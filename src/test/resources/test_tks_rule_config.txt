@@ -1,0 +1,167 @@
+#
+#=================================================================================================================================================================================================================================================
+#HEADER
+#=================================================================================================================================================================================================================================================
+#
+# Simulator rule definition file for ITK Testbench
+# Correspondence
+# v5.2 Template
+#
+#=================================================================================================================================================================================================================================================
+#RESPONSES
+#=================================================================================================================================================================================================================================================
+#
+BEGIN RESPONSES
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/responses.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/responses.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/responses.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/responses.conf
+do_process	NONE	0
+http_header_test NONE 0 WITH_HTTP_HEADERS ( h1 : "v1" h2 : "v2\"*" )
+# added to stop unresolved references
+namef NONE 0
+namet NONE 0
+variable NONE 0 $v1 = "l1"
+END RESPONSES
+#
+#=================================================================================================================================================================================================================================================
+#SUBSTITUTIONS
+#=================================================================================================================================================================================================================================================
+#
+BEGIN SUBSTITUTIONS
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/substitutions.conf
+__LITERAL_TAG__ Literal aaa
+__UC_UUID_TAG__ UUID
+__LC_UUID_TAG__ uuid
+__HL7DATE_TAG__ HL7datetime
+__ISO8601DATE_TAG__ ISO8601datetime
+__PROPERTY_TAG__ Property user.dir
+__XPATH_TAG__ XPath /a/text()
+__CLASS_TAG__ Class uk.nhs.digital.mait.tkwx.tk.internalservices.rules.DelaySubstitution "key 1"
+__RE_CONTENT_TAG__ reg_exp content "^ContentStart(.*)ContentEnd$" "$1"
+__RE_CP_TAG__ reg_exp context_path "^/DocumentReference(.*)$" "$1"
+__RE_HTTP_HEADER_TAG__ reg_exp http_header h1 "^StartHeader(.*)EndHeader$" "$1"
+SESSION_ID  Literal s1
+END SUBSTITUTIONS
+#
+#=================================================================================================================================================================================================================================================
+#EXPRESSIONS
+#=================================================================================================================================================================================================================================================
+#
+BEGIN EXPRESSIONS
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/expressions.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/expressions.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/expressions.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/expressions.conf
+passthrough	Always
+exp_header_matches               HTTP_HEADER Accept matches ^.*application/xml\+fhir.*$
+exp_contextpath_matches              context_path matches ^.*application/xml\+fhir.*$
+exp_content_matches              content matches ^.*application/xml\+fhir.*$
+exp_header_contains              HTTP_HEADER Accept contains xxx
+exp_contextpath_contains              context_path contains xx/x
+exp_content_contains              content contains xx+/x
+exp_xpathequals xpathequals /soap:Envelope/soap:Body/itk:DistributionEnvelope/itk:header/@service urn:nhs-itk:services:201005:SendCDADocument-v2-0
+exp_xpathnotequals xpathnotequals /soap:Envelope/soap:Body/itk:DistributionEnvelope/itk:header/@service urn:nhs-itk:services:201005:SendCDADocument-v2-0
+exp_cp_contains context_path contains /query
+exp_xpathexists xpathexists /fhir:Bundle
+exp_xpathnotexists xpathnotexists /fhir:Bundle
+exp_xpathin xpathin /fhir:Bundle "a b" "c d" e
+exp_xpathin_embedded_quote xpathin /fhir:Bundle "w x" "y z"
+exp_xpathnotin xpathnotin /fhir:Bundle "x y"
+exp_xpathmatches xpathmatches /fhir:Bundle ^a$
+exp_xpathnotmatches xpathnotmatches /fhir:Bundle ^b$
+exp_xpathcompare xpathcompare /fhir:Bundle /fhir:Bundle
+exp_xpathnotcompare xpathnotcompare /fhir:Bundle /fhir:Bundle/fhir:Element
+exp_xslt xslt src/test/resources/testtransform.xsl ERROR
+exp_schema schema /mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/DMS_Schema/ITK_Core/Schemas/distributionEnvelope-v2-0.xsd
+exp_schema_xpath schema /mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/DMS_Schema/ITK_Core/Schemas/distributionEnvelope-v2-0.xsd /soap:Envelope/soap:Body/itk:DistributionEnvelope
+exp_always always
+exp_never never
+contains_variable context_path contains $v1
+variable_contains $v1 contains l1
+END EXPRESSIONS
+#
+#=================================================================================================================================================================================================================================================
+#RULES
+#=================================================================================================================================================================================================================================================
+#
+BEGIN RULE
+urn:nhs-itk:services:201005:SendCDADocument-v2-0
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules_ProfileID.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+END RULE
+
+BEGIN RULE
+urn:nhs-itk:services:201005:SendBusinessAck-v1-0
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules_ProfileID.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+END RULE
+
+BEGIN RULE
+urn:nhs-itk:services:201005:SendInfrastructureAck-v1-0
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+END RULE
+
+BEGIN RULE
+urn:nhs-itk:services:201005:SendDocument-v1-0
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+END RULE
+
+BEGIN RULE
+urn:nhs-itk:services:201005:BroadcastDocument-v1-0
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+END RULE
+
+BEGIN RULE
+urn:nhs-itk:services:201005:SendCDADocument-v1-0
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+END RULE
+
+BEGIN RULE
+test
+# these reference responses created by the test harness
+if exp_cp_contains THEN namef else namet
+if exp_always and not exp_never THEN namet else namef
+if exp_always or exp_never THEN namet else namef
+if not exp_never THEN namet else namef
+if exp_always and exp_always and exp_always THEN namet else namef
+if exp_always or exp_never and exp_always THEN namet else namef
+
+# precedence test - all combos of three logicals with and then or
+if exp_never and exp_never or exp_never THEN namef else namet
+if exp_never and exp_never or exp_always THEN namet else namef
+if exp_never and exp_always or exp_never THEN namef else namet
+if exp_never and exp_always or exp_always THEN namet else namef
+if exp_always and exp_never or exp_never THEN namef else namet
+if exp_always and exp_never or exp_always THEN namet else namef
+if exp_always and exp_always or exp_never THEN namet else namef
+if exp_always and exp_always or exp_always THEN namet else namef
+
+# now with brackets overriding the higher precedence of and 
+if exp_never and ( exp_never or exp_never ) THEN namef else namet
+# differs from equivalent 
+if exp_never and ( exp_never or exp_always ) THEN namef else namet
+if exp_never and ( exp_always or exp_never ) THEN namef else namet
+# differs from equivalent 
+if exp_never and ( exp_always or exp_always ) THEN namef else namet
+if exp_always and ( exp_never or exp_never ) THEN namef else namet
+if exp_always and ( exp_never or exp_always ) THEN namet else namef
+if exp_always and ( exp_always or exp_never ) THEN namet else namef
+if exp_always and ( exp_always or exp_always ) THEN namet else namef
+END RULE

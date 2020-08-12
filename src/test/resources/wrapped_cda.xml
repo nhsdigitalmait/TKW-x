@@ -1,0 +1,335 @@
+<!-- cobbled together file for testing CDA rendering class from POCD_EX040001UK01_01 interaction id POCD_IN040001UK01 
+    end to end this is probably not correct but it works for the test. WE have never had good example logs 
+-->
+<SOAP-ENV:Envelope xmlns:crs="http://national.carerecords.nhs.uk/schema/crs/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns="urn:hl7-org:v3" xmlns:hl7="urn:hl7-org:v3">
+    <SOAP-ENV:Header>
+        <wsa:MessageID>uuid:2BC83AC4-097A-11E7-B30D-6C3BE5A609F5</wsa:MessageID>
+        <wsa:Action>urn:nhs:names:services:pdsquery/QUPA_IN000007UK03</wsa:Action>
+        <wsa:To>10.210.162.81</wsa:To>
+        <wsa:From>
+            <wsa:Address>https://10.97.89.163/reliablemessaging/queryrequest</wsa:Address>
+        </wsa:From>
+        <communicationFunctionRcv typeCode="RCV">
+            <device classCode="DEV" determinerCode="INSTANCE">
+                <id root="1.2.826.0.1285.0.2.0.107" extension="715373337545" />
+            </device>
+        </communicationFunctionRcv>
+        <communicationFunctionSnd typeCode="SND">
+            <device classCode="DEV" determinerCode="INSTANCE">
+                <id root="1.2.826.0.1285.0.2.0.107" extension="908232220511" />
+            </device>
+        </communicationFunctionSnd>
+        <wsa:RelatesTo>uuid:2BA6C8AD-097A-11E7-8EF8-738711186A40</wsa:RelatesTo>
+		<!-- Added scf -->
+        <wsa:ReplyTo>
+            <wsa:Address>http://mycompany.com/poc/reply</wsa:Address>
+        </wsa:ReplyTo>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body>
+            <POCD_IN040001UK01>
+                <ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:npfitlc="NPFIT:HL7:Localisation" xsi:schemaLocation="urn:hl7-org:v3 ../../schemas/POCD_MT000001UK04.xsd" classCode="DOCCLIN" moodCode="EVN">
+                    <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040" />
+                    <npfitlc:messageType root="2.16.840.1.113883.2.1.3.2.4.18.17" extension="POCD_MT040001UK01" />
+                    <id root="5BF54695-ABE6-4887-925F-626A6E4DAE74" />
+                    <code code="313071000000104" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" />
+                    <title>Admission to Inpatient Care</title>
+                    <effectiveTime value="200602141005" />
+                    <confidentialityCode code="V" displayName="very restricted" codeSystem="2.16.840.1.113883.5.25" />
+                    <setId root="654A94B4-C8FF-43C9-8F96-B83B602FFBD7" />
+                    <versionNumber value="1" />
+                    <recordTarget typeCode="RCT" contextControlCode="OP">
+                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145020UK03#PatientRole" />
+                        <patientRole classCode="PAT">
+                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145020UK03#PatientRole" />
+                            <id root="2.16.840.1.113883.2.1.4.1" extension="9413946426" />
+                        </patientRole>
+                    </recordTarget>
+                    <author typeCode="AUT" contextControlCode="OP">
+                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145001UK03#AssignedAuthorSDS" />
+                        <functionCode code="OA" displayName="Originating Author" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.178" />
+                        <time value="200602141005" />
+                        <assignedAuthor classCode="ASSIGNED">
+                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145001UK03#AssignedAuthorSDS" />
+                            <id root="1.2.826.0.1285.0.2.0.67" extension="102018575989" />
+                            <id root="1.2.826.0.1285.0.2.0.65" extension="102018573982" />
+                            <code code="R8010" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196" displayName="Clerical Access Role" />
+                            <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145001UK03#assignedPerson" />
+                                <name>
+                                    <given>Christopher</given>
+                                    <family>Regan</family>
+                                </name>
+                            </assignedPerson>
+                            <representedOrganization classCode="ORG" determinerCode="INSTANCE">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145001UK03#representedOrganization" />
+                                <id root="2.16.840.1.113883.2.1.3.2.4.19.2" extension="RFM" />
+                                <name>Hebburn NHS Trust</name>
+                            </representedOrganization>
+                        </assignedAuthor>
+                    </author>
+                    <custodian typeCode="CST">
+                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145018UK03#AssignedCustodian" />
+                        <assignedCustodian classCode="ASSIGNED">
+                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145018UK03#AssignedCustodian" />
+                            <representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145018UK03#representedCustodianOrganization" />
+                                <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="RFM" />
+                                <name>Hebburn NHS Trust</name>
+                            </representedCustodianOrganization>
+                        </assignedCustodian>
+                    </custodian>
+                    <informationRecipient typeCode="PRCP">
+                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145017UK03#IntendedRecipient" />
+                        <intendedRecipient classCode="ASSIGNED">
+                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145017UK03#IntendedRecipient" />
+                            <receivedOrganization classCode="ORG" determinerCode="INSTANCE">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145017UK03#representedOrganization" />
+                                <id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="YEA" />
+                                <name>NATIONAL CARE RECORDS SERVICE SPINE</name>
+                            </receivedOrganization>
+                        </intendedRecipient>
+                    </informationRecipient>
+                    <informationRecipient typeCode="PRCP">
+                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145021UK04#AssignedEntitySDS" />
+                        <intendedRecipient classCode="ASSIGNED">
+                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145021UK04#AssignedEntitySDS" />
+                            <npfitlc:recipientRoleCode code="GP" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196" displayName="General Practitioner" />
+                            <id root="1.2.826.0.1285.0.2.0.67" extension="102018562987" />
+                            <id root="1.2.826.0.1285.0.2.0.65" extension="102018560980" />
+                            <informationRecipient classCode="PSN" determinerCode="INSTANCE">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145021UK04#assignedPerson" />
+                                <name>
+                                    <given>Natalie Susan</given>
+                                    <family>Atkinson</family>
+                                </name>
+                            </informationRecipient>
+                        </intendedRecipient>
+                    </informationRecipient>
+                    <componentOf typeCode="COMP">
+                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146060UK01#EncompassingEncounter" />
+                        <encompassingEncounter classCode="ENC" moodCode="EVN">
+                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146060UK01#EncompassingEncounter" />
+                            <id root="DACB340E-8069-4D2A-99D5-3AA60CA53171" />
+                            <code code="11429006" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Consultation" />
+                            <effectiveTime>
+                                <center value="200602140930" />
+                            </effectiveTime>
+                            <dischargeDispositionCode />
+                            <responsibleParty typeCode="RESP">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146060UK01#responsibleParty" />
+                                <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145022UK02#AssignedEntitySDS" />
+                                <assignedEntity classCode="ASSIGNED">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145022UK02#AssignedEntitySDS" />
+                                    <id root="1.2.826.0.1285.0.2.0.67" extension="102018578983" />
+                                    <id root="1.2.826.0.1285.0.2.0.65" extension="102018576987" />
+                                    <code code="R8000" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196" displayName="Clinical Practitioner Access Role" />
+                                    <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145022UK02#assignedPerson" />
+                                        <name>
+                                            <given>Dreda</given>
+                                            <family>Ogiffey</family>
+                                        </name>
+                                    </assignedPerson>
+                                </assignedEntity>
+                            </responsibleParty>
+                            <encounterParticipant typeCode="ATND">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146060UK01#encounterParticipant" />
+                                <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145022UK02#AssignedEntitySDS" />
+                                <assignedEntity classCode="ASSIGNED">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145022UK02#AssignedEntitySDS" />
+                                    <id root="1.2.826.0.1285.0.2.0.67" extension="102018581983" />
+                                    <id root="1.2.826.0.1285.0.2.0.65" extension="102018579981" />
+                                    <code code="R8010" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196" displayName="Clerical Access Role" />
+                                    <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145022UK02#assignedPerson" />
+                                        <name>
+                                            <given>Caren</given>
+                                            <family>Griffin</family>
+                                        </name>
+                                    </assignedPerson>
+                                </assignedEntity>
+                            </encounterParticipant>
+                            <encounterParticipant typeCode="ATND">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146060UK01#encounterParticipant" />
+                                <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145022UK02#AssignedEntitySDS" />
+                                <assignedEntity classCode="ASSIGNED">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145022UK02#AssignedEntitySDS" />
+                                    <id root="1.2.826.0.1285.0.2.0.67" extension="102018572984" />
+                                    <id root="1.2.826.0.1285.0.2.0.65" extension="102018570988" />
+                                    <code code="R8001" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196" displayName="Nurse Access Role" />
+                                    <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                                        <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145022UK02#assignedPerson" />
+                                        <name>
+                                            <given>Faron</given>
+                                            <family>MacDermot</family>
+                                        </name>
+                                    </assignedPerson>
+                                </assignedEntity>
+                            </encounterParticipant>
+                            <location typeCode="LOC">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146060UK01#location" />
+                                <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145024UK01#HealthCareFacility" />
+                                <healthCareFacility classCode="SDLOC">
+                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145024UK01#HealthCareFacility" />
+                                    <id nullFlavor="NA" />
+                                    <code code="309989009" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Orthopedic department" />
+                                </healthCareFacility>
+                            </location>
+                        </encompassingEncounter>
+                    </componentOf>
+                    <component typeCode="COMP" contextConductionInd="true">
+                        <structuredBody classCode="DOCBODY" moodCode="EVN">
+                            <component typeCode="COMP" contextConductionInd="true">
+                                <section classCode="DOCSECT" moodCode="EVN">
+                                    <id root="4CA7C63B-EEEC-4327-B071-A81A2F7F067A" />
+                                    <!--Here are the coded entries-->
+                                    <entry typeCode="COMP" contextConductionInd="true">
+                                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146027UK04#Treatment" />
+                                        <procedure classCode="PROC" moodCode="INT">
+                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146027UK04#Treatment" />
+                                            <id root="CD210919-50A9-4732-AF3F-9A705DB3C0D1" />
+                                            <code code="405613005" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Planned procedure">
+                                                <originalText>
+                                                    <reference value="#a6" />
+                                                </originalText>
+                                                <qualifier>
+                                                    <name code="363589002" displayName="Associated procedure" />
+                                                    <value code="52734007" displayName="Total replacement of hip">
+                                                        <qualifier>
+                                                            <name code="272741003" displayName="Laterality" />
+                                                            <value code="7771000" displayName="Left" />
+                                                        </qualifier>
+                                                        <qualifier>
+                                                            <name code="260870009" displayName="Priority" />
+                                                            <value code="103390000" displayName="Elective" />
+                                                        </qualifier>
+                                                    </value>
+                                                </qualifier>
+                                            </code>
+                                            <statusCode code="active" />
+                                            <effectiveTime value="200602141400" />
+                                        </procedure>
+                                    </entry>
+                                    <!--Here are the coded entries-->
+                                    <entry typeCode="COMP" contextConductionInd="true">
+                                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146011UK04#Diagnosis" />
+                                        <observation classCode="OBS" moodCode="EVN">
+                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146011UK04#Diagnosis" />
+                                            <id root="F05F6AAF-E43C-4436-A91C-B217C84A96B3" />
+                                            <code code="396275006" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Osteoarthritis">
+                                                <originalText>
+                                                    <reference value="#a5" />
+                                                </originalText>
+                                            </code>
+                                            <statusCode code="completed" />
+                                            <effectiveTime value="19960120" />
+                                        </observation>
+                                    </entry>
+                                    <!--Here are the coded entries-->
+                                    <entry typeCode="COMP" contextConductionInd="true">
+                                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146057UK02#AdmissionProcedure" />
+                                        <procedure classCode="PROC" moodCode="EVN">
+                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146057UK02#AdmissionProcedure" />
+                                            <id root="E27368B3-0FD2-4579-8E8A-5590AF782A88" />
+                                            <code code="305056002" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Admission procedure">
+                                                <originalText>
+                                                    <reference value="#a1" />
+                                                </originalText>
+                                            </code>
+                                            <statusCode code="completed" />
+                                            <effectiveTime value="200602140930" />
+                                            <entryRelationship typeCode="COMP" contextConductionInd="true">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146057UK02#entryRelationship" />
+                                                <seperatableInd value="false" />
+                                                <observation classCode="OBS" moodCode="EVN">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146057UK02#methodOfAdmission" />
+                                                    <code code="12" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.51" displayName="Elective Admission - Booked" />
+                                                </observation>
+                                            </entryRelationship>
+                                            <entryRelationship typeCode="COMP" contextConductionInd="true">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146057UK02#entryRelationship2" />
+                                                <seperatableInd value="false" />
+                                                <observation classCode="OBS" moodCode="EVN">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146057UK02#estimatedDischargeDate" />
+                                                    <code code="EDD" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.220" displayName="Estimated Discharge Date">
+                                                        <originalText>
+                                                            <reference value="#a3" />
+                                                        </originalText>
+                                                    </code>
+                                                    <value xsi:type="TS" value="20060219" />
+                                                </observation>
+                                            </entryRelationship>
+                                            <entryRelationship typeCode="COMP" contextConductionInd="true">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146057UK02#entryRelationship3" />
+                                                <seperatableInd value="false" />
+                                                <observation classCode="OBS" moodCode="EVN">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146057UK02#sourceOfPatient" />
+                                                    <code code="19" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.56" displayName="Usual Place of Residence">
+                                                        <originalText>
+                                                            <reference value="#a2" />
+                                                        </originalText>
+                                                    </code>
+                                                </observation>
+                                            </entryRelationship>
+                                            <entryRelationship typeCode="COMP" contextConductionInd="true">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146057UK02#entryRelationship4" />
+                                                <seperatableInd value="false" />
+                                                <observation classCode="OBS" moodCode="EVN">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146057UK02#reAdmissionFlag" />
+                                                    <code code="RAF" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.220" displayName="ReAdmission Flag">
+                                                        <originalText>
+                                                            <reference value="#a4" />
+                                                        </originalText>
+                                                    </code>
+                                                    <value xsi:type="BL" value="false" />
+                                                </observation>
+                                            </entryRelationship>
+                                        </procedure>
+                                    </entry>
+                                    <component typeCode="COMP" contextConductionInd="true">
+                                        <npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146061UK01#Section1" />
+                                        <section classCode="DOCSECT" moodCode="EVN">
+                                            <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146061UK01#Section1" />
+                                            <id root="1B87913C-1819-4AA4-84FE-7EFB6B6B426B" />
+                                            <title>Admission</title>
+                                            <text>
+                                                <content styleCode="Bold">Method of Admission:</content>
+                                                <content ID="a1">Elective Admission - Booked</content>
+                                                <br />
+                                                <content styleCode="Bold">Source of Admission:</content>
+                                                <content ID="a2">Usual Place of Residence</content>
+                                                <br />
+                                                <content styleCode="Bold">Estimated Discharge Date:</content>
+                                                <content ID="a3">19-Feb-2006</content>
+                                                <br />
+                                                <content styleCode="Bold">Readmission:</content>
+                                                <content ID="a4">No</content>
+                                            </text>
+                                            <component typeCode="COMP" contextConductionInd="true">
+                                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146061UK01#component1" />
+                                                <section classCode="DOCSECT" moodCode="EVN">
+                                                    <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146061UK01#section2" />
+                                                    <id root="321D3463-6FB8-4DA1-BF1F-9C763EA7299D" />
+                                                    <title>Reason for Admission</title>
+                                                    <text>
+                                                        <list>
+                                                            <item>
+                                                                <content ID="a5">Osteoarthritis.</content>
+                                                            </item>
+                                                            <item>
+                                                                <content ID="a6">Planned total replacement of hip, left, elective.</content>
+                                                            </item>
+                                                        </list>
+                                                    </text>
+                                                </section>
+                                            </component>
+                                        </section>
+                                    </component>
+                                </section>
+                            </component>
+                        </structuredBody>
+                    </component>
+                </ClinicalDocument>
+            </POCD_IN040001UK01>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

@@ -1,0 +1,9 @@
+<DTSControl>
+    <Version>__VERSION__</Version>
+    <AddressType>__ADDRESSTYPE__</AddressType>
+    <MessageType>__MESSAGETYPE__</MessageType>
+    <WorkflowId>__WORKFLOWID__</WorkflowId>
+    <To_DTS>__TODTS__</To_DTS>
+    <From_DTS>__FROMDTS__</From_DTS>
+    <LocalId>__LOCALID__</LocalId>
+__CONTROLSTATUSTEMPLATE__</DTSControl>

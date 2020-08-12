@@ -1,0 +1,18 @@
+<Parameters xmlns="http://hl7.org/fhir">
+   <parameter>
+      <name value="patientNHSNumber"></name>
+      <valueIdentifier>
+		 <system value="http://fhir.nhs.net/Id/nhs-number"></system>
+         <value value="__NNN__"></value>
+      </valueIdentifier>
+   </parameter>
+   <parameter>
+	   <name value="recordSection"/>
+	  <valueCodeableConcept>
+		  <coding>
+			  <system value="http://fhir.nhs.net/ValueSet/gpconnect-record-section-1"/>
+			  <code value="__SECTION__"/>
+		  </coding>
+	  </valueCodeableConcept>
+   </parameter>
+</Parameters>

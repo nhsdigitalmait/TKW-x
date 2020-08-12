@@ -1,0 +1,7 @@
+    <StatusRecord>
+        <DateTime>__DATETIME__</DateTime>
+        <Event>__EVENT__</Event>
+        <Status>__STATUS__</Status>
+        <StatusCode>__STATUSCODE__</StatusCode>
+        <Description>__DESCRIPTION__</Description>
+    </StatusRecord>

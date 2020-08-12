@@ -1,0 +1,58 @@
+VALIDATE-AS: SIMULATOR_LOG_REQUEST
+POST /gpconnect-demonstrator/v0/fhir/Patient/$gpc.getcarerecord HTTP/1.1
+Authorization: ewogICJhbGciOiAiSFMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ew0KICAiaXNzIjogImh0dHBzOi8vQ29uc3VtZXJTeXN0ZW1VUkwiLA0KICAic3ViIjogIjEiLA0KICAiYXVkIjogImh0dHBzOi8vYXV0aG9yaXplLmZoaXIubmhzLm5ldC90b2tlbiIsDQogICJleHAiOiAxNTg1NjQxMjc3LA0KICAiaWF0IjogMTU4NTY0MDk3NywNCiAgInJlYXNvbl9mb3JfcmVxdWVzdCI6ICJkaXJlY3RjYXJlIiwNCiAgInJlcXVlc3RpbmdfZGV2aWNlIjogew0KICAgICJyZXNvdXJjZVR5cGUiOiAiRGV2aWNlIiwNCiAgICAiaWQiOiAiMSIsDQogICAgImlkZW50aWZpZXIiOiBbew0KICAgICAgICAic3lzdGVtIjogIkdQQ29ubmVjdFRlc3RTeXN0ZW0iLA0KICAgICAgICAidmFsdWUiOiAiQ2xpZW50Ig0KICAgICAgfV0sDQoJInR5cGUiOiB7DQogICAgImNvZGluZyI6IFt7DQogICAgICAgICJzeXN0ZW0iOiAiRGV2aWNlSWRlbnRpZmllclN5c3RlbSIsDQogICAgICAgICJjb2RlIjogIkRldmljZUlkZW50aWZpZXIiDQogICAgICB9XQ0KCSAgfSwNCiAgICAibW9kZWwiOiAidjEiLA0KICAgICJ2ZXJzaW9uIjogIjEuMSINCiAgfSwNCiAgInJlcXVlc3Rpbmdfb3JnYW5pemF0aW9uIjogew0KICAgICJyZXNvdXJjZVR5cGUiOiAiT3JnYW5pemF0aW9uIiwNCiAgICAiaWRlbnRpZmllciI6IFt7DQogICAgICAgICJzeXN0ZW0iOiAiaHR0cHM6Ly9maGlyLm5ocy51ay9JZC9vZHMtb3JnYW5pemF0aW9uLWNvZGUiLA0KICAgICAgICAidmFsdWUiOiAiR1BDQTAwMDEiDQogICAgICB9XSwNCgkibmFtZSI6ICJHUCBDb25uZWN0IEFzc3VyYW5jZSINCiAgfSwNCiAgInJlcXVlc3RpbmdfcHJhY3RpdGlvbmVyIjogew0KICAgICJyZXNvdXJjZVR5cGUiOiAiUHJhY3RpdGlvbmVyIiwNCiAgICAiaWQiOiAiMSIsDQogICAgImlkZW50aWZpZXIiOiBbew0KICAgICAgICAic3lzdGVtIjogImh0dHBzOi8vZmhpci5uaHMudWsvSWQvc2RzLXVzZXItaWQiLA0KICAgICAgICAidmFsdWUiOiAiR0NBU0RTMDAwMSINCiAgICAgIH0sDQogICAgICB7DQogICAgICAgICJzeXN0ZW0iOiAiTG9jYWxJZGVudGlmaWVyU3lzdGVtIiwNCiAgICAgICAgInZhbHVlIjogIjEiDQogICAgICB9XSwNCiAgICAibmFtZSI6IFt7DQogICAgICAiZmFtaWx5IjogICJBc3N1cmFuY2VQcmFjdGl0aW9uZXIiICwNCiAgICAgICJnaXZlbiI6IFsgIkFzc3VyYW5jZVRlc3QiIF0sDQogICAgICAicHJlZml4IjogWyAiTXIiIF0NCiAgICB9XQ0KICB9LA0KICAicmVxdWVzdGVkX3Njb3BlIjogInBhdGllbnQvKi5yZWFkIg0KfQ0K.PcKrokU79SqWcWD2-_8Voy2m7Ikvc8vWq82Fgu3d-Ig
+Content-Length: 536
+host: localhost
+Content-type: application/xml+fhir
+ssp-from: from
+ssp-to: to
+SSP-InteractionID: urn:nhs:names:services:gpconnect:fhir:operation:gpc.getcarerecord
+
+<Parameters xmlns="http://hl7.org/fhir">
+   <parameter>
+      <name value="patientNHSNumber"></name>
+      <valueIdentifier>
+		 <system value="http://fhir.nhs.net/Id/nhs-number"></system>
+         <value value="9476719915"></value>
+      </valueIdentifier>
+   </parameter>
+   <parameter>
+	   <name value="recordSection"/>
+	  <valueCodeableConcept>
+		  <coding>
+			  <system value="http://fhir.nhs.net/ValueSet/gpconnect-record-section-1"/>
+			  <code value="SUM"/>
+		  </coding>
+	  </valueCodeableConcept>
+   </parameter>
+</Parameters>
+
+************ END OF INBOUND MESSAGE **************
+
+
+****
+HTTP/1.1 400 
+Content-Length: 604
+expires: 0
+Content-type: application/xml+fhir;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+X-was-Transfer-Encoding: chunked
+
+<OperationOutcome xmlns="http://hl7.org/fhir">
+    <meta>
+        <profile value="http://fhir.nhs.net/StructureDefinition/gpconnect-operationoutcome-1" />
+    </meta>
+    <issue>
+        <severity value="error" />
+        <code value="invalid" />
+        <details>
+            <coding>
+                <system value="http://fhir.nhs.net/ValueSet/gpconnect-error-or-warning-code-1" />
+                <code value="INVALID_PARAMETER" />
+                <display value="__ERRORDETAIL__" />
+            </coding>
+            <text value="__ERRORTEXT__" />
+        </details>
+    </issue>
+</OperationOutcome>

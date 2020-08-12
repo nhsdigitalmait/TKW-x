@@ -1,0 +1,113 @@
+<Bundle xmlns="http://hl7.org/fhir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hl7.org/fhir ../../schemas/bundle.xsd">
+	<id value="13daadee-26e1-4d6a-9e6a-7f4af9b58877"/>
+	<meta>
+		<profile value="http://fhir.nhs.net/StructureDefinition/spine-message-bundle-1-0"/>
+	</meta>
+	<type value="message"/>
+	<entry>
+		<resource>
+			<MessageHeader>
+				<id value="14daadee-26e1-4d6a-9e6a-7f4af9b58877"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-request-messageheader-1-0"/>
+				</meta>
+				<timestamp value="2015-07-04T09:10:14+00:00"/>
+				<event>
+					<system value="http://fhir.nhs.net/ValueSet/message-event-1-0"/>
+					<code value="urn:nhs:names:services:clinicals-sync:FGMQuery_1_0"/>
+				</event>
+				<source>
+					<name value="FooBar NHS Trust"/>
+					<software value="FooBar Patient Manager"/>
+					<contact>
+						<system value="phone"/>
+						<value value="0207 444777"/>
+					</contact>
+					<endpoint value="urn:nhs:addressing:asid:047192794544"/>
+				</source>
+				<destination>
+					<name value="SPINE"/>
+					<endpoint value="urn:nhs:addressing:asid:990101234567"/>
+				</destination>
+				<author>
+					<reference value="Practitioner/41fe704c-18e5-11e5-b60b-1697f925ec7b"/>
+					<display value="Dr Town Wood"/>
+				</author>
+				<data>
+					<reference value="Parameters/7cb73a48-090d-469a-a2b2-04f1e6b11ea2"/>
+				</data>
+			</MessageHeader>
+		</resource>
+	</entry>
+	<entry>
+		<resource>
+			<Parameters>
+				<id value="7cb73a48-090d-469a-a2b2-04f1e6b11ea2"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-ris-parameters-1-0"/>
+				</meta>
+				<parameter>
+					<name value="RiskIndicator"/>
+					<valueCode value="FGM"/>
+				</parameter>
+				<parameter>
+					<name value="NHSNumber"/>
+					<valueIdentifier id="9999999999"/>
+				</parameter>
+			</Parameters>
+		</resource>
+	</entry>
+	<entry>
+		<resource>
+			<Practitioner>
+				<id value="41fe704c-18e5-11e5-b60b-1697f925ec7b"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-practitioner-1-0"/>
+				</meta>
+				<identifier>
+					<use value="official"/>
+					<system value="http://fhir.nhs.net/Id/sds-user-id"/>
+					<value value="G12345678"/>
+				</identifier>
+				<identifier>
+					<use value="official"/>
+					<system value="http://fhir.nhs.net/Id/sds-role-profile-id"/>
+					<value value="PT1234"/>
+				</identifier>
+				<name>
+					<use value="official"/>
+					<family value="Wood"/>
+					<given value="Town"/>
+					<prefix value="Dr."/>
+				</name>
+				<practitionerRole>
+					<managingOrganization>
+						<reference value="Organization/13daadee-26e1-4d6a-9e6a-7f4af9b58878"/>
+					</managingOrganization>
+					<role>
+						<coding>
+							<system value="http://fhir.nhs.net/ValueSet/sds-job-role-name-1-0"/>
+							<code value="R0090"/>
+							<display value="Hospital Practitioner"/>
+						</coding>
+					</role>
+				</practitionerRole>
+			</Practitioner>
+		</resource>
+	</entry>
+	<entry>
+		<resource>
+			<Organization>
+				<id value="13daadee-26e1-4d6a-9e6a-7f4af9b58878"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-organization-1-0"/>
+				</meta>
+				<identifier>
+					<system value="http://fhir.nhs.net/Id/ods-organization-code"/>
+					<value value="RKE"/>
+				</identifier>
+				<name value="THE WHITTINGTON HOSPITAL NHS TRUST"/>
+			</Organization>
+		</resource>
+	</entry>
+</Bundle>

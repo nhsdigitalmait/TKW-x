@@ -1,0 +1,38 @@
+<Parameters xmlns="http://hl7.org/fhir">
+   <parameter>
+      <name value="patientNHSNumber"></name>
+      <valueIdentifier>
+         <system value="https://fhir.nhs.uk/Id/nhs-number"></system>
+         <value value="__NNN__"></value>
+      </valueIdentifier>
+   </parameter>
+   <parameter>
+      <name value="includeAllergies"></name>
+      <part>
+         <name value="includeResolvedAllergies"></name>
+         <valueBoolean value="true"></valueBoolean>
+      </part>
+   <!--
+      <part>
+         <name value="includeResolvedAllergies"></name>
+         <valueBoolean value="true"></valueBoolean>
+      </part>
+   -->
+   </parameter>
+   <parameter>
+      <name value="includeMedication"></name>
+      <part>
+         <name value="includePrescriptionIssues"></name>
+         <valueBoolean value="true"></valueBoolean>
+	  </part>
+      <part>
+         <name value="medicationSearchFromDate"></name>
+		 <valueDate value="2017-11-04"/>
+	  </part>
+   </parameter>
+   <!--
+   <parameter>
+      <name value="includeUncategorisedData"></name>
+   </parameter>
+  -->
+</Parameters>

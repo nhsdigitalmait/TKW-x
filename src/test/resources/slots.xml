@@ -1,0 +1,120 @@
+<Bundle xmlns="http://hl7.org/fhir">
+   <type value="searchset"></type>
+   <entry>
+      <fullUrl value="Organisation/23"></fullUrl>
+      <resource>
+         <Organization xmlns="http://hl7.org/fhir">
+            <id value="23"></id>
+            <meta>
+               <versionId value="636064088098730113"></versionId>
+               <lastUpdated value="2016-08-10T13:52:54.516+01:00"></lastUpdated>
+               <profile value="https://fhir.nhs.uk/STU3/StructureDefinition/CareConnect-GPC-Organization-1"></profile>
+            </meta>
+            <identifier>
+               <system value="https://fhir.nhs.uk/Id/ods-organization-code"></system>
+               <value value="O001"></value>
+            </identifier>
+            <name value="Honley GP Practice"></name>
+         </Organization>
+      </resource>
+   </entry>
+   <entry>
+      <fullUrl value="Location/17"></fullUrl>
+      <resource>
+         <Location xmlns="http://hl7.org/fhir">
+            <id value="17"></id>
+            <meta>
+               <versionId value="636064088100870233"></versionId>
+               <lastUpdated value="2016-08-10T14:27:49.778+01:00"></lastUpdated>
+               <profile value="https://fhir.nhs.uk/STU3/StructureDefinition/CareConnect-GPC-Location-1"></profile>
+            </meta>
+            <identifier>
+               <system value="https://fhir.nhs.uk/Id/ods-site-code"></system>
+               <value value="L001"></value>
+            </identifier>
+            <name value="Honley Highstreet"></name>
+         </Location>
+      </resource>
+   </entry>
+   <entry>
+      <fullUrl value="Schedule/14"></fullUrl>
+      <resource>
+         <Schedule xmlns="http://hl7.org/fhir">
+            <id value="14"></id>
+            <meta>
+               <versionId value="1469444400000"></versionId>
+               <lastUpdated value="2017-11-08T12:00:00.000+01:00"></lastUpdated>
+               <profile value="https://fhir.nhs.uk/STU3/StructureDefinition/GPConnect-Schedule-1"></profile>
+            </meta>
+            <actor>
+               <reference value="Location/17"></reference>
+            </actor>
+            <actor>
+               <reference value="Practitioner/2"></reference>
+            </actor>
+            <comment value="Schedule 1 for general appointments"></comment>
+         </Schedule>
+      </resource>
+   </entry>
+   <entry>
+      <fullUrl value="Practitioner/2"></fullUrl>
+      <resource>
+         <Practitioner xmlns="http://hl7.org/fhir">
+            <id value="2"></id>
+            <meta>
+               <versionId value="636064088099800115"></versionId>
+               <lastUpdated value="2016-08-10T13:47:09.966+01:00"></lastUpdated>
+               <profile value="https://fhir.nhs.uk/STU3/StructureDefinition/CareConnect-GPC-Practitioner-1"></profile>
+            </meta>
+            <identifier>
+               <system value="https://fhir.nhs.uk/Id/sds-user-id"></system>
+               <value value="S001"></value>
+            </identifier>
+            <name>
+               <family value="Black"></family>
+               <given value="Sarah"></given>
+               <prefix value="Mrs"></prefix>
+            </name>
+            <gender value="female"></gender>
+         </Practitioner>
+      </resource>
+   </entry>
+   <entry>
+      <fullUrl value="Slot/1584"></fullUrl>
+      <resource>
+         <Slot xmlns="http://hl7.org/fhir">
+            <id value="1584"></id>
+            <meta>
+               <versionId value="1471219260000"></versionId>
+               <lastUpdated value="2017-11-09T01:01:00.000+01:00"></lastUpdated>
+               <profile value="https://fhir.nhs.uk/STU3/StructureDefinition/GPConnect-Slot-1"></profile>
+            </meta>
+            <schedule>
+               <reference value="Schedule/14"></reference>
+            </schedule>
+            <status value="free"></status>
+            <start value="2016-08-15T11:30:00.000+01:00"></start>
+            <end value="2016-08-15T11:59:59.000+01:00"></end>
+         </Slot>
+      </resource>
+   </entry>
+   <entry>
+      <fullUrl value="Slot/1644"></fullUrl>
+      <resource>
+         <Slot xmlns="http://hl7.org/fhir">
+            <id value="1644"></id>
+            <meta>
+               <versionId value="1471219260112"></versionId>
+               <lastUpdated value="2017-11-09T02:13:05.000+01:00"></lastUpdated>
+               <profile value="https://fhir.nhs.uk/STU3/StructureDefinition/GPConnect-Slot-1"></profile>
+            </meta>
+            <schedule>
+               <reference value="Schedule/14"></reference>
+            </schedule>
+            <status value="free"></status>
+            <start value="2016-08-15T12:00:00.000+01:00"></start>
+            <end value="2016-08-15T12:29:59.000+01:00"></end>
+         </Slot>
+      </resource>
+   </entry>
+</Bundle>

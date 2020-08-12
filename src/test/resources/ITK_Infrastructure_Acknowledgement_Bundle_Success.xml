@@ -1,0 +1,97 @@
+<!-- example modified to fire ITK008M 
+	 set ia requested to true 
+	 added a ba requested false
+     added operation outcome code 30001 for new rules
+ -->
+<Bundle xmlns="http://hl7.org/fhir">
+	<id value="__IAID_BUNDLE_UUID__"/>
+	<meta>
+		<profile value="https://fhir.nhs.uk/STU3/StructureDefinition/ITK-Message-Bundle-1"/>
+	</meta>
+	<identifier>
+		<value value="__IA_BUNDLE_UUID__"/>
+	</identifier>
+	<type value="message"/>
+	<entry>
+		<fullUrl value="urn:uuid:__IA_MESSAGE_HEADER_UUID__"/>
+		<resource>
+			<MessageHeader>
+				<id value="__IA_MESSAGE_HEADER_UUID__"/>
+				<meta>
+					<profile value="https://fhir.nhs.uk/STU3/StructureDefinition/ITK-MessageHeader-2"/>
+				</meta>
+				<extension url="https://fhir.nhs.uk/STU3/StructureDefinition/Extension-ITK-MessageHandling-2">
+					<extension url="InfAckRequested">
+						<valueBoolean value="true"/>
+					</extension>
+					<extension url="BusAckRequested">
+						<valueBoolean value="false"/>
+					</extension>
+					<extension url="RecipientType">
+						<valueCoding>
+							<system value="https://fhir.nhs.uk/STU3/CodeSystem/ITK-RecipientType-1"/>
+							<code value="FI"/>
+							<display value="For Information"/>
+						</valueCoding>
+					</extension>
+			__PRIORITY_BLOCK__					</extension>
+				<event>
+					<system value="https://fhir.nhs.uk/STU3/CodeSystem/ITK-MessageEvent-2"/>
+					<code value="ITK008M"/>
+					<display value="ITK Response"/>
+				</event>
+				<sender>
+					<reference value="urn:uuid:__SENDER_UUID__"/>
+				</sender>
+				<timestamp value="__TIMESTAMP__"/>
+				<source>
+					<endpoint value="urn:nhs-uk:addressing:ods:ITKTestHarness"/>
+				</source>
+				<response>
+					<identifier value="__REQUEST_UUID__"/>
+					<code value="__RESPONSE_CODE__"/>
+					<details>
+						<reference value="urn:uuid:__IA_OPERATION_OUTCOME_UUID__"/>
+					</details>
+				</response>
+			</MessageHeader>
+		</resource>
+	</entry>
+	<entry>
+		<fullUrl value="urn:uuid:__SENDER_UUID__"/>
+		<resource>
+			<Practitioner>
+				<id value="__SENDER_UUID__"/>
+				<meta>
+					<profile value="https://fhir.nhs.uk/STU3/StructureDefinition/CareConnect-ITK-Header-Practitioner-1"/>
+				</meta>
+				<name>
+					<family value="Harness"/>
+					<given value="ITK Test"/>
+				</name>
+			</Practitioner>
+		</resource>
+	</entry>
+	<entry>
+		<fullUrl value="urn:uuid:__IA_OPERATION_OUTCOME_UUID__"/>
+		<resource>
+			<OperationOutcome>
+				<id value="__IA_OPERATION_OUTCOME_UUID__"/>
+				<meta>
+					<profile value="https://fhir.nhs.uk/STU3/StructureDefinition/ITK-Response-OperationOutcome-1"/>
+				</meta>
+				<issue>
+					<severity value="__ISSUE_SEVERITY__"/>
+					<code value="__ISSUE_CODE__"/>
+					<details>
+						<coding>
+							<system value="https://fhir.nhs.uk/STU3/CodeSystem/ITK-ResponseCodes-1"/>
+							<code value="30001"/>
+							<display value="errortext"/>
+						</coding>
+					</details>
+				</issue>
+			</OperationOutcome>
+		</resource>
+	</entry>
+</Bundle>

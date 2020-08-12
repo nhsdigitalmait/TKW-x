@@ -30,6 +30,7 @@ import org.w3c.dom.Element;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.commonutils.util.xsltransform.TransformManager;
+import static uk.nhs.digital.mait.commonutils.util.CfHNamespaceContext.NHS_DIGITAL_JSON;
 
 /**
  *
@@ -37,7 +38,7 @@ import uk.nhs.digital.mait.commonutils.util.xsltransform.TransformManager;
  */
 public class JsonXmlConverter {
 
-    public static final String JSONSOURCEDXMLNAMESPACE = "uk.nhs.digital.mait.tkwx.jsonconverter.JsonXmlConverter";
+    public static final String JSONSOURCEDXMLNAMESPACE = NHS_DIGITAL_JSON;
     public static final String XMLTOJSONCONVERTERATTRIBUTEMAXLENGTH = "tks.jsonconverter.JsonXmlConverter.attributemaxlength";
     public static int ATTRIBUTEMAXLENGTH = 64;
     private static Configurator config;

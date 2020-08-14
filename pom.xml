@@ -47,7 +47,7 @@
                     <reuseForks>false</reuseForks>
                     
                     <!-- set this to true for a development cycle that is shorter than war and peace -->
-                    <skipTests>true</skipTests>
+                    <skipTests>false</skipTests>
                     
                 </configuration> 
             </plugin> 
@@ -401,5 +401,5 @@
             </exclusions>
         </dependency>
     </dependencies>
-    <name>TKW-x-maven-git</name>
+    <name>tkw-x</name>
 </project>

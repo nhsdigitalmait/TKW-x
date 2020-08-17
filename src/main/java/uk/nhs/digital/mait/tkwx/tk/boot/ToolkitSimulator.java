@@ -231,20 +231,7 @@ public class ToolkitSimulator {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args)  {
-     
-        ClassLoader classLoader = ToolkitSimulator.class.getClassLoader();
-        Properties versionProperties = new Properties();
-        try {
-            versionProperties.load(classLoader.getResourceAsStream("git.properties"));
-        } catch (IOException ex) {
-            System.err.println("COuldn't load git properties "+ex.getMessage());
-            System.exit(1);
-        }
-        versionString = String.format("NHS Digital Interoperability Toolkit Testbench TKW-x-%s %s %s",
-                versionProperties.getProperty("git.build.version"),
-                versionProperties.getProperty("git.commit.id.abbrev"),
-                versionProperties.getProperty("git.commit.time"));
+    public static void main(String[] args) {
 
         System.out.println(versionString + " starting on " + System.getProperty("os.name") + " version " + System.getProperty("os.version") + ", " + System.getProperty("os.arch"));
         Mode selectedMode = null;
@@ -349,4 +336,19 @@ public class ToolkitSimulator {
         }
     }
 
+    static {
+        ClassLoader classLoader = ToolkitSimulator.class.getClassLoader();
+        Properties versionProperties = new Properties();
+        try {
+            versionProperties.load(classLoader.getResourceAsStream("git.properties"));
+        } catch (IOException ex) {
+            System.err.println("Couldn't load git properties " + ex.getMessage());
+            System.exit(1);
+        }
+        versionString = String.format("NHS Digital Interoperability Toolkit Testbench TKW-x-%s %s %s",
+                versionProperties.getProperty("git.build.version"),
+                versionProperties.getProperty("git.commit.id.abbrev"),
+                versionProperties.getProperty("git.commit.time"));
+
+    }
 }

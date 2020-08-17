@@ -28,17 +28,23 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.hl7.fhir.dstu3.hapi.validation.DefaultProfileValidationSupport;
+import org.hl7.fhir.dstu3.hapi.ctx.DefaultProfileValidationSupport;
 import org.hl7.fhir.dstu3.hapi.validation.FhirInstanceValidator;
+import org.hl7.fhir.dstu3.hapi.validation.PrePopulatedValidationSupport;
 import org.hl7.fhir.dstu3.hapi.validation.ValidationSupportChain;
+import org.hl7.fhir.dstu3.model.CodeSystem;
+import org.hl7.fhir.dstu3.model.StructureDefinition;
+import org.hl7.fhir.dstu3.model.ValueSet;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
-import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 
 /**
  *
@@ -195,19 +201,43 @@ public class HapiFhirValidatorEngine {
                     System.out.println("No HAPI FHIR assets read in");
                 }
             }
-            CachingIValidationSupport pvs = new CachingIValidationSupport();
-            pvs.setProfileCache(p);
-            FhirInstanceValidator fiv = new FhirInstanceValidator(pvs);
-            /*
-        * ValidationSupportChain strings multiple instances of IValidationSupport together. The
-        * code below is useful because it means that when the validator wants to load a
-        * StructureDefinition or a ValueSet, it will first use DefaultProfileValidationSupport,
-        * which loads the default HL7 versions. Any StructureDefinitions which are not found in
-        * the built-in set are delegated to your custom implementation.
-             */
-            ValidationSupportChain support = new ValidationSupportChain(new DefaultProfileValidationSupport(), pvs);
-            fiv.setValidationSupport(support);
-            fiv.setNoTerminologyChecks(noTerminologyChecks);
+
+            DefaultProfileValidationSupport defaultProfileValidationSupport = new DefaultProfileValidationSupport();
+
+// USING NEW PREPOPULATED            
+//CHHOSE EITHER VANILLA HAPI which loads the reources in but returns null            
+//            PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport();
+////OR MINE WHICH ESSENTIALLY DOES THE SAME AS THE CACHING SUPPORT            
+////            PrePopulatedValidationSupportWithCodedSystems prePopulatedSupport = new PrePopulatedValidationSupportWithCodedSystems();
+//
+//            
+//            HashMap<String, StructureDefinition> sd = p.getStructureDefinitions();
+//            for (StructureDefinition value : sd.values()) {
+//                prePopulatedSupport.addStructureDefinition(value);
+//            }
+//
+//            HashMap<String, CodeSystem> cs = p.getCodeSystemCache();
+//            for (CodeSystem value : cs.values()) {
+//                prePopulatedSupport.addCodeSystem(value);
+//            }
+//
+//            HashMap<String, ValueSet> vs = p.getValueSetCache();
+//            for (ValueSet value : vs.values()) {
+//                prePopulatedSupport.addValueSet(value);
+//            }
+//            ValidationSupportChain supportChain = new ValidationSupportChain(defaultProfileValidationSupport, prePopulatedSupport);
+// USING NEW PREPOPULATED END
+// USING CACHINGIALIDATIONSUPPORT
+            CachingIValidationSupport caching = new CachingIValidationSupport();
+            caching.setProfileCache(p);
+            ValidationSupportChain supportChain = new ValidationSupportChain(defaultProfileValidationSupport, caching);
+// USING CACHINGIALIDATIONSUPPORT END
+
+
+
+            FhirInstanceValidator fhirInstanceValidator = new FhirInstanceValidator(supportChain);
+            fhirInstanceValidator.setNoTerminologyChecks(noTerminologyChecks);
+
 
             xmlParser = context.newXmlParser();
             jsonParser = context.newJsonParser();
@@ -237,7 +267,7 @@ public class HapiFhirValidatorEngine {
                 fhirValidator.registerValidatorModule(module2);
             }
 
-            fhirValidator.registerValidatorModule(fiv);
+            fhirValidator.registerValidatorModule(fhirInstanceValidator);
         } catch (Exception e) {
             Logger log = Logger.getInstance();
             log.log("Exception " + e.getMessage());

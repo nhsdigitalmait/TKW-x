@@ -1,0 +1,10 @@
+<DTSControl>
+	<Version>1.0</Version>
+	<AddressType>DTS</AddressType>
+	<MessageType>Data</MessageType>
+	<WorkflowId>TOC_DISCH_DMS</WorkflowId>
+	<To_DTS>__TO_DTS__</To_DTS>
+	<From_DTS>X26OT020</From_DTS>
+	<Compress>N</Compress>
+	<LocalId>localid</LocalId>
+</DTSControl>

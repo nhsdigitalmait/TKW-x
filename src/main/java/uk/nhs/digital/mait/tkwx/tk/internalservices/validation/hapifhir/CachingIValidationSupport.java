@@ -17,19 +17,26 @@ package uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.api.Constants;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import org.apache.commons.lang3.Validate;
+import org.hl7.fhir.dstu3.hapi.ctx.HapiWorkerContext;
 import org.hl7.fhir.dstu3.hapi.ctx.IValidationSupport;
 import org.hl7.fhir.dstu3.model.CodeSystem;
 import org.hl7.fhir.dstu3.model.CodeSystem.ConceptDefinitionComponent;
+import org.hl7.fhir.dstu3.model.CodeType;
 import org.hl7.fhir.dstu3.model.StructureDefinition;
 import org.hl7.fhir.dstu3.model.UriType;
 import org.hl7.fhir.dstu3.model.ValueSet;
 import org.hl7.fhir.dstu3.model.ValueSet.ValueSetExpansionComponent;
+import org.hl7.fhir.dstu3.terminologies.ValueSetExpander;
+import org.hl7.fhir.dstu3.terminologies.ValueSetExpanderSimple;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 
 /**
@@ -78,12 +85,12 @@ public class CachingIValidationSupport implements IValidationSupport {
         Validate.notBlank(theUri, "theUri must not be null or blank");
 
         if (theClass.equals(StructureDefinition.class)) {
-//            System.out.println("Fetch resource (StructureDefinition) = " + theUri);
+            System.out.println("Fetch resource (StructureDefinition) = " + theUri);
             return (T) fetchStructureDefinition(theContext, theUri);
         }
 
         if (theClass.equals(ValueSet.class) || theUri.startsWith(URL_PREFIX_VALUE_SET)) {
-//            System.out.println("Fetch resource (ValueSet) = " + theUri);
+            System.out.println("Fetch resource (ValueSet) = " + theUri);
             return (T) profileCache.getValueSet(theUri);
         }
 
@@ -105,28 +112,47 @@ public class CachingIValidationSupport implements IValidationSupport {
      * @return Returns a validation result object
      */
     @Override
-    public CodeValidationResult validateCode(FhirContext theContext, String theCodeSystem, String theCode, String theDisplay) {
+    public CodeValidationResult validateCode(FhirContext theContext, String theCodeSystem, String theCode, String theDisplay, String theValueSetUrl) {
+        System.out.print("validateCode " + theCodeSystem + ", " + theCode + ", " + theDisplay + ", " + theValueSetUrl);
+        if (theCodeSystem != null) {
+            CodeSystem cs = fetchCodeSystem(theContext, theCodeSystem);
+            if (cs != null) {
+                boolean caseSensitive = true;
+                if (cs.hasCaseSensitive()) {
+                    caseSensitive = cs.getCaseSensitive();
+                }
 
-//        System.out.print("validateCode " + theCodeSystem + ", " + theCode + ", " + theDisplay);
+                CodeValidationResult retVal = testIfConceptIsInList(cs, theCode, cs.getConcept(), caseSensitive);
 
-        CodeSystem cs = fetchCodeSystem(theContext, theCodeSystem);
-        if (cs != null) {
-            boolean caseSensitive = true;
-            if (cs.hasCaseSensitive()) {
-                caseSensitive = cs.getCaseSensitive();
-            }
-
-            CodeValidationResult retVal = testIfConceptIsInList(theCode, cs.getConcept(), caseSensitive);
-
-            if (retVal != null) {
-//                    System.out.println(", found code");
-                return retVal;
+                if (retVal != null) {
+                    System.out.println(", found code");
+                    return retVal;
+                }
             }
         }
 
-//        System.out.println(", cant find code");
+        System.out.println(", cant find code");
         return new CodeValidationResult(ValidationMessage.IssueSeverity.WARNING, "Unknown code: " + theCodeSystem + " / " + theCode);
     }
+//
+//        CodeSystem cs = fetchCodeSystem(theContext, theCodeSystem);
+//        if (cs != null) {
+//            boolean caseSensitive = true;
+//            if (cs.hasCaseSensitive()) {
+//                caseSensitive = cs.getCaseSensitive();
+//            }
+//
+//            CodeValidationResult retVal = testIfConceptIsInList(cs, theCode, cs.getConcept(), caseSensitive);
+//
+//            if (retVal != null) {
+//                System.out.println(", found code");
+//                return retVal;
+//            }
+//        }
+//
+//        System.out.println(", cant find code");
+//        return new CodeValidationResult(ValidationMessage.IssueSeverity.WARNING, "Unknown code: " + theCodeSystem + " / " + theCode);
+//    }
 
     /**
      * Fetch a code system by ID
@@ -137,7 +163,7 @@ public class CachingIValidationSupport implements IValidationSupport {
      */
     @Override
     public CodeSystem fetchCodeSystem(FhirContext theContext, String theSystem) {
-//        System.out.println("CodeSystem = " + theSystem);
+        System.out.println("CodeSystem = " + theSystem);
         CodeSystem cs = profileCache.getCodeSystem(theSystem);
         if (cs == null) {
 //            System.out.println("CodeSystem NULL = " + theSystem);
@@ -156,7 +182,7 @@ public class CachingIValidationSupport implements IValidationSupport {
      */
     @Override
     public ValueSet.ValueSetExpansionComponent expandValueSet(FhirContext fc, ValueSet.ConceptSetComponent csc) {
-//        System.out.println("expandValueSet");
+        System.out.println("expandValueSet");
         ValueSetExpansionComponent retVal = new ValueSetExpansionComponent();
 
         Set<String> wantCodes = new HashSet<String>();
@@ -165,7 +191,7 @@ public class CachingIValidationSupport implements IValidationSupport {
         }
 
         CodeSystem system = fetchCodeSystem(fc, csc.getSystem());
-/* Previous Code
+        /* Previous Code
         for (ConceptDefinitionComponent next : system.getConcept()) {
             if (wantCodes.isEmpty() || wantCodes.contains(next.getCode())) {
                 retVal
@@ -175,7 +201,7 @@ public class CachingIValidationSupport implements IValidationSupport {
                         .setDisplay(next.getDisplay());
             }
         }
-*/
+         */
         if (system != null) {
             List<ConceptDefinitionComponent> concepts = system.getConcept();
             addConcepts(csc, retVal, wantCodes, concepts);
@@ -222,7 +248,7 @@ public class CachingIValidationSupport implements IValidationSupport {
     @Override
     public StructureDefinition fetchStructureDefinition(FhirContext fc, String string) {
 //        System.out.println("fetchStructureDefinition");
-      return profileCache.getStructureDefinitions().get(string); 
+        return profileCache.getStructureDefinitions().get(string);
     }
 
     /**
@@ -237,8 +263,13 @@ public class CachingIValidationSupport implements IValidationSupport {
     @Override
     public boolean isCodeSystemSupported(FhirContext fc, String string) {
         CodeSystem cs = fetchCodeSystem(fc, string);
-        return cs != null && cs.getContent() != CodeSystem.CodeSystemContentMode.NOTPRESENT;
+        if (cs != null && cs.getContent() != CodeSystem.CodeSystemContentMode.NOTPRESENT) {
+            System.out.println("isCodeSystemSupported " + string + ", returned true");
+            return true;
         }
+        System.out.println("isCodeSystemSupported " + string + ", returned false");
+        return false;
+    }
 
     /**
      * Load and return all conformance resources associated with this validation
@@ -253,16 +284,16 @@ public class CachingIValidationSupport implements IValidationSupport {
         return retVal;
     }
 
-    private CodeValidationResult testIfConceptIsInList(String theCode, List<CodeSystem.ConceptDefinitionComponent> conceptList, boolean theCaseSensitive) {
+    private CodeValidationResult testIfConceptIsInList(CodeSystem theCodeSystem, String theCode, List<CodeSystem.ConceptDefinitionComponent> conceptList, boolean theCaseSensitive) {
         String code = theCode;
         if (theCaseSensitive == false) {
             code = code.toUpperCase();
         }
 
-        return testIfConceptIsInListInner(conceptList, theCaseSensitive, code);
+        return testIfConceptIsInListInner(theCodeSystem, conceptList, theCaseSensitive, code);
     }
 
-    private CodeValidationResult testIfConceptIsInListInner(List<CodeSystem.ConceptDefinitionComponent> conceptList, boolean theCaseSensitive, String code) {
+    private CodeValidationResult testIfConceptIsInListInner(CodeSystem theCodeSystem, List<CodeSystem.ConceptDefinitionComponent> conceptList, boolean theCaseSensitive, String code) {
         CodeValidationResult retVal = null;
         for (CodeSystem.ConceptDefinitionComponent next : conceptList) {
             String nextCandidate = next.getCode();
@@ -275,12 +306,32 @@ public class CachingIValidationSupport implements IValidationSupport {
             }
 
             // recurse
-            retVal = testIfConceptIsInList(code, next.getConcept(), theCaseSensitive);
+            retVal = testIfConceptIsInList(theCodeSystem, code, next.getConcept(), theCaseSensitive);
             if (retVal != null) {
                 break;
             }
         }
+        if (retVal != null) {
+            retVal.setCodeSystemName(theCodeSystem.getName());
+            retVal.setCodeSystemVersion(theCodeSystem.getVersion());
+        }
 
         return retVal;
     }
+
+    @Override
+    public ValueSet fetchValueSet(FhirContext fhirContext, String string) {
+        return profileCache.getValueSet(string);
+    }
+
+    @Override
+    public LookupCodeResult lookupCode(FhirContext theContext, String theSystem, String theCode) {
+        return validateCode(theContext, theSystem, theCode, null, (String) null).asLookupCodeResult(theSystem, theCode);
+    }
+
+    @Override
+    public StructureDefinition generateSnapshot(StructureDefinition theInput, String theUrl, String theName) {
+        return null;
+    }
+
 }

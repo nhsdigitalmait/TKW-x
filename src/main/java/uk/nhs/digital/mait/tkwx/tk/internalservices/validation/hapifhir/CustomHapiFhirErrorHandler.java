@@ -183,4 +183,9 @@ public class CustomHapiFhirErrorHandler implements IParserErrorHandler {
         }
         warningMessages.add(hapiMessage);
     }
+
+    @Override
+    public void extensionContainsValueAndNestedExtensions(IParserErrorHandler.IParseLocation arg0) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

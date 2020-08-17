@@ -97,17 +97,18 @@ public class CachingIValidationSupportTest {
      */
     @Test
     public void testValidateCode() {
-        System.out.println("validateCode");
-        String theCodeSystem = "https://fhir.nhs.uk/STU3/CodeSystem/CareConnect-LanguageAbilityMode-1";
-        String theCode = "RWR";
-        String theDisplay = "Recived written";
-        IValidationSupport.CodeValidationResult result = instance.validateCode(THE_CONTEXT, theCodeSystem, theCode, theDisplay);
-        assertNotNull(result);
-
-        theCode = "XXX";
-        theDisplay = "XXX";
-        result = instance.validateCode(THE_CONTEXT, theCodeSystem, theCode, theDisplay);
-        assertNotNull(result);
+//        System.out.println("validateCode");
+//        String theCodeSystem = "https://fhir.nhs.uk/STU3/CodeSystem/CareConnect-LanguageAbilityMode-1";
+//        String theCode = "RWR";
+//        String theDisplay = "Recived written";
+//        IValidationSupport.CodeValidationResult result = instance.validateCode(THE_CONTEXT, theCodeSystem, theCode, theDisplay);
+//        assertNotNull(result);
+//
+//        theCode = "XXX";
+//        theDisplay = "XXX";
+//        result = instance.validateCode(THE_CONTEXT, theCodeSystem, theCode, theDisplay);
+//        assertNotNull(result);
+        fail("The test needs updating - needs uncommenting and fixing.");
     }
 
     /**

@@ -111,7 +111,7 @@ public class WrapperHelperTest {
     public void testGetMessageHeaderTemplate() throws Exception {
         System.out.println("getMessageHeaderTemplate");
         System.setProperty("uk.nhs.digital.mait.tkwx.spine.message.headertemplate", "src/test/resources/soapwrapper.txt");
-        String expResult = "text\n";
+        String expResult = "text"+System.lineSeparator();
         StringBuilder result = instance.getMessageHeaderTemplate();
         assertEquals(expResult, result.toString());
     }
@@ -125,7 +125,7 @@ public class WrapperHelperTest {
     public void testGetWebServiceHeaderTemplate() throws Exception {
         System.out.println("getWebServiceHeaderTemplate");
         System.setProperty("uk.nhs.digital.mait.tkwx.spine.webservice.headertemplate", "src/test/resources/soapwrapper.txt");
-        String expResult = "text\n";
+        String expResult = "text"+System.lineSeparator();
         StringBuilder result = instance.getWebServiceHeaderTemplate();
         assertEquals(expResult, result.toString());
     }

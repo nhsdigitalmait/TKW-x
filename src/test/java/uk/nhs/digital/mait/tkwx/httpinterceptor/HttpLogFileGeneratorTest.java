@@ -42,6 +42,7 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.ORG_DEFAULT_SYST
  * @author simonfarrow
  */
 public class HttpLogFileGeneratorTest {
+
     private static final String TEST_FILE = "test.txt";
 
     @Rule
@@ -167,7 +168,7 @@ public class HttpLogFileGeneratorTest {
         req.setRemoteAddress(InetAddress.getByName(remoteAddress));
         String savedMessagesDir = "src/test/resources/savedmessages";
         String subDir = "subdir";
-        String expResult = new File(savedMessagesDir).getCanonicalPath() + "/" + subDir + "/" + requestType + "_" + remoteAddress + "_[0-9]+.log";
+        String expResult = new File(savedMessagesDir).getCanonicalPath().replaceAll("/","\\"+ System.getProperty("file.separator")) + "\\" + System.getProperty("file.separator") + subDir + "\\" + System.getProperty("file.separator") + requestType + "_" + remoteAddress + "_[0-9]+.log";
         String result = HttpLogFileGenerator.createLogFile(req, savedMessagesDir, subDir);
         assertTrue(result.matches(expResult));
 
@@ -197,7 +198,7 @@ public class HttpLogFileGeneratorTest {
         String subDir = "subdir";
         String result = HttpLogFileGenerator.createLogFile(fileName, savedMessagesDir, subDir);
 
-        assertTrue(result.matches("^.*/"+savedMessagesDir+"/"+subDir+"/"+TEST_FILE+"_"+"[0-9]{17}\\.log$"));
+        assertTrue(result.matches("^.*"+ "\\" + System.getProperty("file.separator") + savedMessagesDir + "\\" + System.getProperty("file.separator") + subDir + "\\" + System.getProperty("file.separator") + TEST_FILE + "_" + "[0-9]{17}\\.log$"));
 
         new File(TEST_FILE).delete();
 

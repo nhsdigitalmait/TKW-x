@@ -86,6 +86,7 @@ public class HttpTransmitterTest {
         String what = ReconfigureTags.SOURCE_DIRECTORY;
         String value = "newsourcedirectory";
         String expResult = System.getenv("TKWROOT") + "/config/GP_CONNECT/transmitter_source";
+        expResult = expResult.replaceAll("/","\\"+System.getProperty("file.separator"));
         String result = instance.reconfigure(what, value);
         assertEquals(expResult, result);
     }

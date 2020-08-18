@@ -143,7 +143,7 @@ public class MeshMessageTest {
         System.out.println("saveToTempDirectory");
         String content = MESH_MESSAGE;
         String extension = ".dat";
-        String expResult = TEST_MESH_TEMP_FOLDER+"/"+MESH_MESSAGE_FILE;
+        String expResult = (TEST_MESH_TEMP_FOLDER+"/"+MESH_MESSAGE_FILE).replaceAll("/","\\"+System.getProperty("file.separator"));
         setupForParse();
         assertFalse(fileExists(expResult));
         Path result = instance.saveToTempDirectory(content, extension);
@@ -360,6 +360,7 @@ public class MeshMessageTest {
 
     /**
      * Test of closeLog method, of class MeshMessage.
+     * @throws java.io.FileNotFoundException
      */
     @Test
     public void testCloseLog() throws FileNotFoundException {

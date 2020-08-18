@@ -90,6 +90,7 @@ public class SpineToolsTransmitterTest {
         String what = ReconfigureTags.SOURCE_DIRECTORY;
         String value = "new_folder";
         String expResult = System.getenv("TKWROOT") + "/config/SPINE_ITKTrunk_Client/transmitter_source";
+        expResult = expResult.replaceAll("/", "\\" + System.getProperty("file.separator"));
         String result = instance.reconfigure(what, value);
         assertEquals(expResult, result);
     }
@@ -116,7 +117,6 @@ public class SpineToolsTransmitterTest {
         Object param = null;
 
         // returns count of files sent
-        
         // This may depend ofn what files are in the folder currently there were 3
         int expResult = 3;
         ServiceResponse result = instance.execute(param);
@@ -165,8 +165,8 @@ public class SpineToolsTransmitterTest {
     }
 
     /**
-     * Test of execute method, of class SpineToolsTransmitter.
-     * see testExecute_Object
+     * Test of execute method, of class SpineToolsTransmitter. see
+     * testExecute_Object
      */
     @Test
     public void testExecute() throws Exception {

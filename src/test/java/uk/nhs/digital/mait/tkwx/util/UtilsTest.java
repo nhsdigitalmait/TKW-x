@@ -93,9 +93,9 @@ public class UtilsTest {
         // check preservation or not of encoding and PI
         String xmlIn = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><a><b>xxx</b></a>";
         String expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<a>\n"
-                + "   <b>xxx</b>\n"
-                + "</a>\n"
+                + "<a>"+System.lineSeparator() 
+                + "   <b>xxx</b>"+System.lineSeparator()
+                + "</a>"+System.lineSeparator()
                 + "";
         String result = xmlReformat(xmlIn);
         assertEquals(expResult, result);
@@ -103,17 +103,17 @@ public class UtilsTest {
         // check preservation of PI
         xmlIn = "<?xml version=\"1.0\"?><a><b>xxx</b></a>";
         expResult = "<?xml version=\"1.0\"?>"
-                + "<a>\n"
-                + "   <b>xxx</b>\n"
-                + "</a>\n"
+                + "<a>"+System.lineSeparator()
+                + "   <b>xxx</b>"+System.lineSeparator()
+                + "</a>"+System.lineSeparator()
                 + "";
         result = xmlReformat(xmlIn);
         assertEquals(expResult, result);
 
         xmlIn = "<a><b>xxx</b></a>";
-        expResult = "<a>\n"
-                + "   <b>xxx</b>\n"
-                + "</a>\n"
+        expResult = "<a>"+System.lineSeparator()
+                + "   <b>xxx</b>"+System.lineSeparator()
+                + "</a>"+System.lineSeparator()
                 + "";
         result = xmlReformat(xmlIn);
         assertEquals(expResult, result);
@@ -227,7 +227,7 @@ public class UtilsTest {
     @Test
     public void testLoadTemplate_BufferedReader() throws Exception {
         System.out.println("loadTemplate");
-        String expResult = "abc\n123\n";
+        String expResult = "abc"+System.lineSeparator()+"123"+System.lineSeparator();
         BufferedReader br = new BufferedReader(new StringReader(expResult));
         String result = Utils.readFile2String(br);
         assertEquals(expResult, result);
@@ -254,7 +254,7 @@ public class UtilsTest {
     public void testJsonReformat() {
         System.out.println("jsonReformat");
         String json = "{ \"x\" : \"y\"}";
-        String expResult = "\n{\n    \"x\":\"y\"\n}";
+        String expResult = System.lineSeparator()+"{"+System.lineSeparator()+"    \"x\":\"y\""+System.lineSeparator()+"}";
         String result = Utils.jsonReformat(json);
         assertEquals(expResult, result);
     }

@@ -29,7 +29,7 @@ import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.ISOFORMATDATEMASK_NOZ
  */
 public class PropertySetFunctionsTest {
 
-    private static final String JWT_TEMPLATE = System.getenv("TKWROOT")+"/contrib/TKWAutotestManager/tstp/WebServices/host/GP_CONNECT/jwt_templates/gp_connect_jwt_template.fhir3.txt";
+    private static final String JWT_TEMPLATE = "src/test/resources/gp_connect_jwt_template.fhir3.txt";
     
     public PropertySetFunctionsTest() {
     }

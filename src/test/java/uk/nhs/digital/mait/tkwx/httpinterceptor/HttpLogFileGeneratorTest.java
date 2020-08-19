@@ -168,8 +168,11 @@ public class HttpLogFileGeneratorTest {
         req.setRemoteAddress(InetAddress.getByName(remoteAddress));
         String savedMessagesDir = "src/test/resources/savedmessages";
         String subDir = "subdir";
-        String expResult = new File(savedMessagesDir).getCanonicalPath().replaceAll("/","\\"+ System.getProperty("file.separator")) + "\\" + System.getProperty("file.separator") + subDir + "\\" + System.getProperty("file.separator") + requestType + "_" + remoteAddress + "_[0-9]+.log";
+        String expResult = new File(savedMessagesDir).getCanonicalPath();
+        expResult += "/" + subDir + "/" + requestType + "_" + remoteAddress + "_[0-9]+.log";
+        expResult = expResult.replaceAll("\\\\","/");
         String result = HttpLogFileGenerator.createLogFile(req, savedMessagesDir, subDir);
+        result = result.replaceAll("\\\\","/");
         assertTrue(result.matches(expResult));
 
         // this creates the folder but not the log file
@@ -197,8 +200,9 @@ public class HttpLogFileGeneratorTest {
         String savedMessagesDir = "src/test/resources/savedmessages";
         String subDir = "subdir";
         String result = HttpLogFileGenerator.createLogFile(fileName, savedMessagesDir, subDir);
+        result = result.replaceAll("\\\\","/");
 
-        assertTrue(result.matches("^.*"+ "\\" + System.getProperty("file.separator") + savedMessagesDir + "\\" + System.getProperty("file.separator") + subDir + "\\" + System.getProperty("file.separator") + TEST_FILE + "_" + "[0-9]{17}\\.log$"));
+        assertTrue(result.matches("^.*"+ "/" + savedMessagesDir + "/" + subDir + "/" + TEST_FILE + "_" + "[0-9]{17}\\.log$"));
 
         new File(TEST_FILE).delete();
 

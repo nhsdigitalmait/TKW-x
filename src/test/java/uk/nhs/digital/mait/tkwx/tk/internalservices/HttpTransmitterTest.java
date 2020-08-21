@@ -90,8 +90,7 @@ public class HttpTransmitterTest {
         String expResult = System.getenv("TKWROOT") + "/config/GP_CONNECT/transmitter_source";
         expResult = expResult.replaceAll("/","\\"+System.getProperty("file.separator"));
         String result = instance.reconfigure(what, value);
-        result = result.replaceFirst("^[A-Z]:","");
-        assertEquals(expResult, result);
+        assertTrue(expResult.equalsIgnoreCase(result));
     }
 
     /**

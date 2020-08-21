@@ -160,7 +160,7 @@ public class ScheduleTest {
         runTKS();
         // method returns full path so need canaonical name
         String expResult = new File(SCHEDULE_NAME + "/transmitter_source").getCanonicalPath();
-        String result = instance.getTransmitterDirectory().replace('\\', '/');
+        String result = instance.getTransmitterDirectory();
         assertEquals(expResult, result);
     }
 
@@ -175,7 +175,7 @@ public class ScheduleTest {
         runTKS();
         // method returns full path so need canaonical name
         String expResult = new File(SCHEDULE_NAME + "/transmitter_sent_messages").getCanonicalPath();
-        String result = instance.getSentMessagesDirectory().replace('\\', '/');
+        String result = instance.getSentMessagesDirectory();
         assertEquals(expResult, result);
     }
 
@@ -190,7 +190,7 @@ public class ScheduleTest {
         runTKS();
         // method returns full path so need canaonical name
         String expResult = new File(SCHEDULE_NAME + "/simulator_saved_messages").getCanonicalPath();
-        String result = instance.getSimulatorDirectory().replace('\\', '/');
+        String result = instance.getSimulatorDirectory();
         assertEquals(expResult, result);
     }
 

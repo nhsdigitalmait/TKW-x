@@ -56,6 +56,7 @@ public class MeshInterceptHandlerTest {
 
     // from the inf ack template file
     public static final String REQUEST_ID = "__REQUEST_UUID__";
+    private static final String FS = System.getProperty("file.separator");
 
     private MeshInterceptHandler instance;
 
@@ -206,13 +207,13 @@ public class MeshInterceptHandlerTest {
     @Test
     public void testMakeLogFile() throws Exception {
         System.out.println("makeLogFile");
-        String logDirectory = SAVED_MESSAGES_FOLDER;
+        String logDirectory = SAVED_MESSAGES_FOLDER.replaceAll("/","\\"+FS);
         String fromDTS = TEST_MESH_FROM_DTS;
         String requestUuid = "rquuid";
         String result = instance.makeLogFile(logDirectory, fromDTS, requestUuid).toString();
         assertTrue(result.startsWith(logDirectory));
-        assertTrue(result.contains("/" + fromDTS + "/"));
-        assertTrue(result.contains("/" + requestUuid));
+        assertTrue(result.contains(FS + fromDTS + FS));
+        assertTrue(result.contains(FS + requestUuid));
         assertTrue(TRANSACTIONAL_LOGS_IN_FOLDER.exists());
     }
 
@@ -229,8 +230,8 @@ public class MeshInterceptHandlerTest {
         String requestUuid = "rquuid";
         String result = instance.getLogDirString(logDirectory, fromDTS, requestUuid);
         assertTrue(result.startsWith(logDirectory));
-        assertTrue(result.contains("/" + fromDTS + "/"));
-        assertTrue(result.contains("/" + requestUuid));
+        assertTrue(result.contains(FS + fromDTS + FS));
+        assertTrue(result.contains(FS + requestUuid));
     }
 
     /**

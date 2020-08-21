@@ -121,7 +121,7 @@ public class HttpInterceptHandlerTest {
         instance.setToolkit(new HttpTransport());
         String expResult = System.getenv("TKWROOT") + "/config/HTTP_Interceptor/simulator_saved_messages";
         String result = instance.getSavedMessagesDirectory();
-        assertEquals(expResult, result);
+        assertTrue(expResult.equalsIgnoreCase(result));
     }
 
     /**

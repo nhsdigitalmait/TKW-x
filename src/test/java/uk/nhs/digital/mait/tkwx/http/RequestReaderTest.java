@@ -110,7 +110,7 @@ public class RequestReaderTest {
     public void testRun() throws InterruptedException {
         System.out.println("run");
         // give things time to settle down before exiting the test
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         assertTrue(requestAdded);
         // tested by the constructor which invokes start
         System.out.println("[" + bos.toString() + "]");

@@ -89,6 +89,7 @@ public class SenderServiceTest {
         String expResult = System.getenv("TKWROOT") + "/config/GP_CONNECT/transmitter_sent_messages";
         expResult = expResult.replaceAll("/","\\"+System.getProperty("file.separator"));
         String result = instance.reconfigure(what, value);
+        result = result.replaceFirst("^[A-Z]:","");
         assertEquals(expResult, result);
     }
 

@@ -69,6 +69,7 @@ public class HttpTransmitterTest {
 
     /**
      * Test of reconfigure method, of class HttpTransmitter.
+     * @throws java.lang.Exception
      */
     @Test
     public void testReconfigure_Properties() throws Exception {
@@ -79,6 +80,7 @@ public class HttpTransmitterTest {
 
     /**
      * Test of reconfigure method, of class HttpTransmitter.
+     * @throws java.lang.Exception
      */
     @Test
     public void testReconfigure_String_String() throws Exception {
@@ -88,11 +90,13 @@ public class HttpTransmitterTest {
         String expResult = System.getenv("TKWROOT") + "/config/GP_CONNECT/transmitter_source";
         expResult = expResult.replaceAll("/","\\"+System.getProperty("file.separator"));
         String result = instance.reconfigure(what, value);
+        result = result.replaceFirst("^[A-Z]:","");
         assertEquals(expResult, result);
     }
 
     /**
      * Test of boot method, of class HttpTransmitter.
+     * @throws java.lang.Exception
      */
     @Test
     public void testBoot() throws Exception {
@@ -101,6 +105,7 @@ public class HttpTransmitterTest {
 
     /**
      * Test of execute method, of class HttpTransmitter.
+     * @throws java.lang.Exception
      */
     @Test
     public void testExecute_Object() throws Exception {
@@ -114,6 +119,7 @@ public class HttpTransmitterTest {
 
     /**
      * Test of execute method, of class HttpTransmitter.
+     * @throws java.lang.Exception
      */
     @Test
     public void testExecute_String_String() throws Exception {
@@ -127,6 +133,7 @@ public class HttpTransmitterTest {
 
     /**
      * Test of execute method, of class HttpTransmitter.
+     * @throws java.lang.Exception
      */
     @Test
     public void testExecute_String_Object() throws Exception {
@@ -150,8 +157,8 @@ public class HttpTransmitterTest {
     }
 
     /**
-     * Test of execute method, of class HttpTransmitter.
-     * see testExecute_String_Object
+     * Test of execute method, of class HttpTransmitter.see testExecute_String_Object
+     * @throws java.lang.Exception
      */
     @Test
     public void testExecute() throws Exception {

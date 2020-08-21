@@ -105,10 +105,6 @@ public class RequestBodyExtractorTest {
         expResult = "4317";
         result = instance.httpRequestHeaders.getHttpHeaderValue(CONTENT_LENGTH_HEADER);
         assertEquals(expResult, result);
-
-        expResult = "2887"; // changed after readFile2String uses os dependent line separator
-        result = instance.httpRequestHeaders.getHttpHeaderValue("X-was-Content-Length");
-        assertEquals(expResult, result);
    }
 
     /**

@@ -213,7 +213,7 @@ public class UtilsTest {
     @Test
     public void testLoadTemplate_InputStream() throws Exception {
         System.out.println("loadTemplate");
-        String expResult = "abc\n123\n";
+        String expResult = "abc"+System.lineSeparator()+"123"+System.lineSeparator();
         InputStream is = new ByteArrayInputStream(expResult.getBytes());
         String result = Utils.readFile2String(is);
         assertEquals(expResult, result);

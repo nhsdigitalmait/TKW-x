@@ -57,6 +57,9 @@ public class HapiAssetCache {
     private final HashMap<String, StructureDefinition> StructureDefinitionCache = new HashMap<>();
     private final HashMap<String, ValueSet> valueSetCache = new HashMap<>();
     private final HashMap<String, CodeSystem> codeSystemCache = new HashMap<>();
+    private final HashMap<String, IBaseResource> StructureDefinitionIBaseResourceCache = new HashMap<>();
+    private final HashMap<String, IBaseResource> valueSetIBaseResourceCache = new HashMap<>();
+    private final HashMap<String, IBaseResource> codeSystemIBaseResourceCache = new HashMap<>();
     private final HashMap<String, CapabilityStatement> capabilityStatementCache = new HashMap<>();
     private final HashMap<String, ConceptMap> conceptMapCache = new HashMap<>();
     private final HashMap<String, OperationDefinition> operationDefinitionCache = new HashMap<>();
@@ -86,6 +89,9 @@ public class HapiAssetCache {
     public HashMap<String, StructureDefinition> getStructureDefinitions() {
         return StructureDefinitionCache;
     }
+    public HashMap<String, IBaseResource> getStructureDefinitionIBaseResourceCache() {
+        return StructureDefinitionIBaseResourceCache;
+    }
 
     public HashMap<String, IBaseResource> getResourceCache() {
         return resourceCache;
@@ -95,8 +101,15 @@ public class HapiAssetCache {
         return valueSetCache;
     }
 
+    public HashMap<String, IBaseResource> getValueSetIBaseResourceCache() {
+        return valueSetIBaseResourceCache;
+    }
+
     public HashMap<String, CodeSystem> getCodeSystemCache() {
         return codeSystemCache;
+    }
+    public HashMap<String, IBaseResource> getCodeSystemIBaseResourceCache() {
+        return codeSystemIBaseResourceCache;
     }
 
     public HashMap<String, CapabilityStatement> getCapabilityStatementCache() {
@@ -223,6 +236,7 @@ public class HapiAssetCache {
             if (resource instanceof StructureDefinition) {
                 url = ((StructureDefinition) resource).getUrl();
                 StructureDefinitionCache.put(url, (StructureDefinition) resource);
+                StructureDefinitionIBaseResourceCache.put(url, resource);
 //                System.out.println("create StructureDefinition url= " + url);
             } else if (resource instanceof ValueSet) {
                 url = ((ValueSet) resource).getUrl();
@@ -233,11 +247,13 @@ public class HapiAssetCache {
 ////                    valueSetCache.put(id, ((ValueSet) resource));
 //                }
 //                System.out.println("create ValueSet url= " + url);
-                valueSetCache.put(url, ((ValueSet) resource));
+                valueSetCache.put(url, (ValueSet) resource);
+                valueSetIBaseResourceCache.put(url, resource);
             } else if (resource instanceof CodeSystem) {
                 url = ((CodeSystem) resource).getUrl();
 //                System.out.println("create CodeSystem url= " + url);
                 codeSystemCache.put(url, (CodeSystem) resource);
+                codeSystemIBaseResourceCache.put(url, resource);
             } else if (resource instanceof ConceptMap) {
                 url = ((ConceptMap) resource).getUrl();
 //                System.out.println("create ConceptType url= " + url);

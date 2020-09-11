@@ -23,22 +23,32 @@ import ca.uhn.fhir.validation.SchemaBaseValidator;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationResult;
 import ca.uhn.fhir.validation.schematron.SchematronBaseValidator;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.hl7.fhir.dstu3.hapi.validation.DefaultProfileValidationSupport;
-import org.hl7.fhir.dstu3.hapi.validation.FhirInstanceValidator;
-import org.hl7.fhir.dstu3.hapi.validation.ValidationSupportChain;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
-import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
+import org.hl7.fhir.common.hapi.validation.support.PrePopulatedValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
+import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
+import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService;
+import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.RemoteTerminologyServiceValidationSupport;
+import org.hl7.fhir.convertors.VersionConvertor_30_40;
+import org.hl7.fhir.dstu2016may.model.codesystems.V3RoleCode;
+import org.hl7.fhir.dstu3.model.CodeSystem;
+import org.hl7.fhir.dstu3.model.StructureDefinition;
+import org.hl7.fhir.dstu3.model.ValueSet;
 
 /**
  *
@@ -140,7 +150,7 @@ public class HapiFhirValidatorEngine {
                     } else if (pVersion.endsWith("package.json")) {
                         //assume it's an npm package.json
                         JsonObject jsonObject = new JsonParser().parse(Utils.readFile2String(pVersion)).getAsJsonObject();
-                        profileVersion = jsonObject.get("name").getAsString() + " " +jsonObject.get("version").getAsString();
+                        profileVersion = jsonObject.get("name").getAsString() + " " + jsonObject.get("version").getAsString();
                         if (profileVersion == null || profileVersion.trim().equals("")) {
                             profileVersion = "NHS FHIR Profile Version number not configured properly in " + pVersion
                                     + ". Make sure it is a valid package.json file ";
@@ -195,19 +205,56 @@ public class HapiFhirValidatorEngine {
                     System.out.println("No HAPI FHIR assets read in");
                 }
             }
-            CachingIValidationSupport pvs = new CachingIValidationSupport();
-            pvs.setProfileCache(p);
-            FhirInstanceValidator fiv = new FhirInstanceValidator(pvs);
-            /*
-        * ValidationSupportChain strings multiple instances of IValidationSupport together. The
-        * code below is useful because it means that when the validator wants to load a
-        * StructureDefinition or a ValueSet, it will first use DefaultProfileValidationSupport,
-        * which loads the default HL7 versions. Any StructureDefinitions which are not found in
-        * the built-in set are delegated to your custom implementation.
-             */
-            ValidationSupportChain support = new ValidationSupportChain(new DefaultProfileValidationSupport(), pvs);
-            fiv.setValidationSupport(support);
-            fiv.setNoTerminologyChecks(noTerminologyChecks);
+
+            ValidationSupportChain supportChain = new ValidationSupportChain();
+
+            DefaultProfileValidationSupport defaultProfileValidationSupport = new DefaultProfileValidationSupport(context);
+            supportChain.addValidationSupport(defaultProfileValidationSupport);
+            InMemoryTerminologyServerValidationSupport inMemoryTerminologyServerValidationSupport = new InMemoryTerminologyServerValidationSupport(context);
+            supportChain.addValidationSupport(inMemoryTerminologyServerValidationSupport);
+
+// USING NEW PREPOPULATED            
+//CHHOSE EITHER VANILLA HAPI which loads the reources in but returns null            
+            PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(context, p.getStructureDefinitionIBaseResourceCache(), p.getValueSetIBaseResourceCache(), p.getCodeSystemIBaseResourceCache());
+//OR MINE WHICH ESSENTIALLY DOES THE SAME AS THE CACHING SUPPORT            
+//            PrePopulatedValidationSupportWithCodedSystems prePopulatedSupport = new PrePopulatedValidationSupportWithCodedSystems();
+
+//            HashMap<String, StructureDefinition> sd = p.getStructureDefinitions();
+//            for (StructureDefinition value : sd.values()) {
+//                prePopulatedSupport.addStructureDefinition(value);
+//            }
+//
+//            HashMap<String, CodeSystem> cs = p.getCodeSystemCache();
+//            for (CodeSystem value : cs.values()) {
+//                prePopulatedSupport.addCodeSystem(value);
+//            }
+//
+//            HashMap<String, ValueSet> vs = p.getValueSetCache();
+//            for (ValueSet value : vs.values()) {
+//                org.hl7.fhir.r4.model.Resource res = VersionConvertor_30_40.convertResource(value, true);
+//                 org.hl7.fhir.r4.model.ValueSet r4val = (org.hl7.fhir.r4.model.ValueSet)res;
+//                prePopulatedSupport.addValueSet(value);
+//            }
+            supportChain.addValidationSupport(prePopulatedSupport);
+// USING NEW PREPOPULATED END 
+// USING CACHINGIALIDATIONSUPPORT
+//            CachingIValidationSupport caching = new CachingIValidationSupport();
+//            caching.setProfileCache(p);
+//            ValidationSupportChain supportChain = new ValidationSupportChain(defaultProfileValidationSupport, caching);
+// USING CACHINGIALIDATIONSUPPORT END
+
+            CommonCodeSystemsTerminologyService codeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(context);
+            supportChain.addValidationSupport(codeSystemsTerminologyService);
+
+// Create a module that uses a remote terminology service
+//            RemoteTerminologyServiceValidationSupport remoteTermSvc = new RemoteTerminologyServiceValidationSupport(context);
+//            remoteTermSvc.setBaseUrl("http://ontoserver.csiro.au/stu3");
+//            supportChain.addValidationSupport(remoteTermSvc);
+
+            CachingValidationSupport cachingValidationSupport = new CachingValidationSupport(supportChain);
+
+            FhirInstanceValidator fhirInstanceValidator = new FhirInstanceValidator(cachingValidationSupport);
+//            fhirInstanceValidator.setNoTerminologyChecks(noTerminologyChecks);
 
             xmlParser = context.newXmlParser();
             jsonParser = context.newJsonParser();
@@ -228,16 +275,16 @@ public class HapiFhirValidatorEngine {
             // you might want to consider keeping these modules around as long-term
             // objects: they parse and then store schemas, which can be an expensive
             // operation.
-            if (schemaValidate) {
-                IValidatorModule module1 = new SchemaBaseValidator(context);
-                fhirValidator.registerValidatorModule(module1);
-            }
-            if (schematronValidate) {
-                IValidatorModule module2 = new SchematronBaseValidator(context);
-                fhirValidator.registerValidatorModule(module2);
-            }
+//            if (schemaValidate) {
+//                IValidatorModule module1 = new SchemaBaseValidator(context);
+//                fhirValidator.registerValidatorModule(module1);
+//            }
+//            if (schematronValidate) {
+//                IValidatorModule module2 = new SchematronBaseValidator(context);
+//                fhirValidator.registerValidatorModule(module2);
+//            }
 
-            fhirValidator.registerValidatorModule(fiv);
+            fhirValidator.registerValidatorModule(fhirInstanceValidator);
         } catch (Exception e) {
             Logger log = Logger.getInstance();
             log.log("Exception " + e.getMessage());

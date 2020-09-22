@@ -19,12 +19,14 @@ import static com.helger.commons.http.CHttpHeader.CONTENT_LENGTH;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.Properties;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -39,8 +41,11 @@ import uk.nhs.digital.mait.tkwx.tk.boot.HttpInterceptorMode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import uk.nhs.digital.mait.tkwx.ProcessStreamDumper;
+import static uk.nhs.digital.mait.tkwx.httpinterceptor.interceptor.HttpInterceptHandlerTest.TEMP_PROPERTIES_FILE;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.FORWARDINGPORTPROPERTY;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
 import static uk.nhs.digital.mait.tkwx.util.Utils.folderExists;
+import static uk.nhs.digital.mait.tkwx.util.Utils.readPropertiesFile;
 
 /**
  *
@@ -57,6 +62,7 @@ public class HttpInterceptWorkerTest {
     private static final String ENDPOINT_FOLDER = TESTSAVED_MESSAGES_FOLDER + "/127.0.0.1/";
     private HttpRequest request;
 
+    private static String simulatorListenPortNo;
     private static final String INTERCEPTOR_LOG = "src/test/resources/interceptor.log";
 
     public HttpInterceptWorkerTest() {
@@ -65,18 +71,36 @@ public class HttpInterceptWorkerTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         // start an GP_CONNECT host responder
+        String simulatorPropsPath = System.getenv("TKWROOT") + "/config/GP_CONNECT/tkw-x.properties";
+        Properties simulatorProperties = new Properties();
+        readPropertiesFile(simulatorPropsPath, simulatorProperties);
+        simulatorListenPortNo = simulatorProperties.getProperty("tks.HttpTransport.listenport");
+
         ProcessBuilder pb = new ProcessBuilder();
-        pb.command("java", "-jar", System.getenv("TKWROOT") + "/TKW-x.jar", "-simulator", System.getenv("TKWROOT") + "/config/GP_CONNECT/tkw-x.properties");
+        pb.command("java", "-jar", System.getenv("TKWROOT") + "/TKW-x.jar", "-simulator", simulatorPropsPath);
         process = pb.start();
         ProcessStreamDumper.dumpProcessStreams(process);
 
-        ToolkitSimulator tks = new ToolkitSimulator(System.getenv("TKWROOT") + "/config/HTTP_Interceptor/tkw-x.properties");
+        String interceptorPropsPath = System.getenv("TKWROOT") + "/config/HTTP_Interceptor/tkw-x.properties";
+        Properties interceptorProperties = new Properties();
+        readPropertiesFile(interceptorPropsPath, interceptorProperties);
+        // set the interceptor to forward to whichever port the responder is listening on
+        interceptorProperties.setProperty(FORWARDINGPORTPROPERTY, simulatorListenPortNo);
+
+        try ( FileWriter fw = new FileWriter(TEMP_PROPERTIES_FILE)) {
+            for (Object key : interceptorProperties.keySet()) {
+                fw.write(key.toString() + " " + interceptorProperties.getProperty((String) key) + "\r\n");
+            }
+        }
+
+        ToolkitSimulator tks = new ToolkitSimulator(TEMP_PROPERTIES_FILE);
         new HttpInterceptorMode().init(tks);
     }
 
     @AfterClass
     public static void tearDownClass() {
         process.destroy();
+        new File(TEMP_PROPERTIES_FILE).delete();
     }
 
     @Before
@@ -94,7 +118,7 @@ public class HttpInterceptWorkerTest {
         request.setHeader("ssp-from", "from");
         request.setHeader("ssp-to", "to");
 
-        request.setHeader("host", "localhost:4848");
+        request.setHeader("host", "localhost:"+simulatorListenPortNo);
         request.setRequestType("POST");
         request.setRequestContext("/gpconnect-demonstrator/v0/fhir/Patient/$gpc.getcarerecord");
         request.setRemoteAddress(InetAddress.getByName("127.0.0.1"));
@@ -140,7 +164,7 @@ public class HttpInterceptWorkerTest {
     @Test
     public void testGetForwardingPort() {
         System.out.println("getForwardingPort");
-        int expResult = 4848;
+        int expResult = Integer.parseInt(simulatorListenPortNo);
         int result = instance.getForwardingPort();
         assertEquals(expResult, result);
     }
@@ -158,7 +182,7 @@ public class HttpInterceptWorkerTest {
         instance.process(request, resp);
         int timeoutCount = 0;
         // wait for worker thread to complete. This takes quite a long time
-        while ( Thread.activeCount() > 4 && ++timeoutCount < 12) {
+        while (Thread.activeCount() > 4 && ++timeoutCount < 12) {
             Thread.sleep(1000);
         }
 

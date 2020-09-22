@@ -59,7 +59,7 @@ public class HttpInterceptHandlerTest {
     private static final String ENDPOINT_MESSAGES_FOLDER = TESTSAVED_MESSAGES_FOLDER + "/SIAB-Client-200/";
     private static final String ENDPOINT_REPORTS_FOLDER = VALIDATOR_REPORTS_FOLDER + "/SIAB-Client-200/";
 
-    private static final String TEMP_PROPERTIES_FILE = "src/test/resources/temp.properties";
+    public static final String TEMP_PROPERTIES_FILE = "src/test/resources/temp.properties";
 
     public HttpInterceptHandlerTest() {
     }

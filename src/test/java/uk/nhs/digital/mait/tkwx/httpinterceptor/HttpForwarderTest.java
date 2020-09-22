@@ -20,23 +20,26 @@ import static com.helger.commons.http.CHttpHeader.CONTENT_LENGTH;
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.http.HttpResponse;
 import uk.nhs.digital.mait.tkwx.httpinterceptor.interceptor.HttpInterceptHandler;
-import uk.nhs.digital.mait.tkwx.tk.GeneralConstants;
 import uk.nhs.digital.mait.tkwx.tk.boot.HttpInterceptorMode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import uk.nhs.digital.mait.tkwx.ProcessStreamDumper;
+import static uk.nhs.digital.mait.tkwx.httpinterceptor.interceptor.HttpInterceptHandlerTest.TEMP_PROPERTIES_FILE;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.SSP_INTERACTION_ID_HEADER;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.FORWARDINGPORTPROPERTY;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
 import static uk.nhs.digital.mait.tkwx.util.Utils.fileExists;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readPropertiesFile;
@@ -51,7 +54,7 @@ public class HttpForwarderTest {
 
     private HttpForwarder instance;
     private OutputStream ostream;
-    private static String interceptorPortNo;
+    private static String interceptorListenPortNo;
 
     private static final String INTERCEPTOR_LOG = "src/test/resources/interceptor.log";
     private static final String NNN = "9658218873";
@@ -62,31 +65,44 @@ public class HttpForwarderTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         // start a GP Connect host responder on 4848
+        String simulatorPropsPath = System.getenv("TKWROOT") + "/config/GP_CONNECT/tkw-x.properties";
+        Properties simulatorProperties = new Properties();
+        readPropertiesFile(simulatorPropsPath, simulatorProperties);
+        String simulatorListenPortNo = simulatorProperties.getProperty("tks.HttpTransport.listenport");
+
         ProcessBuilder pb = new ProcessBuilder();
-        pb.command("java", "-jar", System.getenv("TKWROOT") + "/TKW-x.jar", "-simulator", System.getenv("TKWROOT") + "/config/GP_CONNECT/tkw-x.properties");
+        pb.command("java", "-jar", System.getenv("TKWROOT") + "/TKW-x.jar", "-simulator", simulatorPropsPath);
         process = pb.start();
         ProcessStreamDumper.dumpProcessStreams(process);
-        
-        // setup the interceptor
-        String propsPath = System.getenv("TKWROOT") + "/config/HTTP_Interceptor/tkw-x.properties";
-        Properties properties = new Properties();
-        readPropertiesFile(propsPath, properties);
-        interceptorPortNo = properties.getProperty("tks.HttpTransport.listenport");
 
-        ToolkitSimulator tks = new ToolkitSimulator(propsPath);
+        // setup the interceptor
+        String interceptorPropsPath = System.getenv("TKWROOT") + "/config/HTTP_Interceptor/tkw-x.properties";
+        Properties interceptorProperties = new Properties();
+        readPropertiesFile(interceptorPropsPath, interceptorProperties);
+        interceptorListenPortNo = interceptorProperties.getProperty("tks.HttpTransport.listenport");
+        // set the interceptor to forward to whichever port the responder is listening on
+        interceptorProperties.setProperty(FORWARDINGPORTPROPERTY, simulatorListenPortNo);
+        try ( FileWriter fw = new FileWriter(TEMP_PROPERTIES_FILE)) {
+            for (Object key : interceptorProperties.keySet()) {
+                fw.write(key.toString() + " " + interceptorProperties.getProperty((String) key) + "\r\n");
+            }
+        }
+
+        ToolkitSimulator tks = new ToolkitSimulator(TEMP_PROPERTIES_FILE);
         new HttpInterceptorMode().init(tks);
     }
 
     @AfterClass
     public static void tearDownClass() {
         process.destroy();
+        new File(TEMP_PROPERTIES_FILE).delete();
     }
 
     @Before
     public void setUp() throws Exception {
         HttpInterceptHandler httpInterceptHandler = new HttpInterceptHandler();
         HttpRequest req = new HttpRequest("id");
-        req.setHeader("host", "localhost:"+interceptorPortNo);
+        req.setHeader("host", "localhost:" + interceptorListenPortNo);
         HttpInterceptWorker httpInterceptWorker = new HttpInterceptWorker(req, httpInterceptHandler);
         httpInterceptWorker.logfile = new LoggingFileOutputStream(new File(INTERCEPTOR_LOG));
         instance = new HttpForwarder(httpInterceptWorker);
@@ -100,17 +116,18 @@ public class HttpForwarderTest {
     }
 
     /**
-     * Test of forward method, of class HttpForwarder.
-     * expects a correspondence simulator to be running at 4848
+     * Test of forward method, of class HttpForwarder. expects a correspondence
+     * simulator to be running at 4848
+     *
      * @throws java.lang.Exception
      */
     @Test
     public void testForward() throws Exception {
         System.out.println("forward");
         String message = Utils.readFile2String("src/test/resources/get_structured_record.xml");
-        message = message.replaceAll("__NNN__",NNN);
-        message = message.replaceAll("__SECTION__","SUM");
-        
+        message = message.replaceAll("__NNN__", NNN);
+        message = message.replaceAll("__SECTION__", "SUM");
+
         byte[] buf = message.getBytes();
 
         HttpResponse resp = new HttpResponse(ostream);
@@ -121,22 +138,22 @@ public class HttpForwarderTest {
         req.setHeader("ssp-traceid", "traceid");
         req.setHeader("host", "localhost");
         AuthorisationGenerator authorisationGenerator
-           = new AuthorisationGenerator("src/test/resources/gp_connect_jwt_template.fhir3.txt");
-        req.setHeader("Authorization", "Bearer "+ authorisationGenerator.getAuthorisationString("pid", NNN, "secret",true,false));
-  
+                = new AuthorisationGenerator("src/test/resources/gp_connect_jwt_template.fhir3.txt");
+        req.setHeader("Authorization", "Bearer " + authorisationGenerator.getAuthorisationString("pid", NNN, "secret", true, false));
+
         req.setRequestType("POST");
         req.setRequestContext("/gpconnect-demonstrator/v1/fhir/Patient/$gpc.getstructuredrecord");
         req.setProtocol("HTTP/1.1");
-        req.setHeader("Content-type","application/fhir+xml");
+        req.setHeader("Content-type", "application/fhir+xml");
         // TODO why does this line not work?
         //req.setContentLength(buf.length);
-        req.setHeader(CONTENT_LENGTH,""+buf.length);
+        req.setHeader(CONTENT_LENGTH, "" + buf.length);
         instance.forward(buf, resp, req);
         instance.join();
         String response = new String(resp.getHttpBuffer());
         System.out.println(response);
         assertTrue(response.contains("OperationOutcome"));
-        
+
         // check the interceptor log file has been created
         assertTrue(fileExists(INTERCEPTOR_LOG));
     }

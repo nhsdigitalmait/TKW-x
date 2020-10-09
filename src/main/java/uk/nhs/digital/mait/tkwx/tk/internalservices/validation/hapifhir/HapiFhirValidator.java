@@ -274,8 +274,8 @@ public class HapiFhirValidator
             }
 
             vsb.append("</tbody></table>");
-            vsb.append("  <script>"
-                    + "$(\"input[name='severity" + uuid + "']\").on('click', function() {\n"
+            vsb.append("  <script>\n"
+                    + "function refresh(){"
                     + "  var selected = [];\n"
                     + "  $('.data" + uuid + " input:checked').each(function() {\n"
                     + "    selected.push($(this).val());\n"
@@ -311,18 +311,34 @@ public class HapiFhirValidator
                     + "      row.hide();\n"
                     + "      });\n"
                     + "  }\n"
-                    + "});");
+                    + "}\n"
+                    + "$(\"input[name='severity" + uuid + "']\").on('click', function() {\n"
+                    + " refresh();\n"
+                    + "});\n"
+            );
             if (hfvEngine.getMinimumReportLevel() > 0) {
-                vsb.append("$(\"input[id='info'], select.filter\").click();");
+                vsb.append("$(\"input[id='info'], select.filter\").click();\n");
             }
             if (hfvEngine.getMinimumReportLevel() > 1) {
-                vsb.append("$(\"input[id='warn'], select.filter\").click();");
+                vsb.append("$(\"input[id='warn'], select.filter\").click();\n");
             }
             if (hfvEngine.getMinimumReportLevel() > 2) {
-                vsb.append("$(\"input[id='err'], select.filter\").click();");
+                vsb.append("$(\"input[id='err'], select.filter\").click();\n");
             }
             if (hfvEngine.getMinimumReportLevel() > 3) {
-                vsb.append("$(\"input[id='fat'], select.filter\").click();");
+                vsb.append("$(\"input[id='fat'], select.filter\").click();\n");
+            }
+            if (!informationFilter.isEmpty()) {
+                vsb.append("$(\"input[name='INFORMATIONmessage']\").on('click', function() {refresh()});\n");
+            }
+            if (!warningFilter.isEmpty()) {
+                vsb.append("$(\"input[name='WARNINGmessage']\").on('click', function() {refresh()});\n");
+            }
+            if (!errorFilter.isEmpty()) {
+                vsb.append("$(\"input[name='ERRORmessage']\").on('click', function() {refresh()});\n");
+            }
+            if (!fatalFilter.isEmpty()) {
+                vsb.append("$(\"input[name='FATALmessage']\").on('click', function() {refresh()});\n");
             }
             vsb.append("</script>");
 

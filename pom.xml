@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     
     <properties>
-        <hapi.version>3.7.0</hapi.version>
+        <hapi.version>5.1.0</hapi.version>
         <internal_services_root>src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices</internal_services_root>
         
         <tkwx-rules-path>${internal_services_root}/rules/parser</tkwx-rules-path>
@@ -47,7 +47,7 @@
                     <reuseForks>false</reuseForks>
                     
                     <!-- set this to true for a development cycle that is shorter than war and peace -->
-                    <skipTests>false</skipTests>
+                    <skipTests>true</skipTests>
                     
                 </configuration> 
             </plugin> 
@@ -250,6 +250,11 @@
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-structures-r5</artifactId>
+            <version>${hapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-base</artifactId>
             <version>${hapi.version}</version>
             <type>jar</type>
@@ -267,6 +272,12 @@
             <artifactId>hapi-fhir-validation</artifactId>
             <version>${hapi.version}</version>
             <type>jar</type>
+        </dependency>  
+       <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-client</artifactId>
+            <version>${hapi.version}</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
@@ -281,6 +292,11 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-validation-resources-r4</artifactId>
+            <version>${hapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-validation-resources-r5</artifactId>
             <version>${hapi.version}</version>
         </dependency>
 
@@ -400,6 +416,28 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- API, java.xml.bind module -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <!-- Runtime, com.sun.xml.bind module -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.2</version>
+        </dependency>
     </dependencies>
-    <name>tkw-x</name>
+    <name>tkw-x-hapi5</name>
+<!--<repositories>
+    <repository>
+        <id>oss-snapshots</id>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
+</repositories>-->
 </project>

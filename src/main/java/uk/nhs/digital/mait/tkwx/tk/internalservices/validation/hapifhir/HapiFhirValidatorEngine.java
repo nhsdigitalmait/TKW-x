@@ -44,6 +44,7 @@ import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService;
 import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.RemoteTerminologyServiceValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.SnapshotGeneratingValidationSupport;
 import org.hl7.fhir.convertors.VersionConvertor_30_40;
 import org.hl7.fhir.dstu2016may.model.codesystems.V3RoleCode;
 import org.hl7.fhir.dstu3.model.CodeSystem;
@@ -210,8 +211,6 @@ public class HapiFhirValidatorEngine {
 
             DefaultProfileValidationSupport defaultProfileValidationSupport = new DefaultProfileValidationSupport(context);
             supportChain.addValidationSupport(defaultProfileValidationSupport);
-            InMemoryTerminologyServerValidationSupport inMemoryTerminologyServerValidationSupport = new InMemoryTerminologyServerValidationSupport(context);
-            supportChain.addValidationSupport(inMemoryTerminologyServerValidationSupport);
 
 // USING NEW PREPOPULATED            
 //CHHOSE EITHER VANILLA HAPI which loads the reources in but returns null            
@@ -243,12 +242,16 @@ public class HapiFhirValidatorEngine {
 //            ValidationSupportChain supportChain = new ValidationSupportChain(defaultProfileValidationSupport, caching);
 // USING CACHINGIALIDATIONSUPPORT END
 
+            InMemoryTerminologyServerValidationSupport inMemoryTerminologyServerValidationSupport = new InMemoryTerminologyServerValidationSupport(context);
+            supportChain.addValidationSupport(inMemoryTerminologyServerValidationSupport);
             CommonCodeSystemsTerminologyService codeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(context);
             supportChain.addValidationSupport(codeSystemsTerminologyService);
+//            SnapshotGeneratingValidationSupport generatingValidationSupport = new SnapshotGeneratingValidationSupport(context);
+//            supportChain.addValidationSupport(generatingValidationSupport);
 
 // Create a module that uses a remote terminology service
 //            RemoteTerminologyServiceValidationSupport remoteTermSvc = new RemoteTerminologyServiceValidationSupport(context);
-//            remoteTermSvc.setBaseUrl("http://ontoserver.csiro.au/stu3");
+//            remoteTermSvc.setBaseUrl("https://stu3.ontoserver.csiro.au/fhir");
 //            supportChain.addValidationSupport(remoteTermSvc);
 
             CachingValidationSupport cachingValidationSupport = new CachingValidationSupport(supportChain);

@@ -183,4 +183,10 @@ public class CustomHapiFhirErrorHandler implements IParserErrorHandler {
         }
         warningMessages.add(hapiMessage);
     }
+
+    @Override
+    public void extensionContainsValueAndNestedExtensions(IParseLocation theLocation) {
+        System.out.println("ARRRRGGGH FIX THE METHOD IN CustomHapiFhirErrorHandler extensionContainsValueAndNestedExtensions");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

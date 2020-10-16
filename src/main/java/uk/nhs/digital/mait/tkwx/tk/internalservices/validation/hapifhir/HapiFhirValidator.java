@@ -47,6 +47,8 @@ public class HapiFhirValidator
     private HapiFhirValidatorEngine hfvEngine;
     private String hapiFhirValidatorInstanceName = null;
     private final HapiFhirValidatorEngineOrchestrator orchestrator = HapiFhirValidatorEngineOrchestrator.getInstance();
+    // adding this variable for to deal with multiple report issue.
+    private int ReportNumber;
 
     @Override
     public void initialise() throws Exception {
@@ -59,6 +61,7 @@ public class HapiFhirValidator
             HapiFhirInstancePath = HAPIFHIR;
         }
         config = Configurator.getConfigurator();
+        ReportNumber= 0;
         int i = 0;
         while (true) {
             String sp = config.getConfiguration(HapiFhirInstancePath + FILTER + i);
@@ -111,7 +114,8 @@ public class HapiFhirValidator
 
         ValidationReport report[] = new ValidationReport[1];
         String x = null;
-        StringBuilder vsb = new StringBuilder();
+        StringBuilder vsb = new StringBuilder();        
+        ++ReportNumber;
         try {
 
             ValidationResult result = hfvEngine.validate(o);
@@ -148,7 +152,7 @@ public class HapiFhirValidator
             }
             for (FilterTotals ft : informationFilter) {
                 vsb.append("<li>"
-                        + "<input type=\"checkbox\" class=\"subOption\" name=\"INFORMATIONmessage\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
+                        + "<input type=\"checkbox\" class=\"subOption\" name=\"INFORMATIONmessage"+Integer.toString(ReportNumber)+"\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
                         + "</li>");
             }
             if (!informationFilter.isEmpty()) {
@@ -162,7 +166,7 @@ public class HapiFhirValidator
             }
             for (FilterTotals ft : warningFilter) {
                 vsb.append("<li>"
-                        + "<input type=\"checkbox\" class=\"subOption\" name=\"WARNINGmessage\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
+                        + "<input type=\"checkbox\" class=\"subOption\" name=\"WARNINGmessage"+Integer.toString(ReportNumber)+"\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
                         + "</li>");
             }
             if (!warningFilter.isEmpty()) {
@@ -176,7 +180,7 @@ public class HapiFhirValidator
             }
             for (FilterTotals ft : errorFilter) {
                 vsb.append("<li>"
-                        + "<input type=\"checkbox\" class=\"subOption\" name=\"ERRORmessage\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
+                        + "<input type=\"checkbox\" class=\"subOption\" name=\"ERRORmessage"+Integer.toString(ReportNumber)+"\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
                         + "</li>");
             }
             if (!errorFilter.isEmpty()) {
@@ -190,7 +194,7 @@ public class HapiFhirValidator
             }
             for (FilterTotals ft : fatalFilter) {
                 vsb.append("<li>"
-                        + "<input type=\"checkbox\" class=\"subOption\" name=\"FATALmessage\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
+                        + "<input type=\"checkbox\" class=\"subOption\" name=\"FATALmessage"+Integer.toString(ReportNumber)+"\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
                         + "</li>");
             }
             if (!fatalFilter.isEmpty()) {
@@ -274,8 +278,8 @@ public class HapiFhirValidator
             }
 
             vsb.append("</tbody></table>");
-            vsb.append("  <script>"
-                    + "$(\"input[name='severity" + uuid + "']\").on('click', function() {\n"
+            vsb.append("  <script>\n"
+                    + "function refresh"+Integer.toString(ReportNumber)+"(){"
                     + "  var selected = [];\n"
                     + "  $('.data" + uuid + " input:checked').each(function() {\n"
                     + "    selected.push($(this).val());\n"
@@ -287,7 +291,7 @@ public class HapiFhirValidator
                     + "        var sevVal = $(this).val();\n"
                     + "        if (row.find('.Severity').html().indexOf(sevVal) >= 0) {\n"
                     + "          show = true;\n"
-                    + "          $(\"input[name='\" + sevVal + \"message']:checked\").each(function() {\n"
+                    + "          $(\"input[name='\" + sevVal + \"message"+Integer.toString(ReportNumber)+"']:checked\").each(function() {\n"
                     + "            var messVal = $(this).val();\n"
                     + "            if (row.find('.Message').html().indexOf(messVal) >= 0) {\n"
                     + "              innerShow = false;\n"
@@ -311,18 +315,34 @@ public class HapiFhirValidator
                     + "      row.hide();\n"
                     + "      });\n"
                     + "  }\n"
-                    + "});");
+                    + "}\n"
+                    + "$(\"input[name='severity" + uuid + "']\").on('click', function() {\n"
+                    + " refresh"+Integer.toString(ReportNumber)+"();\n"
+                    + "});\n"
+            );
             if (hfvEngine.getMinimumReportLevel() > 0) {
-                vsb.append("$(\"input[id='info'], select.filter\").click();");
+                vsb.append("$(\"input[id='info'], select.filter\").click();\n");
             }
             if (hfvEngine.getMinimumReportLevel() > 1) {
-                vsb.append("$(\"input[id='warn'], select.filter\").click();");
+                vsb.append("$(\"input[id='warn'], select.filter\").click();\n");
             }
             if (hfvEngine.getMinimumReportLevel() > 2) {
-                vsb.append("$(\"input[id='err'], select.filter\").click();");
+                vsb.append("$(\"input[id='err'], select.filter\").click();\n");
             }
             if (hfvEngine.getMinimumReportLevel() > 3) {
-                vsb.append("$(\"input[id='fat'], select.filter\").click();");
+                vsb.append("$(\"input[id='fat'], select.filter\").click();\n");
+            }
+            if (!informationFilter.isEmpty()) {
+                vsb.append("$(\"input[name='INFORMATIONmessage"+Integer.toString(ReportNumber)+"']\").on('click', function() {refresh"+Integer.toString(ReportNumber)+"()});\n");
+            }
+            if (!warningFilter.isEmpty()) {
+                vsb.append("$(\"input[name='WARNINGmessage"+Integer.toString(ReportNumber)+"']\").on('click', function() {refresh"+Integer.toString(ReportNumber)+"()});\n");
+            }
+            if (!errorFilter.isEmpty()) {
+                vsb.append("$(\"input[name='ERRORmessage"+Integer.toString(ReportNumber)+"']\").on('click', function() {refresh"+Integer.toString(ReportNumber)+"()});\n");
+            }
+            if (!fatalFilter.isEmpty()) {
+                vsb.append("$(\"input[name='FATALmessage"+Integer.toString(ReportNumber)+"']\").on('click', function() {refresh"+Integer.toString(ReportNumber)+"()});\n");
             }
             vsb.append("</script>");
 

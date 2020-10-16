@@ -20,16 +20,21 @@ import ca.uhn.fhir.model.valueset.BundleTypeEnum;
 import ca.uhn.fhir.parser.IParser;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 import static java.util.logging.Level.SEVERE;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.codec.binary.Base64;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.dstu3.model.Meta;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import uk.nhs.digital.mait.commonutils.util.Logger;
@@ -48,12 +53,13 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.FH
  * @author Richard Robinson
  */
 public class CDSSFHIRUnpacker {
-    
+
     private static final FhirContext context = FhirContext.forDstu3();
     private static IParser xmlparser = context.newXmlParser();
     private static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
     private final String fhirConvertJson2Xml = fhirConvertJson2Xml(null);
-    
+    private static final short FULL_URL_FIELD_ID = (short) 0x0707;
+
     public static HttpRequest unpack(HttpRequest httpRequest)
             throws Exception {
         System.out.println("UNPACK CALLED");
@@ -69,10 +75,16 @@ public class CDSSFHIRUnpacker {
             Base64 b64 = new Base64();
             content = b64.decode(content);
         }
+
+        // Set up the Regex pattern matcher outside of the loop
+        String patternString = ".*/[A-Z][A-Za-z]+/[A-Za-z0-9\\-\\.]{1,64}";
+        Pattern urlPattern = Pattern.compile(patternString);
+        ArrayList<Object[]> resourcesList = new ArrayList();
+        ArrayList<String> previousResources = new ArrayList();
+
         ZipInputStream zipIn = new ZipInputStream(new ByteArrayInputStream(content));
         ZipEntry entry = zipIn.getNextEntry();
         HashMap<String, String> zipHash = new HashMap<>();
-        ArrayList<IBaseResource> theResources = new ArrayList<>();
         while (entry != null) {
             outputStream.reset();
             int len;
@@ -108,8 +120,40 @@ public class CDSSFHIRUnpacker {
             zipHash.put(entry.getName(), zipContents);
 
 //            System.out.println("zipentry= " + entry.getName());
+            System.out.println(getStringField(FULL_URL_FIELD_ID, entry.getExtra()) + " " + entry.getName());
+            String url = getStringField(FULL_URL_FIELD_ID, entry.getExtra());
             IBaseResource ibr = xmlparser.parseResource(zipContents);
-            theResources.add(ibr);
+            /*
+                    1)	Check if the URL is a valid resource ID. If not, replace with a UUID. This probably applies to searches, which would fail to match the pattern you’ve indicated.
+                    2)	Check if there is a metadata.version in the resource. If there isn’t, assume version 0
+                    3)	Keep a list of all url/versions you’ve seen already
+                    4)	If you’ve already seen that combination, replace the full URL with a UUID instead
+             */
+            Matcher urlMatcher = urlPattern.matcher(url);
+            if (!urlMatcher.matches()) {
+                //not a valid Resource ID
+                url = "urn:uuid:" + UUID.randomUUID().toString();
+            }
+            Resource resource = (Resource) ibr;
+            //Set version
+            String version = "0";
+            Meta meta = resource.getMeta();
+            if (meta != null) {
+                if (meta.getVersionId() != null) {
+                    version = meta.getVersionId();
+                }
+            }
+
+            if (previousResources.contains(url +"|version|"+ version)) {
+                // combination already present
+                String newUrl = "urn:uuid:" + UUID.randomUUID().toString();
+                previousResources.add(newUrl);
+                resourcesList.add(new Object[]{resource, newUrl, version});
+            } else {
+                previousResources.add(url +"|version|"+ version);
+                resourcesList.add(new Object[]{resource, url, version});
+            }
+
             entry = zipIn.getNextEntry();
         }
         zipIn.close();
@@ -123,25 +167,33 @@ public class CDSSFHIRUnpacker {
         myBundle.getMeta().setLastUpdated(new Date());
         myBundle.getTypeElement().setValueAsString(theBundleType.getCode());
         int bundleSize = 0;
-        for (IBaseResource nextBaseRes : theResources) {
-            Resource next = (Resource) nextBaseRes;
-            String resourceType = context.getResourceDefinition(next).getName();
-            switch (resourceType.toLowerCase()) {
-                case "parameters":
-                    continue;
-                case "capabilitystatement":
-                    continue;
-                default:
-                    break;
-            }
-            bundleSize++;
+        for (Object[] objects : resourcesList) {
+            Resource resource = (Resource) objects[0];
+            String url = (String) objects[1];
+            String version = (String) objects[2];
+            String resourceType = context.getResourceDefinition(resource).getName();
+//            switch (resourceType.toLowerCase()) {
+//                case "parameters":
+//                    continue;
+//                case "capabilitystatement":
+//                    continue;
+//                default:
+//                    break;
+//            }
             BundleEntryComponent nextEntry = myBundle.addEntry();
-            nextEntry.setResource(next);
-            nextEntry.setFullUrl(UUID.randomUUID().toString());
+            nextEntry.setResource(resource);
+            nextEntry.setFullUrl(url);
+            bundleSize++;
         }
         // clone a request with xml content for the simulator to work on
         HttpRequest xmlRequest = new HttpRequest("From " + httpRequest.getRemoteAddr());
         byte[] xmlRequestBody = xmlparser.encodeResourceToString(myBundle).getBytes();
+
+//THIS IS TEST AND NEEDS RENMOVING
+//        String xmlRequestBodyString = new String(xmlRequestBody);
+//        xmlRequestBody = xmlRequestBodyString.replaceAll("https://cdss-1-1.staging.uec-connect.nhs.uk/fhir/Questionnaire/initial.initial","urn:uuid:"+UUID.randomUUID().toString()).getBytes();
+//THIS IS TEST AND NEEDS RENMOVING
+        
         
         xmlRequest.setInputStream(
                 new ByteArrayInputStream(xmlRequestBody));
@@ -158,13 +210,28 @@ public class CDSSFHIRUnpacker {
             } else {
                 xmlRequest.setHeader(headerName, httpRequest.getField(headerName));
             }
-            
+
         }
         // set the length of the transformed xml
 
         xmlRequest.setLoggingFileOutputStream(httpRequest.getLoggingFileOutputStream());
         return xmlRequest;
-        
+
     }
-    
+
+    private static String getStringField(short code, byte[] extra) {
+        var buffer = ByteBuffer.wrap(extra);
+        while (buffer.remaining() > 4) {
+            short fieldCode = Short.reverseBytes(buffer.getShort());
+            short fieldLength = Short.reverseBytes(buffer.getShort());
+            byte[] fieldValue = new byte[fieldLength];
+            buffer.get(fieldValue);
+
+            if (fieldCode == code) {
+                return new String(fieldValue, UTF_8);
+            }
+        }
+
+        return null;
+    }
 }

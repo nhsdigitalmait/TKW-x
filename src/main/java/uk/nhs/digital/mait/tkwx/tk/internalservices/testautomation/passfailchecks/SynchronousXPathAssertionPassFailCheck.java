@@ -142,7 +142,14 @@ public class SynchronousXPathAssertionPassFailCheck
 
     protected TestResult doChecks(Script s, InputSource is)
             throws Exception {
-        String r = expression.evaluate(is);
+
+        String r = null;
+        try {
+            r = expression.evaluate(is);
+        } catch (XPathExpressionException ex) {
+            // input does not parse return an empty string
+            r = "";
+        }
         StringBuilder sb = new StringBuilder();
         Matcher m = null;
         TestResult t = null;

@@ -25,14 +25,15 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.AbstractAutotestParser.getAutotestParser;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParserBaseVisitor;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.*;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailchecks.PassFailCheck;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser;
 import static uk.nhs.digital.mait.tkwx.util.Utils.FUNCTION_PREFIX;
 
 /**
@@ -57,6 +58,7 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
     private final HashMap<String, Object> substitutionTags = new HashMap<>();
 
     private final ArrayList<Schedule> schedules = new ArrayList<>();
+    private final HashMap<String, String> testRootTest = new HashMap<>();
 
     /**
      * public constructor
@@ -98,6 +100,21 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
     @Override
     public Object visitSchedule(ScheduleContext ctx) {
         getSchedules().add(new Schedule(ctx));
+        String rootTestName = null;
+        for (TestNameContext testNameCtx : ctx.testName()) {
+            if (rootTestName == null) {
+                rootTestName = testNameCtx.getText();
+            }
+            // builds a hashmap relating a test to the root test in the schedule
+            // This is required so that we can derive the appropriate Extractor defined in the PFC for a given schedule
+            if (testRootTest.get(testNameCtx.getText()) == null) {
+                testRootTest.put(testNameCtx.getText(), rootTestName);
+            } else {
+                // This is only a concern if the PassFailCheck associated with the Test has an Extractor defined.
+                //Logger.getInstance().log(WARNING, AutotestGrammarCompilerVisitor.class.getName(),
+                //        "Warning attempt to override root for a repeated test " + testNameCtx.getText());
+            }
+        }
         return super.visitSchedule(ctx);
     }
 
@@ -251,7 +268,7 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
 
     @Override
     public Object visitSubstitution_tag(Substitution_tagContext ctx) {
-        if ( ctx.psArg() != null) {
+        if (ctx.psArg() != null) {
             substitutionTags.put(ctx.SUBSTITUTION_TAG().getText(), handlePsArg(ctx.psArg()));
         } else if (ctx.LITERAL() != null) {
             substitutionTags.put(ctx.SUBSTITUTION_TAG().getText(), ctx.QUOTED_STRING().getText());
@@ -414,5 +431,17 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
      */
     public HashMap<String, Object> getSubstitutionTags() {
         return substitutionTags;
+    }
+
+
+    /**
+     * uses a map to enable us to back track to the first test in the schedule
+     * so that we can derive the message and hence the datasource for the test
+     *
+     * @param testName
+     * @return The name of the first or root test for the given test
+     */
+    public String getRootTest(String testName) {
+        return testRootTest.get(testName);
     }
 }

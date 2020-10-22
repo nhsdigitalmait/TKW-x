@@ -15,6 +15,8 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import uk.nhs.digital.mait.jwttools.AuthorisationGenerator;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -125,27 +127,42 @@ public class PropertySetFunctions {
     public static String getUUID() throws Exception {
         return getuuid().toUpperCase();
     }
+
     /**
-     * 
+     *
      * @param format SimpleDateFormat string
      * @param timezone eg GMT
-     * @return now formatted as per format string
-     * @throws Exception 
+     * @return now formatted as per format string (not url encoded)
+     * @throws Exception
      */
     public static String getFormattedTime(String format, String timezone) throws Exception {
-        return getFormattedTime(format, timezone, "0", "0");
+        return getFormattedTime(format, timezone, "0", "0", "false");
     }
 
     /**
-     * 
+     *
      * @param format SimpleDateFormat string
      * @param timezone eg GMT
      * @param daysoffsetStr String containing offset from in seconds
      * @param secondsoffsetStr String containing offset from now in days
-     * @return now + offset days and seconds from now
-     * @throws Exception 
+     * @return now + offset days and seconds from now (not url encoded)
+     * @throws Exception
      */
     public static String getFormattedTime(String format, String timezone, String daysoffsetStr, String secondsoffsetStr) throws Exception {
+        return getFormattedTime(format, timezone, daysoffsetStr, secondsoffsetStr, "false");
+    }
+
+    /**
+     *
+     * @param format SimpleDateFormat string
+     * @param timezone eg GMT
+     * @param daysoffsetStr String containing offset from in seconds
+     * @param secondsoffsetStr String containing offset from now in days
+     * @param urlEncodeStr boolean whether to url encode the result.
+     * @return now + offset days and seconds from now
+     * @throws Exception
+     */
+    public static String getFormattedTime(String format, String timezone, String daysoffsetStr, String secondsoffsetStr, String urlEncodeStr) throws Exception {
         SimpleDateFormat df = new SimpleDateFormat(format);
         df.setTimeZone(TimeZone.getTimeZone(timezone));
 
@@ -157,6 +174,7 @@ public class PropertySetFunctions {
         cal.add(Calendar.DAY_OF_YEAR, daysOfffset);
         cal.add(Calendar.SECOND, secondsOffset);
 
-        return df.format(cal.getTime());
+        boolean urlEncode = Boolean.parseBoolean(urlEncodeStr);
+        return urlEncode ? URLEncoder.encode(df.format(cal.getTime()), StandardCharsets.UTF_8.toString()) : df.format(cal.getTime());
     }
 }

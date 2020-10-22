@@ -212,23 +212,26 @@ public class ScriptParser {
     }
 
     /**
-     * This is experimental code. Use of extractors is recommended with caution.
+     * Use of extractors is recommended with caution.
+     *
      * For the Datasource lookup a related test (one with a message containing
      * this Datasource), get the PassFailCheck then lookup the Extractor name.
+     *
      * We can only have one extractor associated with a datasource. If we get an
      * attempt to reassign a different extractor to a datasource warn the user
-     * This code assumes that the associated Message is the last one specified
-     * in the declaration sequence. This is actually alphabetic after the merge.
-     * This way of working cannot be relied upon now tests can be reused.
-     * Further this is not a static relationship. The same test might be
-     * associated with different Datasources since it can be reused. At the end
-     * of the day if the tests are named assuming evaluation in alpha prder this
-     * works. This is a workaround. Datasource references (updated by ) 0..1
-     * Extractors Extractor can have 0..* subscribed (updates) Datasources A
-     * Test -- 0..1 --> Message -- 0..1 -> Datasource
+     * This code assumes that the associated Message is the first one specified
+     * in the declaration sequence of schedules.
      *
-     * Depending on which chain a Test is it may be associated with a different
-     * Datasource Meaning an Extractor may be related to different DataSources
+     * Further this is not a static relationship. The same test might be
+     * associated with different Datasources since it can be reused.
+     *
+     * The bottom line is that tests should not be reused if any of the usages
+     * refer to the different messages.
+     *
+     * Datasource references (updated by ) 0..1 Extractors Extractor can have
+     * 0..* subscribed (updates) Datasources A Test -- 0..1 --> Message -- 0..1
+     * -> Datasource
+     *
      *
      * @param datasource the Datasource
      * @param messageDatasourceMap input map associates a message with a
@@ -241,32 +244,34 @@ public class ScriptParser {
     private void setDatasoureExtractor(DataSource datasource, HashMap<String, String> messageDatasourceMap, HashMap<String, String> passFailCheckExtractorMap, HashMap<String, String> dataSourceExtractorMap) {
         String msgName = null;
         for (Test test : visitor.getTests().values()) {
-            if (messageDatasourceMap.get(test.getMsgname()) != null) {
-                // not all tests have a message associated chained tests dont so remember what the last message was
-                msgName = test.getMsgname();
+            String rootTestName = visitor.getRootTest(test.getName());
+            // use the first test in the schedule which should have a message
+            Test rootTest = visitor.getTests().get(rootTestName);
+            if (rootTest != null && messageDatasourceMap.get(rootTest.getMsgname()) != null) {
+                msgName = rootTest.getMsgname();
+                if (msgName != null) {
+                    //System.out.println("Test " + test.getName() + " assuming message " + msgName);
+                    String dataSourceName = messageDatasourceMap.get(msgName);
+                    if (dataSourceName.equals(datasource.getName())) {
+                        String pfcName = test.getSynchronousPassFailCheckName() != null ? test.getSynchronousPassFailCheckName() : test.getChainName();
+                        String extractorName = passFailCheckExtractorMap.get(pfcName);
+                        if (extractorName != null) {
+                            if (dataSourceExtractorMap.get(dataSourceName) == null) {
+                                dataSourceExtractorMap.put(dataSourceName, extractorName);
+                                datasource.setExtractorName(extractorName);
+                                //System.out.println("Setting extractor " + extractorName + " in Datasource " + datasource.getName());
+                                // dont break because we need to report subsequent attempts to overwrite
+                            } else if (!dataSourceExtractorMap.get(dataSourceName).equals(extractorName)) {
+                                Logger.getInstance().log(WARNING, ScriptParser.class.getName(),
+                                        "Test:" + test.getName()
+                                        + " - attempt to reassign a different extractor: " + extractorName
+                                        + " to datasource: " + dataSourceName
+                                        + " with an existing extractor: " + dataSourceExtractorMap.get(dataSourceName));
+                            }
+                        } // non null extractor name
+                    } // if data source match
+                } // non null msgName
             }
-            if (msgName != null) {
-                //System.out.println("Test " + test.getName() + " assuming message " + msgName);
-                String dataSourceName = messageDatasourceMap.get(msgName);
-                if (dataSourceName.equals(datasource.getName())) {
-                    String pfcName = test.getSynchronousPassFailCheckName() != null ? test.getSynchronousPassFailCheckName() : test.getChainName();
-                    String extractorName = passFailCheckExtractorMap.get(pfcName);
-                    if (extractorName != null) {
-                        if (dataSourceExtractorMap.get(dataSourceName) == null) {
-                            dataSourceExtractorMap.put(dataSourceName, extractorName);
-                            datasource.setExtractorName(extractorName);
-                            //System.out.println("Setting extractor " + extractorName + " in Datasource " + datasource.getName());
-                            // dont break because we need to report subsequent attempts to overwrite
-                        } else if (!dataSourceExtractorMap.get(dataSourceName).equals(extractorName)) {
-                            Logger.getInstance().log(WARNING, ScriptParser.class.getName(),
-                                    "Test:" + test.getName()
-                                    + " - attempt to reassign a different extractor: " + extractorName
-                                    + " to datasource: " + dataSourceName
-                                    + " with an existing extractor: " + dataSourceExtractorMap.get(dataSourceName));
-                        }
-                    } // non null extractor name
-                } // if data source match
-            } // non null msgName
         } // for test
     }
 

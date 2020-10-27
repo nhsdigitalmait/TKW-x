@@ -146,6 +146,9 @@ JWT_PAYLOAD : J W T '_' P A Y L O A D ; // xml and text
 MESH_CTL : M E S H '_' C T L; // xml and text
 MESH_DAT : M E S H '_' D A T; // xml and text
 
+FIRST : F I R S T ;
+ALL : A L L ;
+
 //------------------------------------------------------------------------------
 // one liners
 

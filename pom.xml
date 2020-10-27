@@ -430,14 +430,5 @@
             <version>2.3.2</version>
         </dependency>
     </dependencies>
-    <name>tkw-x-hapi5</name>
-<!--<repositories>
-    <repository>
-        <id>oss-snapshots</id>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-    </repository>
-</repositories>-->
+    <name>tkw-x</name>
 </project>

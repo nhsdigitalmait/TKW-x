@@ -157,9 +157,14 @@ public class Substitution {
             } else {
                 matchSource = MatchSource.CONTENT;
             }
-            data = new String[2];
+            data = new String[3];
             data[0] = ctx.substitution_regexp().QUOTED_STRING(0).getText(); // search reg exp
             data[1] = ctx.substitution_regexp().QUOTED_STRING(1).getText(); // replace regexp
+            if (ctx.substitution_regexp().substitution_regexp_cardinality() != null) {
+                data[2] = ctx.substitution_regexp().substitution_regexp_cardinality().getText().toLowerCase();
+            } else {
+                data[2] = "first";
+            }
         }
     }
 
@@ -271,7 +276,6 @@ public class Substitution {
 //        }
 //        throw new Exception("Unrecognised type : " + typ);
 //    }
-
     // This method may be replaced by the similar method in UTILS but this uses StringBuffer c.f. StringBuilder.
     // StringBuffer is however synchronised so has been kept here
     private boolean subs(StringBuffer sb, String value)
@@ -284,6 +288,7 @@ public class Substitution {
         }
         return doneAnything;
     }
+
     /**
      *
      * @param sb StringBuffer holding response template
@@ -297,8 +302,10 @@ public class Substitution {
     }
 
     /**
-     * Method for passing in a full Service Response and having all the substitution points updated. 
-     * This is important for values such as UUID where it is generated each time substitution is called
+     * Method for passing in a full Service Response and having all the
+     * substitution points updated. This is important for values such as UUID
+     * where it is generated each time substitution is called
+     *
      * @param sr ServiceResponse holding response templates
      * @param o request string to use for substitution
      * @throws Exception
@@ -307,20 +314,21 @@ public class Substitution {
             throws Exception {
         String content = getContent(o);
         StringBuffer response = new StringBuffer(sr.getResponse());
-        if(subs(response, content)){
+        if (subs(response, content)) {
             sr.setResponse(response.toString());
         }
-        if(sr.getHttpHeaders()!=null){
+        if (sr.getHttpHeaders() != null) {
             ArrayList<String> fnames = sr.getHttpHeaders().getFieldNames();
             for (String name : fnames) {
                 StringBuffer headerValue = new StringBuffer(sr.getHttpHeaders().getHttpHeaderValue(name));
-                if(subs(headerValue, content)){
+                if (subs(headerValue, content)) {
                     sr.getHttpHeaders().addHttpHeader(name, headerValue.toString());
                 }
             }
         }
 
     }
+
     /**
      *
      * @param sb StringBuffer holding response template
@@ -333,8 +341,10 @@ public class Substitution {
     }
 
     /**
-     * Method for passing in a full Service Response and having all the substitution points updated. 
-     * This is important for values such as UUID where it is generated each time substitution is called
+     * Method for passing in a full Service Response and having all the
+     * substitution points updated. This is important for values such as UUID
+     * where it is generated each time substitution is called
+     *
      * @param sr
      * @param req
      * @throws Exception
@@ -457,7 +467,15 @@ public class Substitution {
 
             case REGEXP:
                 if (inputRequest != null) {
-                    content = inputRequest.replaceFirst(data[0], data[1]);
+                    switch (data[2]) {
+                        case "all":
+                            content = inputRequest.replaceAll(data[0], data[1]);
+                            break;
+                        case "first":
+                        default:
+                            content = inputRequest.replaceFirst(data[0], data[1]);
+                            break;
+                    }
                 } else {
                     content = null;
                 }

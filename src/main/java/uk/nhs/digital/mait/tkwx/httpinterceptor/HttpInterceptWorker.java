@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -144,16 +145,20 @@ public class HttpInterceptWorker {
      * value attribute pairs following a question mark
      *
      * @param request
-     * @return hashmap of get request parameters
+     * @return hashmap of array list of String of get request parameters
      * @throws UnsupportedEncodingException
      */
-    private HashMap<String, String> getRequestParameters(HttpRequest request) throws UnsupportedEncodingException {
+    private HashMap<String, ArrayList<String>> getRequestParameters(HttpRequest request) throws UnsupportedEncodingException {
         String context = request.getContext();
         String paramString = context.replaceFirst("^.*?\\?", "");
         String[] params = paramString.split("\\&");
-        HashMap<String, String> hmParams = new HashMap<>();
+        HashMap<String, ArrayList<String>> hmParams = new HashMap<>();
         for (String param : params) {
-            hmParams.put(param.replaceFirst("=.*$", ""), URLDecoder.decode(param.replaceFirst("^.*?=", ""), "UTF-8"));
+            String paramName = param.replaceFirst("=.*$", "");
+            if (hmParams.get(paramName) == null) {
+                hmParams.put(paramName, new ArrayList<String>());
+            }
+            hmParams.get(paramName).add(URLDecoder.decode(param.replaceFirst("^.*?=", ""), "UTF-8"));
         }
         return hmParams;
     }
@@ -599,24 +604,25 @@ public class HttpInterceptWorker {
         String requestContentTypeHeader = req.getField(CONTENT_TYPE_HEADER);
 
         // fhir specific stuff this is probably built into a "fhir server"
-        HashMap<String, String> hmParams = getRequestParameters(req);
-        String fhirFormatParameter = hmParams.get("_format");
+        HashMap<String, ArrayList<String>> hmParams = getRequestParameters(req);
+        ArrayList<String> fhirFormatParameters = hmParams.get("_format");
+        String fhirFormatParameter = fhirFormatParameters !=null &&  !fhirFormatParameters.isEmpty() ? fhirFormatParameters.get(0) : null;
 
         // determine outbound content type
         contentTypeSet = false;
         if (acceptHeader == null) {
             // content type can be null for a GET
-            if (isValidFhirValue(fhirFormatParameter) && (requestContentTypeHeader == null || isValidFhirValue(requestContentTypeHeader))) {
-                trackedSetContentType(resp, fhirFormatParameter);
+            if (isValidFhirFormatParameter(fhirFormatParameter) && (requestContentTypeHeader == null || isValidFhirContentType(requestContentTypeHeader))) {
+                trackedSetContentType(resp, determineContentType("application/fhir+"+fhirFormatParameter));
             } else if (fhirFormatParameter == null) {
-                if (requestContentTypeHeader == null || isValidFhirValue(requestContentTypeHeader)) {
+                if (requestContentTypeHeader == null || isValidFhirContentType(requestContentTypeHeader)) {
                     trackedSetContentType(resp, requestContentTypeHeader);
                 }
             }
-        } else if (isValidFhirValue(acceptHeader)) { // valid fhir accept
-            if (isValidFhirValue(fhirFormatParameter)) {
+        } else if (isValidFhirContentType(acceptHeader)) { // valid fhir accept
+            if (isValidFhirFormatParameter(fhirFormatParameter)) {
                 // this says a valid _format overrides accept
-                trackedSetContentType(resp, fhirFormatParameter);
+                trackedSetContentType(resp, determineContentType("application/fhir+"+fhirFormatParameter));
             } else {
                 // fall back on valid accept if _format is not valid
                 trackedSetContentType(resp, acceptHeader);
@@ -642,15 +648,24 @@ public class HttpInterceptWorker {
      * @param httpValue could be a header value or an http get parameter
      * @return boolean
      */
-    private boolean isValidFhirValue(String httpValue) {
+    private boolean isValidFhirContentType(String httpValue) {
         return httpValue != null && (isJsonFhir(httpValue) || isXmlFhir(httpValue));
+    }
+
+    /**
+     *
+     * @param parameterValue is a http get parameter
+     * @return boolean
+     */
+    private boolean isValidFhirFormatParameter(String parameterValue) {
+        return parameterValue != null && (parameterValue.equals("json") || parameterValue.equals("xml"));
     }
 
     /**
      * assumes this a valid fhir value ie application/fhir+(xml|json) tested by
      * isValidFhirValue
      *
-     * @param httpValue could be a header value or an http get parameter
+     * @param httpValue must be a header value not an http get parameter
      * @return content type to set
      */
     private String determineContentType(String httpValue) {

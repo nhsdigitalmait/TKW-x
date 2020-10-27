@@ -154,8 +154,11 @@ public class SynchronousXPathAssertionPassFailCheck
         Matcher m = null;
         TestResult t = null;
         int nodeCount = 0;
-        if ((assertionType == EXISTS || assertionType == NOTEXISTS) && r != null) {
-            nodeCount = Integer.parseInt(r);
+        if ((assertionType == EXISTS || assertionType == NOTEXISTS) && r != null && !r.trim().isEmpty()) {
+            try {
+                nodeCount = Integer.parseInt(r);
+            } catch (NumberFormatException ex) {
+            }
         }
 
         // we require delayed pattern compilation when the match string is a substitution tag
@@ -240,7 +243,7 @@ public class SynchronousXPathAssertionPassFailCheck
                 break;
 
             case ISIN:
-                if ((r == null) || (r.length() == 0)) {
+                if ((r == null) || (r.trim().length() == 0)) {
                     t = TestResult.FAIL;
                     sb.append(colourString("Expected: ", BLACK));
                     sb.append(colourString(assertionValue, RED));

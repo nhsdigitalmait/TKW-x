@@ -29,7 +29,7 @@ TKW-x adds support for FHIR and Restful services including:
 * Validation of Http headers and context paths
 * Declaration of and reference to variables
 * Capability to write bespoke test classes via the addition of unchecked tests
-* [ANTLR Lexer](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/validation/parser/ValidationLexer.g4) and [ANTLR Parser](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/validation/parser/ValidationParserLexer.g4)
+* [ANTLR Lexer](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/validation/parser/ValidationLexer.g4) and [ANTLR Parser](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/validation/parser/ValidationParser.g4)
 
 ## Transmitter
 * Statically added http header request and response values
@@ -41,7 +41,7 @@ TKW-x adds support for FHIR and Restful services including:
 * Expression classes
 * Static http headers in responses
 * Ability to return Http headers based on substitution tags
-* [ANTLR Lexer](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/rules/parser/SimulatorRulesLexer.g4) and [ANTLR Parser](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/rules/parser/SimulatorRulesParserLexer.g4)
+* [ANTLR Lexer](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/rules/parser/SimulatorRulesLexer.g4) and [ANTLR Parser](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/rules/parser/SimulatorRulesParser.g4)
 
 ## Autotest
 * Not documented but present in the TKW5 release, allows the user to construct and send requests to provider systems and to validate and test the expected responses.

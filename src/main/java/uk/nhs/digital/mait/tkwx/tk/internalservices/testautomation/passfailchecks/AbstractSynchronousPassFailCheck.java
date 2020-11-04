@@ -15,6 +15,7 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailchecks;
 import java.io.InputStream;
+import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.AbstractPassFailCheck;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.SynchronousResponseBodyExtractor;
@@ -22,6 +23,7 @@ import uk.nhs.digital.mait.tkwx.util.bodyextractors.SynchronousResponseBodyExtra
  * The PassFailCheck classes read log files and apply tests to them. This abstract
  * subclass provides a method to extract the XML portion of a synchronous ITK response
  * from the "transmitter log file", as a SAX InputSource for use by XPath checkers.
+ * Can also extract response headers
  * 
  * @author Damian Murphy murff@warlock.org
  */
@@ -46,5 +48,17 @@ abstract public class AbstractSynchronousPassFailCheck
         return responseBodyExtractor.getBody(in, true);
     }
     
+    /**
+     * Retrieve the http response headers
+     * @return HttpHeaderManager for response headers
+     * @throws Exception 
+     */
+    protected HttpHeaderManager getResponseHeaders()
+            throws Exception
+    {
+        // true for return xml even if its java
+        return responseBodyExtractor.getHttpResponseHeaders();
+    }
+
     protected AbstractBodyExtractor responseBodyExtractor = null;
 }

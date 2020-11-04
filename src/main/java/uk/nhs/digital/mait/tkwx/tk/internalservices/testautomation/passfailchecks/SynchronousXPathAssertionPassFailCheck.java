@@ -30,6 +30,7 @@ import uk.nhs.digital.mait.commonutils.util.ConfigurationTokenSplitter;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import org.xml.sax.InputSource;
+import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 
 /**
  * Pass/fail check implementation that works on synchronous responses - i.e.
@@ -330,13 +331,13 @@ public class SynchronousXPathAssertionPassFailCheck
             throws Exception {
         TestResult p = TestResult.FAIL;
         String responseBody = getResponseBody(in);
-        if (!Utils.isNullOrEmpty(responseBody)) {
+        //if (!Utils.isNullOrEmpty(responseBody)) {
             InputSource is = new InputSource(new StringReader(responseBody));
             p = doChecks(s, is);
-            doExtract(responseBody);
-        } else {
-            setDescription(colourString("Zero Length Content", RED));
-        }
+            doExtract(responseBody, getResponseHeaders());
+        //} else {
+        //    setDescription(colourString("Zero Length Content", RED));
+        //}
         return p;
     }
 

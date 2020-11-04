@@ -123,25 +123,25 @@ public abstract class AbstractUpdatableOrderedPersistentFileDataSource
             File old = new File(file);
             File bck = new File(file + ".backup");
             old.renameTo(bck);
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-            for (int i = 0; i < fields.size() - 1; i++) {
-                bw.append(fields.get(i));
-                bw.append("\t");
-            }
-            bw.append(fields.get(fields.size() - 1));
-            bw.append("\n");
-            bw.flush();
-            for (int i = 0; i < recordids.size(); i++) {
-                HashMap<String, String> rec = data.get(recordids.get(i));
-                for (int j = 0; j < fields.size() - 1; j++) {
-                    bw.append(rec.get(fields.get(j)));
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+                for (int i = 0; i < fields.size() - 1; i++) {
+                    bw.append(fields.get(i));
                     bw.append("\t");
                 }
-                bw.append(rec.get(fields.get(fields.size() - 1)));
+                bw.append(fields.get(fields.size() - 1));
                 bw.append("\n");
                 bw.flush();
+                for (int i = 0; i < recordids.size(); i++) {
+                    HashMap<String, String> rec = data.get(recordids.get(i));
+                    for (int j = 0; j < fields.size() - 1; j++) {
+                        bw.append(rec.get(fields.get(j)));
+                        bw.append("\t");
+                    }
+                    bw.append(rec.get(fields.get(fields.size() - 1)));
+                    bw.append("\n");
+                    bw.flush();
+                }
             }
-            bw.close();
             open = false;
         }
     }

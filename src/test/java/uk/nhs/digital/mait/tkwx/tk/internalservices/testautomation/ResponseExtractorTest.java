@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.BasicMessageIdCorrelatorTest.TKWROOT;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser;
 import static uk.nhs.digital.mait.tkwx.util.Utils.copyFile;
+import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 
 /**
  *
@@ -105,7 +106,7 @@ public class ResponseExtractorTest {
     public void testExtract() throws Exception {
         System.out.println("extract");
         String in = "";
-        instance.extract(in);
+        instance.extract(in,null);
     }
 
     public class ResponseExtractorImpl implements ResponseExtractor {
@@ -120,7 +121,7 @@ public class ResponseExtractorTest {
         }
 
         @Override
-        public void extract(String in) throws Exception {
+        public void extract(String in, HttpHeaderManager hm) throws Exception {
         }
 
         @Override

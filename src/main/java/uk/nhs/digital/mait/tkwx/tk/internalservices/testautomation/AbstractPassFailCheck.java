@@ -16,10 +16,12 @@
 package uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation;
 
 import java.io.InputStream;
+import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.PassFailCheckContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.PassfailContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.XPathCheckContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailchecks.PassFailCheck;
+import uk.nhs.digital.mait.tkwx.util.bodyextractors.SynchronousResponseBodyExtractor;
 
 /**
  * Abstract superclass for checks for test outcome.
@@ -43,8 +45,6 @@ abstract public class AbstractPassFailCheck
     protected static final String GREEN = "#008000";
     protected static final String RED = "#900000";
     protected static final String BLUE = "#3A5FCD";
-
-    private static final int BUFFERSIZE = 1024;
 
     /**
      * antlr parser version
@@ -143,15 +143,16 @@ abstract public class AbstractPassFailCheck
     /**
      * Call the "extract()" method on an extractor class if there is one.
      *
-     * @param s String containing the response from the test message.
+     * @param s String containing the response body from the test message.
+     * @param hm HttpHeaderManager containing response headers
      * @throws Exception If there is an error during the extract.
      */
-    protected void doExtract(String s)
+    protected void doExtract(String s, HttpHeaderManager hm)
             throws Exception {
         if (extractor == null) {
             return;
         }
-        extractor.extract(s);
+        extractor.extract(s, hm);
     }
 
     protected String colourString(String content, String clr) {
@@ -179,18 +180,10 @@ abstract public class AbstractPassFailCheck
 
     protected void extract(InputStream in)
             throws Exception {
-        // Read into a string, substring to \r\n\r\n and then pass that
-        // to the extractor
-        StringBuilder sb = new StringBuilder();
-        byte[] buffer = new byte[BUFFERSIZE];
-        int r = 0;
-        while ((r = in.read(buffer, 0, buffer.length)) != -1) {
-            if (r > 0) {
-                sb.append(new String(buffer, 0, r));
-            }
-        }
-        String body = sb.substring((sb.indexOf("\r\n\r\n") + 4));
-        extractor.extract(body);
+        SynchronousResponseBodyExtractor bodyExtractor = new SynchronousResponseBodyExtractor();
+        // xml response
+        String body = bodyExtractor.getBody(in, true);
+        extractor.extract(body, bodyExtractor.getHttpResponseHeaders());
     }
 
     /**

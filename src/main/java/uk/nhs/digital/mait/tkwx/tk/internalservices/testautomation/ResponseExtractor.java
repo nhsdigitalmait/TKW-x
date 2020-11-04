@@ -17,6 +17,8 @@
 package uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation;
 
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.ExtractorContext;
+import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
+
 
  /**
  * Interface implemented by classes which extract data from responses.
@@ -42,10 +44,11 @@ public interface ResponseExtractor {
     /**
      * Do the extraction.
      * 
-     * @param in String representation of the response to be extracted.
+     * @param in String representation of the response body to be extracted.
+     * @param hm
      * @throws Exception 
      */
-    public void extract(String in) throws Exception;
+    public void extract(String in, HttpHeaderManager hm) throws Exception;
 
     /**
      * Initialisation using a tokenised line from the test automation script.

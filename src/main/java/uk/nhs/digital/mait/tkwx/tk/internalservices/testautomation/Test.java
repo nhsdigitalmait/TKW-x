@@ -446,6 +446,12 @@ public class Test
                 if (tosend == null) {
                     throw new Exception("Test " + testName + " : message " + msgname + " not found");
                 }
+                if (tosend.getDatasourceName() != null) {
+                    // we need to peek ahead because we need these set before the message is instantiated
+                    // so that we can do the httpheader datasource substitutions
+                    datasource = tosend.getDatasource();
+                    recordid = tosend.getRecordid();
+                }
             }
             if (synccheckname != null) {
                 synccheck = scriptParser.getPassFailCheck(synccheckname);
@@ -492,7 +498,7 @@ public class Test
                 preTransforms = new HashMap<>();
                 for (int i = 0; i < pathsCtx.size(); i++) {
                     String transformPath = pathsCtx.get(i).getText();
-                    try (FileInputStream fis = new FileInputStream(transformPath)) {
+                    try ( FileInputStream fis = new FileInputStream(transformPath)) {
                         TransformManager.getInstance().addTransform(transformPath, fis);
                     }
                     String loc = transformPointsCtx.get(i).getText();
@@ -622,11 +628,12 @@ public class Test
 
     /**
      * dequotes quoted string and invokes methods depending on Object type
+     *
      * @param o Object parameter to be processed
      * @return processed String value
      * @throws IllegalArgumentException
      * @throws InvocationTargetException
-     * @throws IllegalAccessException 
+     * @throws IllegalAccessException
      */
     private String processParameterObject(Object o) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException {
         String value = null;
@@ -720,6 +727,10 @@ public class Test
             getChainVariables();
         }
 
+        // need to get the datasource and record id from the message ahead of sending
+        // so that we can substitute any httpheaders
+        // at present the datasource is only available *after* the message is created
+        // by callingSendRequest which is too late
         // If we have any property sets to apply, do it here before anything else.
         processPropertySets(schedule);
 
@@ -818,7 +829,6 @@ public class Test
         return result;
     }
 
-
     /**
      *
      * @param schedule
@@ -834,10 +844,10 @@ public class Test
         // this is not a chain so we have to send a request
         if (chainName == null) {
             String filename = tosend.instantiate(schedule.getTransmitterDirectory(), toUrl, fromUrl, replyTo, preTransforms, preSubstitutions, profileId, iteration);
-            if (tosend != null) {
-                datasource = tosend.getDatasource();
-                recordid = tosend.getRecordid();
-            }
+//            if (tosend != null) {
+//                datasource = tosend.getDatasource();
+//                recordid = tosend.getRecordid();
+//            }
 
             if (transmitMode.equals(SPINETOOLS_TRANSMITTER_MODE)) {
                 // set the required SpineTools request captor object values
@@ -895,8 +905,8 @@ public class Test
 
     /**
      * calls reconfigure for appropriate attributes on the transmitter and
-     * simulator
-     * handles specific ReconfigureTags values
+     * simulator handles specific ReconfigureTags values
+     *
      * @param transmitter ToolkitService object to reconfigure
      * @throws Exception
      */
@@ -1028,7 +1038,25 @@ public class Test
             for (String key : httpHeaderSet.keySet()) {
                 Object o = httpHeaderSet.get(key);
                 if (o instanceof String) {
-                    p.put("tks.transmitter.httpheader." + key, o.toString().replaceFirst("^\"", "").replaceFirst("\"$", ""));
+                    String headerValue = o.toString();
+                    // perform Substitution tag substitutions
+                    for (String tag : substitutionTags.keySet()) {
+                        String value = processParameterObject(substitutionTags.get(tag));
+                        headerValue = headerValue.replaceAll(tag, value);
+                    }
+                    // perform datasource substitutions
+                    if (datasource != null) {
+                        String id = datasource.getNextId();
+                        Iterator<String> iter = datasource.getTags().iterator();
+                        while (iter.hasNext()) {
+                            String tag = iter.next();
+                            try {
+                                headerValue = headerValue.replaceAll(tag, datasource.getValue(id, tag));
+                            } catch (Exception ex) {
+                            }
+                        }
+                    }
+                    p.put("tks.transmitter.httpheader." + key, headerValue.replaceFirst("^\"", "").replaceFirst("\"$", ""));
                 } else if (o instanceof Method) {
                     Method method = (Method) o;
                     // This is a slighly premature execution but there's not much in it.
@@ -1203,7 +1231,7 @@ public class Test
             }
             String fileName = messagesFolder + "/" + messageFileName + "_" + timestamp + ".log";
             File f = new File(fileName);
-            try (FileLocker fl = new FileLocker(f.getAbsolutePath())) {
+            try ( FileLocker fl = new FileLocker(f.getAbsolutePath())) {
                 Utils.writeString2File(fileName, logContent);
             }
         } catch (IOException ex) {
@@ -1369,10 +1397,10 @@ public class Test
         File f = sortedFileMap.get(sortedFileMap.firstKey());
         sb.append(f.getName());
         File output = new File(f.getParent(), sb.toString());
-        try (FileOutputStream fos = new FileOutputStream(output)) {
+        try ( FileOutputStream fos = new FileOutputStream(output)) {
             for (File x : sortedFileMap.values()) {
                 byte[] b;
-                try (FileInputStream fis = new FileInputStream(x)) {
+                try ( FileInputStream fis = new FileInputStream(x)) {
                     b = new byte[(int) x.length()];
                     fis.read(b);
                 }

@@ -139,7 +139,7 @@ public class AbstractPassFailCheckTest {
     public void testDoExtract() throws Exception {
         System.out.println("doExtract");
         String s = "";
-        instance.doExtract(s);
+        instance.doExtract(s,null);
     }
 
     /**

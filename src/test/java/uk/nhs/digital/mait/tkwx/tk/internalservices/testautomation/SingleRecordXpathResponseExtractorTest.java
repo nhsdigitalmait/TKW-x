@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser;
 
 /**
@@ -43,16 +44,10 @@ public class SingleRecordXpathResponseExtractorTest {
     @BeforeClass
     public static void setUpClass() throws IOException {
 
-        // replaced with actual persistent file
-//        try (FileWriter fw = new FileWriter("src/test/resources/extract.cfg")) {
-//            fw.write("__ID__ /a/b/@id ID\r\n");
-//            fw.write("__DATA__ /a/b/text()\r\n");
-//        }
-
         // create a new datasource file each time (this will get overwritten)
-        try (FileWriter fw = new FileWriter("src/test/resources/test.tdv")) {
-            fw.write("__ID__\t__DATA__\r\n");
-            fw.write("id1\tdata1\r\n");
+        try ( FileWriter fw = new FileWriter("src/test/resources/test.tdv")) {
+            fw.write("__ID__\t" + XML_TAG_NAME + "\t" + HTTP_HEADER_TAG_NAME + "\r\n");
+            fw.write("id1\txx\txx\r\n");
         }
 
         TestVisitor visitor = new TestVisitor();
@@ -62,7 +57,7 @@ public class SingleRecordXpathResponseExtractorTest {
 
     @AfterClass
     public static void tearDownClass() {
-        for (String filename : new String[]{"src/test/resources/test.tdv","src/test/resources/test.tdv.backup"}) {
+        for (String filename : new String[]{"src/test/resources/test.tdv", "src/test/resources/test.tdv.backup"}) {
             File file = new File(filename);
             if (file.exists()) {
                 file.delete();
@@ -104,22 +99,29 @@ public class SingleRecordXpathResponseExtractorTest {
         c.init(datasourceCtx);
 
         // check initial value from file
-        assertEquals("data1", c.getValue(RECORD_KEY, TAG_NAME));
+        assertEquals("xx", c.getValue(RECORD_KEY, XML_TAG_NAME));
+        assertEquals("xx", c.getValue(RECORD_KEY, HTTP_HEADER_TAG_NAME));
 
-        String expResult = "xxx";
-        String in = "<a><b id=\""+RECORD_KEY+"\">"+expResult+"</b></a>";
+        String expResult = "xmldata";
+        String in = "<a><b id=\"" + RECORD_KEY + "\">" + expResult + "</b></a>";
         instance.registerDatasourceListener(c);
-        
-        // do the extrcation on the string input
-        instance.extract(in);
-        
+
+        // do the extraction on the string input
+        HttpHeaderManager hm = new HttpHeaderManager();
+        hm.addHttpHeader("h1", "v1");
+        instance.extract(in, hm);
+
         // check the new value is set
-        assertEquals(expResult, c.getValue(RECORD_KEY, TAG_NAME));
+        assertEquals(expResult, c.getValue(RECORD_KEY, XML_TAG_NAME));
+
+        expResult = "v1";
+        assertEquals(expResult, c.getValue(RECORD_KEY, HTTP_HEADER_TAG_NAME));
 
         c.close();
     }
-    
-    private static final String TAG_NAME = "__DATA__";
+
+    private static final String XML_TAG_NAME = "__XML_DATA__";
+    private static final String HTTP_HEADER_TAG_NAME = "__HTTP_HEADER_DATA__";
     private static final String RECORD_KEY = "id1";
 
     /**

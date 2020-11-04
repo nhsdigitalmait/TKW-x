@@ -54,7 +54,7 @@ public class AsynchronousXPathAssertionPassFailCheck
         if (!Utils.isNullOrEmpty(responseBody)) {
             InputSource is = new InputSource(new StringReader(responseBody));
             p = doChecks(s, is);
-            doExtract(responseBody);
+            doExtract(responseBody, getResponseHeaders());
         } else {
             setDescription(colourString("Zero Length Content", RED));
         }

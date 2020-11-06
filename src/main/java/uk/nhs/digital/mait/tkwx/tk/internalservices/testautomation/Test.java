@@ -638,7 +638,8 @@ public class Test
     private String processParameterObject(Object o) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException {
         String value = null;
         if (o instanceof String) {
-            value = o.toString().replaceFirst("^\"", "").replaceFirst("\"$", "");
+           // ensure we only remove matching paired surrounding quotes
+           value = o.toString().replaceFirst("^\"(.*)\"$", "$1");
         } else if (o instanceof Method) {
             Method method = (Method) o;
             // This is a slighly premature execution but there's not much in it.
@@ -1056,7 +1057,8 @@ public class Test
                             }
                         }
                     }
-                    p.put("tks.transmitter.httpheader." + key, headerValue.replaceFirst("^\"", "").replaceFirst("\"$", ""));
+                    // ensure we only remove matching paired surrounding quotes
+                    p.put("tks.transmitter.httpheader." + key, headerValue.replaceFirst("^\"(.$)\"$", "$1"));
                 } else if (o instanceof Method) {
                     Method method = (Method) o;
                     // This is a slighly premature execution but there's not much in it.

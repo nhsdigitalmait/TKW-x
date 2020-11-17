@@ -28,8 +28,6 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
  */
 public class CDSSFHIRUnpackerTest {
     
-    private CDSSFHIRUnpacker instance;
-
     public CDSSFHIRUnpackerTest() {
     }
     
@@ -43,7 +41,6 @@ public class CDSSFHIRUnpackerTest {
     
     @Before
     public void setUp() {
-        instance = new CDSSFHIRUnpacker();
     }
     
     @After
@@ -64,9 +61,15 @@ public class CDSSFHIRUnpackerTest {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ZipOutputStream zipOut = new ZipOutputStream(bos);
         ZipEntry zipEntry = new ZipEntry("entry1");
+        
+        // This is a tld the code 0x0707 represents full url field id 
+        // The code under test breaks if there is no entry
+        // the Shorts are byte reversed
+        // This is 1 byte long and is a letter A
+        zipEntry.setExtra(new byte[]{7,7,1,0,65});
         zipOut.putNextEntry(zipEntry);
         
-        // This is actually a fhir json repsonse but ho hum
+        // This is actually a fhir json response but ho hum
         String json= readFile2String("src/test/resources/slots.json");
         zipOut.write(json.getBytes());
         zipOut.close();
@@ -76,7 +79,7 @@ public class CDSSFHIRUnpackerTest {
         httpRequest.setContentLength(bos.toByteArray().length);
         httpRequest.setHeader(CONTENT_LENGTH_HEADER.toLowerCase(), Integer.toString(bos.toByteArray().length));
         String expResult = "Bundle";
-        HttpRequest result = instance.unpack(httpRequest);
+        HttpRequest result = CDSSFHIRUnpacker.unpack(httpRequest);
         // This checks that its well formed xml and also that the root node is correct.
         assertEquals(expResult, XPathManager.xpathExtractor("local-name(/*)",new String(result.getBody())));
 

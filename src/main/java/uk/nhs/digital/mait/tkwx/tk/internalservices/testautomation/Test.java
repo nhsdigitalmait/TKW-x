@@ -182,7 +182,13 @@ public class Test
          * @return the substituted String object
          */
         public String substitute(String source) {
-            return source.replaceAll(matchRegExp, substituteRegExp);
+            if (matchRegExp == null) {
+                return source;
+            } else if (substituteRegExp == null) {
+                return source.replaceAll(matchRegExp, "$1");
+            } else {
+                return source.replaceAll(matchRegExp, substituteRegExp);
+            }
         }
 
         private final String matchRegExp;

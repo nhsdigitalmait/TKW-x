@@ -114,7 +114,8 @@ public class SingleRecordXpathResponseExtractorTest {
         // check the new value is set
         assertEquals(expResult, c.getValue(RECORD_KEY, XML_TAG_NAME));
 
-        expResult = "v1";
+        // expect initial character truncated
+        expResult = "1";
         assertEquals(expResult, c.getValue(RECORD_KEY, HTTP_HEADER_TAG_NAME));
 
         c.close();

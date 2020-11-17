@@ -28,11 +28,12 @@ import uk.nhs.digital.mait.commonutils.util.ConfigurationTokenSplitter;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Test.RegexpSubstitution;
 
 /**
  * Implementation of the ResponseExtractor that uses a separate XPath expression
- * to identify the record id of a data source to update. 
- * Also extracts data from response headers
+ * to identify the record id of a data source to update. Also extracts data from
+ * response headers
  *
  * @author Damian Murphy murff@warlock.org
  */
@@ -42,9 +43,65 @@ public class SingleRecordXpathResponseExtractor
     private String name = null;
     private String configFile = null;
     private final ArrayList<DataSource> registeredDataSources = new ArrayList<>();
+    //                      expression    tag
     private final HashMap<XPathExpression, String> xmlExtracts = new HashMap<>();
-    private final HashMap<String, String> httpHeaderExtracts = new HashMap<>();
+    //                    headername tag
+    private final HashMap<HeaderRegexpSubstitution, String> httpHeaderExtracts = new HashMap<>();
     private XPathExpression recordid = null;
+
+    /**
+     * wraps the header name and the associated substitution
+     */
+    private static class HeaderRegexpSubstitution extends RegexpSubstitution {
+
+        private String headerName;
+
+        /**
+         * No regexp
+         * @param headerName
+         */
+        public HeaderRegexpSubstitution(String headerName) {
+            super(null, null);
+            this.headerName = headerName;
+        }
+
+        /**
+         * assumes $1 is the subst parameter
+         * @param headerName
+         * @param matchRegExp
+         */
+        public HeaderRegexpSubstitution(String headerName, String matchRegExp) {
+            super(matchRegExp, null);
+            this.headerName = headerName;
+        }
+
+        /**
+         *
+         * @param headerName
+         * @param matchRegExp
+         * @param substituteRegExp
+         */
+        public HeaderRegexpSubstitution(String headerName, String matchRegExp, String substituteRegExp) {
+            super(matchRegExp, substituteRegExp);
+            this.headerName = headerName;
+        }
+
+        /**
+         *
+         * @param hm HttpHeaderManager
+         * @return substituted header value
+         */
+        public String substitute(HttpHeaderManager hm) {
+            String hv = hm.getHttpHeaderValue(headerName);
+            if (hv != null) {
+                return substitute(hv);
+            }
+            else {
+                // header not present return ""
+                return "";
+            }
+        }
+    }
 
     public SingleRecordXpathResponseExtractor() {
     }
@@ -78,7 +135,7 @@ public class SingleRecordXpathResponseExtractor
     public void extract(String body, HttpHeaderManager hm)
             throws Exception {
         String recordIdentity = null;
-        
+
         // usually we getthe id from the response payload but sometimes
         // there is no response payload
         if (recordid == null || body.isEmpty()) {
@@ -86,7 +143,7 @@ public class SingleRecordXpathResponseExtractor
         } else {
             InputSource is = new InputSource(new StringReader(body));
             recordIdentity = recordid.evaluate(is);
-            
+
             for (XPathExpression xpe : xmlExtracts.keySet()) {
                 String tag = xmlExtracts.get(xpe);
                 is = new InputSource(new StringReader(body));
@@ -100,9 +157,9 @@ public class SingleRecordXpathResponseExtractor
         }
 
         // http header values
-        for (String headerName : httpHeaderExtracts.keySet()) {
-            String tag = httpHeaderExtracts.get(headerName);
-            String value = hm.getHttpHeaderValue(headerName);
+        for (HeaderRegexpSubstitution headerSubstitution : httpHeaderExtracts.keySet()) {
+            String tag = httpHeaderExtracts.get(headerSubstitution);
+            String value = headerSubstitution.substitute(hm);
             if (value == null) {
                 value = "";
             }
@@ -122,13 +179,13 @@ public class SingleRecordXpathResponseExtractor
     }
 
     /**
-     * format id ( <xmlpath>|httpheadeader:<headerName> ) <idlabel> 'ID' ?
+     * format id ( <xmlpath>| httpheader <headerName> [ matchregexp [substregexp]]) <tagname> 'ID' ?
      *
      * @throws Exception
      */
     private void load()
             throws Exception {
-        try (BufferedReader br = new BufferedReader(new FileReader(configFile))) {
+        try ( BufferedReader br = new BufferedReader(new FileReader(configFile))) {
             String line = null;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
@@ -139,7 +196,7 @@ public class SingleRecordXpathResponseExtractor
                     continue;
                 }
                 String[] parts = (new ConfigurationTokenSplitter(line)).split();
-                if (!parts[1].startsWith(HTTPHEADER)) {
+                if (!parts[1].equals(HTTPHEADER)) {
                     XPathExpression xpe = getXpathExtractor(parts[1]);
                     if (parts.length == 3) {
                         if (parts[2].contentEquals("ID")) {
@@ -150,13 +207,27 @@ public class SingleRecordXpathResponseExtractor
                         xmlExtracts.put(xpe, parts[0]);
                     }
                 } else {
-                    String headerName = parts[1].substring(HTTPHEADER.length());
-                    httpHeaderExtracts.put(headerName, parts[0]);
+                    String headerName = parts[2];
+                    switch (parts.length) {
+                        case 3:
+                            // no regexp
+                            httpHeaderExtracts.put(new HeaderRegexpSubstitution(headerName), parts[0]);
+                            break;
+                        case 4:
+                            // match regexp but no subst (assumes $1 for subst )
+                            httpHeaderExtracts.put(new HeaderRegexpSubstitution(headerName, parts[3]), parts[0]);
+                            break;
+                        case 5:
+                            // match and subst
+                            httpHeaderExtracts.put(new HeaderRegexpSubstitution(headerName, parts[3], parts[4]), parts[0]);
+                            break;
+                        default:
+                    }
                 }
             }
         }
     }
-    private static final String HTTPHEADER = "httpheader:";
+    private static final String HTTPHEADER = "httpheader";
 
     @Override
     public void registerDatasourceListener(DataSource c) {

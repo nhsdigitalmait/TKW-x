@@ -596,6 +596,23 @@ public class Test
 
             }
 
+            // perform datasource substitutions this is where we get the change to mess with the context path
+            if (datasource != null && recordid != null) {
+                Iterator<String> iter = datasource.getTags().iterator();
+                while (iter.hasNext()) {
+                    String tag = iter.next();
+                    try {
+                        if (toUrl != null) {
+                            toUrl = toUrl.replaceAll(tag, datasource.getValue(recordid, tag));
+                        }
+                        if (fromUrl != null) {
+                            fromUrl = fromUrl.replaceAll(tag, datasource.getValue(recordid, tag));
+                        }
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+
             if (httpHeaderSetNames != null) {
                 httpHeaderSets = new ArrayList<>();
                 Iterator<AutotestParser.HttpHeaderSetNameContext> iter = httpHeaderSetNames.iterator();
@@ -644,8 +661,8 @@ public class Test
     private String processParameterObject(Object o) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException {
         String value = null;
         if (o instanceof String) {
-           // ensure we only remove matching paired surrounding quotes
-           value = o.toString().replaceFirst("^\"(.*)\"$", "$1");
+            // ensure we only remove matching paired surrounding quotes
+            value = o.toString().replaceFirst("^\"(.*)\"$", "$1");
         } else if (o instanceof Method) {
             Method method = (Method) o;
             // This is a slighly premature execution but there's not much in it.
@@ -1040,6 +1057,15 @@ public class Test
         }
     } // processPropertySets
 
+    /**
+     * perform substitutions from autotest substitution tags and also tdv
+     * datasource tags on http header property values
+     *
+     * @param p Properties file
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     */
     private void setTKWHttpHeaderProperties(Properties p) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         for (HashMap<String, Object> httpHeaderSet : httpHeaderSets) {
             for (String key : httpHeaderSet.keySet()) {
@@ -1051,14 +1077,14 @@ public class Test
                         String value = processParameterObject(substitutionTags.get(tag));
                         headerValue = headerValue.replaceAll(tag, value);
                     }
+
                     // perform datasource substitutions
-                    if (datasource != null) {
-                        String id = datasource.getNextId();
+                    if (datasource != null && recordid != null) {
                         Iterator<String> iter = datasource.getTags().iterator();
                         while (iter.hasNext()) {
                             String tag = iter.next();
                             try {
-                                headerValue = headerValue.replaceAll(tag, datasource.getValue(id, tag));
+                                headerValue = headerValue.replaceAll(tag, datasource.getValue(recordid, tag));
                             } catch (Exception ex) {
                             }
                         }

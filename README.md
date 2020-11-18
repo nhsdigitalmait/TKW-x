@@ -4,13 +4,13 @@ NHS Digital Toolkit Workbench. Supersedes the ITK workbench and sunsets legacy p
 
 Original TKW documentation is avalable at [ITK Documentation](https://digital.nhs.uk/services/interoperability-toolkit/developer-resources/itk-test-centre/itk-testbench)
 
-While detailed and accurate the documentation is somewhat old. This page summarises extensions and enhancments not covered in the original documentation.
+While detailed and accurate the documentation is somewhat old. This page summarises extensions and enhancements not covered in the original documentation.
 For definitive descritpions of the three domain specific languages the user should refer to the appropriate ANTLR Lexer and Parser syntaxes.
 
 
 ## General
 TKW-x adds support for FHIR and Restful services including:
-* Migrations to ANTLR based grammars and syntaxes for the three domais specific languages
+* Migrations to ANTLR based grammars and syntaxes for the three domain specific languages
 * Integration with Java HapiFhir libraries
 * Access to Http headers and context paths
 * Construction and testing of Java Web Tokens
@@ -18,10 +18,10 @@ TKW-x adds support for FHIR and Restful services including:
 * Support for [MESH Transport](https://digital.nhs.uk/services/message-exchange-for-social-care-and-health-mesh)
 * Support for creation and consumption of 'on the wire' json payloads driven by http headers Content-type and Accept
 * Support for compressed encodings (gzip and zip) and chunking
-* Addition of two new modes	 httpInterceptor superseding simulator and autotest
+* Addition of two new modes	 httpInterceptor superseding simulator, and autotest
 
 ## Sunsetting of legacy protocols/services
-* Removal of support for SOAP based legacy transports (ITK1 and ITK2) Support for Synchronous and asynchronous Spine Messaging is retained 
+* Removal of support for SOAP based legacy transports (ITK1 and ITK2) Support for Synchronous and Asynchronous Spine Messaging is retained 
 * Removal of support for HL7v2 Pipe and Hat Messaging
 
 ## Validation
@@ -32,15 +32,15 @@ TKW-x adds support for FHIR and Restful services including:
 * [ANTLR Lexer](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/validation/parser/ValidationLexer.g4) and [ANTLR Parser](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/validation/parser/ValidationParser.g4)
 
 ## Transmitter
-* Statically added http header request and response values
+* Ability to add http headers to requests
 * Construction of JWT authentication headers
 * Ability to use a full set of Http methods
 
 ## Simulator
-* Multiple Property file sources
-* Expression classes
+* Multiple named property file sources for substituion tags in addition to the existsing system properties
+* Expression classes allowing users to define their own java coded expressions
 * Static http headers in responses
-* Ability to return Http headers based on substitution tags
+* Ability to return dynamic http headers based on substitution tags
 * [ANTLR Lexer](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/rules/parser/SimulatorRulesLexer.g4) and [ANTLR Parser](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/rules/parser/SimulatorRulesParser.g4)
 
 ## Autotest

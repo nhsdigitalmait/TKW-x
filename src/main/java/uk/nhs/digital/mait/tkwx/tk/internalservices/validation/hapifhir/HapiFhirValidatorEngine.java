@@ -18,16 +18,12 @@ package uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.validation.FhirValidator;
-import ca.uhn.fhir.validation.IValidatorModule;
-import ca.uhn.fhir.validation.SchemaBaseValidator;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationResult;
-import ca.uhn.fhir.validation.schematron.SchematronBaseValidator;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -36,20 +32,17 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isYDefaultY;
 import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
 import org.hl7.fhir.common.hapi.validation.support.PrePopulatedValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService;
 import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.RemoteTerminologyServiceValidationSupport;
-import org.hl7.fhir.common.hapi.validation.support.SnapshotGeneratingValidationSupport;
-import org.hl7.fhir.convertors.VersionConvertor_30_40;
-import org.hl7.fhir.dstu2016may.model.codesystems.V3RoleCode;
-import org.hl7.fhir.dstu3.model.CodeSystem;
-import org.hl7.fhir.dstu3.model.StructureDefinition;
-import org.hl7.fhir.dstu3.model.ValueSet;
 
 /**
  *
@@ -71,6 +64,11 @@ public class HapiFhirValidatorEngine {
     private final String SCHEMATRONVALIDATE = ".schematronvalidate";
     private final String NOTERMINOLOGYCHECKS = ".noterminologychecks";
     private final String MINIMUMREPORTLEVEL = ".minimumreportlevel";
+    private final String INCLUDEVALIDATIONSUPPORTMODULE = ".includevalidationsupportmodule";
+    private final String PREPOPULATED = ".prepopulated";
+    private final String INMEMORYTERMINOLOGYSERVER = ".inmemoryterminologyserver";
+    private final String COMMONCODESYSTEMSTERMINOLOGYSERVICE = ".commoncodesystemsterminologyservice";
+    private final String REMOTETERMINOLOGYSERVICEURL = ".remoteterminologyserviceurl";
     public final int INFORMATION = 0;
     public final int WARNING = 1;
     public final int ERROR = 2;
@@ -79,6 +77,10 @@ public class HapiFhirValidatorEngine {
     private boolean schemaValidate = false;
     private boolean schematronValidate = false;
     private boolean noTerminologyChecks = false;
+    private boolean prepopulatedValidationSupport = true;
+    private boolean inMemoryTerminologyServerValidationSupport = true;
+    private boolean commonCodeSystemTerminologyServiceValidationSupport = true;
+    private String remoteTerminologyServiceUrl = null;
     private int minimumReportLevel = 0;
     private final FhirContext context = FhirContext.forDstu3();
     private String softwareVersion;
@@ -105,6 +107,9 @@ public class HapiFhirValidatorEngine {
             schematronValidate = isY(config.getConfiguration(HapiFhirInstancePath + SCHEMATRONVALIDATE));
             noTerminologyChecks = isY(config.getConfiguration(HapiFhirInstancePath + NOTERMINOLOGYCHECKS));
             strictParserValidation = isY(config.getConfiguration(HapiFhirInstancePath + STRICTPARSERVALIDATION));
+            prepopulatedValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + PREPOPULATED));
+            inMemoryTerminologyServerValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + INMEMORYTERMINOLOGYSERVER));
+            commonCodeSystemTerminologyServiceValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + COMMONCODESYSTEMSTERMINOLOGYSERVICE));
 
             String c = config.getConfiguration(HapiFhirInstancePath + MINIMUMREPORTLEVEL);
 
@@ -127,133 +132,123 @@ public class HapiFhirValidatorEngine {
             if (softwareVersion == null || softwareVersion.trim().equals("")) {
                 softwareVersion = "Version number not configured";
             }
-            // Version number of additional FHIR profiles 
-            String pVersion = config.getConfiguration(HapiFhirInstancePath + PROFILEVERSIONFILELOCATION);
-            if (pVersion == null || pVersion.trim().equals("")) {
-                profileVersion = config.getConfiguration(HapiFhirInstancePath + PROFILEVERSION);
-                if (profileVersion == null || profileVersion.trim().equals("")) {
-                    profileVersion = "Version number not configured. Either use " + PROFILEVERSION
-                            + " in the properties file or " + HapiFhirInstancePath + PROFILEVERSIONFILELOCATION + " in the properties"
-                            + " file referring to an external file with a colon separated profile_version in it e.g. profile_version:V1.1";
-                }
+            remoteTerminologyServiceUrl = config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + REMOTETERMINOLOGYSERVICEURL);
+            if (remoteTerminologyServiceUrl == null || remoteTerminologyServiceUrl.trim().equals("")) {
+                remoteTerminologyServiceUrl = null;
             } else {
                 try {
-                    ignoreList.add(new File(pVersion));
-                    if (pVersion.endsWith(".txt")) {
-                        // assume it's a colon separated file
-                        Map<String, String> profileVersionMap = Utils.readColonSeparatedFile2Map(pVersion);
-                        profileVersion = profileVersionMap.get("profile_version");
-                        if (profileVersion == null || profileVersion.trim().equals("")) {
-                            profileVersion = "NHS FHIR Profile Version number not configured properly in " + pVersion
-                                    + ". Make sure it contains a colon separated term e.g. profile_version:V1.1 ";
-                        }
-
-                    } else if (pVersion.endsWith("package.json")) {
-                        //assume it's an npm package.json
-                        JsonObject jsonObject = new JsonParser().parse(Utils.readFile2String(pVersion)).getAsJsonObject();
-                        profileVersion = jsonObject.get("name").getAsString() + " " + jsonObject.get("version").getAsString();
-                        if (profileVersion == null || profileVersion.trim().equals("")) {
-                            profileVersion = "NHS FHIR Profile Version number not configured properly in " + pVersion
-                                    + ". Make sure it is a valid package.json file ";
-                        }
-                    }
-
-                } catch (java.nio.file.NoSuchFileException e) {
-                    profileVersion = "NHS FHIR Profile Version number not configured properly in " + pVersion
-                            + ". Make sure the colon separated file or package.json file exists ";
-                }
-
-            }
-            // create an ignore list
-            String ignore = config.getConfiguration(HapiFhirInstancePath + ASSETDIR + IGNORELIST);
-            if (ignore != null) {
-                try {
-                    StringTokenizer st = new StringTokenizer(ignore);
-
-                    while (st.hasMoreTokens()) {
-                        File f = new File(st.nextToken());
-                        ignoreList.add(f);
-                    }
-                } catch (Exception e) {
-                    Logger.getInstance().log(java.util.logging.Level.WARNING, HapiFhirValidatorEngine.class.getName(), "One or more elements of the ignore list cannot be understood: " + e.getMessage());
+                    URL url = new URL(remoteTerminologyServiceUrl);
+                } catch (MalformedURLException m) {
+                    remoteTerminologyServiceUrl = null;
+                    Logger.getInstance().log(java.util.logging.Level.WARNING, HapiFhirValidatorEngine.class.getName(), "Terminology Server URL is Malformed: " + m.getMessage());
                 }
             }
 
 //            context = FhirContext.forDstu3();
             context.setParserErrorHandler(customHapiFhirErrorHandler);
 
-            HapiAssetCache p = new HapiAssetCache(context, ignoreList);
-            //set the profile version so that it can be ignored in the loading of the profiles
-            p.setProfileVersionFileName(pVersion);
-            //find what sort of config has been used to define the asset directory and load accordingly
-            String sp = config.getConfiguration(HapiFhirInstancePath + ASSETDIR);
-            if (sp != null && sp.trim().length() > 0) {
-                p.addAll(sp);
-            } else {
-                int i = 0;
-                while (true) {
-                    sp = config.getConfiguration(HapiFhirInstancePath + ASSETDIR + "." + i);
-                    if ((sp == null) || (sp.trim().length() == 0)) {
-                        break;
-                    } else {
-                        p.addAll(sp);
-                    }
-                    i++;
-                }
-                if (i == 0) {
-                    Logger log = Logger.getInstance();
-                    log.log("No HAPI FHIR assets read in");
-                    System.out.println("No HAPI FHIR assets read in");
-                }
-            }
-
             ValidationSupportChain supportChain = new ValidationSupportChain();
 
             DefaultProfileValidationSupport defaultProfileValidationSupport = new DefaultProfileValidationSupport(context);
             supportChain.addValidationSupport(defaultProfileValidationSupport);
 
-// USING NEW PREPOPULATED            
-//CHHOSE EITHER VANILLA HAPI which loads the reources in but returns null            
-            PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(context, p.getStructureDefinitionIBaseResourceCache(), p.getValueSetIBaseResourceCache(), p.getCodeSystemIBaseResourceCache());
-//OR MINE WHICH ESSENTIALLY DOES THE SAME AS THE CACHING SUPPORT            
-//            PrePopulatedValidationSupportWithCodedSystems prePopulatedSupport = new PrePopulatedValidationSupportWithCodedSystems();
+            if (prepopulatedValidationSupport) {
+                // Version number of additional FHIR profiles 
+                String pVersion = config.getConfiguration(HapiFhirInstancePath + PROFILEVERSIONFILELOCATION);
+                if (pVersion == null || pVersion.trim().equals("")) {
+                    profileVersion = config.getConfiguration(HapiFhirInstancePath + PROFILEVERSION);
+                    if (profileVersion == null || profileVersion.trim().equals("")) {
+                        profileVersion = "Version number not configured. Either use " + PROFILEVERSION
+                                + " in the properties file or " + HapiFhirInstancePath + PROFILEVERSIONFILELOCATION + " in the properties"
+                                + " file referring to an external file with a colon separated profile_version in it e.g. profile_version:V1.1";
+                    }
+                } else {
+                    try {
+                        ignoreList.add(new File(pVersion));
+                        if (pVersion.endsWith(".txt")) {
+                            // assume it's a colon separated file
+                            Map<String, String> profileVersionMap = Utils.readColonSeparatedFile2Map(pVersion);
+                            profileVersion = profileVersionMap.get("profile_version");
+                            if (profileVersion == null || profileVersion.trim().equals("")) {
+                                profileVersion = "NHS FHIR Profile Version number not configured properly in " + pVersion
+                                        + ". Make sure it contains a colon separated term e.g. profile_version:V1.1 ";
+                            }
 
-//            HashMap<String, StructureDefinition> sd = p.getStructureDefinitions();
-//            for (StructureDefinition value : sd.values()) {
-//                prePopulatedSupport.addStructureDefinition(value);
-//            }
-//
-//            HashMap<String, CodeSystem> cs = p.getCodeSystemCache();
-//            for (CodeSystem value : cs.values()) {
-//                prePopulatedSupport.addCodeSystem(value);
-//            }
-//
-//            HashMap<String, ValueSet> vs = p.getValueSetCache();
-//            for (ValueSet value : vs.values()) {
-//                org.hl7.fhir.r4.model.Resource res = VersionConvertor_30_40.convertResource(value, true);
-//                 org.hl7.fhir.r4.model.ValueSet r4val = (org.hl7.fhir.r4.model.ValueSet)res;
-//                prePopulatedSupport.addValueSet(value);
-//            }
-            supportChain.addValidationSupport(prePopulatedSupport);
-// USING NEW PREPOPULATED END 
-// USING CACHINGIALIDATIONSUPPORT
-//            CachingIValidationSupport caching = new CachingIValidationSupport();
-//            caching.setProfileCache(p);
-//            ValidationSupportChain supportChain = new ValidationSupportChain(defaultProfileValidationSupport, caching);
-// USING CACHINGIALIDATIONSUPPORT END
+                        } else if (pVersion.endsWith("package.json")) {
+                            //assume it's an npm package.json
+                            JsonObject jsonObject = new JsonParser().parse(Utils.readFile2String(pVersion)).getAsJsonObject();
+                            profileVersion = jsonObject.get("name").getAsString() + " " + jsonObject.get("version").getAsString();
+                            if (profileVersion == null || profileVersion.trim().equals("")) {
+                                profileVersion = "NHS FHIR Profile Version number not configured properly in " + pVersion
+                                        + ". Make sure it is a valid package.json file ";
+                            }
+                        }
 
-            InMemoryTerminologyServerValidationSupport inMemoryTerminologyServerValidationSupport = new InMemoryTerminologyServerValidationSupport(context);
-            supportChain.addValidationSupport(inMemoryTerminologyServerValidationSupport);
-            CommonCodeSystemsTerminologyService codeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(context);
-            supportChain.addValidationSupport(codeSystemsTerminologyService);
+                    } catch (java.nio.file.NoSuchFileException e) {
+                        profileVersion = "NHS FHIR Profile Version number not configured properly in " + pVersion
+                                + ". Make sure the colon separated file or package.json file exists ";
+                    }
+
+                }
+                // create an ignore list
+                String ignore = config.getConfiguration(HapiFhirInstancePath + ASSETDIR + IGNORELIST);
+                if (ignore != null) {
+                    try {
+                        StringTokenizer st = new StringTokenizer(ignore);
+
+                        while (st.hasMoreTokens()) {
+                            File f = new File(st.nextToken());
+                            ignoreList.add(f);
+                        }
+                    } catch (Exception e) {
+                        Logger.getInstance().log(java.util.logging.Level.WARNING, HapiFhirValidatorEngine.class.getName(), "One or more elements of the ignore list cannot be understood: " + e.getMessage());
+                    }
+                }
+                HapiAssetCache p = new HapiAssetCache(context, ignoreList);
+                //set the profile version so that it can be ignored in the loading of the profiles
+                p.setProfileVersionFileName(pVersion);
+                //find what sort of config has been used to define the asset directory and load accordingly
+                String sp = config.getConfiguration(HapiFhirInstancePath + ASSETDIR);
+                if (sp != null && sp.trim().length() > 0) {
+                    p.addAll(sp);
+                } else {
+                    int i = 0;
+                    while (true) {
+                        sp = config.getConfiguration(HapiFhirInstancePath + ASSETDIR + "." + i);
+                        if ((sp == null) || (sp.trim().length() == 0)) {
+                            break;
+                        } else {
+                            p.addAll(sp);
+                        }
+                        i++;
+                    }
+                    if (i == 0) {
+                        Logger log = Logger.getInstance();
+                        log.log("No HAPI FHIR assets read in");
+                        System.out.println("No HAPI FHIR assets read in");
+                    }
+                }
+                PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(context, p.getStructureDefinitionIBaseResourceCache(), p.getValueSetIBaseResourceCache(), p.getCodeSystemIBaseResourceCache());
+                supportChain.addValidationSupport(prePopulatedSupport);
+            }
+
+            if (inMemoryTerminologyServerValidationSupport) {
+                InMemoryTerminologyServerValidationSupport inMemoryTerminologyServer = new InMemoryTerminologyServerValidationSupport(context);
+                supportChain.addValidationSupport(inMemoryTerminologyServer);
+            }
+            if (commonCodeSystemTerminologyServiceValidationSupport) {
+                CommonCodeSystemsTerminologyService codeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(context);
+                supportChain.addValidationSupport(codeSystemsTerminologyService);
+            }
 //            SnapshotGeneratingValidationSupport generatingValidationSupport = new SnapshotGeneratingValidationSupport(context);
 //            supportChain.addValidationSupport(generatingValidationSupport);
 
 // Create a module that uses a remote terminology service
-//            RemoteTerminologyServiceValidationSupport remoteTermSvc = new RemoteTerminologyServiceValidationSupport(context);
-//            remoteTermSvc.setBaseUrl("https://stu3.ontoserver.csiro.au/fhir");
-//            supportChain.addValidationSupport(remoteTermSvc);
-
+            if (remoteTerminologyServiceUrl != null) {
+                RemoteTerminologyServiceValidationSupport remoteTermSvc = new RemoteTerminologyServiceValidationSupport(context);
+                remoteTermSvc.setBaseUrl(remoteTerminologyServiceUrl);
+                supportChain.addValidationSupport(remoteTermSvc);
+            }
             CachingValidationSupport cachingValidationSupport = new CachingValidationSupport(supportChain);
 
             FhirInstanceValidator fhirInstanceValidator = new FhirInstanceValidator(cachingValidationSupport);
@@ -346,6 +341,22 @@ public class HapiFhirValidatorEngine {
 
     public FhirContext getContext() {
         return context;
+    }
+
+    public boolean isPrepopulatedValidationSupport() {
+        return prepopulatedValidationSupport;
+    }
+
+    public boolean isInMemoryTerminologyServerValidationSupport() {
+        return inMemoryTerminologyServerValidationSupport;
+    }
+
+    public boolean isCommonCodeSystemTerminologyServiceValidationSupport() {
+        return commonCodeSystemTerminologyServiceValidationSupport;
+    }
+
+    public String getRemoteTerminologyServiceUrl() {
+        return remoteTerminologyServiceUrl;
     }
 
 }

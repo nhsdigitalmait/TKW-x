@@ -494,4 +494,19 @@ public class UtilsTest {
         new File(dest).delete();
     }
 
+    /**
+     * Test of isYDefaultY method, of class Utils.
+     */
+    @Test
+    public void testIsYDefaultY() {
+        System.out.println("isYDefaultY");
+        String s = null;
+        boolean expResult = true;
+        boolean result = Utils.isYDefaultY(s);
+        assertEquals(expResult, result);
+        s = "y";
+        result = Utils.isYDefaultY(s);
+        assertEquals(expResult, result);
+    }
+
 }

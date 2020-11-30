@@ -409,6 +409,21 @@ public class Utils {
     }
 
     /**
+     * mainly used for converting potentially null property values into booleans
+     * Default behaviour if not set is to return true
+     *
+     * @param s String containing property value
+     * @return boolean
+     */
+    public static boolean isYDefaultY(String s) {
+        if (s == null) {
+            return true;
+        } else {
+            return s.trim().toUpperCase().startsWith("Y");
+        }
+    }
+
+    /**
      * read a properties file into a properties object
      *
      * @param propertiesFile
@@ -466,7 +481,7 @@ public class Utils {
 
         return s;
     }
-    
+
     public static boolean fileExists(String path) {
         File f = new File(path);
         return f.exists() && f.isFile();
@@ -476,7 +491,8 @@ public class Utils {
         File f = new File(path);
         return f.exists() && f.isDirectory();
     }
-        /**
+
+    /**
      * copy file from source to dest folder
      *
      * @param source (fully qualified path and name)
@@ -490,11 +506,10 @@ public class Utils {
         try {
             Files.copy(sourceFile, destPath, REPLACE_EXISTING);
         } catch (IOException ex) {
-            Logger.getInstance().log(Level.SEVERE, Utils.class.getName(),"Failed to copy " + source + " to " + dest +" "+ ex.getMessage());
+            Logger.getInstance().log(Level.SEVERE, Utils.class.getName(), "Failed to copy " + source + " to " + dest + " " + ex.getMessage());
             result = false;
         }
         return result;
     }
 
-    
 }

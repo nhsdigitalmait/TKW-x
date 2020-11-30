@@ -151,9 +151,9 @@
                             <goal>antlr4</goal>
                         </goals>
                         <configuration>
-                            <sourceDirectory>${tkwx-testautomation-path}</sourceDirectory>
-                            <outputDirectory>${tkwx-testautomation-path}</outputDirectory>
-                            <libDirectory>${tkwx-testautomation-path}</libDirectory>
+                            <sourceDirectory>${tkwx-automation-path}</sourceDirectory>
+                            <outputDirectory>${tkwx-automation-path}</outputDirectory>
+                            <libDirectory>${tkwx-automation-path}</libDirectory>
                             <listener>true</listener>
                             <visitor>true</visitor>
                         </configuration>

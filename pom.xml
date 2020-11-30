@@ -11,12 +11,13 @@
         <internal_services_root>src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices</internal_services_root>
         
         <tkwx-rules-path>${internal_services_root}/rules/parser</tkwx-rules-path>
-		<tkwx-automation-path>${internal_services_root}/testautomation/parser</tkwx-automation-path>
+        <tkwx-automation-path>${internal_services_root}/testautomation/parser</tkwx-automation-path>
         <tkwx-validation-path>${internal_services_root}/validation/parser</tkwx-validation-path>
     </properties>    
     
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -29,6 +30,8 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+
+            <!-- related to Junit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -51,35 +54,40 @@
                     
                 </configuration> 
             </plugin> 
+
+            <!-- build the shaded jar including all dependencies -->
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <finalName>TKW-x-maven</finalName>
-                    <descriptorRefs>
-                        <!--
-                        <descriptorRef>bin</descriptorRef>
-                        -->
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <mainClass>uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator</mainClass>
-                        </manifest>
-                    </archive>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator</mainClass>
+                                </transformer>
+                            </transformers>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>classworlds:classworlds</exclude>
+                                    <exclude>junit:junit</exclude>
+                                    <exclude>jmock:*</exclude>
+                                    <exclude>*:xml-apis</exclude>
+                                    <exclude>org.apache.maven:lib:tests</exclude>
+                                    <exclude>log4j:log4j:jar:</exclude>
+                                </excludes>
+                            </artifactSet>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
             
-            <!-- copy -->
+            <!-- copy the jar to TKWROOT -->
             <plugin>
                 <!-- 
                     see https://maven.apache.org/plugins/maven-dependency-plugin/examples/copying-artifacts.html 
@@ -165,6 +173,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- adds a git.properties file to the jar -->
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
@@ -273,7 +283,7 @@
             <version>${hapi.version}</version>
             <type>jar</type>
         </dependency>  
-       <dependency>
+        <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-client</artifactId>
             <version>${hapi.version}</version>

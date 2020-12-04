@@ -145,6 +145,14 @@ public class HttpSender
             }
         }
         start();
+        
+        // autotest mode requires the transmit to block until the log file has been fully populated.
+        if (System.getProperty("tkw.internal.runningautotest") != null) {
+            try {
+                join();
+            } catch (InterruptedException ex) {
+            }
+        }
     }
 
     private void initSSLContext()
@@ -253,7 +261,7 @@ public class HttpSender
 
         String logFileName = getLogFileName(u);
 
-        try (FileOutputStream logFileWriter = new FileOutputStream(logFileName)) {
+        try ( FileOutputStream logFileWriter = new FileOutputStream(logFileName)) {
             if (useLogFileLocker) {
                 logFileLock = new FileLocker(logFileName);
             }
@@ -549,6 +557,7 @@ public class HttpSender
             LogVerifier lv = LogVerifier.getInstance();
             lv.makeSignature(logFileName);
         }
+        System.out.println("Finished writing log HttpSender Thread " + getName() + "terminating");
     }
 
     /**

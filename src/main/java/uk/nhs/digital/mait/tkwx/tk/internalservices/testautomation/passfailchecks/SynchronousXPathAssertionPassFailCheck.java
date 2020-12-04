@@ -330,14 +330,26 @@ public class SynchronousXPathAssertionPassFailCheck
     public TestResult passed(Script s, InputStream in, InputStream inSync)
             throws Exception {
         TestResult p = TestResult.FAIL;
-        String responseBody = getResponseBody(in);
-        //if (!Utils.isNullOrEmpty(responseBody)) {
+        try {
+            String responseBody = getResponseBody(in);
+            //if (!Utils.isNullOrEmpty(responseBody)) {
             InputSource is = new InputSource(new StringReader(responseBody));
             p = doChecks(s, is);
             doExtract(responseBody, getResponseHeaders());
-        //} else {
-        //    setDescription(colourString("Zero Length Content", RED));
-        //}
+            //} else {
+            //    setDescription(colourString("Zero Length Content", RED));
+            //}
+        } catch (Exception ex) {
+            if (ex.getMessage().startsWith("Invalid log file")) {
+                // Looking for an exception from the body extractor
+                //we dont want the script to fail so trap if its what we are expecting
+                // otherwise rethrow
+                // set the description but this is not the text we get from the report
+                setDescription(colourString(ex.getMessage(), RED));
+            } else {
+                throw ex;
+            }
+        }
         return p;
     }
 

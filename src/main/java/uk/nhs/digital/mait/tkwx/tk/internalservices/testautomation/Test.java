@@ -881,6 +881,8 @@ public class Test
 
             handleReconfigurables(transmitter);
 
+            // This needs to be a blocking call for autotest purposes
+            // The transmitter checks the autotest system property and joins the thread if its true
             ServiceResponse r = transmitter.execute(null);
 
             transmitterLog = getTransmitterLogFile(schedule, filename);

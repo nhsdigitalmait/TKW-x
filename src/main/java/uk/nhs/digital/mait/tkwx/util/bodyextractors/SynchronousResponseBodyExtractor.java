@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.send.LogMarkers;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage.VALIDATE_AS;
 
 /**
  * Retrieve the body of a synchronous response from a transmitter or simulator
@@ -34,6 +33,7 @@ public class SynchronousResponseBodyExtractor extends AbstractBodyExtractor {
      * Retrieve the body of a synchronous response from a log file.
      *
      * @param in InputStream opened for reading the log file
+     * @param getXML
      * @return String containing the unchunked unzipped extracted response.
      * @throws Exception If something goes wrong, most likely
      * java.io.IOException.

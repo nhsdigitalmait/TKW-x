@@ -3,7 +3,7 @@
 Please note that this is work in progress currently only usable internally by the nhs mait team.
 The test suite has dependencies on internal artefacts not currently available in GitHub. If built by external users it will not pass many of the Junit tests.
 
-TKW-x does not support the ITK 1 or ITK 2 standards. Any support issues for TKW should be raised with the ITK Accreditation team via the Solution Assurance helpdesk mailto:platforms.supportdesk@nhs.net.
+TKW-x does not support the ITK 1 or ITK 2 standards. Any support issues for TKW should be raised with the ITK Accreditation team via the PLatforms Support desk.
 
 NHS Digital Toolkit Workbench. Supersedes the ITK workbench and sunsets legacy protocols. Positioning for Micro Services/Distributed Execution environments.
 

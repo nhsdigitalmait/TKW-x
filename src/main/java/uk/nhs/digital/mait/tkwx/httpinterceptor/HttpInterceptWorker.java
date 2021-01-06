@@ -105,6 +105,7 @@ public class HttpInterceptWorker {
 
     private static String fhirVersion;
     protected EvidenceMetaDataHandler evidenceMetaDataHandler;
+
     static {
         try {
             config = Configurator.getConfigurator();
@@ -180,10 +181,10 @@ public class HttpInterceptWorker {
                 if (restful) {
                     if (isZip(contentTypeHeader)) {
                         // if it's a $evaluate request assume that it's a CDSS/EMS validation
-                            if(httpRequest.getContext().toLowerCase().contains("$evaluate")){
-                                clonedXmlHttpRequest = CDSSFHIRUnpacker.unpack(httpRequest);
-                                service = clonedXmlHttpRequest.getField(SOAP_ACTION_HEADER);
-                            }
+                        if (httpRequest.getContext().toLowerCase().contains("$evaluate")) {
+                            clonedXmlHttpRequest = CDSSFHIRUnpacker.unpack(httpRequest);
+                            service = clonedXmlHttpRequest.getField(SOAP_ACTION_HEADER);
+                        }
                         // NB This is a content-type not an encoding type
                         //has been added to capture CDSS Clinical Decision Support validation request which arrive as B64 zip files
                         simulatorServiceResponse = rulesService.execute(httpRequest);
@@ -273,6 +274,7 @@ public class HttpInterceptWorker {
 
     /**
      * Parse the xml as fhir and flag up an format conversion error if it fails
+     *
      * @param contentTypeHeader
      * @param httpRequest
      * @throws Exception
@@ -284,10 +286,10 @@ public class HttpInterceptWorker {
                 String jsonRequestBody = fhirConvertXml2Json(new String(httpRequest.getBody()));
                 if (jsonRequestBody.contains(FHIRCONVERSIONFAILURE)) {
                     String errorText = JsonXmlConverter.jsonToXmlString(jsonRequestBody.toCharArray()).
-                            replaceFirst("(?s)^.*<text>(.*)</text>.*$","<fhirconversionfailure>$1</fhirconversionfailure>");
+                            replaceFirst("(?s)^.*<text>(.*)</text>.*$", "<fhirconversionfailure>$1</fhirconversionfailure>");
                     httpRequest.setInputStream(new ByteArrayInputStream(errorText.getBytes()));
                     //httpRequest.setContentLength(errorText.length());
-                    httpRequest.setHeader(CONTENT_LENGTH_HEADER,""+errorText.length());
+                    httpRequest.setHeader(CONTENT_LENGTH_HEADER, "" + errorText.length());
                     Logger.getInstance().log(WARNING, HttpInterceptWorker.class.getName(),
                             "Failed to convert fhir xml -> json " + jsonRequestBody);
                 }
@@ -369,13 +371,13 @@ public class HttpInterceptWorker {
         String rmlog = HttpLogFileGenerator.createLogFile(req, savedMessagesDir, subDir);
 // initialise the evidence Metatdata handler
         evidenceMetaDataHandler = new EvidenceMetaDataHandler(subDir, "Discriminator");
-        
+
         logfile = new LoggingFileOutputStream(rmlog);
         logfile.setEvidenceMetaDataHandler(evidenceMetaDataHandler);
-        logfile.setMetaDataDescription("interaction-log","Interaction Log");
+        logfile.setMetaDataDescription("interaction-log", "Interaction Log");
         req.setLoggingFileOutputStream(logfile);
         //As there may have been a clone add the logging to that too 
-        if(clonedXmlHttpRequest!=null){
+        if (clonedXmlHttpRequest != null) {
             clonedXmlHttpRequest.setLoggingFileOutputStream(logfile);
         }
 
@@ -470,7 +472,7 @@ public class HttpInterceptWorker {
                 responseBytes = chunkResponse(responseBytes, chunkSize);
             }
 
-            try (OutputStream os = resp.getOutputStream()) {
+            try ( OutputStream os = resp.getOutputStream()) {
                 os.write(responseBytes);
                 // NB Don't delete the flush its critical to successful operation of the interceptor
                 // because theres an override that causes the final response to be generated
@@ -479,7 +481,7 @@ public class HttpInterceptWorker {
             req.setHandled(true);
 
             // write the log file
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            try ( ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 HttpHeaderManager hm = new HttpHeaderManager();
                 hm.parseHttpHeaders(resp.getHttpHeader());
                 hm.modifyHttpHeadersForLogging(responseStr.length());
@@ -606,14 +608,14 @@ public class HttpInterceptWorker {
         // fhir specific stuff this is probably built into a "fhir server"
         HashMap<String, ArrayList<String>> hmParams = getRequestParameters(req);
         ArrayList<String> fhirFormatParameters = hmParams.get("_format");
-        String fhirFormatParameter = fhirFormatParameters !=null &&  !fhirFormatParameters.isEmpty() ? fhirFormatParameters.get(0) : null;
+        String fhirFormatParameter = fhirFormatParameters != null && !fhirFormatParameters.isEmpty() ? fhirFormatParameters.get(0) : null;
 
         // determine outbound content type
         contentTypeSet = false;
         if (acceptHeader == null) {
             // content type can be null for a GET
             if (isValidFhirFormatParameter(fhirFormatParameter) && (requestContentTypeHeader == null || isValidFhirContentType(requestContentTypeHeader))) {
-                trackedSetContentType(resp, determineContentType("application/fhir+"+fhirFormatParameter));
+                trackedSetContentType(resp, determineContentType(fhirFormatParameter));
             } else if (fhirFormatParameter == null) {
                 if (requestContentTypeHeader == null || isValidFhirContentType(requestContentTypeHeader)) {
                     trackedSetContentType(resp, requestContentTypeHeader);
@@ -622,7 +624,7 @@ public class HttpInterceptWorker {
         } else if (isValidFhirContentType(acceptHeader)) { // valid fhir accept
             if (isValidFhirFormatParameter(fhirFormatParameter)) {
                 // this says a valid _format overrides accept
-                trackedSetContentType(resp, determineContentType("application/fhir+"+fhirFormatParameter));
+                trackedSetContentType(resp, determineContentType(fhirFormatParameter));
             } else {
                 // fall back on valid accept if _format is not valid
                 trackedSetContentType(resp, acceptHeader);
@@ -658,7 +660,14 @@ public class HttpInterceptWorker {
      * @return boolean
      */
     private boolean isValidFhirFormatParameter(String parameterValue) {
-        return parameterValue != null && (parameterValue.equals("json") || parameterValue.equals("xml"));
+        if (fhirVersion.equals(DSTU2)) {
+            return parameterValue != null && parameterValue.matches("^application/(json|xml)\\+fhir.*$");
+        } else if (fhirVersion.equals(DSTU3)) {
+            // accept dstu2 and stu3
+            return parameterValue != null && (parameterValue.matches("^application/fhir\\+(json|xml).*$")  || parameterValue.matches("^application/(json|xml)\\+fhir.*$") ) ;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -737,7 +746,6 @@ public class HttpInterceptWorker {
     public static boolean isJsonFhir(String httpHeader) {
         return httpHeader != null && httpHeader.contains("fhir") && httpHeader.contains("json");
     }
-
 
     private boolean isZip(String httpHeader) {
         return httpHeader != null && httpHeader.contains("zip");

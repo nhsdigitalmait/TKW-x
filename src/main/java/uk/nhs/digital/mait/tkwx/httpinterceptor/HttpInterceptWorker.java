@@ -615,7 +615,7 @@ public class HttpInterceptWorker {
         if (acceptHeader == null) {
             // content type can be null for a GET
             if (isValidFhirFormatParameter(fhirFormatParameter) && (requestContentTypeHeader == null || isValidFhirContentType(requestContentTypeHeader))) {
-                trackedSetContentType(resp, determineContentType(fhirFormatParameter));
+                trackedSetContentType(resp, determineFormatParameterContentType(fhirFormatParameter));
             } else if (fhirFormatParameter == null) {
                 if (requestContentTypeHeader == null || isValidFhirContentType(requestContentTypeHeader)) {
                     trackedSetContentType(resp, requestContentTypeHeader);
@@ -624,7 +624,7 @@ public class HttpInterceptWorker {
         } else if (isValidFhirContentType(acceptHeader)) { // valid fhir accept
             if (isValidFhirFormatParameter(fhirFormatParameter)) {
                 // this says a valid _format overrides accept
-                trackedSetContentType(resp, determineContentType(fhirFormatParameter));
+                trackedSetContentType(resp, determineFormatParameterContentType(fhirFormatParameter));
             } else {
                 // fall back on valid accept if _format is not valid
                 trackedSetContentType(resp, acceptHeader);
@@ -655,19 +655,26 @@ public class HttpInterceptWorker {
     }
 
     /**
+     * see https://www.hl7.org/fhir/http.html
      *
      * @param parameterValue is a http get parameter
      * @return boolean
      */
     private boolean isValidFhirFormatParameter(String parameterValue) {
-        if (fhirVersion.equals(DSTU2)) {
-            return parameterValue != null && parameterValue.matches("^application/(json|xml)\\+fhir.*$");
-        } else if (fhirVersion.equals(DSTU3)) {
-            // accept dstu2 and stu3
-            return parameterValue != null && (parameterValue.matches("^application/fhir\\+(json|xml).*$")  || parameterValue.matches("^application/(json|xml)\\+fhir.*$") ) ;
-        } else {
-            return false;
+        if (parameterValue != null) {
+            if (parameterValue.matches("^((xml|json)|(text/(xml|json))|(application/(xml|json))).*$")) {
+                return true;
+            } else if (fhirVersion.equals(DSTU2)) {
+                return parameterValue.matches("^(application/(xml|json)\\+fhir).*$");
+            } else if (fhirVersion.equals(DSTU3)) {
+                // accept dstu2 and stu3
+                return (parameterValue.matches("^(application/(xml|json)\\+fhir).*$")
+                        || parameterValue.matches("^(application/fhir\\+(xml|json)).*$"));
+            } else {
+                return false;
+            }
         }
+        return false;
     }
 
     /**
@@ -683,6 +690,22 @@ public class HttpInterceptWorker {
             contentType = isJsonFhir(httpValue) ? FHIR_JSON_MIMETYPE_DSTU2 : FHIR_XML_MIMETYPE_DSTU2;
         } else if (fhirVersion.equals(DSTU3)) {
             contentType = isJsonFhir(httpValue) ? FHIR_JSON_MIMETYPE_STU3 : FHIR_XML_MIMETYPE_STU3;
+        }
+        return contentType;
+    }
+
+    /**
+     * The format parameter can have a wider range of values than accept or Content-type
+     * if its come from a _format parameter then its reasonable to assume this is a fhir message 
+     * @param httpParameterValue must be an  http get parameter called _format
+     * @return content type to set
+     */
+    private String determineFormatParameterContentType(String httpParameterValue) {
+        String contentType = null;
+        if (fhirVersion.equals(DSTU2)) {
+            contentType = (httpParameterValue.contains("json")) ? FHIR_JSON_MIMETYPE_DSTU2 : FHIR_XML_MIMETYPE_DSTU2;
+        } else if (fhirVersion.equals(DSTU3)) {
+            contentType = (httpParameterValue.contains("json")) ? FHIR_JSON_MIMETYPE_STU3 : FHIR_XML_MIMETYPE_STU3;
         }
         return contentType;
     }

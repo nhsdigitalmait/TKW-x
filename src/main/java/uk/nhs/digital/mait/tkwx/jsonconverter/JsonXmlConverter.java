@@ -27,6 +27,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.commonutils.util.xsltransform.TransformManager;
@@ -42,6 +43,7 @@ public class JsonXmlConverter {
     public static final String XMLTOJSONCONVERTERATTRIBUTEMAXLENGTH = "tks.jsonconverter.JsonXmlConverter.attributemaxlength";
     public static int ATTRIBUTEMAXLENGTH = 64;
     private static Configurator config;
+    private static final boolean DEBUG = false;
 
     static {
         try {
@@ -73,8 +75,7 @@ public class JsonXmlConverter {
             throws Exception {
         Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         try (
-                CharArrayReader car = new CharArrayReader(buffer);
-                JsonParser jp = Json.createParser(car)) {
+                 CharArrayReader car = new CharArrayReader(buffer);  JsonParser jp = Json.createParser(car)) {
             Element root = xml.createElementNS(JSONSOURCEDXMLNAMESPACE, "json");
             xml.appendChild(root);
             Element current = root;
@@ -85,10 +86,16 @@ public class JsonXmlConverter {
                 // determines what we're going to do with it.
 
                 JsonParser.Event event = jp.next();
+                if (DEBUG) {
+                    System.out.println(event);
+                }
                 switch (event) {
                     case KEY_NAME:
                         containerKey = jp.getString();
                         JsonParser.Event content = jp.next();
+                        if (DEBUG) {
+                            System.out.println("content " + content + " container key " + containerKey);
+                        }
                         String value = null;
                         switch (content) {
                             case START_ARRAY:
@@ -158,8 +165,8 @@ public class JsonXmlConverter {
                                 //
                                 // TODO: Add debugging detail
                                 //
-                                throw new Exception("Unexpected event parsing JSON");
-                        }
+                                throw new Exception("Unexpected event parsing JSON content " + content);
+                        } // content
                         break;
 
                     case START_OBJECT:
@@ -167,7 +174,14 @@ public class JsonXmlConverter {
                         // object
                         //
                         if (containerKey != null) {
-                            newlevel = xml.createElementNS(JSONSOURCEDXMLNAMESPACE, containerKey);
+                            NodeList children = current.getChildNodes();
+                            if (children.getLength() > 0) {
+                                // fixes issue #9 with array of records where the seconds and subsequent took the name of the plural not the first record
+                                // eg identifiers not identifier
+                                newlevel = xml.createElementNS(JSONSOURCEDXMLNAMESPACE, children.item(children.getLength() - 1).getNodeName());
+                            } else {
+                                newlevel = xml.createElementNS(JSONSOURCEDXMLNAMESPACE, containerKey);
+                            }
                             current.appendChild(newlevel);
                             current = newlevel;
                         }
@@ -179,17 +193,41 @@ public class JsonXmlConverter {
                         {
                             break;
                         }
+                        if (DEBUG) {
+                            System.out.print("Current set from " + current);
+                        }
                         current = (Element) current.getParentNode();
+                        if (DEBUG) {
+                            System.out.println(" to " + current);
+                        }
+
+                        if (DEBUG) {
+                            System.out.print("Container key set from  " + containerKey);
+                        }
                         if (current.getParentNode() == null) {
                             containerKey = null;
                         } else {
                             containerKey = current.getNodeName();
                         }
+                        if (DEBUG) {
+                            System.out.println(" to " + containerKey);
+                        }
                         break;
 
-                }
+                    case VALUE_STRING:
+                        // fix issue #9 this is an array of strings create an element just containing a text node
+                        if (containerKey != null) {
+                            newlevel = xml.createElementNS(JSONSOURCEDXMLNAMESPACE, containerKey);
+                            newlevel.setTextContent(jp.getString());
+                            current.appendChild(newlevel);
+                        }
+                        break;
 
-            }
+                    default:
+                        throw new Exception("Unexpected event parsing JSON event " + event);
+                } // switch event
+
+            } // while jp.next
         }
         return xml;
     }

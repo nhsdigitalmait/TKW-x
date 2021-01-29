@@ -32,7 +32,7 @@ TKW-x adds support for FHIR and Restful services including:
 ## Validation
 * Implementation of HapiFhir Validator and many other validation enhancements
 * Validation of Http headers and context paths
-* Declaration of and reference to variables
+* Declaration of, and reference to, variables
 * Capability to write bespoke test classes via the addition of unchecked tests
 * [ANTLR Lexer](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/validation/parser/ValidationLexer.g4) and [ANTLR Parser](https://github.com/nhsdigitalmait/TKW-x/blob/master/src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices/validation/parser/ValidationParser.g4)
 
@@ -42,7 +42,7 @@ TKW-x adds support for FHIR and Restful services including:
 * Ability to use a full set of Http methods
 
 ## Simulator
-* Multiple named property file sources for substituion tags in addition to the existsing system properties
+* Multiple named property file sources for substitution tags in addition to the existing default of system properties
 * Expression classes allowing users to define their own java coded expressions
 * Static http headers in responses
 * Ability to return dynamic http headers based on substitution tags

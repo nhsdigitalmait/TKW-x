@@ -206,7 +206,7 @@ public class HttpInterceptWorker {
                         }
                         simulatorServiceResponse = rulesService.execute(clonedXmlHttpRequest);
                     } else if (!Utils.isNullOrEmpty(contentTypeHeader) && contentTypeHeader.toLowerCase().contains("json")) {
-                        // this is josn but not fhir
+                        // this is json but not fhir
                         clonedXmlHttpRequest = cloneXmlRequest(httpRequest, false);
                         // if we get here it's json but not as fhir knows it
                         simulatorServiceResponse = rulesService.execute(cloneXmlRequest(httpRequest, false));
@@ -629,6 +629,12 @@ public class HttpInterceptWorker {
                 // fall back on valid accept if _format is not valid
                 trackedSetContentType(resp, acceptHeader);
             }
+        } else {
+            // invalid accept but .. #11 handle a _format together with an invalid accept
+            if (isValidFhirFormatParameter(fhirFormatParameter)) {
+                // this says a valid _format overrides an invalid accept
+                trackedSetContentType(resp, determineFormatParameterContentType(fhirFormatParameter));
+            }
         }
 
         if (!contentTypeSet) {
@@ -695,9 +701,11 @@ public class HttpInterceptWorker {
     }
 
     /**
-     * The format parameter can have a wider range of values than accept or Content-type
-     * if its come from a _format parameter then its reasonable to assume this is a fhir message 
-     * @param httpParameterValue must be an  http get parameter called _format
+     * The format parameter can have a wider range of values than accept or
+     * Content-type if its come from a _format parameter then its reasonable to
+     * assume this is a fhir message
+     *
+     * @param httpParameterValue must be an http get parameter called _format
      * @return content type to set
      */
     private String determineFormatParameterContentType(String httpParameterValue) {

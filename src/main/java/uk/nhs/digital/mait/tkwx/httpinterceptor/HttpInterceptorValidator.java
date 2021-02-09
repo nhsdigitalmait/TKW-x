@@ -42,7 +42,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.EvidenceInterfaceRegister;
  *
  * @author riro
  */
-public class HttpInterceptorValidator {
+public class HttpInterceptorValidator extends Thread {
 
     private final HttpRequest clonedXmlHttpRequest;
     private final Configurator config;
@@ -55,6 +55,8 @@ public class HttpInterceptorValidator {
 
     private static final Object lock = new Object();
     private EvidenceInterface evidenceInterface = null;
+    private HttpRequest httpRequest;
+    private String subDir;
 
     public HttpInterceptorValidator(Configurator config, String service, HttpRequest clonedXmlHttpRequest) {
         this.config = config;
@@ -71,6 +73,20 @@ public class HttpInterceptorValidator {
      * @param subDir any subdirectory to be used in the logging structure
      */
     public void validateRequest(HttpRequest httpRequest, String subDir) {
+        this.httpRequest = httpRequest;
+        this.subDir = subDir;
+        this.start();
+    }
+
+    /**
+     * Reinstated the Threading after discovering that the validation was indeed
+     * part of the request/response round trip, but was disguised by the fact
+     * that the response was send on the open connection which wasn't closed
+     * until the validation had ended. This fixes the issue that states the
+     * socket output stream dead
+     */
+    @Override
+    public void run() {
         try {
             // default to Validator
             String validatorServiceName = "Validator";

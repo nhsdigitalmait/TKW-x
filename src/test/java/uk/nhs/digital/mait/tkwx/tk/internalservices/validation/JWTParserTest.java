@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static uk.nhs.digital.mait.tkwx.util.Utils.xmlReformat;
 
 /**
  *
@@ -155,8 +156,9 @@ public class JWTParserTest {
     @Test
     public void testGetXmlPayload() {
         System.out.println("getXmlPayload");
-        String expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><json xmlns=\"uk.nhs.digital.mait.tkwx.jsonconverter.JsonXmlConverter\" aud=\"https://authorize.fhir.nhs.net/token\" exp=\"1503995882\" iat=\"1503995582\" iss=\"https://ConsumerSystemURL\" reason_for_request=\"directcare\" requested_scope=\"patient/*.read\" sub=\"1\"><requesting_device id=\"1\" model=\"v1\" resourceType=\"Device\" version=\"1.1\"><identifiers><identifier system=\"GPConnectTestSystem\" value=\"Client\"/></identifiers><type><codings><coding code=\"DeviceIdentifier\" system=\"DeviceIdentifierSystem\"/></codings></type></requesting_device><requesting_organization id=\"1\" name=\"GP Connect Assurance\" resourceType=\"Organization\"><identifiers><identifier system=\"http://fhir.nhs.net/Id/ods-organization-code\" value=\"GPCA0001\"/></identifiers></requesting_organization><requesting_practitioner id=\"1\" resourceType=\"Practitioner\"><identifiers><identifier system=\"http://fhir.nhs.net/sds-user-id\" value=\"GCASDS0001\"/><identifiers system=\"LocalIdentifierSystem\" value=\"1\"/></identifiers><name><familys/><givens/><prefixs/></name><practitionerRoles><practitionerRole><role><codings><coding code=\"AssuranceJobRole\" system=\"http://fhir.nhs.net/ValueSet/sds-job-role-name-1\"/></codings></role></practitionerRole></practitionerRoles></requesting_practitioner><requested_record resourceType=\"Patient\"><identifiers><identifier system=\"https://fhir.nhs.uk/Id/nhs-number\" value=\"9476719931\"/></identifiers></requested_record></json>";
+        String expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><json xmlns=\"uk.nhs.digital.mait.tkwx.jsonconverter.JsonXmlConverter\" aud=\"https://authorize.fhir.nhs.net/token\" exp=\"1503995882\" iat=\"1503995582\" iss=\"https://ConsumerSystemURL\" reason_for_request=\"directcare\" requested_scope=\"patient/*.read\" sub=\"1\"><requesting_device id=\"1\" model=\"v1\" resourceType=\"Device\" version=\"1.1\"><identifiers><identifier system=\"GPConnectTestSystem\" value=\"Client\"/></identifiers><type><codings><coding code=\"DeviceIdentifier\" system=\"DeviceIdentifierSystem\"/></codings></type></requesting_device><requesting_organization id=\"1\" name=\"GP Connect Assurance\" resourceType=\"Organization\"><identifiers><identifier system=\"http://fhir.nhs.net/Id/ods-organization-code\" value=\"GPCA0001\"/></identifiers></requesting_organization><requesting_practitioner id=\"1\" resourceType=\"Practitioner\"><identifiers><identifier system=\"http://fhir.nhs.net/sds-user-id\" value=\"GCASDS0001\"/><identifier system=\"LocalIdentifierSystem\" value=\"1\"/></identifiers><name><familys><family>AssurancePractitioner</family></familys><givens><given>AssuranceTest</given></givens><prefixs><prefix>Mr</prefix></prefixs></name><practitionerRoles><practitionerRole><role><codings><coding code=\"AssuranceJobRole\" system=\"http://fhir.nhs.net/ValueSet/sds-job-role-name-1\"/></codings></role></practitionerRole></practitionerRoles></requesting_practitioner><requested_record resourceType=\"Patient\"><identifiers><identifier system=\"https://fhir.nhs.uk/Id/nhs-number\" value=\"9476719931\"/></identifiers></requested_record></json>";
         String result = instance.getXmlPayload();
+        System.out.println(xmlReformat(result));
         assertEquals(expResult, result);
     }
 

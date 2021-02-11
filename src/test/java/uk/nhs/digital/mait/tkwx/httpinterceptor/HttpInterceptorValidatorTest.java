@@ -114,6 +114,9 @@ public class HttpInterceptorValidatorTest {
         LoggingFileOutputStream lfos = new LoggingFileOutputStream(LOGGING_FILE);
         httpRequest.setLoggingFileOutputStream(lfos);
         instance.validateRequest(httpRequest, TEST_FOLDER);
+        
+        // this is now a thread again so wait for completion
+        instance.join();
  
         // four new files in folder if second or subsequent because extracted cda isn't date stampoed so gets overwritten.
         // log file

@@ -202,9 +202,12 @@ public class Utils {
             writer.write(documentNode, output);
             String reformattedXML = new String(out.toByteArray());
             if (encoding == null) {
+                // remove the encoding pragma
                 return reformattedXML.replaceFirst(" *(encoding *= *\").*(\")", "");
             } else if (reformattedXML.matches("(?s)^<\\?.* *encoding *= *.* *\\?>.*$")) {
-                return reformattedXML.replaceFirst("(encoding *= *\").*(\")", "$1" + encoding + "$2");
+                // replace the encoding pragma
+                // #12 fixed the regexp to match the whole of the first line
+                return reformattedXML.replaceFirst("(encoding *= *\").*(\".*$)", "$1" + encoding + "$2");
             } else {
                 return reformattedXML;
             }

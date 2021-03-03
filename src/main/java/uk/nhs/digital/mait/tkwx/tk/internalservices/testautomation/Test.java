@@ -452,12 +452,6 @@ public class Test
                 if (tosend == null) {
                     throw new Exception("Test " + testName + " : message " + msgname + " not found");
                 }
-                if (tosend.getDatasourceName() != null) {
-                    // we need to peek ahead because we need these set before the message is instantiated
-                    // so that we can do the httpheader datasource substitutions
-                    datasource = tosend.getDatasource();
-                    recordid = tosend.getRecordid();
-                }
             }
             if (synccheckname != null) {
                 synccheck = scriptParser.getPassFailCheck(synccheckname);
@@ -590,27 +584,10 @@ public class Test
                 if (toUrl != null) {
                     toUrl = toUrl.replaceAll(key, value);
                 }
-                if (fromUrl != fromUrl) {
+                if (fromUrl != null) {
                     fromUrl = fromUrl.replaceAll(key, value);
                 }
 
-            }
-
-            // perform datasource substitutions this is where we get the change to mess with the context path
-            if (datasource != null && recordid != null) {
-                Iterator<String> iter = datasource.getTags().iterator();
-                while (iter.hasNext()) {
-                    String tag = iter.next();
-                    try {
-                        if (toUrl != null) {
-                            toUrl = toUrl.replaceAll(tag, datasource.getValue(recordid, tag));
-                        }
-                        if (fromUrl != null) {
-                            fromUrl = fromUrl.replaceAll(tag, datasource.getValue(recordid, tag));
-                        }
-                    } catch (Exception ex) {
-                    }
-                }
             }
 
             if (httpHeaderSetNames != null) {
@@ -867,11 +844,11 @@ public class Test
 
         // this is not a chain so we have to send a request
         if (chainName == null) {
-            String filename = tosend.instantiate(schedule.getTransmitterDirectory(), toUrl, fromUrl, replyTo, preTransforms, preSubstitutions, profileId, iteration);
-//            if (tosend != null) {
-//                datasource = tosend.getDatasource();
-//                recordid = tosend.getRecordid();
-//            }
+            String filename = tosend.instantiate(this, schedule.getTransmitterDirectory(), toUrl, fromUrl, replyTo, preTransforms, preSubstitutions, profileId, iteration);
+            if (tosend != null) {
+                datasource = tosend.getDatasource();
+                recordid = tosend.getRecordid();
+            }
 
             if (transmitMode.equals(SPINETOOLS_TRANSMITTER_MODE)) {
                 // set the required SpineTools request captor object values
@@ -1538,5 +1515,33 @@ public class Test
     static { // valid suffixes for Http and SpineTools messaging
         TRANSMIT_MODE_SUFFIXES.put("SpineTools", ".message");
         TRANSMIT_MODE_SUFFIXES.put("Http", ".log");
+    }
+
+    /**
+     * @return the toUrl
+     */
+    public String getToUrl() {
+        return toUrl;
+    }
+
+    /**
+     * @param toUrl the toUrl to set
+     */
+    public void setToUrl(String toUrl) {
+        this.toUrl = toUrl;
+    }
+
+    /**
+     * @return the fromUrl
+     */
+    public String getFromUrl() {
+        return fromUrl;
+    }
+
+    /**
+     * @param fromUrl the fromUrl to set
+     */
+    public void setFromUrl(String fromUrl) {
+        this.fromUrl = fromUrl;
     }
 }

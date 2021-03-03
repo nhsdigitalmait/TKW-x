@@ -32,6 +32,7 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.BasicM
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.TestTest.deleteFolder;
 import static uk.nhs.digital.mait.tkwx.util.Utils.copyFile;
 
+
 /**
  *
  * @author sifa2
@@ -98,6 +99,7 @@ public class MessageTest {
 
     /**
      * Test of link method, of class Message.
+     *
      * @throws java.lang.Exception
      */
     @Test
@@ -110,49 +112,15 @@ public class MessageTest {
         instance.link(p);
     }
 
-    /**
-     * Test of instantiate method, of class Message.
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testInstantiate() throws Exception {
-        System.out.println("instantiate");
-        String ts = TIMESTAMP;
-        String to = "to";
-        String from = "from";
-        String replyto = "replyto";
-        HashMap<String, ArrayList<String>> pst = null;
-        String profileId = "profileid";
-        String result = instance.instantiate(ts, to, from, replyto, pst, null, profileId);
-        assertTrue(result.startsWith(NAME));
-        assertTrue(result.endsWith(".msg"));
-    }
 
     /**
      * Test of instantiate method, of class Message.
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testInstantiate_6args() throws Exception {
-        System.out.println("instantiate");
-        String ts = TIMESTAMP;
-        String to = "to";
-        String from = "from";
-        String replyto = "replyto";
-        HashMap<String, ArrayList<String>> pst = null;
-        String profileId = "profileid";
-        String expResult = "DE_EMPPID_9.msg";
-        String result = instance.instantiate(ts, to, from, replyto, pst, null, profileId);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of instantiate method, of class Message.
+     *
      * @throws java.lang.Exception
      */
     @Test
     public void testInstantiate_7args() throws Exception {
-        System.out.println("instantiate");
+        System.out.println("instantiate_7args");
         String ts = TIMESTAMP;
         String to = "to";
         String from = "from";
@@ -160,8 +128,8 @@ public class MessageTest {
         HashMap<String, ArrayList<String>> pst = null;
         String profileId = "profileid";
         int iterationp = 0;
-        String expResult = "DE_EMPPID_11.msg";
-        String result = instance.instantiate(ts, to, from, replyto, pst, null, profileId, iterationp);
+        String expResult = "DE_EMPPID_9.msg";
+        String result = instance.instantiate(null, ts, to, from, replyto, pst, null, profileId, iterationp);
         assertEquals(expResult, result);
     }
 
@@ -178,6 +146,7 @@ public class MessageTest {
 
     /**
      * Test of getRecordid method, of class Message.
+     *
      * @throws java.lang.Exception
      */
     @Test
@@ -201,11 +170,33 @@ public class MessageTest {
 
     /**
      * Test of instantiate method, of class Message.
+     *
      * @throws java.lang.Exception
      */
     @Test
     public void testInstantiate_8args() throws Exception {
-        System.out.println("instantiate");
+        System.out.println("instantiate_8args");
+        String ts = TIMESTAMP;
+        String to = "to";
+        String from = "from";
+        String replyto = "replyto";
+        HashMap<String, ArrayList<String>> xslTransforms = new HashMap<>();
+        HashMap<String, ArrayList<uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Test.RegexpSubstitution>> reSubstitutions = new HashMap<>();
+        String profileId = "profileid";
+        int iterationp = 0;
+        String expResult = "DE_EMPPID_11.msg";
+        String result = instance.instantiate(null, ts, to, from, replyto, xslTransforms, reSubstitutions, profileId, iterationp);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of instantiate method, of class Message.
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testInstantiate_9args() throws Exception {
+        System.out.println("instantiate_9args");
         String ts = TIMESTAMP;
         String to = "to";
         String from = "from";
@@ -215,7 +206,7 @@ public class MessageTest {
         String profileId = "profileid";
         int iterationp = 0;
         String expResult = "DE_EMPPID_13.msg";
-        String result = instance.instantiate(ts, to, from, replyto, xslTransforms, reSubstitutions, profileId, iterationp);
+        String result = instance.instantiate(null, ts, to, from, replyto, xslTransforms, reSubstitutions, profileId, iterationp);
         assertEquals(expResult, result);
     }
 }

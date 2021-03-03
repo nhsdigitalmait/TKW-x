@@ -306,4 +306,48 @@ public class TestTest {
         String result = instance.getChainName();
         assertEquals(expResult, result);
     }
+
+    /**
+     * Test of getToUrl method, of class Test.
+     */
+    @Test
+    public void testGetToUrl() {
+        System.out.println("getToUrl");
+        String expResult = "xxx";
+        instance.setToUrl(expResult);
+        String result = instance.getToUrl();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of setToUrl method, of class Test.
+     */
+    @Test
+    public void testSetToUrl() {
+        System.out.println("setToUrl");
+        String toUrl = "";
+        instance.setToUrl(toUrl);
+    }
+
+    /**
+     * Test of getFromUrl method, of class Test.
+     */
+    @Test
+    public void testGetFromUrl() {
+        System.out.println("getFromUrl");
+        String expResult = "yyy";
+        instance.setFromUrl(expResult);
+        String result = instance.getFromUrl();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of setFromUrl method, of class Test.
+     */
+    @Test
+    public void testSetFromUrl() {
+        System.out.println("setFromUrl");
+        String fromUrl = "";
+        instance.setFromUrl(fromUrl);
+    }
 }

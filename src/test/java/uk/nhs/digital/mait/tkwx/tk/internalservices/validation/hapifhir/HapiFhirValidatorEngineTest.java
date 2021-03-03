@@ -79,8 +79,10 @@ public class HapiFhirValidatorEngineTest {
         System.out.println("validate");
         // pick a fhir v3 source file
         String o = Utils.readFile2String("src/test/resources/slots.json");
-        boolean expResult = true;
+        boolean expResult = false;
         ValidationResult result = instance.validate(o);
+        // reports unknown element fullUrl
+        System.out.println(result.toString());
         assertEquals(expResult, result.isSuccessful());
     }
 

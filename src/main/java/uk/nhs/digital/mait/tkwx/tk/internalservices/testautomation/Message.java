@@ -237,13 +237,14 @@ public class Message
     }
 
     /**
-     * 
+     *
      * @param msg String containing message for transform
      * @param where transform point
      * @param xslTransforms HashMap of ArrayList of transform paths
-     * @param reSubstitutions HashMap of ArrayList of Regular EXpression Transform objects
+     * @param reSubstitutions HashMap of ArrayList of Regular EXpression
+     * Transform objects
      * @return String containing the transformed message
-     * @throws Exception 
+     * @throws Exception
      */
     private String doPreTransform(String msg, String where, HashMap<String, ArrayList<String>> xslTransforms, HashMap<String, ArrayList<RegexpSubstitution>> reSubstitutions)
             throws Exception {
@@ -270,24 +271,7 @@ public class Message
     /**
      * Creates a transmittable form of the message in a string.
      *
-     * @param ts Timestamp (for log file naming)
-     * @param to "To" address or URL
-     * @param from "From" address (URL in SOAP usage)
-     * @param replyto "ReplyTo" URL
-     * @param xslTransforms
-     * @param reSubstitutions
-     * @param profileId
-     * @return
-     * @throws Exception
-     */
-    public String instantiate(String ts, String to, String from, String replyto, HashMap<String, ArrayList<String>> xslTransforms, HashMap<String, ArrayList<RegexpSubstitution>> reSubstitutions, String profileId)
-            throws Exception {
-        return instantiate(ts, to, from, replyto, xslTransforms, reSubstitutions, profileId, 0);
-    }
-
-    /**
-     * Creates a transmittable form of the message in a string.
-     *
+     * @param test the Test object
      * @param ts Timestamp (for log file naming)
      * @param to "To" address or URL
      * @param from "From" address (URL in SOAP usage)
@@ -300,8 +284,9 @@ public class Message
      * @return
      * @throws Exception
      */
-    public String instantiate(String ts, String to, String from, String replyto, HashMap<String, ArrayList<String>> xslTransforms, HashMap<String, ArrayList<RegexpSubstitution>> reSubstitutions, String profileId, int iterationp)
+    public String instantiate(Test test, String ts, String to, String from, String replyto, HashMap<String, ArrayList<String>> xslTransforms, HashMap<String, ArrayList<RegexpSubstitution>> reSubstitutions, String profileId, int iterationp)
             throws Exception {
+
         this.iteration = iterationp;
         instantiationCount++;
         String id = null;
@@ -314,6 +299,31 @@ public class Message
             }
         }
         String msg = template.makeMessage(id, datasource);
+
+
+        // perform datasource substitutions this is where we get the chance to mess with the context path (toUrl)
+        // This can only happen after makeMessage has been called at which point the datasource has been updated with
+        // the latest updates eg from previous interactions. fixes #15
+        if (datasource != null && recordid != null) {
+            Iterator<String> iter = datasource.getTags().iterator();
+            while (iter.hasNext()) {
+                String tag = iter.next();
+                try {
+                    if (to != null) {
+                        to = to.replaceAll(tag, datasource.getValue(recordid, tag));
+                    }
+                    if (from != null) {
+                        from = from.replaceAll(tag, datasource.getValue(recordid, tag));
+                    }
+                } catch (Exception ex) {
+                }
+            }
+            if (test != null) {
+                test.setToUrl(to);
+                test.setFromUrl(from);
+            }
+        }
+
         msg = doPreTransform(msg, "data", xslTransforms, reSubstitutions);
         if (base64) {
             msg = doPreTransform(msg, "prebase64", xslTransforms, reSubstitutions);

@@ -59,7 +59,7 @@ public class BasicMessageIdCorrelatorTest {
     @AfterClass
     public static void tearDownClass() {
         // delete trashed tdv file
-        for (String filename : new String[]{LOGFILE,"src/test/resources/test.tdv","src/test/resources/test.tdv.backup"}) {
+        for (String filename : new String[]{LOGFILE, "src/test/resources/test.tdv", "src/test/resources/test.tdv.backup"}) {
             File file = new File(filename);
             if (file.exists()) {
                 file.delete();
@@ -115,7 +115,7 @@ public class BasicMessageIdCorrelatorTest {
         // all this just to get a message id set in request
         // namely soapwrap must be called so we must strip the soap before rewrapping it.
         if (messageCtx == null) {
-            if (visitor == null ) {
+            if (visitor == null) {
                 visitor = new TestVisitor();
             }
             messageCtx = visitor.getMessageContext();
@@ -135,13 +135,13 @@ public class BasicMessageIdCorrelatorTest {
         // transform list
         pst.put("data", new ArrayList(Arrays.asList(new String[]{EXTRACT_DE_XFORM})));
 
-        request.instantiate(timestamp, "to", "from", "replyto", pst, null, "profileid");
+        request.instantiate(null, timestamp, "to","from","replyto", pst, null, "profileid", 0);
 
         return request;
     }
 
     public static void writeLogFile(String s) throws IOException {
-        Utils.writeString2File(LOGFILE,s);
+        Utils.writeString2File(LOGFILE, s);
     }
 
 }

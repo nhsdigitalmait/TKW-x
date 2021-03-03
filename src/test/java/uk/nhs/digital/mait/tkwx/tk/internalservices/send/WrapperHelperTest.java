@@ -49,7 +49,7 @@ public class WrapperHelperTest {
 
     @Before
     public void setUp() {
-        System.setProperty("uk.nhs.digital.mait.tkwx.spine.sds.reference", "../../msgxmit1/yea_s2_int.xml");
+        System.setProperty("uk.nhs.digital.mait.tkwx.spine.sds.reference", "src/test/resources/yea_s2_int.xml");
         instance = WrapperHelper.getInstance();
     }
 
@@ -138,7 +138,7 @@ public class WrapperHelperTest {
         System.out.println("resolveServiceEndpoint");
         String soapaction = "urn:nhs:names:services:sds/REPC_IN130002UK01";
         String toParty = "YEA-801248";
-        String expResult = "https://10.97.89.163/reliablemessaging/reliablerequest";
+        String expResult = "https://10.239.14.26/reliablemessaging/reliablerequest";
         String result = instance.resolveServiceEndpoint(soapaction, toParty);
         assertEquals(expResult, result);
     }

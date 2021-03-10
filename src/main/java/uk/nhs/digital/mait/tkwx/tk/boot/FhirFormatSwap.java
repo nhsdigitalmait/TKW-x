@@ -15,13 +15,12 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.boot;
 
+import static ca.uhn.fhir.context.FhirVersionEnum.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.DSTU2;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.DSTU3;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
@@ -44,9 +43,24 @@ public class FhirFormatSwap {
         }
 
         int offset = 0;
-        if (args[0].matches("^-[23]$")) {
+        if (args[0].matches("^-[2345]$")) {
             offset++;
-            FHIRJsonXmlAdapter.setFhirVersion(args[0].equals("-2") ? DSTU2 : DSTU3);
+            switch (args[0]) {
+                case "-2":
+                    FHIRJsonXmlAdapter.setFhirVersion(DSTU2);
+                    break;
+                case "-3":
+                    FHIRJsonXmlAdapter.setFhirVersion(DSTU3);
+                    break;
+                case "-4":
+                    FHIRJsonXmlAdapter.setFhirVersion(R4);
+                    break;
+                case "-5":
+                    FHIRJsonXmlAdapter.setFhirVersion(R5);
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
         } else {
             FHIRJsonXmlAdapter.setFhirVersion(DSTU3);
         }
@@ -76,7 +90,7 @@ public class FhirFormatSwap {
     }
 
     private static void usage() {
-        error("usage: [-(2|3)] <filename> | -");
+        error("usage: [-(2|3|4)] <filename> | -");
     }
 
     private static void error(String s) {

@@ -15,6 +15,7 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices.send;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import java.io.ByteArrayOutputStream;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import java.net.Socket;
@@ -49,7 +50,6 @@ import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.COMPR
 import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.COMPRESSION_GZIP;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
-import uk.nhs.digital.mait.tkwx.tk.boot.ServiceManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.Compressor;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.FHIRCONVERSIONFAILURE;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.fhirConvertXml2Json;
@@ -736,7 +736,7 @@ public class HttpSender
         if (reconfiguredProperties != null) {
             suppressClose = isY(reconfiguredProperties.getProperty(SUPPRESS_CLOSE_PROPERTY, "N"));
             if (reconfiguredProperties.getProperty(FHIR_VERSION_PROPERTY) != null) {
-                FHIRJsonXmlAdapter.setFhirVersion(reconfiguredProperties.getProperty(FHIR_VERSION_PROPERTY));
+                FHIRJsonXmlAdapter.setFhirVersion(FhirVersionEnum.valueOf(reconfiguredProperties.getProperty(FHIR_VERSION_PROPERTY).toUpperCase()));
             }
         }
     }

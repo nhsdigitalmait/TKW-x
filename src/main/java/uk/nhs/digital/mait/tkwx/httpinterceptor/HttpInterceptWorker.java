@@ -15,6 +15,9 @@
  */
 package uk.nhs.digital.mait.tkwx.httpinterceptor;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
+import static ca.uhn.fhir.context.FhirVersionEnum.DSTU2;
+import static ca.uhn.fhir.context.FhirVersionEnum.DSTU3;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,8 +49,6 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.Compressor.compress;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.fhirConvertXml2Json;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.RuleService;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.ConditionalCompilationControls;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.DSTU3;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.DSTU2;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.FHIRCONVERSIONFAILURE;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.fhirConvertJson2Xml;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Schedule.deriveInteractionID;
@@ -103,7 +104,7 @@ public class HttpInterceptWorker {
     // Mime types
     public static final String JSON_MIMETYPE = "application/json";
 
-    private static String fhirVersion;
+    private static FhirVersionEnum fhirVersion;
     protected EvidenceMetaDataHandler evidenceMetaDataHandler;
 
     static {
@@ -119,7 +120,8 @@ public class HttpInterceptWorker {
                 }
             }
             inhibitValidation = isY(config.getConfiguration(INHIBITVALIDATION_PROPERTY));
-            fhirVersion = config.getConfiguration(FHIR_VERSION_PROPERTY) != null ? config.getConfiguration(FHIR_VERSION_PROPERTY) : DSTU3;
+            fhirVersion = config.getConfiguration(FHIR_VERSION_PROPERTY) != null ? 
+                    FhirVersionEnum.valueOf(config.getConfiguration(FHIR_VERSION_PROPERTY).toUpperCase()) : DSTU3;
 
         } catch (Exception e) {
             Logger.getInstance().log(SEVERE, HttpInterceptWorker.class.getName(), "Failure to retrieve forwarding endpoint properties - " + e.toString());
@@ -670,9 +672,9 @@ public class HttpInterceptWorker {
         if (parameterValue != null) {
             if (parameterValue.matches("^((xml|json)|(text/(xml|json))|(application/(xml|json))).*$")) {
                 return true;
-            } else if (fhirVersion.equals(DSTU2)) {
+            } else if (isHapiVersionDstu2()) {
                 return parameterValue.matches("^(application/(xml|json)\\+fhir).*$");
-            } else if (fhirVersion.equals(DSTU3)) {
+            } else if (isHapIVersionNewerThanDstu2()) {
                 // accept dstu2 and stu3
                 return (parameterValue.matches("^(application/(xml|json)\\+fhir).*$")
                         || parameterValue.matches("^(application/fhir\\+(xml|json)).*$"));
@@ -692,9 +694,9 @@ public class HttpInterceptWorker {
      */
     private String determineContentType(String httpValue) {
         String contentType = null;
-        if (fhirVersion.equals(DSTU2)) {
+        if (isHapiVersionDstu2()) {
             contentType = isJsonFhir(httpValue) ? FHIR_JSON_MIMETYPE_DSTU2 : FHIR_XML_MIMETYPE_DSTU2;
-        } else if (fhirVersion.equals(DSTU3)) {
+        } else if (isHapIVersionNewerThanDstu2()) {
             contentType = isJsonFhir(httpValue) ? FHIR_JSON_MIMETYPE_STU3 : FHIR_XML_MIMETYPE_STU3;
         }
         return contentType;
@@ -710,9 +712,9 @@ public class HttpInterceptWorker {
      */
     private String determineFormatParameterContentType(String httpParameterValue) {
         String contentType = null;
-        if (fhirVersion.equals(DSTU2)) {
+        if (isHapiVersionDstu2()) {
             contentType = (httpParameterValue.contains("json")) ? FHIR_JSON_MIMETYPE_DSTU2 : FHIR_XML_MIMETYPE_DSTU2;
-        } else if (fhirVersion.equals(DSTU3)) {
+        } else if (isHapIVersionNewerThanDstu2()) {
             contentType = (httpParameterValue.contains("json")) ? FHIR_JSON_MIMETYPE_STU3 : FHIR_XML_MIMETYPE_STU3;
         }
         return contentType;
@@ -733,9 +735,9 @@ public class HttpInterceptWorker {
         // TODO this is a bit of a hack
         if (responseStr.trim().startsWith("<")) {
             if (isXmlFhir(accept)) {
-                if (fhirVersion.equals(DSTU2)) {
+                if (isHapiVersionDstu2()) {
                     resp.setContentType(FHIR_XML_MIMETYPE_DSTU2);
-                } else if (fhirVersion.equals(DSTU3)) {
+                } else if (isHapIVersionNewerThanDstu2()) {
                     resp.setContentType(FHIR_XML_MIMETYPE_STU3);
                 }
             } else {
@@ -743,9 +745,9 @@ public class HttpInterceptWorker {
             }
         } else if (responseStr.trim().startsWith("{")) {
             if (isJsonFhir(accept)) {
-                if (fhirVersion.equals(DSTU2)) {
+                if (isHapiVersionDstu2()) {
                     resp.setContentType(FHIR_JSON_MIMETYPE_DSTU2);
-                } else if (fhirVersion.equals(DSTU3)) {
+                } else if (isHapIVersionNewerThanDstu2()) {
                     resp.setContentType(FHIR_JSON_MIMETYPE_STU3);
                 }
             } else {
@@ -780,6 +782,14 @@ public class HttpInterceptWorker {
 
     private boolean isZip(String httpHeader) {
         return httpHeader != null && httpHeader.contains("zip");
+    }
+    
+    private boolean isHapiVersionDstu2() {
+        return fhirVersion == DSTU2;
+    }
+
+    private boolean isHapIVersionNewerThanDstu2() {
+        return fhirVersion.isNewerThan(DSTU2);
     }
 
 }

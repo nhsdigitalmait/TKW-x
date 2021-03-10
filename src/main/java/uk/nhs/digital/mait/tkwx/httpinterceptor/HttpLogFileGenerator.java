@@ -15,6 +15,9 @@
  */
 package uk.nhs.digital.mait.tkwx.httpinterceptor;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
+import static ca.uhn.fhir.context.FhirVersionEnum.DSTU2;
+import static ca.uhn.fhir.context.FhirVersionEnum.DSTU3;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,8 +34,6 @@ import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.FILEDATEMASK;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.SOAP_ACTION_HEADER;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.XML_MIMETYPE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.FHIR_VERSION_PROPERTY;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.DSTU2;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.DSTU3;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.fhirConvertJson2Xml;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
 import uk.nhs.digital.mait.commonutils.util.Logger;
@@ -55,12 +56,13 @@ public class HttpLogFileGenerator {
     private static final Object lock = new Object();
     private static SimpleDateFormat FILEDATE = new SimpleDateFormat(FILEDATEMASK);
     private static Configurator config;
-    private static String fhirVersion;
+    private static FhirVersionEnum fhirVersion;
 
     static {
         try {
             config = Configurator.getConfigurator();
-            fhirVersion = config.getConfiguration(FHIR_VERSION_PROPERTY) != null ? config.getConfiguration(FHIR_VERSION_PROPERTY) : DSTU3;
+            fhirVersion = config.getConfiguration(FHIR_VERSION_PROPERTY) != null
+                    ? FhirVersionEnum.valueOf(config.getConfiguration(FHIR_VERSION_PROPERTY).toUpperCase()) : DSTU3;
 
         } catch (Exception e) {
             Logger.getInstance().log(SEVERE, HttpInterceptWorker.class.getName(), "Failure to retrieve forwarding endpoint properties - " + e.toString());
@@ -77,7 +79,7 @@ public class HttpLogFileGenerator {
      * @throws Exception
      */
     public static String createLogFile(HttpRequest req, String savedMessagesDir, String subDir) throws Exception {
-            String fileName = null;
+        String fileName = null;
         if (!Utils.isNullOrEmpty(req.getField(SOAP_ACTION_HEADER))) {
             fileName = req.getField(SOAP_ACTION_HEADER);
         } else {
@@ -89,7 +91,7 @@ public class HttpLogFileGenerator {
             throw new Exception("No SOAPaction HTTP header found in request");
         }
         return createLogFile(fileName, savedMessagesDir, subDir);
-}
+    }
 
     /**
      * sets the logFile FileWrite field for the required log file
@@ -241,9 +243,9 @@ public class HttpLogFileGenerator {
                 extractedContentType = contentType;
             } else if (HttpInterceptWorker.isJsonFhir(contentType)) {
                 extractedRequestContent = fhirConvertJson2Xml(requestContent);
-                if (fhirVersion.equals(DSTU2)) {
+                if (fhirVersion == DSTU2) {
                     extractedContentType = FHIR_XML_MIMETYPE_DSTU2;
-                } else if (fhirVersion.equals(DSTU3)) {
+                } else if (fhirVersion.isNewerThan(DSTU2)) {
                     extractedContentType = FHIR_XML_MIMETYPE_STU3;
                 }
             } else if (contentType.equals(HttpInterceptWorker.JSON_MIMETYPE)) {

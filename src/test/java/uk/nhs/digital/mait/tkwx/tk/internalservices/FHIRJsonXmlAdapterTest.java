@@ -15,6 +15,7 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -201,8 +202,8 @@ public class FHIRJsonXmlAdapterTest {
     @Test
     public void testGetFhirVersion() {
         System.out.println("getFhirVersion");
-        String expResult = "";
-        String result = FHIRJsonXmlAdapter.getFhirVersion();
+        FhirVersionEnum expResult = null;
+        FhirVersionEnum result = FHIRJsonXmlAdapter.getFhirVersion();
         assertEquals(expResult, result);
     }
 
@@ -212,7 +213,7 @@ public class FHIRJsonXmlAdapterTest {
     @Test
     public void testSetFhirVersion() {
         System.out.println("setFhirVersion");
-        String aFhirVersion = "Dstu2";
+        FhirVersionEnum aFhirVersion = FhirVersionEnum.DSTU2;
         FHIRJsonXmlAdapter.setFhirVersion(aFhirVersion);
     }
 }

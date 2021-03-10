@@ -16,6 +16,7 @@
 package uk.nhs.digital.mait.tkwx.tk.internalservices;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import static java.util.logging.Level.SEVERE;
@@ -38,11 +39,9 @@ public class FHIRJsonXmlAdapter {
     private IParser xmlParser = null;
     private IParser jsonParser = null;
 
-    private static String fhirVersion;
+    private static FhirVersionEnum fhirVersion;
     private static final boolean DEBUG = false;
 
-    public static final String DSTU2 = "Dstu2";
-    public static final String DSTU3 = "Dstu3";
     public static final String FHIRCONVERSIONFAILURE = "fhirconversionfailure";
 
     /**
@@ -51,7 +50,8 @@ public class FHIRJsonXmlAdapter {
     private FHIRJsonXmlAdapter() {
         try {
             Configurator configurator = Configurator.getConfigurator();
-            fhirVersion = configurator.getConfiguration(FHIR_VERSION_PROPERTY) != null ? configurator.getConfiguration(FHIR_VERSION_PROPERTY) : DSTU3;
+            fhirVersion = configurator.getConfiguration(FHIR_VERSION_PROPERTY) != null ? 
+                    FhirVersionEnum.valueOf(configurator.getConfiguration(FHIR_VERSION_PROPERTY).toUpperCase()) : FhirVersionEnum.DSTU3;
         } catch (Exception ex) {
             Logger.getInstance().log(SEVERE, FHIRJsonXmlAdapter.class.getName(),
                     "Error getting fhir version : " + ex.getMessage());
@@ -69,6 +69,12 @@ public class FHIRJsonXmlAdapter {
                     break;
                 case DSTU3:
                     ctx = FhirContext.forDstu3();
+                    break;
+                case R4:
+                    ctx = FhirContext.forR4();
+                    break;
+                case R5:
+                    ctx = FhirContext.forR5();
                     break;
                 default:
                     Logger.getInstance().log(SEVERE, FHIRJsonXmlAdapter.class.getName(),
@@ -202,18 +208,18 @@ public class FHIRJsonXmlAdapter {
     /**
      * @return the fhirVersion
      */
-    public static String getFhirVersion() {
-        return fhirVersion != null ? fhirVersion : "";
+    public static FhirVersionEnum getFhirVersion() {
+        return fhirVersion;
     }
 
     /**
      * @param aFhirVersion the fhirVersion to set
      */
-    public static void setFhirVersion(String aFhirVersion) {
+    public static void setFhirVersion(FhirVersionEnum aFhirVersion) {
         if (fhirVersion == null) {
             getInstance();
         }
-        if (!aFhirVersion.equals(fhirVersion)) {
+        if (aFhirVersion != fhirVersion) {
             fhirVersion = aFhirVersion;
             me.init();
         }

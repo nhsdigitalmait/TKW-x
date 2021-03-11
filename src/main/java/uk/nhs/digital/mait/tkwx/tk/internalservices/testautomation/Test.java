@@ -452,6 +452,12 @@ public class Test
                 if (tosend == null) {
                     throw new Exception("Test " + testName + " : message " + msgname + " not found");
                 }
+				if (tosend.getDatasourceName() != null) {
+                    // we need to peek ahead because we need these set before the message is instantiated
+                    // so that we can do the httpheader datasource substitutions
+                    datasource = tosend.getDatasource();
+                    recordid = tosend.getRecordid();
+                }
             }
             if (synccheckname != null) {
                 synccheck = scriptParser.getPassFailCheck(synccheckname);
@@ -845,10 +851,10 @@ public class Test
         // this is not a chain so we have to send a request
         if (chainName == null) {
             String filename = tosend.instantiate(this, schedule.getTransmitterDirectory(), toUrl, fromUrl, replyTo, preTransforms, preSubstitutions, profileId, iteration);
-            if (tosend != null) {
-                datasource = tosend.getDatasource();
-                recordid = tosend.getRecordid();
-            }
+            //if (tosend != null) {
+            //   datasource = tosend.getDatasource();
+            //  recordid = tosend.getRecordid();
+            //}
 
             if (transmitMode.equals(SPINETOOLS_TRANSMITTER_MODE)) {
                 // set the required SpineTools request captor object values

@@ -16,7 +16,6 @@
 package uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor;
 
 import java.util.HashMap;
-import org.hl7.fhir.dstu3.model.OperationOutcome;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.RuleService;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Substitution;
@@ -37,6 +36,7 @@ public class HAPIFHIRRebuild
     private String busyMessage = null;
     private String successMessage = null;
     private final HapiFhirValidatorEngineOrchestrator orchestrator = HapiFhirValidatorEngineOrchestrator.getInstance();
+    String hapiFhirValidatorInstanceName = null;
 
     /**
      * Public constructor
@@ -57,19 +57,11 @@ public class HAPIFHIRRebuild
         initialise(hapiFhirValidatorInstanceName);
     }
 
-    private void initialise(String hapiFhirValidatorInstanceName) {
+    private void initialise(String instanceName) {
+        this.hapiFhirValidatorInstanceName = instanceName;
         hfvEngine = orchestrator.getEngine(hapiFhirValidatorInstanceName);
-        OperationOutcome oo = new OperationOutcome();
-        oo.addIssue().setCode(OperationOutcome.IssueType.NOTFOUND)
-                .setSeverity(OperationOutcome.IssueSeverity.FATAL)
-                .setDiagnostics("Server is busy whilst Profile is being Rebuilt - try again later");
-        busyMessage = hfvEngine.getContext().newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);
-        
-        oo = new OperationOutcome();
-        oo.addIssue().setCode(OperationOutcome.IssueType.INFORMATIONAL)
-                .setSeverity(OperationOutcome.IssueSeverity.INFORMATION)
-                .setDiagnostics("Server Profile Rebuild Successful");
-        successMessage = hfvEngine.getContext().newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);
+        busyMessage = hfvEngine.getRebuildBusyOOMessage();
+        successMessage = hfvEngine.getRebuildSuccessOOMessage();
     }
 
     @Override
@@ -79,7 +71,7 @@ public class HAPIFHIRRebuild
         RuleService rulesService = (RuleService) ServiceManager.getInstance().getService("RulesEngine");
         rulesService.setBusy(true, busyMessage);
 
-        hfvEngine.rebuild();
+        hfvEngine.rebuild(hapiFhirValidatorInstanceName);
         
 
         rulesService.setBusy(false, "");

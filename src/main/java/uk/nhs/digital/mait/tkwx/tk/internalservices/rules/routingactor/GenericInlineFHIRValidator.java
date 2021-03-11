@@ -32,7 +32,11 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Substitution;
  * Specifically for FHIR Messaging over ITK returns synchronous empty message
  * followed by asynchronous Inf Ack and Bus Ack. This Routing actor uses HTTP
  * transport for sending its response
- *
+ * 
+ * ***********
+ * Not sure whether this is still current so not made it FHIR version agnostic
+ * ***********
+ * 
  * @author Simon Farrow simon.farrow1@nhs.net
  */
 public class GenericInlineFHIRValidator

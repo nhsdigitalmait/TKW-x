@@ -50,6 +50,11 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.FH
  * CDSS/EMS validator which accepts a zip file and processes its contents It is
  * no longer required but may be useful for a staring point for something else
  *
+ * ***********
+ * THIS IS NOT FHIR VERSION AGNOSTIC - MAY NEED CHANGING IN THE FUTURE As this
+ * is for a specific implementation fhir version has not been abstracted - If it
+ * is required to do so it can be done in the future
+ *
  * @author Richard Robinson
  */
 public class CDSSFHIRUnpacker {
@@ -144,13 +149,13 @@ public class CDSSFHIRUnpacker {
                 }
             }
 
-            if (previousResources.contains(url +"|version|"+ version)) {
+            if (previousResources.contains(url + "|version|" + version)) {
                 // combination already present
                 String newUrl = "urn:uuid:" + UUID.randomUUID().toString();
                 previousResources.add(newUrl);
                 resourcesList.add(new Object[]{resource, newUrl, version});
             } else {
-                previousResources.add(url +"|version|"+ version);
+                previousResources.add(url + "|version|" + version);
                 resourcesList.add(new Object[]{resource, url, version});
             }
 
@@ -193,8 +198,6 @@ public class CDSSFHIRUnpacker {
 //        String xmlRequestBodyString = new String(xmlRequestBody);
 //        xmlRequestBody = xmlRequestBodyString.replaceAll("https://cdss-1-1.staging.uec-connect.nhs.uk/fhir/Questionnaire/initial.initial","urn:uuid:"+UUID.randomUUID().toString()).getBytes();
 //THIS IS TEST AND NEEDS RENMOVING
-        
-        
         xmlRequest.setInputStream(
                 new ByteArrayInputStream(xmlRequestBody));
         xmlRequest.setRequestType(httpRequest.getRequestType());

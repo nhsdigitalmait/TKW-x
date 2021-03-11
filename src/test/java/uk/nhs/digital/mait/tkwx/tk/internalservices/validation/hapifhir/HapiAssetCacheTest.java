@@ -44,7 +44,7 @@ import static org.junit.Assert.*;
  */
 public class HapiAssetCacheTest {
 
-    private HapiAssetCache instance;
+    private HapiAssetCacheStu3 instance;
     private final static String ROOT = System.getenv("TKWROOT")+"/config/GP_CONNECT/validator_config/fhir_assets/STU3-FHIR-Assets/";
     
     public HapiAssetCacheTest() {
@@ -60,7 +60,7 @@ public class HapiAssetCacheTest {
     
     @Before
     public void setUp() {
-        instance = new HapiAssetCache(new ArrayList<File>());
+        instance = new HapiAssetCacheStu3(new ArrayList<File>());
     }
     
     @After

@@ -1,4 +1,4 @@
-/*
+    /*
   Copyright 2018  Richard Robinson rrobinson@nhs.net
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -367,6 +367,7 @@ public class HapiFhirValidator
                     break;
             }
             ;
+            vsb.append("<li>").append("HAPI FHIR Validator FHIR Version: ").append(hfvEngine.getFhirVersion()).append("</li>");
             vsb.append("<li>").append("INSTALLED: Caching Validation Support module installed").append("</li>");
             vsb.append("<li>").append("INSTALLED: Default Validation Support module installed").append("</li>");
             vsb.append("<li>").append(hfvEngine.isPrepopulatedValidationSupport()? "INSTALLED: " : "NOT INSTALLED: ").append("Prepopulated Validation Support Module").append("</li>");

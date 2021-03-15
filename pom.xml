@@ -50,7 +50,7 @@
                     <reuseForks>false</reuseForks>
                     
                     <!-- set this to true for a development cycle that is shorter than war and peace -->
-                    <skipTests>false</skipTests>
+                    <skipTests>true</skipTests>
                     
                 </configuration> 
             </plugin> 

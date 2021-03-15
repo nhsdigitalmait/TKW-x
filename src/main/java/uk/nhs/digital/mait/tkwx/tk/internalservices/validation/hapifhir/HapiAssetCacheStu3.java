@@ -18,14 +18,19 @@ package uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
+import ca.uhn.fhir.validation.ValidationResult;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.hl7.fhir.dstu3.model.CapabilityStatement;
 import org.hl7.fhir.dstu3.model.CodeSystem;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ConceptMap;
+import org.hl7.fhir.dstu3.model.Meta;
 import org.hl7.fhir.dstu3.model.NamingSystem;
 import org.hl7.fhir.dstu3.model.OperationDefinition;
+import org.hl7.fhir.dstu3.model.OperationOutcome;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.SearchParameter;
 import org.hl7.fhir.dstu3.model.StructureDefinition;
 import org.hl7.fhir.dstu3.model.ValueSet;
@@ -38,7 +43,7 @@ import uk.nhs.digital.mait.tkwx.util.Utils;
  *
  * @author Richard Robinson
  */
-public class HapiAssetCache {
+public class HapiAssetCacheStu3 implements HapiAssetCacheInterface {
 
     private static final int UNKNOWN_FORMAT = 0;
     private static final int JSON_FORMAT = 1;
@@ -70,13 +75,13 @@ public class HapiAssetCache {
     private String profileVersionFileName = null;
     private ArrayList<File> ignoreList;
 
-    public HapiAssetCache(ArrayList<File> ignoreList) {
+    public HapiAssetCacheStu3(ArrayList<File> ignoreList) {
         super();
         context = FhirContext.forDstu3();
         this.ignoreList = ignoreList;
     }
 
-    public HapiAssetCache(FhirContext c, ArrayList<File> ignoreList) {
+    public HapiAssetCacheStu3(FhirContext c, ArrayList<File> ignoreList) {
         super();
         context = c;
         this.ignoreList = ignoreList;
@@ -89,6 +94,8 @@ public class HapiAssetCache {
     public HashMap<String, StructureDefinition> getStructureDefinitions() {
         return StructureDefinitionCache;
     }
+
+    @Override
     public HashMap<String, IBaseResource> getStructureDefinitionIBaseResourceCache() {
         return StructureDefinitionIBaseResourceCache;
     }
@@ -101,6 +108,7 @@ public class HapiAssetCache {
         return valueSetCache;
     }
 
+    @Override
     public HashMap<String, IBaseResource> getValueSetIBaseResourceCache() {
         return valueSetIBaseResourceCache;
     }
@@ -108,6 +116,8 @@ public class HapiAssetCache {
     public HashMap<String, CodeSystem> getCodeSystemCache() {
         return codeSystemCache;
     }
+
+    @Override
     public HashMap<String, IBaseResource> getCodeSystemIBaseResourceCache() {
         return codeSystemIBaseResourceCache;
     }
@@ -169,6 +179,7 @@ public class HapiAssetCache {
         }
     }
 
+    @Override
     public void addAll(String d)
             throws Exception {
         File dir = new File(d);
@@ -336,8 +347,45 @@ public class HapiAssetCache {
         return UNKNOWN_FORMAT;
     }
 
-    void setProfileVersionFileName(String name) {
+    @Override
+    public void setProfileVersionFileName(String name) {
         profileVersionFileName = name;
+    }
+
+    @Override
+    public String convertValidationResultToOOString(ValidationResult vr, HapiFhirValidatorEngine hfve) {
+        OperationOutcome oo = (OperationOutcome) vr.toOperationOutcome();
+        Meta meta = new Meta();
+        Coding hapiVersion = new Coding();
+        hapiVersion.setVersion(hfve.getSoftwareVersion());
+        hapiVersion.setSystem("urn:nhs:digital:fhir:validator:version");
+        meta.addTag(hapiVersion);
+        Coding profileVersion = new Coding();
+        profileVersion.setVersion(hfve.getProfileVersion());
+        profileVersion.setSystem("urn:nhs:digital:fhir:profile:version");
+        meta.addTag(profileVersion);
+        Resource resource = (Resource) oo;
+        resource.setMeta(meta);
+        return context.newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);
+    }
+
+    @Override
+    public String getRebuildBusyOOMessage() {
+
+        OperationOutcome oo = new OperationOutcome();
+        oo.addIssue().setCode(OperationOutcome.IssueType.NOTFOUND)
+                .setSeverity(OperationOutcome.IssueSeverity.FATAL)
+                .setDiagnostics("Server is busy whilst Profile is being Rebuilt - try again later");
+        return context.newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);
+    }
+
+    @Override
+    public String getRebuildSuccessOOMessage() {
+        OperationOutcome oo = new OperationOutcome();
+        oo.addIssue().setCode(OperationOutcome.IssueType.INFORMATIONAL)
+                .setSeverity(OperationOutcome.IssueSeverity.INFORMATION)
+                .setDiagnostics("Server Profile Rebuild Successful");
+         return context.newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);
     }
 
 }

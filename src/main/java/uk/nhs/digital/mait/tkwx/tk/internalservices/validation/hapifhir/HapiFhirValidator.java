@@ -1,4 +1,4 @@
-/*
+    /*
   Copyright 2018  Richard Robinson rrobinson@nhs.net
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -218,7 +218,7 @@ public class HapiFhirValidator
                 switch (next.getSeverity()) {
                     case INFORMATION:
                         for (FilterTotals ft : informationFilter) {
-                            if (next.getMessage().contains(ft.getCondition())) {
+                            if (next.getMessage().matches(ft.getCondition())) {
                                 ft.increaseByOne();
                             }
                         }
@@ -230,7 +230,7 @@ public class HapiFhirValidator
                         break;
                     case WARNING:
                         for (FilterTotals ft : warningFilter) {
-                            if (next.getMessage().contains(ft.getCondition())) {
+                            if (next.getMessage().matches(ft.getCondition())) {
                                 ft.increaseByOne();
                             }
                         }
@@ -242,7 +242,7 @@ public class HapiFhirValidator
                         break;
                     case ERROR:
                         for (FilterTotals ft : errorFilter) {
-                            if (next.getMessage().contains(ft.getCondition())) {
+                            if (next.getMessage().matches(ft.getCondition())) {
                                 ft.increaseByOne();
                             }
                         }
@@ -254,7 +254,7 @@ public class HapiFhirValidator
                         break;
                     case FATAL:
                         for (FilterTotals ft : fatalFilter) {
-                            if (next.getMessage().contains(ft.getCondition())) {
+                            if (next.getMessage().matches(ft.getCondition())) {
                                 ft.increaseByOne();
                             }
                         }
@@ -367,6 +367,7 @@ public class HapiFhirValidator
                     break;
             }
             ;
+            vsb.append("<li>").append("HAPI FHIR Validator FHIR Version: ").append(hfvEngine.getFhirVersion()).append("</li>");
             vsb.append("<li>").append("INSTALLED: Caching Validation Support module installed").append("</li>");
             vsb.append("<li>").append("INSTALLED: Default Validation Support module installed").append("</li>");
             vsb.append("<li>").append(hfvEngine.isPrepopulatedValidationSupport()? "INSTALLED: " : "NOT INSTALLED: ").append("Prepopulated Validation Support Module").append("</li>");

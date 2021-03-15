@@ -1,0 +1,3 @@
+tks.routingactor.cda.appnackerrorcode DE0007
+tks.routingactor.cda.appnackerrortext Distribution EnvelopeManifest Item Processing Error
+tks.routingactor.cda.appnackdiagnostictext TKW Simulator Generated DE0007 InfNACK

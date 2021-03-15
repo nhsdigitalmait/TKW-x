@@ -1,0 +1,169 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="cda-person-relationship-type" >
+	<concept code="1">
+		<display>Spouse</display>
+	</concept>
+	<concept code="2">
+		<display>Partner</display>
+	</concept>
+	<concept code="3">
+		<display>Parent</display>
+	</concept>
+	<concept code="4">
+		<display>Next of kin</display>
+	</concept>
+	<concept code="5">
+		<display>Guardian</display>
+	</concept>
+	<concept code="6">
+		<display>Foster parent</display>
+	</concept>
+	<concept code="7">
+		<display>Step parent</display>
+	</concept>
+	<concept code="8">
+		<display>Polygamous partner</display>
+	</concept>
+	<concept code="9">
+		<display>Child</display>
+	</concept>
+	<concept code="10">
+		<display>Dependant</display>
+	</concept>
+	<concept code="11">
+		<display>Non-dependant</display>
+	</concept>
+	<concept code="12">
+		<display>Mother</display>
+	</concept>
+	<concept code="13">
+		<display>Father</display>
+	</concept>
+	<concept code="14">
+		<display>Sister</display>
+	</concept>
+	<concept code="15">
+		<display>Brother</display>
+	</concept>
+	<concept code="16">
+		<display>Relative</display>
+	</concept>
+	<concept code="17">
+		<display>Proxy - Contact</display>
+	</concept>
+	<concept code="18">
+		<display>Proxy - Communication</display>
+	</concept>
+	<concept code="19">
+		<display>Proxy - Contact and Communication</display>
+	</concept>
+	<concept code="20">
+		<display>Carer</display>
+	</concept>
+	<concept code="21">
+		<display>Self</display>
+	</concept>
+	<concept code="98">
+		<display>Not Known</display>
+	</concept>
+	<concept code="99">
+		<display>Not specified</display>
+	</concept>
+	<concept code="22">
+		<display>Wife</display>
+	</concept>
+	<concept code="23">
+		<display>Husband</display>
+	</concept>
+	<concept code="24">
+		<display>Maternal Grand-Father</display>
+	</concept>
+	<concept code="25">
+		<display>Maternal Grand-Mother</display>
+	</concept>
+	<concept code="26">
+		<display>Paternal Grand-Father</display>
+	</concept>
+	<concept code="27">
+		<display>Paternal Grand-Mother</display>
+	</concept>
+	<concept code="28">
+		<display>Grand-Son</display>
+	</concept>
+	<concept code="29">
+		<display>Grand-Daughter</display>
+	</concept>
+	<concept code="30">
+		<display>Aunt</display>
+	</concept>
+	<concept code="31">
+		<display>Uncle</display>
+	</concept>
+	<concept code="32">
+		<display>Niece</display>
+	</concept>
+	<concept code="33">
+		<display>Nephew</display>
+	</concept>
+	<concept code="34">
+		<display>Step-Mother</display>
+	</concept>
+	<concept code="35">
+		<display>Step-Father</display>
+	</concept>
+	<concept code="36">
+		<display>Step-Son</display>
+	</concept>
+	<concept code="37">
+		<display>Step-Daughter</display>
+	</concept>
+	<concept code="38">
+		<display>Civil Partner</display>
+	</concept>
+	<concept code="39">
+		<display>Ex-Wife</display>
+	</concept>
+	<concept code="40">
+		<display>Ex-Husband</display>
+	</concept>
+	<concept code="41">
+		<display>Ex-Civil Partner</display>
+	</concept>
+	<concept code="42">
+		<display>Son</display>
+	</concept>
+	<concept code="43">
+		<display>Daughter</display>
+	</concept>
+	<concept code="44">
+		<display>Grandparent</display>
+	</concept>
+	<concept code="45">
+		<display>Grandchild</display>
+	</concept>
+	<concept code="46">
+		<display>Friend</display>
+	</concept>
+	<concept code="47">
+		<display>Neighbour</display>
+	</concept>
+	<concept code="48">
+		<display>Work Colleague</display>
+	</concept>
+	<concept code="49">
+		<display>Person with Parental Responsibility</display>
+	</concept>
+	<concept code="50">
+		<display>Informal Partner</display>
+	</concept>
+	<concept code="51">
+		<display>Non-relative lived with for at least 5 years</display>
+	</concept>
+	<concept code="61">
+		<display>Step parent</display>
+	</concept>
+	<concept code="62">
+		<display>Polygamous partner</display>
+	</concept>
+	</valueSet>
+</ValueSets>

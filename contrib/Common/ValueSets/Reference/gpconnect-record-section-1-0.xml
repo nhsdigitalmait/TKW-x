@@ -1,0 +1,43 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="gpconnect-record-section" >
+		<concept code="PAT">
+			<display>Patient Details</display>
+		</concept>
+		<concept code="KEY">
+			<display>Key Indicators (Flags)</display>
+		</concept>
+		<concept code="ALL">
+			<display>Allergies and Sensitivities</display>
+		</concept>
+		<concept code="SUM">
+			<display>Summary</display>
+		</concept>
+		<concept code="ADM">
+			<display>Administrative Items</display>
+		</concept>
+		<concept code="CLI">
+			<display>Clinical Items</display>
+		</concept>
+		<concept code="ENC">
+			<display>Encounters</display>
+		</concept>
+		<concept code="IMM">
+			<display>Immunisations</display>
+		</concept>		
+		<concept code="INV">
+			<display>Investigations</display>
+		</concept>
+		<concept code="MED">
+			<display>Medications</display>
+		</concept>
+		<concept code="OBS">
+			<display>Observations</display>
+		</concept>
+		<concept code="PRB">
+			<display>Problems</display>
+		</concept>
+		<concept code="REF">
+			<display>Referral</display>
+		</concept>
+	</valueSet>
+</ValueSets>

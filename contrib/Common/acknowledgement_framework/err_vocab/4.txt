@@ -1,0 +1,3 @@
+tks.routingactor.cda.appnackerrorcode DE0004
+tks.routingactor.cda.appnackerrortext Distribution Envelope Audit Identity Processing Error
+tks.routingactor.cda.appnackdiagnostictext TKW Simulator Generated DE0004 InfNACK

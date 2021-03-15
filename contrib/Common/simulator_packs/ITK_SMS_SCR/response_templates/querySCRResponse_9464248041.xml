@@ -1,0 +1,239 @@
+
+<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <itk:header service="urn:nhs-itk:services:201005:sendRecvDistEnvelopeResponse" trackingid="7D6782C0-AE1A-11DB-97CF-B18E1E0994CD">
+        <itk:addresslist>
+            <itk:address type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RKE"/>
+        </itk:addresslist>
+        <itk:auditIdentity>
+            <itk:id type="2.16.840.1.113883.2.1.3.2.4.18.27" uri="urn:nhs-uk:identity:ods:RAL"/>
+       </itk:auditIdentity>
+        <itk:manifest count="1">
+            <itk:manifestitem mimetype="text/xml" id="uuid_7D6782C0-AE1A-11DB-97BF-B18E1E0994CD" profileid="urn:nhs-en:profile:querySCRResponse-v-1-0"/>
+        </itk:manifest>
+        <itk:senderAddress type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RAL"/>
+        <itk:handlingSpecification>
+            <itk:spec value="urn:nhs-itk:interaction:querySCRResponse-v1-0" key="urn:nhs-itk:ns:201005:interaction"/>
+        </itk:handlingSpecification>
+    </itk:header>
+    <itk:payloads count="1">
+        <itk:payload id="uuid_7D6782C0-AE1A-11DB-97BF-B18E1E0994CD">
+            <QuerySCRResponse xmlns="urn:hl7-org:v3">
+                <id root="7D6782C0-AE1A-11DB-97BF-B18E1E0994CD"/>
+                <text>
+                    <npfitlc:GPSummary.text xmlns:npfitlc="NPFIT:Localisation" xmlns="urn:hl7-org:v3">
+                        <hl7:GPSummary xmlns:hl7="urn:hl7-org:v3" classCode="COMPOSITION" moodCode="EVN">
+                            <id xmlns:xhtml="xhtml:NPfIT:PresentationText" root="0600CE57-912C-4C7F-E050-950AE073125B"></id>
+                            <code xmlns:xhtml="xhtml:NPfIT:PresentationText" code="196971000000103" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="General Practice Initial Summary"></code>
+                            <statusCode xmlns:xhtml="xhtml:NPfIT:PresentationText" code="active"></statusCode>
+                            <effectiveTime xmlns:xhtml="xhtml:NPfIT:PresentationText" value="201305010000"></effectiveTime>
+                            <author xmlns:xhtml="xhtml:NPfIT:PresentationText" typeCode="AUT" contextControlCode="OP">
+                                <time value="201305010000"/>
+                                <UKCT_MT160017UK01.AgentOrgSDS classCode="AGNT">
+                                    <agentOrganizationSDS classCode="ORG" determinerCode="INSTANCE">
+                                        <id root="1.2.826.0.1285.0.1.10" extension="D82015"/>
+                                        <name>BRIDGE STREET SURGERY</name>
+                                    </agentOrganizationSDS>
+                                </UKCT_MT160017UK01.AgentOrgSDS>
+                            </author>
+                            <hl7:excerptFrom typeCode="XCRPT" contextConductionInd="true" inversionInd="false" negationInd="false">
+                                <hl7:templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAT_RM-NPfITUK10.excerptFrom"/>
+                                <hl7:seperatableInd value="false"/>
+                                <hl7:UKCT_MT144051UK01.CareProfessionalDocumentationCRE classCode="CATEGORY" moodCode="EVN">
+                                    <hl7:code codeSystem="2.16.840.1.113883.2.1.3.2.4.15" code="163171000000105" displayName="Care Professional Documentation"/>
+                                    <hl7:component typeCode="COMP" inversionInd="false" negationInd="false">
+                                        <hl7:templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+                                        <hl7:seperatableInd value="false"/>
+                                        <hl7:presentationText classCode="OBS" moodCode="EVN">
+                                            <hl7:value mediaType="text/plain">
+                                                <html xmlns="xhtml:NPfIT:PresentationText">
+                                                    <head/>
+                                                    <body>
+                                                        <h2>General Practice Initial Summary</h2>
+                                                        <h3>This is a GP Initial Summary sourced from the patient's General Practice record. This information has not been verified by the practice prior to sending.This summary will not include all the information pertinent to this patient.</h3>
+                                                        <h3>Time of summary creation 01-May-2013 00:00</h3>
+                                                        <h3>Time of sending 01-May-2013 00:00</h3>
+                                                        <h3>Author THE BRIDGE STREET SURGERY, 30/32 BRIDGE STREET, DOWNHAM MARKET, NORFOLK, PE38 9DH</h3>
+                                                        <h2>Allergies and Adverse Reactions</h2>
+                                                        <h2>The practice system holds no Allergies and Adverse Reactions for this patient</h2>
+                                                        <h2>Repeat Medication</h2>
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <td>Date/time</td>
+                                                                    <td>Medication Item</td>
+                                                                    <td>Dosage Instructions</td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>12-DEC-2012</td>
+                                                                    <td>Salbutamol 100micrograms CFC-free breath-actuated aerosol inhaler - product</td>
+                                                                    <td>inhale 2 doses as needed, upto 4 times a day, prn</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>17-SEP-2012</td>
+                                                                    <td>Calcium carbonate+colecalciferol 1.5g/10micrograms chewable tablet - product</td>
+                                                                    <td>take one twice daily</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>14-MAR-2012</td>
+                                                                    <td>Quinine bisulphate 300mg tablet - product</td>
+                                                                    <td>take one bd</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>14-FEB-2012</td>
+                                                                    <td>simvador 40mg tablet</td>
+                                                                    <td>take one at night</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>01-DEC-2011</td>
+                                                                    <td>Oxybutynin hydrochloride 2.5mg tablet - product</td>
+                                                                    <td>take one bd</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>31-OCT-2011</td>
+                                                                    <td>Urisleeve 150121 medium leg bag support</td>
+                                                                    <td>use as directed</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>18-JAN-2011</td>
+                                                                    <td>Clotrimazole 1% cream - product</td>
+                                                                    <td>apply 3 times/day</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>06-SEP-2010</td>
+                                                                    <td>Uriplan-500 DT5L leg bags x10</td>
+                                                                    <td>use as directed</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>23-AUG-2010</td>
+                                                                    <td>Ketoprofen 2.5% gel - product</td>
+                                                                    <td>apply twice daily</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>24-FEB-2010</td>
+                                                                    <td>Dipyridamole 200mg m/r capsule - product</td>
+                                                                    <td>take one twice daily</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>24-FEB-2010</td>
+                                                                    <td>Gliclazide 80mg tablet - product</td>
+                                                                    <td>take half twice a day.</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>24-FEB-2010</td>
+                                                                    <td>Ramipril 1.25mg capsule - product</td>
+                                                                    <td>take one daily</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>14-OCT-2009</td>
+                                                                    <td>Aspirin 75mg dispersible tablet - product</td>
+                                                                    <td>take 150mg daily.</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <h2>Acute Medication</h2>
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <td>Date/time</td>
+                                                                    <td>Medication Item</td>
+                                                                    <td>Dosage Instructions</td>
+                                                                    <td>Quantity or Duration</td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>20-MAR-2013</td>
+                                                                    <td>Co-codamol 8mg/500mg tablet - product</td>
+                                                                    <td>take 1 or 2 4 times/day</td>
+                                                                    <td>100</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>12-MAR-2013</td>
+                                                                    <td>Amoxicillin 500mg capsule - product</td>
+                                                                    <td>take one 3 times/day</td>
+                                                                    <td>21</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>30-JAN-2013</td>
+                                                                    <td>Sno Tears 1.4% eye drops 10mL</td>
+                                                                    <td>one drop as needed</td>
+                                                                    <td>10</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>30-JAN-2013</td>
+                                                                    <td>Dipyridamole 200mg m/r capsule - product</td>
+                                                                    <td>take one twice daily</td>
+                                                                    <td>56</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>30-JAN-2013</td>
+                                                                    <td>Quinine bisulphate 300mg tablet - product</td>
+                                                                    <td>take one bd</td>
+                                                                    <td>56</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>28-NOV-2012</td>
+                                                                    <td>ROC Total sunblock SPF25 colourless cream</td>
+                                                                    <td>use as directed</td>
+                                                                    <td>1</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <h2>Discontinued Repeat Medication</h2>
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <td>Start Date/time</td>
+                                                                    <td>Discontinuation Date/time</td>
+                                                                    <td>Medication Item</td>
+                                                                    <td>Dosage Instructions</td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>16-NOV-2012</td>
+                                                                    <td>12-DEC-2012</td>
+                                                                    <td>Beclometasone dipropionate 100micrograms inhaler - product</td>
+                                                                    <td>inhale 2 doses twice daily</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>22-OCT-2010</td>
+                                                                    <td>12-DEC-2012</td>
+                                                                    <td>Co-codamol 8mg/500mg tablet - product</td>
+                                                                    <td>take 1 or 2 4 times/day</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </body>
+                                                </html>
+                                            </hl7:value>
+                                            <hl7:id root="0600CE57-A2D4-4C7F-E050-950AE073125B"/>
+                                            <hl7:code codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126" code="PresentationText" displayName="Presentation Text"/>
+                                            <hl7:statusCode code="completed"/>
+                                            <hl7:effectiveTime value="20141022104626"/>
+                                        </hl7:presentationText>
+                                    </hl7:component>
+                                </hl7:UKCT_MT144051UK01.CareProfessionalDocumentationCRE>
+                            </hl7:excerptFrom>
+                            <pertinentInformation1 xmlns:xhtml="xhtml:NPfIT:PresentationText" typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+                                <templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+                                <seperatableInd value="true"/>
+                                <pertinentRootCREType classCode="CATEGORY" moodCode="EVN">
+                                    <code code="163171000000105" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Care Professional Documentation"/>
+                                </pertinentRootCREType>
+                            </pertinentInformation1>
+                            <recordTarget xmlns:xhtml="xhtml:NPfIT:PresentationText" typeCode="RCT">
+                                <patient classCode="PAT">
+                                    <id root="2.16.840.1.113883.2.1.4.1" extension="9464248041"/>
+                                </patient>
+                            </recordTarget>
+                        </hl7:GPSummary>
+                    </npfitlc:GPSummary.text>
+                </text>
+                <value code="SMSP-0000" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.506" displayName="Success"/>
+            </QuerySCRResponse>
+        </itk:payload>
+    </itk:payloads>
+</itk:DistributionEnvelope>

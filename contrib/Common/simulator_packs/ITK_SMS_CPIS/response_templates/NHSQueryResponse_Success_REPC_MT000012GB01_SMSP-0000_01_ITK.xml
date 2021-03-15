@@ -1,0 +1,112 @@
+<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<itk:header service="urn:nhs-itk:services:201005:sendRecvDistEnvelopeResponse" trackingid="7D6F23E0-AE1A-11DB-8707-B18E1E0994EA">
+		<itk:addresslist>
+			<itk:address type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RKE"/>
+		</itk:addresslist>
+		<itk:auditIdentity>
+			<itk:id type="2.16.840.1.113883.2.1.3.2.4.18.27" uri="urn:nhs-uk:identity:ods:RAL"/>
+		</itk:auditIdentity>
+		<itk:manifest count="1">
+			<itk:manifestitem mimetype="text/xml" id="uuid_D7F7B039-3572-495C-A46A-6B243A68B175" profileid="urn:nhs-en:profile:SMSP-CP-ISNHSQueryResponse-v1-0"/>
+		</itk:manifest>
+		<itk:senderAddress type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RAL"/>
+		<itk:handlingSpecification>
+			<itk:spec value="urn:nhs-itk:interaction:SMSP-CP-ISNHSQueryResponse-v1-0" key="urn:nhs-itk:ns:201005:interaction"/>
+		</itk:handlingSpecification>
+	</itk:header>
+	<itk:payloads count="1">
+		<itk:payload id="uuid_D7F7B039-3572-495C-A46A-6B243A68B175">
+			<CP-ISNHSQueryResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:hl7-org:v3" xmlns:npfitlc="NPFIT:HL7:Localisation">
+				<effectiveTime value="201212082000+0000"/>
+				<id root="3C4C0AEF-3537-44C4-A8B5-F0C313603458"/>
+				<value codeSystem="2.16.840.1.113883.2.1.3.2.4.17.499" code="SMSP-0000" displayName="Success"/>
+				<pertinentInformation11>
+					<pertinentTotalReturnedAccessRecords>
+						<value value="1"/>
+					</pertinentTotalReturnedAccessRecords>
+				</pertinentInformation11>
+				<pertinentInformation12>
+					<pertinentTotalReturnedChildRecords>
+						<value value="1"/>
+					</pertinentTotalReturnedChildRecords>
+				</pertinentInformation12>
+				<pertinentInformation13>
+					<pertinentCP-ISNHSQuery>
+						<effectiveTime value="201212082000+0100"/>
+						<id root="7D616840-AE1A-11DB-973A-B18E1E0994CD"/>
+						<author>
+							<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCT_TP145102GB01#AssignedAuthor"/>
+							<COCT_TP145102GB01.AssignedAuthor>
+								<code code="R0670" displayName="Midwife - Sister/Charge Nurse" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.196"/>
+								<id root="1.2.826.0.1285.0.2.0.65" extension="200009876204"/>
+								<id root="1.2.826.0.1285.0.2.0.67" extension="100077650987"/>
+								<assignedAuthorPerson>
+									<name use="L">
+										<prefix>Mrs</prefix>
+										<given>Paula</given>
+										<family>Palmer</family>
+									</name>
+								</assignedAuthorPerson>
+								<representedOrganization>
+									<id extension="RKE" root="2.16.840.1.113883.2.1.3.2.4.19.1"/>
+									<name>THE WHITTINGTON COMMUNITY HOSPITAL</name>
+								</representedOrganization>
+							</COCT_TP145102GB01.AssignedAuthor>
+						</author>
+						<queryByParameter>
+							<person.NHSnumber>
+								<value extension="1234567895"/>
+							</person.NHSnumber>
+						</queryByParameter>
+					</pertinentCP-ISNHSQuery>
+				</pertinentInformation13>
+				<pertinentInformation14>
+					<pertinentCP-ISRecordControlAct>
+						<record>
+							<communicationFunctionSnd>
+								<organisation>
+									<id extension="V145" root="2.16.840.1.113883.2.1.3.2.4.19.1"/>
+									<name>Islington Local Authority</name>
+									<telecom value="tel:0207527200" use="WP"/>
+									<telecom value="tel:0734577777" use="EC"/>
+								</organisation>
+							</communicationFunctionSnd>
+							<CP-ISRecord>
+								<pertinentInformation15>
+									<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCT_TP146104GB01#UCPInformation"/>
+									<COCT_TP146104GB01.UCPInformation>
+										<component>
+											<uCPStartDate>
+												<value value="201209260900"/>
+											</uCPStartDate>
+										</component>
+										<component1>
+											<uCPEndDate>
+												<value value="201309260900"/>
+											</uCPEndDate>
+										</component1>
+									</COCT_TP146104GB01.UCPInformation>
+								</pertinentInformation15>
+								<subject>
+									<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCT_TP145100GB01#UnbornChild"/>
+									<COCT_TP145100GB01.UnbornChild>
+										<parentMotherPerson>
+											<birthTime value="20000926"/>
+											<name>
+												<given>Louise </given>
+												<family>Doyle</family>
+											</name>
+											<playedMother>
+												<id extension="1234567895" root="2.16.840.1.113883.2.1.4.1"/>
+											</playedMother>
+										</parentMotherPerson>
+									</COCT_TP145100GB01.UnbornChild>
+								</subject>
+							</CP-ISRecord>
+						</record>
+					</pertinentCP-ISRecordControlAct>
+				</pertinentInformation14>
+			</CP-ISNHSQueryResponse>
+		</itk:payload>
+	</itk:payloads>
+</itk:DistributionEnvelope>

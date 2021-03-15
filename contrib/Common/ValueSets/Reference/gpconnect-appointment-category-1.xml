@@ -1,0 +1,19 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="gpconnect-appointment-category" >
+		<concept code="CLI">
+			<display>Clinical</display>
+		</concept>
+		<concept code="ADM">
+			<display>Administrative</display>
+		</concept>
+		<concept code="VIR">
+			<display>Virtual</display>
+		</concept>
+		<concept code="REM">
+			<display>Reminder</display>
+		</concept>
+		<concept code="MSG">
+			<display>Message</display>
+		</concept>		
+	</valueSet>
+</ValueSets>

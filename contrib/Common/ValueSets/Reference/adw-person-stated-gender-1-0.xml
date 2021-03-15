@@ -1,0 +1,16 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="adw-patient-consent-status" >
+		<concept code="male">
+			<display>Male</display>
+		</concept>
+		<concept code="female">
+			<display>Female</display>
+		</concept>
+		<concept code="indeterminate">
+			<display>Indeterminate</display>
+		</concept>
+		<concept code="not known">
+			<display>Not Known</display>
+		</concept>		
+	</valueSet>
+</ValueSets>

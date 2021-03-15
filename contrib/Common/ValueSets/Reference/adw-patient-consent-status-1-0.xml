@@ -1,0 +1,13 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="adw-patient-consent-status" >
+		<concept code="Y">
+			<display>Yes</display>
+		</concept>
+		<concept code="N">
+			<display>No</display>
+		</concept>
+		<concept code="L">
+			<display>Lacks Mental Capacity</display>
+		</concept>
+	</valueSet>
+</ValueSets>

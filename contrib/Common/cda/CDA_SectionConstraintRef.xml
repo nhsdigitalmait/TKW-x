@@ -1,0 +1,14 @@
+<ProfileConfigs>
+	<configGroup type="ClassificationSectionContraints">
+		<configItem dmsName="Ambulance" messageName="AmbulanceServiceSummaryPatientReport" messageType="POCD_MT030001UK01" CodedEntry="NPFIT-000041_Section" CRETypeListChoice="NPFIT-000032_Section" SectionChoice="NPFIT-000001_Section" SectionTemplateChoice=""/>
+		<configItem dmsName="ChildScreening" messageName="ChildScreening" messageType="POCD_MT010000GB01" CodedEntry="NPFIT-000167_Section" CRETypeListChoice="" SectionChoice="NPFIT-000168_Section" SectionTemplateChoice=""/>
+		<configItem dmsName="Discharge" messageName="DischargeReport" messageType="POCD_MT150001UK06" CodedEntry="NPFIT-000005_Section" CRETypeListChoice="NPFIT-000032_Section" SectionChoice="NPFIT-000001_Section" SectionTemplateChoice="NPFIT-000064_Section"/>
+		<configItem dmsName="Emergency" messageName="EmergencyDepartmentReport" messageType="POCD_MT160001UK06" CodedEntry="NPFIT-000026_Section" CRETypeListChoice="NPFIT-000032_Section" SectionChoice="NPFIT-000001_Section" SectionTemplateChoice=""/>
+		<configItem dmsName="HPEN" messageName="Non Coded CDA Document" messageType="POCD_MT000020GB01" CodedEntry="" CRETypeListChoice="" SectionChoice="NPFIT-000169_Section" SectionTemplateChoice=""/>
+		<configItem dmsName="NonCodedCDA" messageName="Non Coded CDA Document" messageType="POCD_MT010011GB02" CodedEntry="NPFIT-000066_Section" CRETypeListChoice="" SectionChoice="NPFIT-000040_Section" SectionTemplateChoice=""/>
+		<configItem dmsName="OutOfHours" messageName="Out Of Hours Report" messageType="POCD_MT020001UK01" CodedEntry="NPFIT-000033_Section" CRETypeListChoice="NPFIT-000032_Section" SectionChoice="NPFIT-000001_Section" SectionTemplateChoice=""/>
+		<configItem dmsName="Outpatients" messageName="OutpatientReport" messageType="POCD_MT170001UK06" CodedEntry="NPFIT-000027_Section" CRETypeListChoice="NPFIT-000032_Section" SectionChoice="NPFIT-000001_Section" SectionTemplateChoice=""/>
+		<!--<configItem dmsName="Telehealth" messageName="Telehealth Service Order Request" messageType="POCD_MT190000GB01" CodedEntry="NPFIT-000149_Section" CRETypeListChoice="" SectionChoice="NPFIT-000101_Section" SectionTemplateChoice=""/>-->
+		<configItem dmsName="TransferOfCare" messageName="eDischarge Document" messageType="POCD_MT000026GB01" CodedEntry="" CRETypeListChoice="" SectionChoice="NPFIT-200002_Section" SectionTemplateChoice=""/>
+		</configGroup>
+</ProfileConfigs>

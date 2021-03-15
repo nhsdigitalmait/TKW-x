@@ -1,0 +1,66 @@
+<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<itk:header service="urn:nhs-itk:services:201005:sendRecvDistEnvelopeResponse" trackingid="7D6782C0-AE1A-11DB-97D0-B18E1E0994CD">
+		<itk:addresslist>
+			<itk:address type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RKE"/>
+		</itk:addresslist>
+		<itk:auditIdentity>
+			<itk:id type="2.16.840.1.113883.2.1.3.2.4.18.27" uri="urn:nhs-uk:identity:ods:RKE"/>
+		</itk:auditIdentity>
+		<itk:manifest count="1">
+			<itk:manifestitem mimetype="text/xml" id="uuid_7D6782C0-AE1A-11DB-97C1-B18E1E0994CD" profileid="urn:nhs-en:profile:querySCRActivityResponse-v-1-0"/>
+		</itk:manifest>
+		<itk:senderAddress type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RAL"/>
+		<itk:handlingSpecification>
+			<itk:spec value="urn:nhs-itk:interaction:querySCRActivityResponse-v1-0" key="urn:nhs-itk:ns:201005:interaction"/>
+		</itk:handlingSpecification>
+	</itk:header>
+	<itk:payloads count="1">
+		<itk:payload id="uuid_7D6782C0-AE1A-11DB-97C1-B18E1E0994CD">
+			<QuerySCRActivityResponse xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				<id root="7D6782C0-AE1A-11DB-97C1-B18E1E0994CD"/>
+				<text representation="TXT">"20150402112703","40","40","20140112","20140118","","156565656231",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140113035501",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient sick", "20140113035721",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","2200394876","156565656231","345676767898","Dr Garth Brooks","T","Unwell","20140113043000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140113070000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","2200394876","156565656231","345676767898","Dr Garth Brooks","T","Sick", "20140113071500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Unwell","20140113073000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140113075900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","7776650001","156565656231","345676767898","Dr Garth Brooks","T","Sick", "20140113090000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","7776650001","156565656231","345676767898","Dr Garth Brooks","T","Sick","20140113090200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","7776650001","156565656231","345676767898","Dr Garth Brooks","F","","20140113112100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Sick", "20140113115600",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Ill","20140113123500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140113123900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","2200394876","156565656231","345676767898","Dr Garth Brooks","F","", "20140113131500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Ill","20140113131515",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140113140000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","7776650001","156565656231","345676767898","Dr Garth Brooks","T","Unwell", "20140113150100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","4456221133","156565656231","345676767898","Dr Garth Brooks","F","","20140113150950",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","4456221133","156565656231","345676767898","Dr Garth Brooks","F","","20140113152550",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Sick", "20140113152900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.","20140113192900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140113193100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","7776650001","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.", "20140113193400",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.","20140113193900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","4456221133","156565656231","345676767898","Dr Garth Brooks","F","","20140113195900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","", "20140113195930",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","2200394876","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.","20140113225530",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140113232500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.", "20140113235500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","4456221133","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.","20140114065000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140114075000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","7776650001","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.", "20140114075900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.","20140114080900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","2200394876","156565656231","345676767898","Dr Garth Brooks","F","","20140114084900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","2200394876","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.", "20140114085700",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.","20140114085900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140114100300",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","7776650001","156565656231","345676767898","Dr Garth Brooks","F","", "20140114100900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","7776650001","156565656231","345676767898","Dr Garth Brooks","T","Patient was in an unconscious condition when they arrived at the A/E department. We were unable to ask their consent on arrival.","20140114102500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140114103800"</text>
+				<value code="SMSP-0000" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.506" displayName="Success"/>
+			</QuerySCRActivityResponse>
+		</itk:payload>
+	</itk:payloads>
+</itk:DistributionEnvelope>

@@ -1,0 +1,13 @@
+<soap:Fault xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<faultcode>soap:MustUnderstand</faultcode>
+	<faultstring xml:lang="en-GB">SOAP MustUnderstand error thrown.</faultstring>
+	<faultactor>http://itk.cfh.com/</faultactor>
+	<detail>
+		<toolkit:ToolkitErrorInfo xmlns:toolkit="urn:nhs-itk:ns:201005">
+		<toolkit:ErrorID>__ERRORID__</toolkit:ErrorID>
+		<toolkit:ErrorCode codeSystem="2.16.840.1.113883.2.1.3.2.4.17.268">1000</toolkit:ErrorCode>
+		<toolkit:ErrorText>The header 'someheader' from the namespace 'http://www.w3.org/2005/08/addressing' was not understood by the recipient of this message, causing the message to not be processed.  This error typically indicates that the sender of this message has enabled a communication protocol that the receiver cannot process.</toolkit:ErrorText>
+		<toolkit:ErrorDiagnosticText>Please ensure that the configuration of the client's binding is consistent with the service's binding.</toolkit:ErrorDiagnosticText>
+		</toolkit:ToolkitErrorInfo>
+	</detail>
+</soap:Fault>

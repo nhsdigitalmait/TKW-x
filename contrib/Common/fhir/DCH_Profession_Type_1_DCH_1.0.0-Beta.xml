@@ -1,0 +1,167 @@
+<Import>
+	<Metadata>
+		<Title>Table of DCH Profession Type</Title>
+		<Date>Built July 2019</Date>
+		<Source>https://fhir.nhs.uk/STU3/ValueSet/DCH-ProfessionalType-1</Source>
+	</Metadata>
+	<Row>
+		<Code>010</Code>
+		<Display>Arts Therapist (Art, Music and Drama Therapists)</Display>
+	</Row>
+	<Row>
+		<Code>020</Code>
+		<Display>Biomedical Scientist</Display>
+	</Row>
+	<Row>
+		<Code>030</Code>
+		<Display>Chiropodist / Podiatrist</Display>
+	</Row>
+	<Row>
+		<Code>040</Code>
+		<Display>Chiropractor</Display>
+	</Row>
+	<Row>
+		<Code>050</Code>
+		<Display>Clinical Scientist</Display>
+	</Row>
+	<Row>
+		<Code>060</Code>
+		<Display>Consultant</Display>
+	</Row>
+	<Row>
+		<Code>070</Code>
+		<Display>Clinical Dental Technician</Display>
+	</Row>
+	<Row>
+		<Code>080</Code>
+		<Display>Dental Hygienist</Display>
+	</Row>
+	<Row>
+		<Code>090</Code>
+		<Display>Dental Nurse</Display>
+	</Row>
+	<Row>
+		<Code>100</Code>
+		<Display>Dental Technician</Display>
+	</Row>
+	<Row>
+		<Code>110</Code>
+		<Display>Dental Therapist</Display>
+	</Row>
+	<Row>
+		<Code>120</Code>
+		<Display>Orthodontic Therapist</Display>
+	</Row>
+	<Row>
+		<Code>130</Code>
+		<Display>Dietitian</Display>
+	</Row>
+	<Row>
+		<Code>140</Code>
+		<Display>Dispensing Optician</Display>
+	</Row>
+	<Row>
+		<Code>150</Code>
+		<Display>General Dental Practitioner</Display>
+	</Row>
+	<Row>
+		<Code>160</Code>
+		<Display>General Medical Practitioner</Display>
+	</Row>
+	<Row>
+		<Code>170</Code>
+		<Display>Midwife</Display>
+	</Row>
+	<Row>
+		<Code>180</Code>
+		<Display>Nurse</Display>
+	</Row>
+	<Row>
+		<Code>190</Code>
+		<Display>Occupational Therapist</Display>
+	</Row>
+	<Row>
+		<Code>200</Code>
+		<Display>Operating Department Practitioner</Display>
+	</Row>
+	<Row>
+		<Code>210</Code>
+		<Display>Ophthalmic Medical Practitioner</Display>
+	</Row>
+	<Row>
+		<Code>220</Code>
+		<Display>Optometrist</Display>
+	</Row>
+	<Row>
+		<Code>230</Code>
+		<Display>Orthoptist</Display>
+	</Row>
+	<Row>
+		<Code>240</Code>
+		<Display>Orthotist</Display>
+	</Row>
+	<Row>
+		<Code>250</Code>
+		<Display>Osteopath</Display>
+	</Row>
+	<Row>
+		<Code>260</Code>
+		<Display>Paramedic</Display>
+	</Row>
+	<Row>
+		<Code>270</Code>
+		<Display>Pharmacist</Display>
+	</Row>
+	<Row>
+		<Code>280</Code>
+		<Display>Physiotherapist</Display>
+	</Row>
+	<Row>
+		<Code>290</Code>
+		<Display>Practitioner Psychologist</Display>
+	</Row>
+	<Row>
+		<Code>300</Code>
+		<Display>Prosthetist</Display>
+	</Row>
+	<Row>
+		<Code>310</Code>
+		<Display>Radiographer</Display>
+	</Row>
+	<Row>
+		<Code>320</Code>
+		<Display>Specialist Community Public Health Nurse: Family Health Nurse</Display>
+	</Row>
+	<Row>
+		<Code>330</Code>
+		<Display>Specialist Community Public Health Nurse: Health Visitor</Display>
+	</Row>
+	<Row>
+		<Code>340</Code>
+		<Display>Specialist Community Public Health Nurse: Occupational Health Nurse</Display>
+	</Row>
+	<Row>
+		<Code>350</Code>
+		<Display>Specialist Community Public Health Nurse: School Nurse</Display>
+	</Row>
+	<Row>
+		<Code>360</Code>
+		<Display>Speech and Language Therapist</Display>
+	</Row>
+	<Row>
+		<Code>370</Code>
+		<Display>Hearing Aid Dispenser</Display>
+	</Row>
+	<Row>
+		<Code>380</Code>
+		<Display>Pharmacy Technician</Display>
+	</Row>
+	<Row>
+		<Code>390</Code>
+		<Display>Social Worker in England</Display>
+	</Row>
+	<Row>
+		<Code>XXX</Code>
+		<Display>Other (not listed)</Display>
+	</Row>
+</Import>

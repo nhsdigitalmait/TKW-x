@@ -1,0 +1,13 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="gpconnect-condition-category" >
+		<concept code="DIA">
+			<display>Diagnosis</display>
+		</concept>
+		<concept code="PRB">
+			<display>Problem</display>
+		</concept>
+		<concept code="X">
+			<display>Other</display>
+		</concept>
+	</valueSet>
+</ValueSets>

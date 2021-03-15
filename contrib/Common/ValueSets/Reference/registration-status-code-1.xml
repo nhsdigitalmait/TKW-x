@@ -1,0 +1,16 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="registration-status-code" >
+		<concept code="A">
+			<display>Active</display>
+		</concept>
+		<concept code="D">
+			<display>Deduction Pending</display>
+		</concept>
+		<concept code="I">
+			<display>Inactive</display>
+		</concept>
+		<concept code="R">
+			<display>Registration Pending</display>
+		</concept>		
+	</valueSet>
+</ValueSets>

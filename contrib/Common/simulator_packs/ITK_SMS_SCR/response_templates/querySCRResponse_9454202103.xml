@@ -1,0 +1,165 @@
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+	<S:Header>
+		<To xmlns="http://www.w3.org/2005/08/addressing">http://www.w3.org/2005/08/addressing/anonymous</To>
+		<Action xmlns="http://www.w3.org/2005/08/addressing">urn:nhs-itk:services:201005:sendRecvDistEnvelopeResponse</Action>
+		<MessageID xmlns="http://www.w3.org/2005/08/addressing">664C20B2-ED0D-4FB9-B47D-65F0D2E05595</MessageID>
+		<RelatesTo xmlns="http://www.w3.org/2005/08/addressing">51E0DF56-1E65-11E5-A53D-05704BA93658</RelatesTo>
+	</S:Header>
+	<S:Body>
+		<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:ns2="urn:hl7-org:v3" xmlns:verylongnamespace="xhtml:NPfIT:PresentationText">
+			<itk:header service="urn:nhs-itk:services:201005:sendRecvDistEnvelopeResponse" trackingid="9F45DEAD-8B29-4E5B-BFBC-D471DC926307">
+				<itk:auditIdentity>
+					<itk:id type="2.16.840.1.113883.2.1.3.2.4.18.27" uri="urn:nhs-uk:identity:ods:ITKBridge"/>
+				</itk:auditIdentity>
+				<itk:manifest count="1">
+					<itk:manifestitem base64="false" compressed="false" encrypted="false" id="uuid_F5E683F3-3AD8-4D92-A0BF-5501A66A8AFB" mimetype="text/xml" profileid="urn:nhs-en:profile:querySCRResponse-v-1-0"/>
+				</itk:manifest>
+				<itk:handlingSpecification>
+					<itk:spec key="urn:nhs-itk:ns:201005:interaction" value="urn:nhs-itk:interaction:querySCRResponse-v1-0"/>
+				</itk:handlingSpecification>
+			</itk:header>
+			<itk:payloads count="1">
+				<itk:payload id="uuid_F5E683F3-3AD8-4D92-A0BF-5501A66A8AFB">
+					<ns2:QuerySCRResponse xmlns="urn:hl7-org:v3">
+						<id root="CE3D7217-6B1E-4B9A-8277-0292A3B60F54"/>
+						<text>
+							<npfitlc:GPSummary.text xmlns:npfitlc="NPFIT:HL7:Localisation">
+								<GPSummary classCode="COMPOSITION" moodCode="EVN">
+									<id xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" root="0600CE57-C6F6-4C7F-E050-950AE073125B"/>
+									<code xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" code="196981000000101" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="General Practice Summary"/>
+									<effectiveTime xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" value="201305020000"/>
+									<statusCode xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" code="active"/>
+									<author xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contextControlCode="OP" typeCode="AUT">
+										<time value="201305020000"/>
+										<UKCT_MT160018UK01.AgentPersonSDS classCode="AGNT">
+											<id extension="100141551985" root="1.2.826.0.1285.0.2.0.67"/>
+											<agentPersonSDS classCode="PSN" determinerCode="INSTANCE">
+												<id extension="100141550987" root="1.2.826.0.1285.0.2.0.65"/>
+												<name>Dr JOHN CRAIG</name>
+											</agentPersonSDS>
+										</UKCT_MT160018UK01.AgentPersonSDS>
+									</author>
+									<hl7:excerptFrom xmlns:hl7="urn:hl7-org:v3" contextConductionInd="true" inversionInd="false" negationInd="false" typeCode="XCRPT">
+										<hl7:templateId extension="CSAT_RM-NPfITUK10.excerptFrom" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+										<hl7:seperatableInd value="false"/>
+										<hl7:UKCT_MT144051UK01.CareProfessionalDocumentationCRE classCode="CATEGORY" moodCode="EVN">
+											<hl7:code code="163171000000105" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Care Professional Documentation"/>
+											<hl7:component inversionInd="false" negationInd="false" typeCode="COMP">
+												<hl7:templateId extension="CSAB_RM-NPfITUK10.component" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+												<hl7:seperatableInd value="false"/>
+												<hl7:presentationText classCode="OBS" moodCode="EVN">
+													<hl7:value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" mediaType="text/plain" xsi:type="ED.NPfIT.Text.XHTML">
+														<!-- "verylongnamespace" name space used in this message to test system is namespace agnostic -->
+														<verylongnamespace:html xmlns="xhtml:NPfIT:PresentationText">
+															<head/>
+															<body>
+																<h2>General Practice Summary</h2>
+																<h3>This is a GP Summary sourced from the patient's General Practice record. This information has not been verified by the practice prior to sending.This summary will not include all the  information pertinent to this patient.</h3>
+																<h3>Time of summary creation 02-May-2013 00:00</h3>
+																<h3>Time of sending 02-May-2013 00:00</h3>
+																<h3>Author WESTCLIFFE MEDICAL CENTRE, WESTCLIFFE ROAD, SHIPLEY, BD18 3EE</h3>
+																<h2>Allergies and Adverse Reactions</h2>
+																<table>
+																	<thead>
+																		<tr>
+																			<td>Date/time</td>
+																			<td>Description</td>
+																			<td>Supporting Information</td>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr>
+																			<td>21-NOV-2013</td>
+																			<td>refused consent for upload to national shared electronic record</td>
+																			<td/>
+																		</tr>
+																	</tbody>
+																</table>
+																<h2>Lifestyle</h2>
+																<table>
+																	<thead>
+																		<tr>
+																			<td>Date/time</td>
+																			<td>Description</td>
+																			<td>Supporting Information</td>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr>
+																			<td>31-MAR-2013</td>
+																			<td>Heavy Smoker - 40 a day</td>
+																			<td/>
+																		</tr>
+																	</tbody>
+																</table>
+															</body>
+														</verylongnamespace:html>
+													</hl7:value>
+													<hl7:id root="0600CE57-D7D1-4C7F-E050-950AE073125B"/>
+													<hl7:code code="PresentationText" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126" displayName="Presentation Text"/>
+													<hl7:statusCode code="completed"/>
+													<hl7:effectiveTime value="20141022104905"/>
+												</hl7:presentationText>
+											</hl7:component>
+										</hl7:UKCT_MT144051UK01.CareProfessionalDocumentationCRE>
+									</hl7:excerptFrom>
+									<pertinentInformation1 xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contextConductionInd="true" inversionInd="false" negationInd="false" typeCode="PERT">
+										<templateId extension="CSAB_RM-NPfITUK10.pertinentInformation1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+										<seperatableInd value="true"/>
+										<pertinentRootCREType classCode="CATEGORY" moodCode="EVN">
+											<code code="163171000000105" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Care Professional Documentation"/>
+										</pertinentRootCREType>
+									</pertinentInformation1>
+									<pertinentInformation2 xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contextConductionInd="true" inversionInd="false" negationInd="false" typeCode="PERT">
+										<templateId extension="CSAB_RM-NPfITUK10.pertinentInformation1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+										<seperatableInd value="true"/>
+										<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+											<code code="163221000000102" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Allergies and Adverse Reactions"/>
+											<component contextConductionInd="true" typeCode="COMP">
+												<templateId extension="CSAB_RM-NPfITUK10.component" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+												<seperatableInd value="false"/>
+												<UKCT_MT144056UK01.Refusal classCode="OBS" moodCode="EVN">
+													<id root="296094AF-EFE9-08F6-E044-602099E4885E"/>
+													<code code="416308001" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="refused consent for upload to national shared electronic record"/>
+													<effectiveTime value="20130331"/>
+												</UKCT_MT144056UK01.Refusal>
+											</component>
+										</pertinentCREType>
+									</pertinentInformation2>
+									<pertinentInformation2 xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" contextConductionInd="true" inversionInd="false" negationInd="false" typeCode="PERT">
+										<templateId extension="CSAB_RM-NPfITUK10.pertinentInformation1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+										<seperatableInd value="true"/>
+										<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+											<code code="163041000000100" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Lifestyle"/>
+											<component contextConductionInd="true" typeCode="COMP">
+												<templateId extension="CSAB_RM-NPfITUK10.component" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+												<seperatableInd value="false"/>
+												<UKCT_MT144036UK01.LifeStyle classCode="OBS" moodCode="EVN">
+													<id root="296094AF-EFEE-08F6-E044-602099E4885E"/>
+													<code code="77176002" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Smoker"/>
+													<statusCode code="completed"/>
+													<effectiveTime value="20130331"/>
+												</UKCT_MT144036UK01.LifeStyle>
+											</component>
+										</pertinentCREType>
+									</pertinentInformation2>
+									<recordTarget xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeCode="RCT">
+										<patient classCode="PAT">
+											<id extension="9454202103" root="2.16.840.1.113883.2.1.4.1"/>
+										</patient>
+									</recordTarget>
+									<replacementOf xmlns:xhtml="xhtml:NPfIT:PresentationText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeCode="RPLC">
+										<priorMessageRef classCode="COMPOSITION" moodCode="EVN">
+											<id root="0600CE57-9064-4C7F-E050-950AE073125B"/>
+										</priorMessageRef>
+									</replacementOf>
+								</GPSummary>
+							</npfitlc:GPSummary.text>
+						</text>
+						<value code="SMSP-0000" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.506" displayName="Success"/>
+					</ns2:QuerySCRResponse>
+				</itk:payload>
+			</itk:payloads>
+		</itk:DistributionEnvelope>
+	</S:Body>
+</S:Envelope>

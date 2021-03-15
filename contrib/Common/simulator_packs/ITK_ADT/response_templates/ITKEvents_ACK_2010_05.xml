@@ -1,0 +1,59 @@
+<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:hl7v2="urn:hl7-org:v2xml">
+	<itk:header service="__ACTION__Response" trackingid="__TRACKINGID__">
+		<itk:auditIdentity>
+			<itk:id uri="urn:nhs-uk:identity:cfh:nic:lab:itk-demonstrator"/>
+		</itk:auditIdentity>
+		<itk:manifest count="1">
+			<itk:manifestitem mimetype="text/xml" base64="false" compressed="false" id="uuid_E808A967-49B2-498B-AD75-1D7A0F1262D7" encrypted="false"/>
+		</itk:manifest>
+	</itk:header>
+	<itk:payloads count="1">
+		<itk:payload id="uuid_E808A967-49B2-498B-AD75-1D7A0F1262D7">
+			<hl7v2:ACK>
+				<hl7v2:MSH>
+					<hl7v2:MSH.1>|</hl7v2:MSH.1>
+					<hl7v2:MSH.2>^~\&amp;</hl7v2:MSH.2>
+					<hl7v2:MSH.3>
+						<hl7v2:HD.1>__ROUTE1__</hl7v2:HD.1>
+					</hl7v2:MSH.3>	
+					<hl7v2:MSH.4>
+						<hl7v2:HD.1>__ROUTE2__</hl7v2:HD.1>
+					</hl7v2:MSH.4>
+					<hl7v2:MSH.5>
+						<hl7v2:HD.1>__LPAS__</hl7v2:HD.1>
+					</hl7v2:MSH.5>
+					<hl7v2:MSH.6>
+						<hl7v2:HD.1>__ORG1__</hl7v2:HD.1>
+					</hl7v2:MSH.6>
+					<hl7v2:MSH.7>
+						<hl7v2:TS.1>__TIMESTAMP__</hl7v2:TS.1>
+					</hl7v2:MSH.7>
+					<hl7v2:MSH.9>
+						<hl7v2:MSG.1>ACK</hl7v2:MSG.1>
+						<hl7v2:MSG.2></hl7v2:MSG.2>
+						<hl7v2:MSG.3>ACK</hl7v2:MSG.3>
+					</hl7v2:MSH.9>
+					<hl7v2:MSH.10>__MSH10__</hl7v2:MSH.10>
+					<hl7v2:MSH.11>
+						<hl7v2:PT.1>__MSH11__</hl7v2:PT.1>
+					</hl7v2:MSH.11>
+					<hl7v2:MSH.12>
+						<hl7v2:VID.1>__MSH12__</hl7v2:VID.1>
+					</hl7v2:MSH.12>
+					<hl7v2:MSH.13></hl7v2:MSH.13>
+					<hl7v2:MSH.14></hl7v2:MSH.14>
+					<hl7v2:MSH.17>GBR</hl7v2:MSH.17>
+					<hl7v2:MSH.18>UNICODE UTF-8</hl7v2:MSH.18>
+					<hl7v2:MSH.19>
+						<hl7v2:CE.1>EN</hl7v2:CE.1>
+					</hl7v2:MSH.19>
+					<hl7v2:MSH.21>__ITKVer__</hl7v2:MSH.21>
+				</hl7v2:MSH>
+				<hl7v2:MSA>
+					<hl7v2:MSA.1>AA</hl7v2:MSA.1>
+					<hl7v2:MSA.2>252192</hl7v2:MSA.2>
+				</hl7v2:MSA>
+			</hl7v2:ACK>
+		</itk:payload>
+	</itk:payloads>
+</itk:DistributionEnvelope>

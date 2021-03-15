@@ -1,0 +1,16 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="adw-consultation-status" >
+		<concept code="Y">
+			<display>Yes</display>
+		</concept>
+		<concept code="N">
+			<display>No</display>
+		</concept>
+		<concept code="NA">
+			<display>Not Applicable</display>
+		</concept>
+		<concept code="NKC">
+			<display>No Known Carer</display>
+		</concept>		
+	</valueSet>
+</ValueSets>

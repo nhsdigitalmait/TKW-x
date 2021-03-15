@@ -1,0 +1,40 @@
+<Vocabularies xmlns="urn:nhs-itk:ns:201005">
+	<vocabulary version="1.0" status="active" name="DE_Error" id="2.16.840.1.113883.2.1.3.2.4.17.516">
+		<concept code="DE0001">
+			<displayName>Distribution Envelope Processing Error</displayName>
+		</concept>
+		<concept code="DE0002">
+			<displayName>Distribution Envelope Header Processing Error</displayName>
+		</concept>
+		<concept code="DE0003">
+			<displayName>Distribution Envelope Address List Processing Error</displayName>
+		</concept>
+		<concept code="DE0004">
+			<displayName>Distribution Envelope Audit Identity Processing Error</displayName>
+		</concept>
+		<concept code="DE0005">
+			<displayName>Distribution Envelope Id Processing Error</displayName>
+		</concept>
+		<concept code="DE0006">
+			<displayName>Distribution Envelope Manifest Processing Error</displayName>
+		</concept>
+		<concept code="DE0007">
+			<displayName>Distribution EnvelopeManifest Item Processing Error</displayName>
+		</concept>
+		<concept code="DE0008">
+			<displayName>Distribution Envelope Sender Address Processing Error</displayName>
+		</concept>
+		<concept code="DE0009">
+			<displayName>Distribution Envelope Handling Specifications Processing Error</displayName>
+		</concept>
+		<concept code="DE0010">
+			<displayName>Distribution Envelope Spec Processing Error</displayName>
+		</concept>
+		<concept code="DE0011">
+			<displayName>Distribution Envelope Payloads Processing Error</displayName>
+		</concept>
+		<concept code="DE0012">
+			<displayName>Distribution Envelope Payload Processing Error</displayName>
+		</concept>
+	</vocabulary>
+</Vocabularies>

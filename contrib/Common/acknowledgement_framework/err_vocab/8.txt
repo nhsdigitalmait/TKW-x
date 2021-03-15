@@ -1,0 +1,3 @@
+tks.routingactor.cda.appnackerrorcode DE0008
+tks.routingactor.cda.appnackerrortext Distribution Envelope Sender Address Processing Error
+tks.routingactor.cda.appnackdiagnostictext TKW Simulator Generated DE0008 InfNACK

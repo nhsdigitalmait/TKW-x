@@ -1,0 +1,19 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="marital-status" >
+		<concept code="M">
+			<display>Married/Civil Partner</display>
+		</concept>
+		<concept code="D">
+			<display>Divorced/Person whose Civil Partnership has been dissolved</display>
+		</concept>
+		<concept code="W">
+			<display>Widowed/Surviving Civil Partner</display>
+		</concept>
+		<concept code="P">
+			<display>Separated</display>
+		</concept>
+		<concept code="N">
+			<display>Not disclosed</display>
+		</concept>		
+	</valueSet>
+</ValueSets>

@@ -1,0 +1,122 @@
+<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<itk:header service="urn:nhs-itk:services:201005:sendRecvDistEnvelopeResponse" trackingid="7D6782C0-AE1A-11DB-97D0-B18E1E0994CD">
+		<itk:addresslist>
+			<itk:address type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RKE"/>
+		</itk:addresslist>
+		<itk:auditIdentity>
+			<itk:id type="2.16.840.1.113883.2.1.3.2.4.18.27" uri="urn:nhs-uk:identity:ods:RKE"/>
+		</itk:auditIdentity>
+		<itk:manifest count="1">
+			<itk:manifestitem mimetype="text/xml" id="uuid_7D6782C0-AE1A-11DB-97C1-B18E1E0994CD" profileid="urn:nhs-en:profile:querySCRActivityResponse-v-1-0"/>
+		</itk:manifest>
+		<itk:senderAddress type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RAL"/>
+		<itk:handlingSpecification>
+			<itk:spec value="urn:nhs-itk:interaction:querySCRActivityResponse-v1-0" key="urn:nhs-itk:ns:201005:interaction"/>
+		</itk:handlingSpecification>
+	</itk:header>
+	<itk:payloads count="1">
+		<itk:payload id="uuid_7D6782C0-AE1A-11DB-97C1-B18E1E0994CD">
+			<QuerySCRActivityResponse xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				<id root="7D6782C0-AE1A-11DB-97C1-B18E1E0994CD"/>
+				<text representation="TXT">"20150402112703","96","96","20140115","20140120","1112223333","156565656231",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103035501",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Very Unwell", "20140103035721",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140103043000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103070000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140103071500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140103073000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103075900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Very Unwell", "20140103090000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140103090200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103112100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140103115600",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140103123500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103123900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","", "20140103131500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140103131515",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103140000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140103150100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103150950",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","166565656231","385676767898","Dr Garth Brooks","F","","20140103152550",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient in critical condition", "20140103152900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140103192900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103193100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140103193400",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140103193900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103195900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","", "20140103195930",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140103225530",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140103232500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140103235500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140104065000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140104075000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Very Unwell", "20140104075900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140104080900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140104084900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140104085700",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140104085900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140104100300",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","", "20140104100900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140104102500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140104103800",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140104105800",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140104120800",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140104131200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Very Unwell", "20140104142200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140104150200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140104193200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140104223200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140104234200",
+        				"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140106084200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient in critical condition", "20140106085200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140106121134",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140106124500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140106125600",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140106150000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140106170100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Very Unwell", "20140106170700",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140107010700",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140107090900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140107120307",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140107150800",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140107150820",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","l", "20140107155920",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140107201220",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140107205220",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140107223200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140107224900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140107234900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","", "20140108094900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140108095100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140108095900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140108095930",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140108112930",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140108123030",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Very Sick", "20140108143000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140108145600",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140108165600",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140108165800",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140108173800",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140108175500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient in a serious condition", "20140108175700",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140108192100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140108192200",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140108192300",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140108192800",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140108195800",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","l", "20140108195900",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140108213000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140108223100",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140108223134",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Emergency Situation","20140108233034",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140109010000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Very Unwell", "20140109032000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unconscious after RTA","20140109034000",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","F","","20140109094500",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","156565656231","345676767898","Dr Garth Brooks","T","Patient Unable To Respond to Questions", "20140109094700",
+						"RWA","Hull and East Yorkshire NHS Foundation Trust","1112223333","166565656231","385676767898","Dr Garth Brooks","T","Emergency Situation","20140109124900"</text>
+				<value code="SMSP-0000" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.506" displayName="Success"/>
+			</QuerySCRActivityResponse>
+		</itk:payload>
+	</itk:payloads>
+</itk:DistributionEnvelope>

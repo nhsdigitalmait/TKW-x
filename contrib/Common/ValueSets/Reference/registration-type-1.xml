@@ -1,0 +1,22 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="registration-type" >
+		<concept code="R">
+			<display>Fully Registered</display>
+		</concept>
+		<concept code="T">
+			<display>Temporary Resident</display>
+		</concept>
+		<concept code="IN">
+			<display>Immediately necessary treatment</display>
+		</concept>
+		<concept code="P">
+			<display>Private</display>
+		</concept>
+		<concept code="O">
+			<display>Other</display>
+		</concept>
+		<concept code="S">
+			<display>Synthetic Record</display>
+		</concept>		
+	</valueSet>
+</ValueSets>

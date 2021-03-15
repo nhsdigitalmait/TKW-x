@@ -1,0 +1,281 @@
+<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<itk:header service="urn:nhs-itk:services:201005:sendRecvDistEnvelopeResponse" trackingid="7D6782C0-AE1A-11DB-97CF-B18E1E0994CD">
+		<itk:addresslist>
+			<itk:address type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RKE"/>
+		</itk:addresslist>
+		<itk:auditIdentity>
+			<itk:id type="2.16.840.1.113883.2.1.3.2.4.18.27" uri="urn:nhs-uk:identity:ods:RAL"/>
+		</itk:auditIdentity>
+		<itk:manifest count="1">
+			<itk:manifestitem mimetype="text/xml" id="uuid_7D6782C0-AE1A-11DB-97BF-B18E1E0994CD" profileid="urn:nhs-en:profile:querySCRResponse-v-1-0"/>
+		</itk:manifest>
+		<itk:senderAddress type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RAL"/>
+		<itk:handlingSpecification>
+			<itk:spec value="urn:nhs-itk:interaction:querySCRResponse-v1-0" key="urn:nhs-itk:ns:201005:interaction"/>
+		</itk:handlingSpecification>
+	</itk:header>
+	<itk:payloads count="1">
+		<itk:payload id="uuid_7D6782C0-AE1A-11DB-97BF-B18E1E0994CD">
+			<QuerySCRResponse xmlns="urn:hl7-org:v3">
+				<id root="7D6782C0-AE1A-11DB-97BF-B18E1E0994CD"/>
+				<text>
+					<npfitlc:GPSummary.text xmlns="urn:hl7-org:v3" xmlns:npfitlc="NPFIT:Localisation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+						<GPSummary xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nasp="http://spine.nhs.uk/spine-servicev1.0" xmlns:soapcsf="http://www.w3.org/2001/12/soap-envelope" xmlns:eb="http://www.oasis-open.org/committees/ebxml-msg/schema/msg-header-2_0.xsd" classCode="COMPOSITION" moodCode="EVN">
+							<id root="744AD29E-C0C5-4850-8514-D1738D4B6BB3"/>
+							<code code="196981000000101" displayName="General Practice Summary" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+							<effectiveTime value="20120127101442"/>
+							<statusCode code="active"/>
+							<author typeCode="AUT" contextControlCode="OP">
+								<time value="20120127101442"/>
+								<UKCT_MT160018UK01.AgentPersonSDS classCode="AGNT">
+									<id extension="028479115512" root="1.2.826.0.1285.0.2.0.67"/>
+									<agentPersonSDS classCode="PSN" determinerCode="INSTANCE">
+										<id extension="820564415512" root="1.2.826.0.1285.0.2.0.65"/>
+										<name>
+											<family>Smith</family>
+											<given>Josephine</given>
+											<prefix>Mrs</prefix>
+										</name>
+									</agentPersonSDS>
+								</UKCT_MT160018UK01.AgentPersonSDS>
+							</author>
+							<excerptFrom typeCode="XCRPT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAT_RM-NPfITUK10.excerptFrom"/>
+								<seperatableInd value="false"/>
+								<UKCT_MT144051UK01.CareProfessionalDocumentationCRE classCode="CATEGORY" moodCode="EVN">
+									<code code="163171000000105" displayName="Care Professional Documentation" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" inversionInd="false" negationInd="false">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<presentationText classCode="OBS" moodCode="EVN">
+											<value mediaType="text/plain">
+												<html xmlns="xhtml:NPfIT:PresentationText">
+													<head/>
+													<body>
+														<h2 id="Title">General Practice Summary</h2>
+														<h3 id="Disclaimer">This is a GP Summary sourced from the patient's General Practice record. This summary may not include all the information pertinent to this patient. NB the patient may have opted to leave out items from this summary.</h3>
+														<h3 id="CreateTime">Time of summary creation 27/01/2012 10:14:08</h3>
+														<h3 id="SendTime">Time of sending 27/01/2012 10:14.37</h3>
+														<h3 id="Author">Author Mrs Josephine Smith, Main Surgery Name, Park End Surgry, Park End Surgry, 7 Printers Ave, Watford, Herts, WD18 7QR</h3>
+														<h2 id="Allergies" class="CreType">Allergies and Adverse reactions</h2>
+														<table id="AllergiesTable">
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Severity</th>
+																	<th>Certainty</th>
+																	<th>Reaction</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">19/05/2011</td>
+																	<td>H/O: drug allergy to Penbritin 125mg/5ml syrup (Chemidex Pharma Ltd)</td>
+																	<td>Moderate</td>
+																	<td>Likely</td>
+																	<td>Allergy</td>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="RepeatMeds" class="CreType">Repeat Medication</h2>
+														<table id="RepeatMedsTable">
+															<thead>
+																<tr>
+																	<th>Date first added</th>
+																	<th>Medication Item</th>
+																	<th>Dosage instructions</th>
+																	<th>Quantity or duration</th>
+																	<th>Reason for medication</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">25/10/2011</td>
+																	<td>Paracetamol 500mg capsules</td>
+																	<td>TAKE TWO FOUR TIMES DAILY</td>
+																	<td>80 capsule</td>
+																	<td/>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">19/05/2011</td>
+																	<td>Co-amilozide 5mg/50mg tablets</td>
+																	<td>TAKE ONE EACH MORNING</td>
+																	<td>28 tablet(s)</td>
+																	<td/>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="DiscRepeatMeds" class="CreType">Discontinued Repeat Medication</h2>
+														<p>The practice system holds no record of Repeat Medication that has been recently discontinued</p>
+														<h2 id="AcuteMeds" class="CreType">Acute Medication</h2>
+														<p>The practice system holds no Acute Medication issued within the last 6 months</p>
+													</body>
+												</html>
+											</value>
+											<id root="A9579D07-1B12-4ED8-8AEC-7C0A624522D2"/>
+											<code code="PresentationText" displayName="Presentation Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20120127101453"/>
+										</presentationText>
+									</component>
+								</UKCT_MT144051UK01.CareProfessionalDocumentationCRE>
+							</excerptFrom>
+							<pertinentInformation1 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentRootCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163171000000105" displayName="Care Professional Documentation" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+								</pertinentRootCREType>
+							</pertinentInformation1>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="185361000000102" displayName="Medication" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144040UK01.CurrentRepeatMedication classCode="SBADM" moodCode="RQO">
+											<id root="D5ED1F1D-1A0F-4EBA-97EA-4D99E5B3D8C3"/>
+											<code code="222681000000101" displayName="Repeat medication" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="active"/>
+											<effectiveTime>
+												<low value="20111025"/>
+												<high value="20111025"/>
+											</effectiveTime>
+											<pertinentInformation1 typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentDosageInstructions classCode="OBS" moodCode="EVN">
+													<value>TAKE TWO FOUR TIMES DAILY</value>
+													<code code="DI" displayName="Dose Instructions" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+												</pertinentDosageInstructions>
+											</pertinentInformation1>
+											<component typeCode="COMP">
+												<seperatableInd value="false"/>
+												<medicationQuantity classCode="SPLY" moodCode="RQO">
+													<quantity value="80" unit="1">
+														<translation value="80">
+															<originalText>capsule</originalText>
+														</translation>
+													</quantity>
+													<code code="246205007" displayName="Quantity" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+												</medicationQuantity>
+											</component>
+											<consumable typeCode="CSM" contextControlCode="OP">
+												<manufacturedProduct classCode="MANU">
+													<manufacturedManufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<code code="322280009" displayName="Paracetamol 500mg capsules" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+													</manufacturedManufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</UKCT_MT144040UK01.CurrentRepeatMedication>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144040UK01.CurrentRepeatMedication classCode="SBADM" moodCode="RQO">
+											<id root="F9612706-FEEE-4BCF-A020-5B1F16FE6979"/>
+											<code code="222681000000101" displayName="Repeat medication" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="active"/>
+											<effectiveTime>
+												<low value="20110519"/>
+												<high value="20110519"/>
+											</effectiveTime>
+											<pertinentInformation1 typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentDosageInstructions classCode="OBS" moodCode="EVN">
+													<value>TAKE ONE EACH MORNING</value>
+													<code code="DI" displayName="Dose Instructions" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+												</pertinentDosageInstructions>
+											</pertinentInformation1>
+											<component typeCode="COMP">
+												<seperatableInd value="false"/>
+												<medicationQuantity classCode="SPLY" moodCode="RQO">
+													<quantity value="28" unit="1">
+														<translation value="28">
+															<originalText>tablet(s)</originalText>
+														</translation>
+													</quantity>
+													<code code="246205007" displayName="Quantity" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+												</medicationQuantity>
+											</component>
+											<consumable typeCode="CSM" contextControlCode="OP">
+												<manufacturedProduct classCode="MANU">
+													<manufacturedManufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<code code="377566005" displayName="Co-amilozide 5mg/50mg tablets" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+													</manufacturedManufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</UKCT_MT144040UK01.CurrentRepeatMedication>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163221000000102" displayName="Allergies and Adverse Reactions" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144053UK02.Allergy classCode="OBS" moodCode="EVN">
+											<id root="06EE0761-1EA0-46AE-B0EC-94E89D1D5CAD"/>
+											<code code="413350009" displayName="Finding with explicit context" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>H/O: drug allergy, Penbritin 125mg/5ml syrup (Chemidex Pharma Ltd), Moderate, Likely.</originalText>
+												<qualifier>
+													<name code="246090004" displayName="associated finding"/>
+													<value code="416098002" displayName="drug allergy">
+														<qualifier>
+															<name code="246075003" displayName="causative agent"/>
+															<value code="12778811000001103" displayName="Penbritin 125mg/5ml syrup (Chemidex Pharma Ltd)"/>
+														</qualifier>
+														<qualifier>
+															<name code="246112005" displayName="Severity"/>
+															<value code="6736007" displayName="Moderate"/>
+														</qualifier>
+													</value>
+												</qualifier>
+												<qualifier>
+													<name code="408729009" displayName="Finding context"/>
+													<value code="410592001" displayName="Probably present"/>
+												</qualifier>
+											</code>
+											<statusCode code="completed"/>
+											<effectiveTime>
+												<low value="20110519"/>
+											</effectiveTime>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Reaction type:Allergy</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144053UK02.Allergy>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<recordTarget typeCode="RCT">
+								<patient classCode="PAT">
+									<id extension="9449001758" root="2.16.840.1.113883.2.1.4.1"/>
+								</patient>
+							</recordTarget>
+							<replacementOf typeCode="RPLC">
+								<priorMessageRef classCode="COMPOSITION" moodCode="EVN">
+									<id root="E7976336-8B7D-4A07-8095-50B7471F18F3"/>
+								</priorMessageRef>
+							</replacementOf>
+						</GPSummary>
+					</npfitlc:GPSummary.text>
+				</text>
+				<value code="SMSP-0000" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.506" displayName="Success"/>
+			</QuerySCRResponse>
+		</itk:payload>
+	</itk:payloads>
+</itk:DistributionEnvelope>

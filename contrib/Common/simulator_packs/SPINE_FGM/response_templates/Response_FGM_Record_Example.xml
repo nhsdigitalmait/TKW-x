@@ -1,0 +1,72 @@
+<Bundle xmlns="http://hl7.org/fhir">
+	<id value="13daadee-26e1-4d6a-9e6a-7f4af9b58878"/>
+	<meta>
+		<profile value="http://fhir.nhs.net/StructureDefinition/spine-message-bundle-1-0"/>
+	</meta>
+	<type value="message"/>
+	<entry>
+		<resource>
+			<MessageHeader>
+				<id value="14daadee-26e1-4d6a-9e6a-7f4af9b58879"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-response-messageheader-1-0"/>
+				</meta>
+				<timestamp value="__TIMESTAMP__"/>
+				<event>
+					<system value="http://fhir.nhs.net/ValueSet/message-event-1-0"/>
+					<code value="urn:nhs:names:services:clinicals-sync:FGMQueryResponse_1_0"/>
+				</event>
+				<response>
+					<identifier value="14daadee-26e1-4d6a-9e6a-7f4af9b58877"/>
+					<code value="ok"/>
+				</response>
+				<source>
+					<name value="SPINE"/>
+					<endpoint value="urn:nhs:addressing:asid:990101234567"/>
+				</source>
+				<destination>
+					<name value="FooBar NHS Trust"/>
+					<endpoint value="urn:nhs:addressing:asid:047192794544"/>
+				</destination>
+				<data>
+					<reference value="Flag/8cb73a48-090d-469a-a2b2-04f1e6b11ea2"/>
+				</data>
+			</MessageHeader>
+		</resource>
+	</entry>
+	<entry>
+		<resource>
+			<Flag>
+				<id value="8cb73a48-090d-469a-a2b2-04f1e6b11ea2"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-ris-flag-1-0"/>
+				</meta>
+				<contained>
+					<Patient>
+						<id value="20daadee-26e1-4d6a-9e6a-7f4af9b58877"/>
+						<meta>
+							<profile value="http://fhir.nhs.net/StructureDefinition/spine-ris-patient-1-0"/>
+						</meta>
+						<identifier>
+							<system value="http://fhir.nhs.net/Id/nhs-number"/>
+							<value value="__IDENTIFIER__"/>
+						</identifier>
+					</Patient>
+				</contained>
+				<status value="active"/>
+				<period>
+					<start value="2015-02-04"/>
+				</period>
+				<subject>
+					<reference value="#20daadee-26e1-4d6a-9e6a-7f4af9b58877"/>
+				</subject>
+				<code>
+					<coding>
+						<system value="http://fhir.nhs.net/ValueSet/risk-indicator-type-1-0"/>
+						<code value="FGM"/>
+					</coding>
+				</code>
+			</Flag>
+		</resource>
+	</entry>
+</Bundle>

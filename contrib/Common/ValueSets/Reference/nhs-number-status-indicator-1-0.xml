@@ -1,0 +1,28 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="nhs-number-status-indicator" >
+		<concept code="01">
+			<display>Number present and verified</display>
+		</concept>
+		<concept code="02">
+			<display>Number present but not traced</display>
+		</concept>
+		<concept code="03">
+			<display>Trace required</display>
+		</concept>
+		<concept code="04">
+			<display>Trace attempted - No match or multiple match found</display>
+		</concept>
+		<concept code="05">
+			<display>Trace needs to be resolved - (NHS Number or PATIENT detail conflict)</display>
+		</concept>
+		<concept code="06">
+			<display>Trace in progress</display>
+		</concept>
+		<concept code="07">
+			<display>Number not present and trace not required</display>
+		</concept>
+		<concept code="08">
+			<display>Trace postponed (baby under six weeks old)</display>
+		</concept>
+	</valueSet>
+</ValueSets>

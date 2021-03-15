@@ -1,0 +1,12 @@
+<soap:Fault xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<faultcode>Client</faultcode>
+	<faultstring>A client related error has occurred, see detail element for further information</faultstring>
+	<detail>
+		<toolkit:ToolkitErrorInfo xmlns:toolkit="urn:nhs-itk:ns:201005">
+			<toolkit:ErrorID>__ERRORID__</toolkit:ErrorID>
+			<toolkit:ErrorCode>__ERRORCODE__</toolkit:ErrorCode>
+			<toolkit:ErrorText>__ERRORTEXT__</toolkit:ErrorText>
+			<toolkit:ErrorDiagnosticText>__ERRORDETAIL__. TEST_HARNESS_ID:__TRACKINGID__</toolkit:ErrorDiagnosticText>
+		</toolkit:ToolkitErrorInfo>
+	</detail>
+</soap:Fault>

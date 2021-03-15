@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Discharge_ClinicalHeadings>
+	<!--<template name="SchemaName" extension="ExtensionName">
+				<clinicalheading title="titletext">
+					<subheading text="subheading1"/>
+					<subheading text="subheading2"/>
+					<subheading text="subheading3"/>
+				</clinicalheading>	
+</template>	-->
+	<template name="COCD_TP000043GB01" extension="COCD_TP000043GB01#SocialContextSection" snomed="887051000000101">
+		<clinicalheading title="Social context">
+			<subheading text="Household composition"/>
+			<subheading text="Lives alone"/>
+			<subheading text="Occupational history"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000042GB01" extension="COCD_TP000042GB01#SpecialRequirementsSection" snomed="886741000000100">
+		<clinicalheading title="Special requirements">
+			<subheading text="Special requirements"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000001GB01" extension="COCD_TP000001GB01#ParticipationInResearchSection" snomed="886751000000102">
+		<clinicalheading title="Participation in research">
+			<subheading text="Participation in research"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000034GB01" extension="COCD_TP000034GB01#AdmissionDetailsSection" snomed="886781000000108">
+		<clinicalheading title="Admission details">
+			<subheading text="Admission method"/>
+			<subheading text="Source of admission"/>
+			<subheading text="Patient location"/>
+			<subheading text="Date of admission"/>
+			<subheading text="Time of admission"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000036GB01" extension="COCD_TP000036GB01#DischargeDetailsSection" snomed="886811000000106">
+		<clinicalheading title="Discharge details">
+			<subheading text="Discharging consultant"/>
+			<subheading text="Discharging specialty/department"/>
+			<subheading text="Expected date of discharge"/>
+			<subheading text="Date of discharge"/>
+			<subheading text="Time of discharge"/>
+			<subheading text="Discharge method"/>
+			<subheading text="Discharge destination"/>
+			<subheading text="Discharge address"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000045GB01" extension="COCD_TP000045GB01#ClinicalDetailsSection" snomed="305056002">
+		<clinicalheading title="Clinical details">
+			<subheading text="Reason for admission"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000037GB01" extension="COCD_TP000037GB01#DiagnosesSection" snomed="887161000000102">
+		<clinicalheading title="Diagnoses">
+			<subheading text="Diagnosis"/>
+			<subheading text="Differential diagnosis"/>
+			<subheading text="Episode (first, new, other, ongoing)"/>
+			<subheading text="Date diagnosis made"/>
+			<subheading text="Date of first presentation"/>			
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000038GB01" extension="COCD_TP000038GB01#ProceduresSection" snomed="887171000000109">
+		<clinicalheading title="Procedures">
+			<subheading text="Procedure"/>
+			<subheading text="Complications related to procedure"/>
+			<subheading text="Specific anaesthesia issues"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000033GB01" extension="COCD_TP000033GB01#ClinicalSummarySection" snomed="887181000000106">
+		<clinicalheading title="Clinical summary">
+			<subheading text="Clinical summary"/>
+			<subheading text="Investigation results"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000008GB01" extension="COCD_TP000008GB01#AssessmentScalesSection" snomed="887141000000103">
+		<clinicalheading title="Assessment scales">
+			<subheading text="Assessment scales"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000044GB01" extension="COCD_TP000044GB01#LegalInformationSection" snomed="886961000000102">
+		<clinicalheading title="Legal information">
+			<subheading text="Consent for treatment record"/>
+			<subheading text="Mental capacity assessment"/>
+			<subheading text="Advance decisions about treatment"/>
+			<subheading text="Lasting or enduring power of attorney or similar"/>
+			<subheading text="Organ and tissue donation"/>
+			<subheading text="Consent relating to child"/>
+			<subheading text="Consent to information sharing"/>
+			<subheading text="Safeguarding issues"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000039GB01" extension="COCD_TP000039GB01#SafetyAlertsSection" snomed="886931000000107">
+		<clinicalheading title="Safety alerts">
+			<subheading text="Risks to self"/>
+			<subheading text="Risks to others"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000040GB01" extension="COCD_TP000040GB01#MedicationsAndMedicalDevicesSection" snomed="933361000000108">
+		<clinicalheading title="Medications and medical devices">
+			<subheading text="Medication name"/>
+			<subheading text="Medication form"/>
+			<subheading text="Route"/>
+			<subheading text="Dose"/>
+			<subheading text="Medication frequency"/>
+			<subheading text="Additional instructions"/>
+			<subheading text="Reason for medication"/>
+			<subheading text="Do not discontinue warning"/>
+			<subheading text="Medication recommendations"/>
+			<subheading text="Medication status"/>
+			<subheading text="Medication change"/>
+			<subheading text="Reason for medication change"/>
+			<subheading text="Medicine administered"/>
+			<subheading text="Reason for non-administration"/>
+			<subheading text="Relevant previous medications"/>
+			<subheading text="Medical devices"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000035GB01" extension="COCD_TP000035GB01#AllergiesAndAdverseReactionsSection" snomed="886921000000105">
+		<clinicalheading title="Allergies and adverse reactions">
+			<subheading text="Causative agent"/>
+			<subheading text="Description of the reaction"/>
+			<subheading text="Probability of recurrence"/>
+			<subheading text="Date first experienced"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000041GB01" extension="COCD_TP000041GB01#InvestigationsAndProceduresRequestedSection" snomed="887191000000108">
+		<clinicalheading title="Investigations and procedures requested">
+			<subheading text="Investigations requested"/>
+			<subheading text="Procedures requested"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000010GB01" extension="COCD_TP000010GB01#PatientAndCarerConcernsSection" snomed="887131000000107">
+		<clinicalheading title="Patient and carer concerns">
+			<subheading text="Patient's and carer's concerns, expectations and wishes"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000015GB01" extension="COCD_TP000015GB01#InformationGivenSection" snomed="887221000000101">
+		<clinicalheading title="Information given">
+			<subheading text="Information and advice given"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000014GB01" extension="COCD_TP000014GB01#PlanAndRequestedActionsSection" snomed="887201000000105">
+		<clinicalheading title="Plan and requested actions">
+			<subheading text="Actions"/>
+			<subheading text="Agreed with patient or legitimate patient representative"/>
+		</clinicalheading>
+	</template>
+	<template name="COCD_TP000046GB01" extension="COCD_TP000046GB01#PersonCompletingRecordSection" snomed="887231000000104">
+		<clinicalheading title="Person completing record">
+			<subheading text="Name"/>
+			<subheading text="Designation or role"/>
+			<subheading text="Grade"/>
+			<subheading text="Specialty"/>
+			<subheading text="Contact details"/>
+			<subheading text="Date completed"/>
+		</clinicalheading>
+	</template>
+</Discharge_ClinicalHeadings>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProfileConfigs>
+	<configItem codeSystemName="adw-admission-type-1-0" />
+	<configItem codeSystemName="human-language-1-0"/>
+	<configItem codeSystemName="adw-consultation-status-1-0"/>
+	<configItem codeSystemName="adw-message-event-1-0"/>
+	<configItem codeSystemName="nhs-number-status-indicator-1-0"/>
+	<configItem codeSystemName="job-role-name-1-0"/>
+	<configItem codeSystemName="adw-third-party-consent-source-1-0"/>	
+	<configItem codeSystemName="adw-patient-consent-status-1-0"/>	
+	<configItem codeSystemName="adw-carerconsultation-status-1-0"/>		
+	<configItem codeSystemName="adw-person-stated-gender-1-0"/>		
+	<configItem codeSystemName="adw-person-stated-gender-ddmap-1-0"/>		
+	<configItem codeSystemName="adw-assessment-notice-accept-reason-1-0"/>			
+	<configItem codeSystemName="adw-withdrawal-reason-1-0"/>
+</ProfileConfigs>

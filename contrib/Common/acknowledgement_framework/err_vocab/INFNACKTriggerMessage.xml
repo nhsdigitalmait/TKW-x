@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:itk="urn:nhs-itk:ns:201005">
+	<soap:Header>
+		<wsa:MessageID>__MESSAGEID__</wsa:MessageID>
+		<wsa:Action>urn:nhs-itk:services:201005:sendDistEnvelope</wsa:Action>
+		<wsa:To>__SENDTO__</wsa:To>
+		<wsa:From>
+			<wsa:Address>http://localhost:4000</wsa:Address>
+		</wsa:From>
+		<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+			<wsu:Timestamp xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="D6CD5232-14CF-11DF-9423-1F9A910D4703">
+				<wsu:Created>__TIMESTAMP__</wsu:Created>
+				<wsu:Expires>__EXPIRES__</wsu:Expires>
+			</wsu:Timestamp>
+			<wsse:UsernameToken>
+				<wsse:Username>TKS Server test</wsse:Username>
+			</wsse:UsernameToken>
+		</wsse:Security>
+	</soap:Header>
+	<soap:Body>
+<!--
+			This example message is provided for illustrative purposes only. It
+			has had no clinical validation. Whilst every effort has been taken to
+			ensure that the examples are consistent with the message
+			definition contained within the domain message specifications,
+			where there are conflicts	with the written message specification or 
+			schema, the specification or schema shall be considered to take
+			precedence.
+		-->
+<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<itk:header service="urn:nhs-itk:services:201005:sendDistEnvelope" trackingid="FE32DE12-3D67-11E2-B6B1-C58C6188709B">
+		<itk:addresslist>
+			<itk:address uri="urn:nhs-uk:addressing:ods:V396A"/>
+		</itk:addresslist>
+		<itk:auditIdentity>
+			<itk:id uri="urn:nhs-uk:identity:ods:A1A"/>
+		</itk:auditIdentity>
+		<itk:manifest count="1">
+			<itk:manifestitem id="uuid_3ECE728D-1560-4B1D-9395-853292052046" mimetype="text/xml" profileid="urn:nhs-en:profile:eDischargeInpatientDischargeSummary-v2-0"/>
+		</itk:manifest>
+		<itk:senderAddress uri="urn:nhs-uk:addressing:ods:AAA:XZ901:XY7650987"/>
+		<itk:handlingSpecification>
+			<itk:spec value="true" key="urn:nhs-itk:ns:201005:infackrequested"/>
+			<itk:spec value="true" key="urn:nhs-itk:ns:201005:ackrequested"/>
+			<itk:spec value="false" key="urn:nhs-itk:ns:201005:busresponserequested"/>
+			<itk:spec key="urn:nhs-itk:ns:201005:interaction" value="urn:nhs-itk:interaction:primaryRecipienteDischargeInpatientDischargeSummaryDocument-v1-0"/>
+		</itk:handlingSpecification>
+	</itk:header>
+	<itk:payloads count="1">
+		<itk:payload id="uuid_3ECE728D-1560-4B1D-9395-853292052046">
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:npfitlc="NPFIT:HL7:Localisation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" classCode="DOCCLIN" moodCode="EVN">
+	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+	<npfitlc:messageType root="2.16.840.1.113883.2.1.3.2.4.18.17" extension="POCD_MT000026GB01"/>
+	<id root="CB0AABF7-E7F9-4D76-A6E1-40C440C79634"/>
+	<code code="810301000000103:810311000000101=373942005,810321000000107=394576009" codeSystem="2.16.840.1.113883.2.1.3.2.4.15.1" displayName="810301000000103|Clinical document descriptor|:810311000000101|Type of clinical document|=373942005|Discharge summary|,810321000000107|Care setting of clinical document|=394576009|Accident &amp; emergency"/>
+	<title>Discharge summary</title>
+	<effectiveTime value="201502171000+00"/>
+	<confidentialityCode code="V" displayName="Very restricted" codeSystem="2.16.840.1.113883.1.11.16926"/>
+	<setId root="262BF05B-74B9-4487-88FE-8B72C71E9D76"/>
+	<versionNumber value="1"/>
+	<recordTarget typeCode="RCT" contextControlCode="OP">
+		<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145201GB02#PatientRole"/>
+		<patientRole classCode="PAT">
+			<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145201GB02#PatientRole"/>
+			<id extension="1352465790" root="2.16.840.1.113883.2.1.4.1"/>
+			<addr use="H">
+				<streetAddressLine>21, Grove Street</streetAddressLine>
+				<streetAddressLine>Overtown</streetAddressLine>
+				<streetAddressLine>Leeds</streetAddressLine>
+				<streetAddressLine>West Yorkshire</streetAddressLine>
+				<postalCode>LS21 1PF</postalCode>
+			</addr>
+			<patient classCode="PSN" determinerCode="INSTANCE">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145201GB02#patientPatient"/>
+				<name>
+					<prefix>Mr</prefix>
+					<given>Richard</given>
+					<family>InfNACK</family>
+				</name>
+				<administrativeGenderCode code="1" displayName="Male" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.25"/>
+				<birthTime value="19570101"/>
+				<ethnicGroupCode code="A" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.81" displayName="British"/>
+				<guardian classCode="GUARD">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145201GB02#guardian"/>
+					<code code="16" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.454" displayName="Relative"/>
+					<telecom use="MC" value="tel:0712345678"/>
+					<telecom value="mailto:mrssmith@mymail.com"/>
+					<guardianPerson classCode="PSN" determinerCode="INSTANCE">
+						<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145201GB02#guardianPerson"/>
+						<name use="PREFERRED">
+							<prefix>Mrs</prefix>
+							<given>Joy</given>
+							<family>InfNACK</family>
+						</name>
+					</guardianPerson>
+				</guardian>
+			</patient>
+			<providerOrganization classCode="ORG" determinerCode="INSTANCE">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145201GB02#providerOrganization"/>
+				<id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="GP123456"/>
+				<name>MGP Medical Centre</name>
+				<telecom value="tel:01634111222" use="WP"/>
+				<telecom value="mailto:jlorenzo@MMC.co.uk"/>
+				<addr use="WP">
+					<streetAddressLine>1 MGP House</streetAddressLine>
+					<streetAddressLine>Overtown</streetAddressLine>
+					<streetAddressLine>Leeds</streetAddressLine>
+					<streetAddressLine>West Yorkshire</streetAddressLine>
+					<postalCode>LS21 7PA</postalCode>
+				</addr>
+				<standardIndustryClassCode code="001" displayName="GP Practice" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.289"/>
+			</providerOrganization>
+		</patientRole>
+	</recordTarget>
+	<author typeCode="AUT" contextControlCode="OP">
+		<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145208GB01#AssignedAuthor"/>
+		<functionCode code="OA" displayName="Originating Author" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.178"/>
+		<time value="201502140900+00"/>
+		<assignedAuthor classCode="ASSIGNED">
+			<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145208GB01#AssignedAuthor"/>
+			<id root="2.16.840.1.113883.2.1.3.2.4.18.37" extension="SR1701" assigningAuthorityName="A1A:XYZ Hospital"/>
+			<code code="NR0110" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.124" displayName="Specialist Registrar"/>
+			<representedOrganization classCode="ORG" determinerCode="INSTANCE">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145208GB01#representedOrganization"/>
+				<id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="A1A"/>
+				<name>XYZ Hospital</name>
+			</representedOrganization>
+		</assignedAuthor>
+	</author>
+	<custodian typeCode="CST">
+		<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145018UK03#AssignedCustodian"/>
+		<assignedCustodian classCode="ASSIGNED">
+			<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145018UK03#AssignedCustodian"/>
+			<representedCustodianOrganization classCode="ORG" determinerCode="INSTANCE">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145018UK03#representedCustodianOrganization"/>
+				<id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="GP135791"/>
+				<name>XYZ NHS trust</name>
+			</representedCustodianOrganization>
+		</assignedCustodian>
+	</custodian>
+	<informationRecipient typeCode="PRCP">
+		<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145203GB03#IntendedRecipient"/>
+		<intendedRecipient classCode="ASSIGNED">
+			<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145203GB03#IntendedRecipient"/>
+			<receivedOrganization classCode="ORG" determinerCode="INSTANCE">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145203GB03#representedOrganization"/>
+				<id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="V396A"/>
+				<name>MGP Medical Centre</name>
+			</receivedOrganization>
+		</intendedRecipient>
+	</informationRecipient>
+	<informationRecipient typeCode="TRC">
+		<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145202GB02#IntendedRecipient"/>
+		<intendedRecipient classCode="ASSIGNED">
+			<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145202GB02#IntendedRecipient"/>
+			<npfitlc:recipientRoleCode code="NR0700" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.124" displayName="Community Nurse"/>
+			<id root="2.16.840.1.113883.2.1.3.2.4.18.24" assigningAuthorityName="RY6:Leeds Community Healthcare NHS Trust" extension="NR0700"/>
+			<addr use="WP">
+				<streetAddressLine>Leeds Community Healthcare NHS Trust</streetAddressLine>
+				<streetAddressLine>First Floor, Stockdale House</streetAddressLine>
+				<streetAddressLine>Headingley Office Park</streetAddressLine>
+				<streetAddressLine>Victoria Road</streetAddressLine>
+				<streetAddressLine>Leeds</streetAddressLine>
+				<postalCode>LS6 1PF</postalCode>
+			</addr>
+			<telecom use="WP" value="tel:01136323200"/>
+			<informationRecipient classCode="PSN" determinerCode="INSTANCE">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145202GB02#assignedPerson"/>
+				<name>
+					<family>Smith</family>
+					<given>A</given>
+					<prefix>Mrs</prefix>
+				</name>
+			</informationRecipient>
+			<receivedOrganization classCode="ORG" determinerCode="INSTANCE">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145202GB02#representedOrganization"/>
+				<id root="2.16.840.1.113883.2.1.3.2.4.19.1" extension="RAE"/>
+				<name>RY6:Leeds Community Healthcare NHS Trust</name>
+			</receivedOrganization>
+		</intendedRecipient>
+	</informationRecipient>
+	<participant typeCode="IND" contextControlCode="OP">
+		<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145214GB01#AssociatedEntity"/>
+		<functionCode code="PCP" codeSystem="2.16.840.1.113883.5.88" displayName="primary care physician"/>
+		<associatedEntity classCode="PROV">
+			<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145214GB01#AssociatedEntity"/>
+			<id root="1.2.826.0.1285.0.2.0.65" extension="GP123456"/>
+			<addr use="WP">
+				<streetAddressLine>1 MGP House</streetAddressLine>
+				<streetAddressLine>Overtown</streetAddressLine>
+				<streetAddressLine>Leeds</streetAddressLine>
+				<streetAddressLine>West Yorkshire</streetAddressLine>
+				<postalCode>LS21 7PA</postalCode>
+			</addr>
+			<telecom value="tel:01634111222" use="WP"/>
+			<associatedPerson classCode="PSN" determinerCode="INSTANCE">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145214GB01#associatedPerson"/>
+				<name use="PREFERRED">
+					<prefix>Dr</prefix>
+					<given>John</given>
+					<family>Lorenzo</family>
+				</name>
+			</associatedPerson>
+		</associatedEntity>
+	</participant>
+	<participant typeCode="REFB" contextControlCode="OP">
+		<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145007UK03#RelatedEntity"/>
+		<associatedEntity classCode="PRS">
+			<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145007UK03#RelatedEntity"/>
+			<code code="21" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.45" displayName="Self"/>
+			<telecom use="MC" value="tel:0712345678"/>
+			<associatedPerson classCode="PSN" determinerCode="INSTANCE">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145007UK03#relationshipHolder"/>
+				<name use="PREFERRED">
+					<prefix>Mr</prefix>
+					<given>Richard</given>
+					<family>Smith</family>
+				</name>
+			</associatedPerson>
+		</associatedEntity>
+	</participant>
+	<componentOf typeCode="COMP">
+		<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146228GB01#EncompassingEncounter"/>
+		<encompassingEncounter classCode="ENC" moodCode="EVN">
+			<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146228GB01#EncompassingEncounter"/>
+			<id root="133C6C34-1399-4342-B72D-F0011FF91661"/>
+			<code code="4525004" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Emergency department patient visit"/>
+			<effectiveTime>
+				<low value="201502120900+00"/>
+				<high value="201502160900+00"/>
+			</effectiveTime>
+			<dischargeDispositionCode code="306689006" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Discharge to home"/>
+			<location typeCode="LOC">
+				<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146228GB01#location"/>
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145211GB01#HealthCareFacility"/>
+				<healthCareFacility classCode="SDLOC">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145211GB01#HealthCareFacility"/>
+					<code code="225728007" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Accident and Emergency department"/>
+				</healthCareFacility>
+			</location>
+		</encompassingEncounter>
+	</componentOf>
+	<component typeCode="COMP" contextConductionInd="true">
+		<structuredBody classCode="DOCBODY" moodCode="EVN">
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000034GB01#AdmissionDetailsSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000034GB01#AdmissionDetailsSection"/>
+					<id root="C3A0F8FB-35FA-4358-B46E-6F9EE6AC6CF2"/>
+					<code code="886781000000108" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Admission details</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Admission method</th>
+									<td>Emergency</td>
+								</tr>
+								<tr>
+									<th>Date of admission</th>
+									<td>12-Feb-2015</td>
+								</tr>
+								<tr>
+									<th>Source of admission</th>
+									<td>Usual place of residence</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000034GB01#entry"/>
+						<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146062GB01#AdmissionProcedure"/>
+						<procedure classCode="PROC" moodCode="EVN">
+							<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146062GB01#AdmissionProcedure"/>
+							<id root="5E656F0B-FB2F-45DA-8397-A3D16ECBBF4A"/>
+							<code code="305056002" displayName="Admission Procedure" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+							<statusCode code="completed"/>
+							<effectiveTime value="201502120900+00"/>
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146062GB01#entryRelationship"/>
+								<seperatableInd value="false"/>
+								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146062GB01#methodOfAdmission"/>
+									<code code="MOA" displayName="Method of Admission" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.220"/>
+									<value xsi:type="CV" code="21" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.51"/>
+								</observation>
+							</entryRelationship>
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146062GB01#entryRelationship1"/>
+								<seperatableInd value="false"/>
+								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146062GB01#reasonForAdmission"/>
+									<id root="C65DC088-939F-4623-A9F0-A1C7103ED5F4"/>
+									<code code="RFA" displayName="Reason for Admission" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.220"/>
+									<value xsi:type="CV" code="49966017" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Chest pain"/>
+								</observation>
+							</entryRelationship>
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146062GB01#entryRelationship2"/>
+								<seperatableInd value="false"/>
+								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146062GB01#sourceOfPatient"/>
+									<code code="SOP" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.220"/>
+									<value xsi:type="CV" code="19" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.509"/>
+								</observation>
+							</entryRelationship>
+						</procedure>
+					</entry>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000035GB01#AllergiesAndAdverseReactionsSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000035GB01#AllergiesAndAdverseReactionsSection"/>
+					<id root="82BF32F4-297F-4768-8D13-E832B08CC8F9"/>
+					<code code="886921000000105" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Allergies and adverse reactions</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Causative agent</th>
+									<td>Penicillin</td>
+								</tr>
+								<tr>
+									<th>Description of the reaction</th>
+									<td>Rash. No swelling/anaphylaxis</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000035GB01#entry"/>
+						<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146061GB01#Allergy"/>
+						<observation classCode="COND" moodCode="EVN">
+							<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146061GB01#Allergy"/>
+							<id root="090FE2A4-8AB9-487B-925D-3719DC3D9777"/>
+							<code code="152307010" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Allergy to penicillin"/>
+							<statusCode code="active"/>
+							<effectiveTime value="201502121200+00"/>
+							<entryRelationship typeCode="SPRT" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146061GB01#entryRelationship"/>
+								<seperatableInd value="false"/>
+								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146061GB01#supportingFinding"/>
+									<id root="50B496A8-01C1-4897-B8C4-425A54F22035"/>
+									<code code="ASF" displayName="Allergy Supporting Finding" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.220"/>
+									<value xsi:type="CV" code="406764010" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Eruption"/>
+								</observation>
+							</entryRelationship>
+						</observation>
+					</entry>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000008GB01#AssessmentScalesSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000008GB01#AssessmentScalesSection"/>
+					<id root="C0EA8568-2F11-4EC1-910D-B4A5793D0487"/>
+					<code code="887141000000103" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Assessment scales</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Assessment scales</th>
+									<td>TIMI score=2</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000033GB01#ClinicalSummarySection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000033GB01#ClinicalSummarySection"/>
+					<id root="FFC35837-1801-4CA1-A2B2-AC514A250BD4"/>
+					<code code="887181000000106" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Clinical summary</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Clinical Summary</th>
+								</tr>
+								<tr>
+									<td>58 year old man with an acute history of cardiac sounding chest pain lasting around 2 hours. </td>
+								</tr>
+								<tr>
+									<td>Examination unremarkable.</td>
+								</tr>
+								<tr>
+									<td>Inferior ischaemic changes on ECGs and raised Troponin T. </td>
+								</tr>
+								<tr>
+									<td>Coronary angiogram demonstrated diseased RCA, drug eluting stent successfully placed. </td>
+								</tr>
+								<tr>
+									<td>Appropriate secondary prevention medications prescribed and for follow up with Cardiac Rehabilitation team. </td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000037GB01#DiagnosesSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000037GB01#DiagnosesSection"/>
+					<id root="B1A24C38-C952-4231-8A7C-3D4BB3022468"/>
+					<code code="887161000000102" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Diagnoses</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Diagnosis</th>
+								</tr>
+								<tr>
+									<td>Cardiac chest pain/ACS</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000037GB01#entry"/>
+						<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146063GB01#Diagnosis"/>
+						<observation classCode="OBS" moodCode="EVN">
+							<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146063GB01#Diagnosis"/>
+							<id root="6AE16FAF-E99C-43BF-BD21-A7EEDF44C691"/>
+							<code code="439401001" displayName="Diagnosis" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+							<statusCode code="completed"/>
+							<effectiveTime value="201502121200+00"/>
+							<value xsi:type="CD" code="2676104013" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Cardiac chest pain"/>
+						</observation>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000037GB01#entry"/>
+						<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146063GB01#Diagnosis"/>
+						<observation classCode="OBS" moodCode="EVN">
+							<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146063GB01#Diagnosis"/>
+							<id root="FE3237B9-023F-4503-A2CF-21BB39E5E84E"/>
+							<code code="439401001" displayName="Diagnosis" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+							<statusCode code="completed"/>
+							<effectiveTime value="201502121200+00"/>
+							<value xsi:type="CD" code="1488382011" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Acute coronary syndrome"/>
+						</observation>
+					</entry>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000036GB01#DischargeDetailsSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000036GB01#DischargeDetailsSection"/>
+					<id root="939FAE99-0E5B-44DD-8EF6-DBBFCE9089C1"/>
+					<code code="886811000000106" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Discharge details</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Discharging consultant</th>
+									<td>Mr Abacus</td>
+								</tr>
+								<tr>
+									<th>Date of discharge</th>
+									<td>16-Feb-2015</td>
+								</tr>
+								<tr>
+									<th>Discharge method</th>
+									<td>Patient discharged on clinical advice</td>
+								</tr>
+								<tr>
+									<th>Discharge destination</th>
+									<td>Usual place of residence</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000036GB01#entry"/>
+						<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146067GB01#Discharge"/>
+						<encounter classCode="ENC" moodCode="EVN">
+							<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146067GB01#Discharge"/>
+							<id root="96C28A61-13F9-4307-BD08-CBF660491759"/>
+							<code code="58000006" displayName="Patient discharge" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+							<statusCode code="completed"/>
+							<effectiveTime value="201502160900+00"/>
+							<performer typeCode="PRF">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146067GB01#performer"/>
+								<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP145243GB01#AssignedEntity"/>
+								<assignedEntity classCode="ASSIGNED">
+									<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145243GB01#AssignedEntity"/>
+									<id extension="123456789123" root="1.2.826.0.1285.0.2.0.65"/>
+									<code code="180" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.511"/>
+									<assignedPerson classCode="PSN" determinerCode="INSTANCE">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP145243GB01#assignedPerson"/>
+										<name>
+											<family>Abacus</family>
+											<prefix>Mr</prefix>
+										</name>
+									</assignedPerson>
+								</assignedEntity>
+							</performer>
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146067GB01#entryRelationship"/>
+								<seperatableInd value="false"/>
+								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146067GB01#dischargeMethod"/>
+									<code code="DM" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.220"/>
+									<value xsi:type="CV" code="1" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.41"/>
+								</observation>
+							</entryRelationship>
+							<entryRelationship typeCode="COMP" contextConductionInd="true">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146067GB01#entryRelationship1"/>
+								<seperatableInd value="false"/>
+								<observation classCode="OBS" moodCode="EVN">
+									<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146067GB01#dischargeDestination"/>
+									<code code="DD" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.220"/>
+									<value xsi:type="CV" code="19" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.40"/>
+								</observation>
+							</entryRelationship>
+						</encounter>
+					</entry>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000015GB01#InformationGivenSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000015GB01#InformationGivenSection"/>
+					<id root="A68BCC94-C887-4B89-B6EF-B972789A4DEE"/>
+					<code code="887221000000101" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Information given</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Information and advice given</th>
+								</tr>
+								<tr>
+									<td>Patient seen by Cardiac Rehab and information given regarding diagnosis, lifestyle change and benefits of rehab programme.</td>
+								</tr>
+								<tr>
+									<td>Community follow up planned.</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000041GB01#InvestigationsAndProceduresRequestedSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000041GB01#InvestigationsAndProceduresRequestedSection"/>
+					<id root="5998CA3D-A3A5-4C24-A7A6-49B51823062A"/>
+					<code code="887191000000108" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Investigations and procedures requested</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>FBC</th>
+									<td> 5 x 10<content styleCode="super">
+											<sup>12</sup>
+										</content>/L, WCC: 11.1 x 10<content styleCode="super">
+											<sup>9</sup>
+										</content>/L, Hb: 150 g/dl, neutrophils: 7.0 x 10<content styleCode="super">
+											<sup>9</sup>
+										</content>/L, eosinophils: 0.40 x 10<content styleCode="super">
+											<sup>9</sup>
+										</content>/L, lymphocytes: 3.5x10<content styleCode="super">
+											<sup>9</sup>
+										</content>/L, monocytes: 0.3 x 10<content styleCode="super">
+											<sup>9</sup>
+										</content>/L</td>
+								</tr>
+								<tr>
+									<th>Arterial Blood Gases</th>
+									<td>PH: 7.41, pO<content styleCode="sub">
+											<sub>2</sub>
+										</content>: 13 kPa, pCO<content styleCode="sub">
+											<sub>2</sub>
+										</content>: 6.0kPa, HCO3: 24 mEq/L, B.E.: +2 mmol/L</td>
+								</tr>
+								<tr>
+									<th>ECG</th>
+									<td>Inferior ischaemic changes</td>
+								</tr>
+								<tr>
+									<th>Chest Xray</th>
+									<td>Normal</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000044GB01#LegalInformationSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000044GB01#LegalInformationSection"/>
+					<id root="D6429937-7490-4C30-88B2-5C20BD913CA2"/>
+					<code code="886961000000102" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Legal information</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Advance decisions about treatment</th>
+								</tr>
+								<tr>
+									<td>Declines blood products - patient is a Jehovah's witness </td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000040GB01#MedicationsAndMedicalDevicesSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000040GB01#MedicationsAndMedicalDevicesSection"/>
+					<id root="581BD7AB-80D0-4052-AF58-521C80FF9B8D"/>
+					<code code="933361000000108" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Medications and medical devices</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Medication Name</th>
+									<td>Ramipril</td>
+								</tr>
+								<tr>
+									<th>Dose</th>
+									<td>2.5mg</td>
+								</tr>
+								<tr>
+									<th>Medication Frequency</th>
+									<td>OD</td>
+								</tr>
+								<tr>
+									<th>Route</th>
+									<td>oral</td>
+								</tr>
+								<tr>
+									<th>Medication Recommendations</th>
+									<td>continue</td>
+								</tr>
+							</tbody>
+						</table>
+						<paragraph/>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Medication Name</th>
+									<td>Omeprazole</td>
+								</tr>
+								<tr>
+									<th>Dose</th>
+									<td>20mg</td>
+								</tr>
+								<tr>
+									<th>Medication Frequency</th>
+									<td>OD/PRN</td>
+								</tr>
+								<tr>
+									<th>Route</th>
+									<td>oral</td>
+								</tr>
+								<tr>
+									<th>Medication Recommendations</th>
+									<td>continue</td>
+								</tr>
+							</tbody>
+						</table>
+						<paragraph/>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Medication Name</th>
+									<td>Aspirin</td>
+								</tr>
+								<tr>
+									<th>Dose</th>
+									<td>75mg</td>
+								</tr>
+								<tr>
+									<th>Medication Frequency</th>
+									<td>OD</td>
+								</tr>
+								<tr>
+									<th>Route</th>
+									<td>oral</td>
+								</tr>
+								<tr>
+									<th>Medication Recommendations</th>
+									<td>continue</td>
+								</tr>
+							</tbody>
+						</table>
+						<paragraph/>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Medication Name</th>
+									<td>Clopidogrel</td>
+								</tr>
+								<tr>
+									<th>Dose</th>
+									<td>75mg</td>
+								</tr>
+								<tr>
+									<th>Medication Frequency</th>
+									<td>OD</td>
+								</tr>
+								<tr>
+									<th>Route</th>
+									<td>oral</td>
+								</tr>
+								<tr>
+									<th>Medication Recommendations</th>
+									<td>1 year then stop</td>
+								</tr>
+							</tbody>
+						</table>
+						<paragraph/>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Medication Name</th>
+									<td>Simvastatin</td>
+								</tr>
+								<tr>
+									<th>Dose</th>
+									<td>40mg</td>
+								</tr>
+								<tr>
+									<th>Medication Frequency</th>
+									<td>OD</td>
+								</tr>
+								<tr>
+									<th>Route</th>
+									<td>oral</td>
+								</tr>
+								<tr>
+									<th>Medication Recommendations</th>
+									<td>continue</td>
+								</tr>
+							</tbody>
+						</table>
+						<paragraph/>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Medication Name</th>
+									<td>Bisoprolol</td>
+								</tr>
+								<tr>
+									<th>Dose</th>
+									<td>5mg</td>
+								</tr>
+								<tr>
+									<th>Medication Frequency</th>
+									<td>OD</td>
+								</tr>
+								<tr>
+									<th>Route</th>
+									<td>oral</td>
+								</tr>
+								<tr>
+									<th>Medication Recommendations</th>
+									<td>Uptitrate according to BP and HR</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000001GB01#ParticipationInResearchSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000001GB01#ParticipationInResearchSection"/>
+					<id root="9FAD3E38-9589-4C6E-A686-4C2B0E06E22F"/>
+					<code code="886751000000102" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Participation in research</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Participation in research</th>
+								</tr>
+								<tr>
+									<td>None</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000010GB01#PatientAndCarerConcernsSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000010GB01#PatientAndCarerConcernsSection"/>
+					<id root="40085D49-A7AE-4654-97E5-09EDD4F9E9C3"/>
+					<code code="887131000000107" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Patient and carer concerns</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Patient's and carer's concerns, expectations and wishes</th>
+								</tr>
+								<tr>
+									<td>Concern re possibility of heart attack/similarity with mothers illness.</td>
+								</tr>
+								<tr>
+									<td>Worried about ability to drive and work/financial implications.</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000046GB01#PersonCompletingRecordSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000046GB01#PersonCompletingRecordSection"/>
+					<id root="3FC2BA99-C93E-44B2-A926-4B4FE04C0E79"/>
+					<code code="887231000000104" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Person completing record</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Name</th>
+									<td>Dr Paul Rastall</td>
+								</tr>
+								<tr>
+									<th>Designation or role</th>
+									<td>On call Dr</td>
+								</tr>
+								<tr>
+									<th>Grade</th>
+									<td>SpR</td>
+								</tr>
+								<tr>
+									<th>Specialty</th>
+									<td>Medicine</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000014GB01#PlanAndRequestedActionsSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000014GB01#PlanAndRequestedActionsSection"/>
+					<id root="F1775E17-A7B5-4668-AB2F-1262FBF16BEA"/>
+					<code code="887201000000105" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Plan and requested actions</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Actions</th>
+								</tr>
+								<tr>
+									<td>GP please continue secondary preventative medication.</td>
+								</tr>
+								<tr>
+									<td>Doses will be uptitrated by Cardiac Rehab team.</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000038GB01#ProceduresSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000038GB01#ProceduresSection"/>
+					<id root="DBA09523-E29A-4D05-AA88-8530988FB61F"/>
+					<code code="887171000000109" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Procedures</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Procedure</th>
+								</tr>
+								<tr>
+									<td>Coronary Angiogram with stent to right coronary artery (RCA)</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000038GB01#entry"/>
+						<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146066GB01#Procedure"/>
+						<procedure classCode="PROC" moodCode="EVN">
+							<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146066GB01#Procedure"/>
+							<id root="2043D176-E676-4880-8970-FA35B647748B"/>
+							<code code="55676017" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Coronary angiography"/>
+							<statusCode code="completed"/>
+							<effectiveTime value="201502121300+00"/>
+						</procedure>
+					</entry>
+					<entry typeCode="COMP" contextConductionInd="true">
+						<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000038GB01#entry"/>
+						<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP146066GB01#Procedure"/>
+						<procedure classCode="PROC" moodCode="EVN">
+							<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP146066GB01#Procedure"/>
+							<id root="D57C58ED-EB1F-4FD4-96F1-7191EAEDB6DC"/>
+							<code code="2984969013" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Stent in branch of right coronary artery"/>
+							<statusCode code="completed"/>
+							<effectiveTime value="201502121300+00"/>
+						</procedure>
+					</entry>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000039GB01#SafetyAlertsSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000039GB01#SafetyAlertsSection"/>
+					<id root="1D350DC7-A2B2-4509-948C-0B8E125F8A68"/>
+					<code code="886931000000107" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Safety alerts</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Risks to self</th>
+								</tr>
+								<tr>
+									<td>None</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+			<component typeCode="COMP" contextConductionInd="true">
+				<npfitlc:contentId root="2.16.840.1.113883.2.1.3.2.4.18.16" extension="COCD_TP000043GB01#SocialContextSection"/>
+				<section classCode="DOCSECT" moodCode="EVN">
+					<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="COCD_TP000043GB01#SocialContextSection"/>
+					<id root="046F1E8C-C842-47FD-8292-CC5AF87E4C50"/>
+					<code code="887051000000101" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+					<title>Social context</title>
+					<text>
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th>Household composition</th>
+									<td>Lives alone</td>
+								</tr>
+								<tr>
+									<th>Lives alone</th>
+									<td>No</td>
+								</tr>
+								<tr>
+									<th>Occupational history</th>
+									<td>Self employed electrician</td>
+								</tr>
+							</tbody>
+						</table>
+					</text>
+				</section>
+			</component>
+		</structuredBody>
+	</component>
+</ClinicalDocument>
+		</itk:payload>
+	</itk:payloads>
+</itk:DistributionEnvelope>
+	</soap:Body>
+</soap:Envelope>

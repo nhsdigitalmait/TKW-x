@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Bundle xmlns="http://hl7.org/fhir">
+	<!-- Default FGM Delete message response returned when no error response has been triggered in the TKW test harness -->
+	<id value="b507265b-89ed-4ee7-a280-74bfc4c1c664"/>
+	<meta>
+		<profile value="http://fhir.nhs.net/StructureDefinition/spine-message-bundle-1-0"/>
+	</meta>
+	<type value="message"/>
+	<entry>
+		<resource>
+			<MessageHeader>
+				<id value="0737d279-762e-447e-9ae1-6dbf3b6cdf65"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-response-messageheader-2-0"/>
+				</meta>
+				<timestamp value="__TIMESTAMP__"/>
+				<event>
+					<system value="http://fhir.nhs.net/ValueSet/message-event-2-0"/>
+					<code value="urn:nhs:names:services:clinicals-sync:FGMDeleteResponse_1_0"/>
+				</event>
+				<response>
+					<identifier value="__FHIRREQUESTMESSAGEID__"/>
+					<code value="ok"/>
+				</response>
+				<source>
+					<name value="__FHIRREQUESTTONAME__"/>
+					<endpoint value="__FHIRREQUESTTOENDPOINT__"/>
+				</source>
+				<destination>
+					<name value="__FHIRREQUESTFROMNAME__"/>
+					<endpoint value="__FHIRREQUESTFROMENDPOINT__"/>
+				</destination>
+			</MessageHeader>
+		</resource>
+	</entry>
+</Bundle>

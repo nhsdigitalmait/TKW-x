@@ -1,0 +1,1248 @@
+<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<itk:header service="urn:nhs-itk:services:201005:sendRecvDistEnvelopeResponse" trackingid="7D6782C0-AE1A-11DB-97CF-B18E1E0994CD">
+		<itk:addresslist>
+			<itk:address type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RKE"/>
+		</itk:addresslist>
+		<itk:auditIdentity>
+			<itk:id type="2.16.840.1.113883.2.1.3.2.4.18.27" uri="urn:nhs-uk:identity:ods:RAL"/>
+		</itk:auditIdentity>
+		<itk:manifest count="1">
+			<itk:manifestitem mimetype="text/xml" id="uuid_7D6782C0-AE1A-11DB-97BF-B18E1E0994CD" profileid="urn:nhs-en:profile:querySCRResponse-v-1-0"/>
+		</itk:manifest>
+		<itk:senderAddress type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RAL"/>
+		<itk:handlingSpecification>
+			<itk:spec value="urn:nhs-itk:interaction:querySCRResponse-v1-0" key="urn:nhs-itk:ns:201005:interaction"/>
+		</itk:handlingSpecification>
+	</itk:header>
+	<itk:payloads count="1">
+		<itk:payload id="uuid_7D6782C0-AE1A-11DB-97BF-B18E1E0994CD">
+			<QuerySCRResponse xmlns="urn:hl7-org:v3">
+				<id root="7D6782C0-AE1A-11DB-97BF-B18E1E0994CD"/>
+				<text>
+					<npfitlc:GPSummary.text xmlns="urn:hl7-org:v3" xmlns:npfitlc="NPFIT:Localisation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+						<GPSummary xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nasp="http://spine.nhs.uk/spine-servicev1.0" xmlns:soapcsf="http://www.w3.org/2001/12/soap-envelope" xmlns:eb="http://www.oasis-open.org/committees/ebxml-msg/schema/msg-header-2_0.xsd" classCode="COMPOSITION" moodCode="EVN">
+							<id root="04CF131E-3BCB-45D8-9CB4-11D85315493C"/>
+							<code code="196981000000101" displayName="General Practice Summary" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+							<effectiveTime value="20120314135606"/>
+							<statusCode code="active"/>
+							<author typeCode="AUT" contextControlCode="OP">
+								<time value="20120314135606"/>
+								<UKCT_MT160018UK01.AgentPersonSDS classCode="AGNT">
+									<id extension="028479115512" root="1.2.826.0.1285.0.2.0.67"/>
+									<agentPersonSDS classCode="PSN" determinerCode="INSTANCE">
+										<id extension="820564415512" root="1.2.826.0.1285.0.2.0.65"/>
+										<name>
+											<family>Smith</family>
+											<given>Josephine</given>
+											<prefix>Mrs</prefix>
+										</name>
+									</agentPersonSDS>
+								</UKCT_MT160018UK01.AgentPersonSDS>
+							</author>
+							<excerptFrom typeCode="XCRPT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAT_RM-NPfITUK10.excerptFrom"/>
+								<seperatableInd value="false"/>
+								<UKCT_MT144051UK01.CareProfessionalDocumentationCRE classCode="CATEGORY" moodCode="EVN">
+									<code code="163171000000105" displayName="Care Professional Documentation" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" inversionInd="false" negationInd="false">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<presentationText classCode="OBS" moodCode="EVN">
+											<value mediaType="text/plain">
+												<html xmlns="xhtml:NPfIT:PresentationText">
+													<head/>
+													<body>
+														<h2 id="Title">General Practice Summary</h2>
+														<h3 id="Disclaimer">This is a GP Summary sourced from the patient's General Practice record. This summary may not include all the information pertinent to this patient. NB the patient may have opted to leave out items from this summary.</h3>
+														<h3 id="CreateTime">Time of summary creation 14/03/2012 13:55:37</h3>
+														<h3 id="SendTime">Time of sending 14/03/2012 13:55.58</h3>
+														<h3 id="Author">Author Mrs Josephine Smith, Main Surgery Name, Park End Surgry, Park End Surgry, 7 Printers Ave, Watford, Herts, WD18 7QR</h3>
+														<h2 id="Allergies" class="CreType">Allergies and Adverse reactions</h2>
+														<table id="AllergiesTable">
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Severity</th>
+																	<th>Certainty</th>
+																	<th>Reaction</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>H/O: penicillin allergy to Penbritin Forte 250mg/5ml syrup (Chemidex Pharma Ltd)</td>
+																	<td>Moderate</td>
+																	<td>Likely</td>
+																	<td>Allergy</td>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="RepeatMeds" class="CreType">Repeat Medication</h2>
+														<table id="RepeatMedsTable">
+															<thead>
+																<tr>
+																	<th>Date first added</th>
+																	<th>Medication Item</th>
+																	<th>Dosage instructions</th>
+																	<th>Quantity or duration</th>
+																	<th>Reason for medication</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">09/05/2011</td>
+																	<td>Prednisolone 5mg tablets</td>
+																	<td>1 TWICE A DAY</td>
+																	<td>28 tablet</td>
+																	<td/>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">09/04/2011</td>
+																	<td>Atenolol 25mg tablets</td>
+																	<td>TAKE ONE DAILY</td>
+																	<td>28 tablet</td>
+																	<td/>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">09/03/2011</td>
+																	<td>Cimetidine 200mg tablets</td>
+																	<td>1 TWICE A DAY</td>
+																	<td>48 tablet</td>
+																	<td/>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="DiscRepeatMeds" class="CreType">Discontinued Repeat Medication</h2>
+														<table id="DiscRepeatMedsTable">
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Medication Item</th>
+																	<th>Dosage instructions</th>
+																	<th>Quantity or duration</th>
+																	<th>Reason for medication</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">Start 01/09/2011 End 14/09/2011</td>
+																	<td>Ciprofloxacin 100mg tablets</td>
+																	<td>TAKE ONE TWICE DAILY</td>
+																	<td>6 tablet</td>
+																	<td/>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="AcuteMeds" class="CreType">Acute Medication</h2>
+														<p>The practice system holds no Acute Medication issued within the last 6 months</p>
+														<h2 id="CreType">Administrative Procedures</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">09/09/2011</td>
+																	<td>Preferred place of death</td>
+																	<td>Employment related: No</td>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>FP1001 signed</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">19/05/2011</td>
+																	<td>Consent given for upload to national shared electronic rec</td>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Clinical Observation and Findings</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>O/E - pulse rate</td>
+																	<td>Notes: 78</td>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>H/O: cardiovascular disease</td>
+																	<td>Notes: Angina</td>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>O/E - ethnic group</td>
+																	<td>Notes: British</td>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Body Mass Index</td>
+																	<td>Notes: 23</td>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>O/E - blood pressure reading</td>
+																	<td>BP: 165/98, Event time: 01/09/2011 15:01:00, Posture for BP recording: Sitting, Cuff size used: Standard</td>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Diagnoses</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Mixed asthma</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Mixed asthma</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Epilepsy</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Generalised convulsive epilepsy NOS</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Ischaemic heart disease</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">19/05/2011</td>
+																	<td>Chronic obstructive airways disease NOS</td>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Family History</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>FH: Asthma</td>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Investigation Results</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">09/09/2011</td>
+																	<td>U-S pelvic scan</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>ECG - general</td>
+																	<td>Result qualifier: Abnormal</td>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Full blood count - FBC</td>
+																	<td>Result qualifier: Normal</td>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Lifestyle</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Alcohol consumption</td>
+																	<td>Current drinker, Units of alcohol drank per week: 20</td>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Stopped smoking</td>
+																	<td>Ex-smoker, Number of cigarettes smoked per day: 20, Date patient started smoking: 1989, Date patient stopped smoking: 2010</td>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Personal Preferences</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">09/07/2011</td>
+																	<td>Discussion about preferences</td>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Provision of Advice and Information to Patients and Carers</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Advice to patient - subject</td>
+																	<td>Type of advice given: Advice, Advice: Diet</td>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Health education offered for Blood pressure</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Health ed. - smoking for Smoking</td>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Services, Care Professionals and Carers</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">09/08/2011</td>
+																	<td>Home help</td>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Social and Personal Circumstances</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Teacher - infant class</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Personal status</td>
+																	<td>Notes: Married</td>
+																</tr>
+																<tr>
+																	<td id="Date">09/07/2011</td>
+																	<td>Lives alone - help available</td>
+																	<td>Lives alone: No</td>
+																</tr>
+															</tbody>
+														</table>
+														<h2 id="CreType">Treatments</h2>
+														<table>
+															<thead>
+																<tr>
+																	<th>Date</th>
+																	<th>Description</th>
+																	<th>Supporting information</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td id="Date">09/09/2011</td>
+																	<td>Lifestyle counselling</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">01/09/2011</td>
+																	<td>Excision of gall bladder</td>
+																	<td/>
+																</tr>
+																<tr>
+																	<td id="Date">09/08/2011</td>
+																	<td>Endoscopic ultrasonic approach to other body cavity</td>
+																	<td/>
+																</tr>
+															</tbody>
+														</table>
+													</body>
+												</html>
+											</value>
+											<id root="73B9D7B9-0B82-4275-9957-B4AD8E91084E"/>
+											<code code="PresentationText" displayName="Presentation Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20120314135618"/>
+										</presentationText>
+									</component>
+								</UKCT_MT144051UK01.CareProfessionalDocumentationCRE>
+							</excerptFrom>
+							<pertinentInformation1 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentRootCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163171000000105" displayName="Care Professional Documentation" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+								</pertinentRootCREType>
+							</pertinentInformation1>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="185361000000102" displayName="Medication" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144040UK01.CurrentRepeatMedication classCode="SBADM" moodCode="RQO">
+											<id root="E56F7E75-6F31-4CC9-8A51-E469DE207B31"/>
+											<code code="222681000000101" displayName="Repeat medication" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="active"/>
+											<effectiveTime>
+												<low value="20110509"/>
+												<high value="20110909"/>
+											</effectiveTime>
+											<pertinentInformation1 typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentDosageInstructions classCode="OBS" moodCode="EVN">
+													<value>1 TWICE A DAY</value>
+													<code code="DI" displayName="Dose Instructions" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+												</pertinentDosageInstructions>
+											</pertinentInformation1>
+											<component typeCode="COMP">
+												<seperatableInd value="false"/>
+												<medicationQuantity classCode="SPLY" moodCode="RQO">
+													<quantity value="28" unit="1">
+														<translation value="28">
+															<originalText>tablet</originalText>
+														</translation>
+													</quantity>
+													<code code="246205007" displayName="Quantity" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+												</medicationQuantity>
+											</component>
+											<consumable typeCode="CSM" contextControlCode="OP">
+												<manufacturedProduct classCode="MANU">
+													<manufacturedManufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<code code="325427002" displayName="Prednisolone 5mg tablets" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+													</manufacturedManufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</UKCT_MT144040UK01.CurrentRepeatMedication>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144040UK01.CurrentRepeatMedication classCode="SBADM" moodCode="RQO">
+											<id root="93AED9A7-C761-4FA9-9FE1-53F14245721C"/>
+											<code code="222681000000101" displayName="Repeat medication" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="active"/>
+											<effectiveTime>
+												<low value="20110409"/>
+												<high value="20110909"/>
+											</effectiveTime>
+											<pertinentInformation1 typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentDosageInstructions classCode="OBS" moodCode="EVN">
+													<value>TAKE ONE DAILY</value>
+													<code code="DI" displayName="Dose Instructions" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+												</pertinentDosageInstructions>
+											</pertinentInformation1>
+											<component typeCode="COMP">
+												<seperatableInd value="false"/>
+												<medicationQuantity classCode="SPLY" moodCode="RQO">
+													<quantity value="28" unit="1">
+														<translation value="28">
+															<originalText>tablet</originalText>
+														</translation>
+													</quantity>
+													<code code="246205007" displayName="Quantity" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+												</medicationQuantity>
+											</component>
+											<consumable typeCode="CSM" contextControlCode="OP">
+												<manufacturedProduct classCode="MANU">
+													<manufacturedManufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<code code="318434003" displayName="Atenolol 25mg tablets" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+													</manufacturedManufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</UKCT_MT144040UK01.CurrentRepeatMedication>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144040UK01.CurrentRepeatMedication classCode="SBADM" moodCode="RQO">
+											<id root="49ABFB56-05AF-4A15-BEA0-4409D33A9691"/>
+											<code code="222681000000101" displayName="Repeat medication" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="active"/>
+											<effectiveTime>
+												<low value="20110309"/>
+												<high value="20110909"/>
+											</effectiveTime>
+											<pertinentInformation1 typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentDosageInstructions classCode="OBS" moodCode="EVN">
+													<value>1 TWICE A DAY</value>
+													<code code="DI" displayName="Dose Instructions" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+												</pertinentDosageInstructions>
+											</pertinentInformation1>
+											<component typeCode="COMP">
+												<seperatableInd value="false"/>
+												<medicationQuantity classCode="SPLY" moodCode="RQO">
+													<quantity value="48" unit="1">
+														<translation value="48">
+															<originalText>tablet</originalText>
+														</translation>
+													</quantity>
+													<code code="246205007" displayName="Quantity" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+												</medicationQuantity>
+											</component>
+											<consumable typeCode="CSM" contextControlCode="OP">
+												<manufacturedProduct classCode="MANU">
+													<manufacturedManufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<code code="317222006" displayName="Cimetidine 200mg tablets" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+													</manufacturedManufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</UKCT_MT144040UK01.CurrentRepeatMedication>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144040UK01.DiscontinuedRepeatMedication classCode="SBADM" moodCode="RQO">
+											<id root="2C9CA767-A2D1-4B41-A315-CD9B3C3E5B0D"/>
+											<code code="222691000000104" displayName="Discontinued repeat medication" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime>
+												<low value="20110901"/>
+												<high value="20110914"/>
+											</effectiveTime>
+											<pertinentInformation1 typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentDosageInstructions classCode="OBS" moodCode="EVN">
+													<value>TAKE ONE TWICE DAILY</value>
+													<code code="DI" displayName="Dose Instructions" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+												</pertinentDosageInstructions>
+											</pertinentInformation1>
+											<component typeCode="COMP">
+												<seperatableInd value="false"/>
+												<medicationQuantity classCode="SPLY" moodCode="RQO">
+													<quantity value="6" unit="1">
+														<translation value="6">
+															<originalText>tablet</originalText>
+														</translation>
+													</quantity>
+													<code code="246205007" displayName="Quantity" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+												</medicationQuantity>
+											</component>
+											<consumable typeCode="CSM" contextControlCode="OP">
+												<manufacturedProduct classCode="MANU">
+													<manufacturedManufacturedMaterial classCode="MMAT" determinerCode="KIND">
+														<code code="324600002" displayName="Ciprofloxacin 100mg tablets" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+													</manufacturedManufacturedMaterial>
+												</manufacturedProduct>
+											</consumable>
+										</UKCT_MT144040UK01.DiscontinuedRepeatMedication>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163221000000102" displayName="Allergies and Adverse Reactions" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144053UK02.Allergy classCode="OBS" moodCode="EVN">
+											<id root="5300F39C-74DE-449B-9648-CF6F573B95ED"/>
+											<code code="413350009" displayName="Finding with explicit context" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>H/O: penicillin allergy, Penbritin Forte 250mg/5ml syrup (Chemidex Pharma Ltd), Moderate, Likely.</originalText>
+												<qualifier>
+													<name code="246090004" displayName="associated finding"/>
+													<value code="416098002" displayName="drug allergy">
+														<qualifier>
+															<name code="246075003" displayName="causative agent"/>
+															<value code="12778611000001102" displayName="Penbritin Forte 250mg/5ml syrup (Chemidex Pharma Ltd)"/>
+														</qualifier>
+														<qualifier>
+															<name code="246112005" displayName="Severity"/>
+															<value code="6736007" displayName="Moderate"/>
+														</qualifier>
+													</value>
+												</qualifier>
+												<qualifier>
+													<name code="408729009" displayName="Finding context"/>
+													<value code="410592001" displayName="Probably present"/>
+												</qualifier>
+											</code>
+											<statusCode code="completed"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Reaction type:Allergy</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144053UK02.Allergy>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163091000000105" displayName="Administrative Procedures" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144050UK01.AdministrativeProcedure classCode="ACT" moodCode="EVN">
+											<id root="2A81C052-37C1-4DB3-B739-6C88AE47770D"/>
+											<code code="395091006" displayName="Preferred place of death" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110909"/>
+											</effectiveTime>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Employment related: No</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144050UK01.AdministrativeProcedure>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144050UK01.AdministrativeProcedure classCode="ACT" moodCode="EVN">
+											<id root="0A21348E-A922-43CF-8D07-1A1AB78F31D3"/>
+											<code code="9561000000100" displayName="FP1001 signed" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+										</UKCT_MT144050UK01.AdministrativeProcedure>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144050UK01.AdministrativeProcedure classCode="ACT" moodCode="EVN">
+											<id root="083DB44F-E8E6-4006-BA06-3BC915875967"/>
+											<code code="417370002" displayName="Consent given for upload to national shared electronic record" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>Consent given for upload to national shared electronic rec</originalText>
+											</code>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110519"/>
+											</effectiveTime>
+										</UKCT_MT144050UK01.AdministrativeProcedure>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163131000000108" displayName="Clinical Observations and Findings" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="5F0F4584-22E3-4FAD-9343-61E3FFFE4D11"/>
+											<code code="162986007" displayName="O/E - pulse rate" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110901"/>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Notes: 78</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="325BA348-A50C-4043-976F-9B055228466A"/>
+											<code code="266995000" displayName="H/O: cardiovascular disease" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110901"/>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Notes: Angina</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="0208B32F-9CA6-4E86-B3B1-457D78ED35AD"/>
+											<code code="162730000" displayName="O/E - ethnic group" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110901"/>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Notes: British</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="CDA2903C-6E52-4A90-A160-E82850227CD5"/>
+											<code code="60621009" displayName="Body mass index" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>Body Mass Index</originalText>
+											</code>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110901"/>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Notes: 23</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.BloodPressure classCode="BATTERY" moodCode="EVN">
+											<id root="B6FC889B-B9C7-4D0E-80A2-3CADADC57199"/>
+											<code code="163020007" displayName="O/E - blood pressure reading" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110901"/>
+											<component1 typeCode="COMP" inversionInd="false" negationInd="false">
+												<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+												<seperatableInd value="false"/>
+												<diastolicPressure classCode="OBS" moodCode="EVN">
+													<value value="98" unit="mm[Hg]"/>
+													<id root="072DB49A-ED81-49E3-87DB-2FF22F8B2E9A"/>
+													<code code="271650006" displayName="Diastolic blood pressure" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+													<effectiveTime value="20110901150100"/>
+												</diastolicPressure>
+											</component1>
+											<component2 typeCode="COMP" inversionInd="false" negationInd="false">
+												<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+												<seperatableInd value="false"/>
+												<systolicPressure classCode="OBS" moodCode="EVN">
+													<value value="165" unit="mm[Hg]"/>
+													<id root="072DB49A-ED81-49E3-87DB-2FF22F8B2E9A"/>
+													<code code="271649006" displayName="Systolic blood pressure" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+													<effectiveTime value="20110901150100"/>
+												</systolicPressure>
+											</component2>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Event time: 01/09/2011 15:01:00, Posture for BP recording: Sitting, Cuff size used: Standard</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144043UK02.BloodPressure>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163001000000103" displayName="Diagnoses" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144042UK01.Diagnosis classCode="OBS" moodCode="EVN">
+											<id root="ACBCF27A-93A7-4CB1-BA8B-88A9A583EC53"/>
+											<code code="195977004" displayName="Mixed asthma" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+										</UKCT_MT144042UK01.Diagnosis>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144042UK01.Diagnosis classCode="OBS" moodCode="EVN">
+											<id root="BB36E9DF-BA25-4221-B619-86BAA256E090"/>
+											<code code="195977004" displayName="Mixed asthma" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+										</UKCT_MT144042UK01.Diagnosis>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144042UK01.Diagnosis classCode="OBS" moodCode="EVN">
+											<id root="246AC0C5-F81D-4A2D-A795-8FB6A6467116"/>
+											<code code="84757009" displayName="Epilepsy" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+										</UKCT_MT144042UK01.Diagnosis>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144042UK01.Diagnosis classCode="OBS" moodCode="EVN">
+											<id root="6559A138-FE73-4C1A-AC2E-0539408ECF06"/>
+											<code code="192997001" displayName="Generalised convulsive epilepsy NOS" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+										</UKCT_MT144042UK01.Diagnosis>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144042UK01.Diagnosis classCode="OBS" moodCode="EVN">
+											<id root="5E654DAE-BFE5-4CC0-B28E-7589201CFCF3"/>
+											<code code="414545008" displayName="Ischaemic heart disease" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+										</UKCT_MT144042UK01.Diagnosis>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144042UK01.Diagnosis classCode="OBS" moodCode="EVN">
+											<id root="4EFF35A7-CF7D-4D72-936B-A0AA06DDF5BD"/>
+											<code code="196003006" displayName="Chronic obstructive airways disease NOS" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110519"/>
+											</effectiveTime>
+										</UKCT_MT144042UK01.Diagnosis>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163051000000102" displayName="Family History" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="41229B14-DB7D-4347-8BF8-AD352BFED291"/>
+											<code code="160377001" displayName="FH: Asthma" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110901"/>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163141000000104" displayName="Investigation Results" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="5C8E0C0F-3246-4223-8A4C-DC2B376F7001"/>
+											<code code="24848001" displayName="Pelvic echography" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>U-S pelvic scan</originalText>
+											</code>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110909"/>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="4B1BD7A5-4A86-4495-9064-6A6E6BD235DF"/>
+											<code code="164845003" displayName="ECG - general" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110901"/>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Result qualifier: Abnormal</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="05765B75-68CB-4AF1-8449-C0DC996E6522"/>
+											<code code="26604007" displayName="Complete blood count" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>Full blood count - FBC</originalText>
+											</code>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110901"/>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Result qualifier: Normal</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163041000000100" displayName="Lifestyle" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144036UK01.AlcoholIntake classCode="OBS" moodCode="EVN">
+											<value value="20" unit="/wk"/>
+											<id root="AFE2B146-2586-498F-A79F-AEB37536D74A"/>
+											<code code="160573003" displayName="Alcohol intake" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>Alcohol consumption</originalText>
+											</code>
+											<statusCode code="completed"/>
+											<effectiveTime>
+												<center value="20110901"/>
+											</effectiveTime>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Current drinker</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144036UK01.AlcoholIntake>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144036UK01.Smoking classCode="OBS" moodCode="EVN">
+											<id root="E7E37584-D70C-4C99-8A01-4C89A49EBFE4"/>
+											<code code="160617001" displayName="Stopped smoking" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime>
+												<low value="1989"/>
+												<high value="2010"/>
+											</effectiveTime>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Ex-smoker, Number of cigarettes smoked per day: 20</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144036UK01.Smoking>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="162961000000108" displayName="Personal Preferences" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="8C5EFF8B-4BF2-4BD5-B508-CE84AEFF342C"/>
+											<code code="223486007" displayName="Discussion about preferences" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110709"/>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163101000000102" displayName="Provision of Advice and Information to Patients and Carers" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144049UK01.ProvisionOfAdviceAndInformation classCode="INFRM" moodCode="EVN">
+											<id root="00EB6F80-8E85-479A-A06B-32ED592174CF"/>
+											<code code="409066002" displayName="Education, guidance and counselling" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>Advice to patient - subject</originalText>
+											</code>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Type of advice given: Advice, Advice: Diet</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+											<receiver typeCode="RCV" contextControlCode="OP">
+												<nonAgentRole classCode="ROL">
+													<code code="99" displayName="Not specified" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.15"/>
+												</nonAgentRole>
+											</receiver>
+										</UKCT_MT144049UK01.ProvisionOfAdviceAndInformation>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144049UK01.ProvisionOfAdviceAndInformation classCode="INFRM" moodCode="EVN">
+											<id root="27294D12-38EB-451F-BEC6-627C596BC28A"/>
+											<code code="171033006" displayName="Health education offered" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+											<receiver typeCode="RCV" contextControlCode="OP">
+												<nonAgentRole classCode="ROL">
+													<code code="99" displayName="Not specified" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.15"/>
+												</nonAgentRole>
+											</receiver>
+										</UKCT_MT144049UK01.ProvisionOfAdviceAndInformation>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144049UK01.ProvisionOfAdviceAndInformation classCode="INFRM" moodCode="EVN">
+											<id root="C5AC4447-7D4B-4458-9F93-BD2A1FB66101"/>
+											<code code="225324006" displayName="Smoking effects education" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>Health ed. - smoking</originalText>
+											</code>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+											<receiver typeCode="RCV" contextControlCode="OP">
+												<nonAgentRole classCode="ROL">
+													<code code="99" displayName="Not specified" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.15"/>
+												</nonAgentRole>
+											</receiver>
+										</UKCT_MT144049UK01.ProvisionOfAdviceAndInformation>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163031000000109" displayName="Services, Care Professionals and Carers" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144047UK01.Service classCode="PCPR" moodCode="EVN">
+											<id root="71C1D2A6-19B1-498C-9E26-1A18ACCE2BA1"/>
+											<code code="271391000" displayName="Provision of home help" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>Home help</originalText>
+											</code>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<low value="20110809"/>
+											</effectiveTime>
+										</UKCT_MT144047UK01.Service>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163021000000107" displayName="Social and Personal Circumstances" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144036UK01.SocialOrPersonalCircumstance classCode="OBS" moodCode="EVN">
+											<id root="DDCB0424-71EB-40D0-8676-CECED6D425EB"/>
+											<code code="158907006" displayName="Teacher - infant class" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<center value="20110901"/>
+											</effectiveTime>
+										</UKCT_MT144036UK01.SocialOrPersonalCircumstance>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144043UK02.Finding classCode="OBS" moodCode="EVN">
+											<id root="B40B273F-A2C2-4EFA-A860-D855A159BAC2"/>
+											<code code="7542004" displayName="Personal status" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="completed"/>
+											<effectiveTime value="20110901"/>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Notes: Married</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144043UK02.Finding>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144036UK01.SocialOrPersonalCircumstance classCode="OBS" moodCode="EVN">
+											<id root="54D25ED3-F501-4CED-A885-C04C2C59D345"/>
+											<code code="160725005" displayName="Lives alone - help available" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="normal"/>
+											<effectiveTime>
+												<center value="20110709"/>
+											</effectiveTime>
+											<pertinentInformation typeCode="PERT" contextConductionInd="true">
+												<seperatableInd value="false"/>
+												<pertinentSupportingInfo classCode="OBS" moodCode="EVN">
+													<value>Lives alone: No</value>
+													<code code="SupportingText" displayName="Supporting Text" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.126"/>
+												</pertinentSupportingInfo>
+											</pertinentInformation>
+										</UKCT_MT144036UK01.SocialOrPersonalCircumstance>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<pertinentInformation2 typeCode="PERT" inversionInd="false" contextConductionInd="true" negationInd="false">
+								<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.pertinentInformation1"/>
+								<seperatableInd value="true"/>
+								<pertinentCREType classCode="CATEGORY" moodCode="EVN">
+									<code code="163071000000106" displayName="Treatments" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144055UK01.Treatment classCode="PROC" moodCode="EVN">
+											<id root="120817D3-3E28-4A50-B880-1234142B8084"/>
+											<code code="313204009" displayName="Lifestyle education" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>Lifestyle counselling</originalText>
+											</code>
+											<statusCode code="active"/>
+											<effectiveTime>
+												<low value="20110909"/>
+											</effectiveTime>
+										</UKCT_MT144055UK01.Treatment>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144055UK01.Treatment classCode="PROC" moodCode="EVN">
+											<id root="0731856B-896E-49A3-9D97-EF7A54001B2A"/>
+											<code code="38102005" displayName="Cholecystectomy" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+												<originalText>Excision of gall bladder</originalText>
+											</code>
+											<statusCode code="active"/>
+											<effectiveTime>
+												<low value="20110901"/>
+											</effectiveTime>
+										</UKCT_MT144055UK01.Treatment>
+									</component>
+									<component typeCode="COMP" contextConductionInd="true">
+										<templateId root="2.16.840.1.113883.2.1.3.2.4.18.2" extension="CSAB_RM-NPfITUK10.component"/>
+										<seperatableInd value="false"/>
+										<UKCT_MT144055UK01.Treatment classCode="PROC" moodCode="EVN">
+											<id root="62AD826A-0297-4B26-B912-B1196D4580BB"/>
+											<code code="221911000000108" displayName="Endoscopic ultrasonic approach to other body cavity" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+											<statusCode code="active"/>
+											<effectiveTime>
+												<low value="20110809"/>
+											</effectiveTime>
+										</UKCT_MT144055UK01.Treatment>
+									</component>
+								</pertinentCREType>
+							</pertinentInformation2>
+							<recordTarget typeCode="RCT">
+								<patient classCode="PAT">
+									<id extension="9449001812" root="2.16.840.1.113883.2.1.4.1"/>
+								</patient>
+							</recordTarget>
+							<replacementOf typeCode="RPLC">
+								<priorMessageRef classCode="COMPOSITION" moodCode="EVN">
+									<id root="E0DA7A06-BF19-4350-9547-A6E3AE83EA10"/>
+								</priorMessageRef>
+							</replacementOf>
+						</GPSummary>
+					</npfitlc:GPSummary.text>
+				</text>
+				<value code="SMSP-0000" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.506" displayName="Success"/>
+			</QuerySCRResponse>
+		</itk:payload>
+	</itk:payloads>
+</itk:DistributionEnvelope>

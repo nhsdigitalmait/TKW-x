@@ -1,0 +1,3 @@
+GetMessages	org.warlock.tk.internalservices.queue.QueueRequestHandler
+ConfirmMessage	org.warlock.tk.internalservices.queue.QueueConfirmationHandler
+

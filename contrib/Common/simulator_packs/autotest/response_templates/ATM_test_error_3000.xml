@@ -1,0 +1,12 @@
+<soap:Fault xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<faultcode>Client</faultcode>
+	<faultstring>ATM A client related error has occurred, see detail element for further information</faultstring>
+	<detail>
+		<toolkit:ToolkitErrorInfo xmlns:toolkit="urn:nhs-itk:ns:201005">
+			<toolkit:ErrorID>__ERRORID__</toolkit:ErrorID>
+			<toolkit:ErrorCode codeSystem="2.16.840.1.113883.2.1.3.2.4.17.268">3000</toolkit:ErrorCode>
+			<toolkit:ErrorText>__ERRORTEXT__</toolkit:ErrorText>
+			<toolkit:ErrorDiagnosticText>__ERRORDETAIL__.</toolkit:ErrorDiagnosticText>
+		</toolkit:ToolkitErrorInfo>
+	</detail>
+</soap:Fault>

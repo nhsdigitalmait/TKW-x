@@ -1,0 +1,3 @@
+tks.routingactor.cda.appnackerrorcode DE0002
+tks.routingactor.cda.appnackerrortext Distribution Envelope Header Processing Error
+tks.routingactor.cda.appnackdiagnostictext TKW Simulator Generated DE0002 InfNACK

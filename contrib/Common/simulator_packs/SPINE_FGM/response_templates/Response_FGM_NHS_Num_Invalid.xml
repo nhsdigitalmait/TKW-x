@@ -1,0 +1,58 @@
+<Bundle xmlns="http://hl7.org/fhir">
+	<id value="22daadee-26e1-4d6a-9e6a-7f4af9b58892"/>
+	<meta>
+		<profile value="http://fhir.nhs.net/StructureDefinition/spine-message-bundle-1-0"/>
+	</meta>
+	<type value="message"/>
+	<entry>
+		<resource>
+			<MessageHeader>
+				<id value="23daadee-26e1-4d6a-9e6a-7f4af9b58893"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-response-messageheader-1-0"/>
+				</meta>
+				<timestamp value="__TIMESTAMP__"/>
+				<event>
+					<system value="http://fhir.nhs.net/ValueSet/message-event-1-0"/>
+					<code value="urn:nhs:names:services:clinicals-sync:FGMQueryResponse_1_0"/>
+				</event>
+				<response>
+					<identifier value="14daadee-26e1-4d6a-9e6a-7f4af9b58877"/>
+					<code value="fatal-error"/>
+					<details>
+						<reference value="OperationOutcome/22daadee-26e1-4d6a-9e6a-7f4af9b58877"/>
+					</details>
+				</response>
+				<source>
+					<name value="SPINE"/>
+					<endpoint value="urn:nhs:addressing:asid:990101234567"/>
+				</source>
+				<destination>
+					<name value="FooBar NHS Trust"/>
+					<endpoint value="urn:nhs:addressing:asid:047192794544"/>
+				</destination>
+			</MessageHeader>
+		</resource>
+	</entry>
+	<entry>
+		<resource>
+			<OperationOutcome>
+				<id value="22daadee-26e1-4d6a-9e6a-7f4af9b58877"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-operationoutcome-1-0"/>
+				</meta>
+				<issue>
+					<severity value="error"/>
+					<code value="invalid"/>
+					<details>
+						<coding>
+							<system value="http://fhir.nhs.net/ValueSet/spine-response-code-1-0"/>
+							<code value="FGM-0002"/>
+						</coding>
+					</details>
+					<diagnostics value="NHS Number Invalid"/>
+				</issue>
+			</OperationOutcome>
+		</resource>
+	</entry>
+</Bundle>

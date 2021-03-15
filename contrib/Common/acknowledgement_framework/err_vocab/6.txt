@@ -1,0 +1,3 @@
+tks.routingactor.cda.appnackerrorcode DE0006
+tks.routingactor.cda.appnackerrortext Distribution Envelope Manifest Processing Error
+tks.routingactor.cda.appnackdiagnostictext TKW Simulator Generated DE0006 InfNACK

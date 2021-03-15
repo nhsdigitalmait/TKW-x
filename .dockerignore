@@ -1,0 +1,8 @@
+# Ignore everything
+**
+
+# With these exceptions:
+!/contrib/Common/**
+!/TKW-x.jar
+!/lib/TKWPropertiesEditor.jar
+!/TKWAutotestManager.jar

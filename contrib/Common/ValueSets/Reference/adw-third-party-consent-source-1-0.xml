@@ -1,0 +1,19 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="adw-third-party-consent-source" >
+		<concept code="C">
+			<display>Legal Representative (Carer)</display>
+		</concept>
+		<concept code="O">
+			<display>Legal Representative (Other)</display>
+		</concept>
+		<concept code="B">
+			<display>Best Interest Decision</display>
+		</concept>
+		<concept code="NA">
+			<display>Not Applicable</display>
+		</concept>
+		<concept code="N/A">
+			<display>Not Applicable</display>
+		</concept>
+	</valueSet>
+</ValueSets>

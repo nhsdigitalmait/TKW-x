@@ -1,0 +1,13 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="organisation-type-1" >
+		<concept code="prov">
+			<display>Healthcare Provider</display>
+		</concept>
+		<concept code="E">
+			<display>Emergency</display>
+		</concept>
+		<concept code="X">
+			<display>Other</display>
+		</concept>
+	</valueSet>
+</ValueSets>

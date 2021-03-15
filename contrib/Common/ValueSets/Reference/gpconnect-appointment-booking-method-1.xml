@@ -1,0 +1,22 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="gpconnect-appointment-booking-method" >
+		<concept code="PER">
+			<display>In Person</display>
+		</concept>
+		<concept code="ONL">
+			<display>Online</display>
+		</concept>
+		<concept code="TEL">
+			<display>Telephone</display>
+		</concept>
+		<concept code="EMA">
+			<display>Email</display>
+		</concept>
+		<concept code="LET">
+			<display>Letter</display>
+		</concept>
+		<concept code="TEX">
+			<display>Text</display>
+		</concept>
+	</valueSet>
+</ValueSets>

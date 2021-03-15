@@ -1,0 +1,55 @@
+<Bundle xmlns="http://hl7.org/fhir">
+	<id value="22daadee-26e1-4d6a-9e6a-7f4af9b58892"/>
+	<meta>
+		<profile value="http://fhir.nhs.net/StructureDefinition/spine-message-bundle-1-0"/>
+	</meta>
+	<type value="message"/>
+	<entry>
+		<resource>
+			<MessageHeader>
+				<id value="14daadee-26e1-4d6a-9e6a-7f4af9b58879"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-response-messageheader-2-0"/>
+				</meta>
+				<timestamp value="__TIMESTAMP__"/>
+				<event>
+					<system value="http://fhir.nhs.net/ValueSet/message-event-2-0"/>
+					<code value="urn:nhs:names:services:clinicals-sync:FGMQueryResponse_2_0"/>
+				</event>
+				<response>
+					<identifier value="__FHIRREQUESTMESSAGEID__"/>
+					<code value="fatal-error"/>
+				</response>
+				<source>
+					<name value="__FHIRREQUESTTONAME__"/>
+					<endpoint value="__FHIRREQUESTTOENDPOINT__"/>
+				</source>
+				<destination>
+					<name value="__FHIRREQUESTFROMNAME__"/>
+					<endpoint value="__FHIRREQUESTFROMENDPOINT__"/>
+				</destination>
+			</MessageHeader>
+		</resource>
+	</entry>
+	<entry>
+		<resource>
+			<OperationOutcome>
+				<id value="22daadee-26e1-4d6a-9e6a-7f4af9b58877"/>
+				<meta>
+					<profile value="http://fhir.nhs.net/StructureDefinition/spine-operationoutcome-1-0"/>
+				</meta>
+				<issue>
+					<severity value="error"/>
+					<code value="not-found"/>
+					<details>
+						<coding>
+							<system value="http://fhir.nhs.net/ValueSet/spine-response-code-2-0"/>
+							<code value="NO_RECORD_FOUND"/>
+							<display value="No Record Found"/>
+						</coding>
+					</details>
+				</issue>
+			</OperationOutcome>
+		</resource>
+	</entry>
+</Bundle>

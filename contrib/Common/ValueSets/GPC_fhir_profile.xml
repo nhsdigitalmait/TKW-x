@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProfileConfigs>
+	<configItem codeSystemName="v3-ServiceDeliveryLocationRoleType" />
+	<configItem codeSystemName="human-language-1"/>
+	<configItem codeSystemName="sds-job-role-name-1-0"/>
+	<configItem codeSystemName="gpconnect-reason-type-1-0"/>
+	<configItem codeSystemName="gpconnect-task-narrative-1"/>
+	<configItem codeSystemName="marital-status-1"/>
+	<configItem codeSystemName="cda-person-relationship-type-1"/>
+	<configItem codeSystemName="organisation-type-1"/>
+	<configItem codeSystemName="gpconnect-appointment-category-1"/>		
+	<configItem codeSystemName="gpconnect-appointment-booking-method-1"/>			
+	<configItem codeSystemName="gpconnect-appointment-contact-method-1"/>		
+	<configItem codeSystemName="gpconnect-record-section-1-0"/>		
+	<configItem codeSystemName="gpconnect-condition-category-1-0"/>		
+	<configItem codeSystemName="gpconnect-key-flags-code-1-0"/>				
+	<configItem codeSystemName="nhs-e-prescribing-route-of-administration-1-0"/>				
+	<configItem codeSystemName="gpconnect-getrecord-response-code-1-0"/>					
+</ProfileConfigs>

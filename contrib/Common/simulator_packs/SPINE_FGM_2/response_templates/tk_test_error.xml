@@ -1,0 +1,15 @@
+<soap:Fault>
+	<faultcode>soap:Client</faultcode>
+	<faultstring>The message is not well formed</faultstring>
+	<detail>
+		<nasp:errorList>
+			<nasp:error>
+				<nasp:codeContext>__CODECONTEXT__</nasp:codeContext>
+				<nasp:errorCode>__ERRORCODE__</nasp:errorCode>
+				<nasp:severity>__SEVERITY__</nasp:severity>
+				<nasp:location/>
+				<nasp:description>__DESCRIPTION__</nasp:description>
+			</nasp:error>
+		</nasp:errorList>
+	</detail>
+</soap:Fault>

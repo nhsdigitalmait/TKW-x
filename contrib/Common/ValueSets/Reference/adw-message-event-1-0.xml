@@ -1,0 +1,34 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="adw-message-event" >
+		<concept code="975701000000106">
+			<display>Assessment Notice under the Care Act 2014 schedule 3</display>
+		</concept>
+		<concept code="975711000000108">
+			<display>Assessment Notice Accept Response under the Care Act 2014 Schedule 3</display>
+		</concept>
+		<concept code="975721000000102">
+			<display>Assessment Notice Reject Response under the Care Act 2014 Schedule 3</display>
+		</concept>
+		<concept code="975731000000100">
+			<display>Discharge Notice under the Care Act 2014 Schedule 3</display>
+		</concept>
+		<concept code="975821000000109">
+			<display>Discharge Notice Agreement under the Care Act 2014 Schedule 3</display>
+		</concept>
+		<concept code="975831000000106">
+			<display>Discharge Notice Disagreement under the Care Act 2014 Schedule 3</display>
+		</concept>
+		<concept code="975841000000102">
+			<display>Withdraw All Notices under the Care Act 2014 Schedule 3</display>
+		</concept>
+		<concept code="975851000000104">
+			<display>Withdraw Discharge Notice Only under the Care Act 2014 Schedule 3</display>
+		</concept>
+		<concept code="1025651000000109">
+			<display>Withdraw Notice Accept under the Care Act 2014 Schedule 3</display>
+		</concept>
+		<concept code="1025641000000106">
+			<display>Withdraw Notice Reject under the Care Act 2014 Schedule 3</display>
+		</concept>		
+	</valueSet>
+</ValueSets>

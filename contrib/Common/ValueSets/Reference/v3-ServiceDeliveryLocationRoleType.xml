@@ -1,0 +1,13 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="v3-ServiceDeliveryLocationRoleType" >
+		<concept code="HEM">
+			<display>Hematology clinic</display>
+		</concept>
+		<concept code="PC">
+			<display>Primary care clinic</display>
+		</concept>
+		<concept code="HOSP">
+			<display>Hospital</display>
+		</concept>
+	</valueSet>
+</ValueSets>

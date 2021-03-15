@@ -1,0 +1,27 @@
+<itk:DistributionEnvelope xmlns:itk="urn:nhs-itk:ns:201005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<itk:header service="urn:nhs-itk:services:201005:sendRecvDistEnvelopeResponse" trackingid="7D6782C0-AE1A-11DB-97D0-B18E1E0994CD">
+		<itk:addresslist>
+			<itk:address type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RKE"/>
+		</itk:addresslist>
+		<itk:auditIdentity>
+			<itk:id type="2.16.840.1.113883.2.1.3.2.4.18.27" uri="urn:nhs-uk:identity:ods:RKE"/>
+		</itk:auditIdentity>
+		<itk:manifest count="1">
+			<itk:manifestitem mimetype="text/xml" id="uuid_7D6782C0-AE1A-11DB-97C1-B18E1E0994CD" profileid="urn:nhs-en:profile:querySCRActivityResponse-v-1-0"/>
+		</itk:manifest>
+		<itk:senderAddress type="2.16.840.1.113883.2.1.3.2.4.18.22" uri="urn:nhs-uk:addressing:ods:RAL"/>
+		<itk:handlingSpecification>
+			<itk:spec value="urn:nhs-itk:interaction:querySCRActivityResponse-v-1-0" key="urn:nhs-itk:ns:201005:interaction"/>
+		</itk:handlingSpecification>
+	</itk:header>
+	<itk:payloads count="1">
+		<itk:payload id="uuid_7D6782C0-AE1A-11DB-97C1-B18E1E0994CD">
+			<QuerySCRActivityResponse xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				<id root="7D6782C0-AE1A-11DB-97C1-B18E1E0994CD"/>
+				<!-- base64 encoded text does NOT have CR at the end of each line. -->
+				<text mediaType="text/csv" representation="B64">IjIwMTUwNDAyMTEyNzAzIiwiNDAiLCI0MCIsIjIwMTQwMTE2IiwiMjAxNDAxMTgiLCI5NDU0MjAxMzg3IiwiMTU2NTY1NjU2MjMxIiJSV0EiLCJIdWxsIGFuZCBFYXN0IFlvcmtzaGlyZSBOSFMgRm91bmRhdGlvbiBUcnVzdCIsIjk0NTQyMDEzODciLCIxNTY1NjU2NTYyMzEiLCIzNDU2NzY3Njc4OTgiLCJEciBHYXJ0aCBCcm9va3MiLCJGIiwiIiwiMjAxNDAxMTYwMzU1MDEiIlJXQSIsIkh1bGwgYW5kIEVhc3QgWW9ya3NoaXJlIE5IUyBGb3VuZGF0aW9uIFRydXN0IiwiOTQ1NDIwMTM4NyIsIjE1NjU2NTY1NjIzMSIsIjM0NTY3Njc2Nzg5OCIsIkRyIEdhcnRoIEJyb29rcyIsIlQiLCJQYXRpZW50IHNpY2siLCAiMjAxNDAxMTYwMzU3MjEiIlJXQSIsIkh1bGwgYW5kIEVhc3QgWW9ya3NoaXJlIE5IUyBGb3VuZGF0aW9uIFRydXN0IiwiOTQ1NDIwMTM4NyIsIjE1NjU2NTY1NjIzMSIsIjM0NTY3Njc2Nzg5OCIsIkRyIEdhcnRoIEJyb29rcyIsIlQiLCJVbndlbGwiLCIyMDE0MDExNjA0MzAwMCIiUldBIiwiSHVsbCBhbmQgRWFzdCBZb3Jrc2hpcmUgTkhTIEZvdW5kYXRpb24gVHJ1c3QiLCI5NDU0MjAxMzg3IiwiMTU2NTY1NjU2MjMxIiwiMzQ1Njc2NzY3ODk4IiwiRHIgR2FydGggQnJvb2tzIiwiRiIsIiIsIjIwMTQwMTE0MTAzODAwIg==</text>
+				<value code="SMSP-0000" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.506" displayName="Success"/>
+			</QuerySCRActivityResponse>
+		</itk:payload>
+	</itk:payloads>
+</itk:DistributionEnvelope>

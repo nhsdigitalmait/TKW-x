@@ -1,0 +1,22 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="gpconnect-error-or-warning-code" >
+		<concept code="GPC-001">
+			<display>Not found</display>
+		</concept>		
+		<concept code="GPC-002">
+			<display>Invalid element</display>
+		</concept>	
+		<concept code="GPC-0003">
+			<display>Missing element</display>
+		</concept>		
+		<concept code="GS-0001">
+			<display>Not found</display>
+		</concept>
+		<concept code="GS-0002">
+			<display>Invalid element</display>
+		</concept>
+		<concept code="GS-0003">
+			<display>Missing element</display>
+		</concept>
+	</valueSet>
+</ValueSets>

@@ -1,0 +1,7 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="adw-assessment-notice-reject-reason" >
+		<concept code="OFT">
+			<display>Other - Free Text</display>
+		</concept>
+	</valueSet>
+</ValueSets>

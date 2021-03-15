@@ -1,0 +1,43 @@
+<ValueSets xmlns="http://hl7.org/fhir">
+	<valueSet name="adw-withdrawal-reason" >
+		<concept code="01">
+			<display>Patient is safe to discharge without a needs assessment</display>
+		</concept>
+		<concept code="02">
+			<display>Patient is eligible for NHS Continuing Health Care</display>
+		</concept>
+		<concept code="03">
+			<display>Proposed care package is inadequate</display>
+		</concept>
+		<concept code="04">
+			<display>Patient's proposed treatment has been cancelled or postponed</display>
+		</concept>
+		<concept code="05">
+			<display>Patient has refused a needs assessment</display>
+		</concept>
+		<concept code="06">
+			<display>Patient is resident in another local authority</display>
+		</concept>
+		<concept code="07">
+			<display>Patient's condition has deteriorated</display>
+		</concept>
+		<concept code="08">
+			<display>Patient has died</display>
+		</concept>
+		<concept code="09">
+			<display>Patient has transferred to intermediate care</display>
+		</concept>
+		<concept code="10">
+			<display>Patient has self-discharged</display>
+		</concept>
+		<concept code="11">
+			<display>Patient is making their own arrangements</display>
+		</concept>
+		<concept code="12">
+			<display>Notice sent in error</display>
+		</concept>
+		<concept code="13">
+			<display>Other</display>
+		</concept>
+	</valueSet>
+</ValueSets>

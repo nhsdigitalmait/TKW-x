@@ -218,7 +218,7 @@ public class HapiFhirValidator
                 switch (next.getSeverity()) {
                     case INFORMATION:
                         for (FilterTotals ft : informationFilter) {
-                            if (next.getMessage().contains(ft.getCondition())) {
+                            if (next.getMessage().matches(ft.getCondition())) {
                                 ft.increaseByOne();
                             }
                         }
@@ -230,7 +230,7 @@ public class HapiFhirValidator
                         break;
                     case WARNING:
                         for (FilterTotals ft : warningFilter) {
-                            if (next.getMessage().contains(ft.getCondition())) {
+                            if (next.getMessage().matches(ft.getCondition())) {
                                 ft.increaseByOne();
                             }
                         }
@@ -242,7 +242,7 @@ public class HapiFhirValidator
                         break;
                     case ERROR:
                         for (FilterTotals ft : errorFilter) {
-                            if (next.getMessage().contains(ft.getCondition())) {
+                            if (next.getMessage().matches(ft.getCondition())) {
                                 ft.increaseByOne();
                             }
                         }
@@ -254,7 +254,7 @@ public class HapiFhirValidator
                         break;
                     case FATAL:
                         for (FilterTotals ft : fatalFilter) {
-                            if (next.getMessage().contains(ft.getCondition())) {
+                            if (next.getMessage().matches(ft.getCondition())) {
                                 ft.increaseByOne();
                             }
                         }

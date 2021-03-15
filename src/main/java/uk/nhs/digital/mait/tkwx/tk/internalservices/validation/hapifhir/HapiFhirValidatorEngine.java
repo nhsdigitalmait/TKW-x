@@ -45,6 +45,8 @@ import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerVali
 import org.hl7.fhir.common.hapi.validation.support.RemoteTerminologyServiceValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.SnapshotGeneratingValidationSupport;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
+import ca.uhn.fhir.context.FhirVersionEnum;
+import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
 
 /**
  *
@@ -72,6 +74,7 @@ public class HapiFhirValidatorEngine {
     private final String COMMONCODESYSTEMSTERMINOLOGYSERVICE = ".commoncodesystemsterminologyservice";
     private final String REMOTETERMINOLOGYSERVICEURL = ".remoteterminologyserviceurl";
     private final String FHIRVERSION = ".fhir.version";
+    private final String PRIMINGRESOURCELOCATION = ".primingresource";
     public final int INFORMATION = 0;
     public final int WARNING = 1;
     public final int ERROR = 2;
@@ -92,6 +95,7 @@ public class HapiFhirValidatorEngine {
     private CustomHapiFhirErrorHandler customHapiFhirErrorHandler = new CustomHapiFhirErrorHandler();
     private HapiAssetCacheInterface hapiAssetCacheInterface = null;
     private FhirVersionEnum fhirVersionEnum = null;
+    private String primingResourceLocation = null;
 
     public String getRebuildBusyOOMessage() {
         return hapiAssetCacheInterface.getRebuildBusyOOMessage();
@@ -99,14 +103,6 @@ public class HapiFhirValidatorEngine {
 
     public String getRebuildSuccessOOMessage() {
         return hapiAssetCacheInterface.getRebuildSuccessOOMessage();
-    }
-
-
-
-    enum FhirVersionEnum {
-        STU3,
-        R4,
-        R5
     }
 
     public HapiFhirValidatorEngine(String hapiFhirInstanceName) {
@@ -172,13 +168,13 @@ public class HapiFhirValidatorEngine {
                 context = FhirContext.forR5();
                 System.out.println("HAPI FHIR Validator R5 selected");
             } else if (!isNullOrEmpty(fhirVersion) && fhirVersion.toLowerCase().equals("r4")) {
-                 fhirVersionEnum = FhirVersionEnum.R4;
-               context = FhirContext.forR4();
+                fhirVersionEnum = FhirVersionEnum.R4;
+                context = FhirContext.forR4();
                 System.out.println("HAPI FHIR Validator R4 selected");
-            } else if (isNullOrEmpty(fhirVersion)||fhirVersion.toLowerCase().equals("stu3")) {
-                fhirVersionEnum = FhirVersionEnum.STU3;
+            } else if (isNullOrEmpty(fhirVersion) || fhirVersion.toLowerCase().equals("stu3") || fhirVersion.toLowerCase().equals("dstu3")) {
+                fhirVersionEnum = FhirVersionEnum.DSTU3;
                 context = FhirContext.forDstu3();
-                System.out.println("HAPI FHIR Validator STU3 selected");
+                System.out.println("HAPI FHIR Validator DSTU3 selected");
             }
 
             context.setParserErrorHandler(customHapiFhirErrorHandler);
@@ -240,22 +236,24 @@ public class HapiFhirValidatorEngine {
                         Logger.getInstance().log(java.util.logging.Level.WARNING, HapiFhirValidatorEngine.class.getName(), "One or more elements of the ignore list cannot be understood: " + e.getMessage());
                     }
                 }
-             hapiAssetCacheInterface = null;
-            if( null!=fhirVersionEnum)switch (fhirVersionEnum) {
-                    case R5:
-                        hapiAssetCacheInterface = new HapiAssetCacheR5(context, ignoreList);
-                        break;
-                    case R4:
-                        hapiAssetCacheInterface = new HapiAssetCacheR4(context, ignoreList);
-                        break; 
-                    case STU3:
-                        hapiAssetCacheInterface = new HapiAssetCacheStu3 (context, ignoreList);
-                        break;
-                    default:
-                        hapiAssetCacheInterface = new HapiAssetCacheStu3 (context, ignoreList);
-                        break;
+                hapiAssetCacheInterface = null;
+                if (null != fhirVersionEnum) {
+                    switch (fhirVersionEnum) {
+                        case R5:
+                            hapiAssetCacheInterface = new HapiAssetCacheR5(context, ignoreList);
+                            break;
+                        case R4:
+                            hapiAssetCacheInterface = new HapiAssetCacheR4(context, ignoreList);
+                            break;
+                        case DSTU3:
+                            hapiAssetCacheInterface = new HapiAssetCacheStu3(context, ignoreList);
+                            break;
+                        default:
+                            hapiAssetCacheInterface = new HapiAssetCacheStu3(context, ignoreList);
+                            break;
+                    }
                 }
-                            
+
                 //set the profile version so that it can be ignored in the loading of the profiles
                 hapiAssetCacheInterface.setProfileVersionFileName(pVersion);
                 //find what sort of config has been used to define the asset directory and load accordingly
@@ -334,6 +332,16 @@ public class HapiFhirValidatorEngine {
 //            }
 
             fhirValidator.registerValidatorModule(fhirInstanceValidator);
+
+            //Optionally call a dummy message to validate at startup to fully prime the validator
+            primingResourceLocation = config.getConfiguration(HapiFhirInstancePath + PRIMINGRESOURCELOCATION);
+            if (primingResourceLocation != null && !softwareVersion.trim().equals("")) {
+                // prime the hapi fhir validator
+                System.out.println("Priming HAPI FHIR Validator");
+                String primingResource = readFile2String(primingResourceLocation);
+                validate(primingResource); // We don't care about the validation
+            }
+
         } catch (Exception e) {
             Logger log = Logger.getInstance();
             log.log("Exception " + e.getMessage());
@@ -374,6 +382,7 @@ public class HapiFhirValidatorEngine {
         ValidationResult result = validate(o);
         return hapiAssetCacheInterface.convertValidationResultToOOString(result, this);
     }
+
     public void rebuild() {
         rebuild(null);
     }
@@ -413,6 +422,7 @@ public class HapiFhirValidatorEngine {
     public String getRemoteTerminologyServiceUrl() {
         return remoteTerminologyServiceUrl;
     }
+
     String getFhirVersion() {
         return fhirVersionEnum.toString();
     }

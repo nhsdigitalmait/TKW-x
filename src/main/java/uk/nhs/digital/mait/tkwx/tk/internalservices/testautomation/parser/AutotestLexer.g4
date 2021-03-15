@@ -283,7 +283,7 @@ PATH : (ALPHA ':')? EXTENDED_IDENTIFIER+  ;
 // For other dubious characters the url can now be surrounded by double quotes
 // apparently + is a valid character interpretetd as space but adding this breaks + separated strings eg for transforms:w
 
-fragment EXTENDED_IDENTIFIER : IDENTIFIER | DOT | [/] | '?' | '$' | '%' | ':' | '-' | '=' | '&' | '|' ;
+fragment EXTENDED_IDENTIFIER : IDENTIFIER | DOT | [/] | '?' | '$' | '%' | ':' | '-' | '=' | '&' | '|' | ',' ;
 
 
 //------------------------------------------------------------------------------

@@ -296,7 +296,9 @@ public class HttpSender
         logFileWriter.write(hm.getHttpHeaders().getBytes());
         logFileWriter.write("\r\n".getBytes());
         logFileWriter.flush();
-        logFileWriter.write(messageBytes);
+        // message.getBytes() has the original unchunked uncompressed content which is what we need for the log
+        // as opposed to messageBytes which has the on the wire potentially chunked and/or compressed binary
+        logFileWriter.write(message.getBytes());
         logFileWriter.write(("\r\n" + LogMarkers.END_REQUEST_MARKER + "\r\n").getBytes());
         logFileWriter.flush();
         if (System.getProperty(NOORIGINATE_PROPERTY) != null) {

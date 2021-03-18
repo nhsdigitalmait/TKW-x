@@ -138,7 +138,8 @@ public class HttpRequest extends Request {
     public void setContentLength(int c)
             throws Exception {
         if (contentLength != -1) {
-            throw new Exception("Protocol error: content length already set");
+            // chunking and compress mean we may well need to call this more than once so we dont throw an exception any more
+            //throw new Exception("Protocol error: content length already set");
         }
         contentLength = c;
     }

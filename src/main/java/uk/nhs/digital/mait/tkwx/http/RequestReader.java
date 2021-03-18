@@ -24,6 +24,9 @@ import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import static uk.nhs.digital.mait.tkwx.util.HttpChunker.unchunk;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.COMPRESSION_DEFLATE;
+import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.COMPRESSION_GZIP;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.Compressor;
 
 /**
  * Package-private class for reading HTTP headers, and then the input stream.
@@ -180,6 +183,7 @@ class RequestReader
                 // whole thing at this point, because the request handler will anyway, and
                 // it means that we can set the content length correctly.
                 //
+                ByteArrayInputStream baosBody = null;
                 if (req.getHeaderManager().headerValueCsvIncludes(TRANSFER_ENCODING_HEADER, TRANSFER_ENCODING_CHUNKED)) {
                     if (req.getContentLength() > 0) {
                         req.setBadRequestReason("Protocol error, content length is set for a chunked request");
@@ -187,14 +191,13 @@ class RequestReader
                     // Chunked, need to pre-read the stream, de-chunk, and set the content
                     // length to the real value. Also set the request input stream to a
                     // ByteArrayInputStream based on the buffered input
-                    req.setInputStream(bufferChunkedInput(req, socket.getInputStream()));
-                    // Not chunked, last element or no content 
-                } else if (connectionClose || req.getContentLength() <= 0) {
-                    req.setInputStream(socket.getInputStream());
-                } else {
-                    req.setInputStream(bufferStreamedInput(req, socket.getInputStream()));
-                }
-
+                    baosBody = bufferChunkedInput(req, socket.getInputStream());
+                } else  {
+                    // Not chunked
+                    baosBody = bufferStreamedInput(req, socket.getInputStream());
+                } 
+                uncompressRequest(req, baosBody);
+                
                 req.setResponse(resp);
                 queue.addQueueEntry(req);
                 server.addRequest(req);
@@ -229,6 +232,30 @@ class RequestReader
 //        System.out.println("4. RequestReader closed");
     }
 
+    /**
+     * uncompress the incoming request if necessary
+     * @param req
+     * @param baosBody
+     * @throws Exception 
+     */
+    private void uncompressRequest(HttpRequest req, ByteArrayInputStream baosBody) throws Exception {
+        byte[] uncompressed = null;
+        if (req.getHeaderManager().headerValueCsvIncludes(CONTENT_ENCODING_HEADER, COMPRESSION_GZIP)) {
+            uncompressed = Compressor.uncompress(baosBody.readAllBytes(), Compressor.CompressionType.COMPRESSION_GZIP);
+            req.getHeaderManager().addHttpHeader("X-was-"+CONTENT_ENCODING_HEADER, COMPRESSION_GZIP);
+        } else if (req.getHeaderManager().headerValueCsvIncludes(CONTENT_ENCODING_HEADER, COMPRESSION_DEFLATE)) {
+            uncompressed = Compressor.uncompress(baosBody.readAllBytes(), Compressor.CompressionType.COMPRESSION_DEFLATE);
+            req.getHeaderManager().addHttpHeader("X-was-"+CONTENT_ENCODING_HEADER, COMPRESSION_DEFLATE);
+        } 
+        
+        if (uncompressed != null) {
+            req.setInputStream(new ByteArrayInputStream(uncompressed));
+            req.setContentLength(uncompressed.length);
+        } else {
+            req.setInputStream(baosBody);
+        }
+    }
+
     private ByteArrayInputStream bufferChunkedInput(HttpRequest req, InputStream is)
             throws Exception {
         byte[] ba = unchunk(is);
@@ -260,7 +287,6 @@ class RequestReader
             throws Exception {
         int i;
         int colon = -1;
-        String value;
 
         if ((line == null) || (line.trim().length() == 0)) {
             return null;

@@ -55,6 +55,9 @@ public class XmlFragmentSubstitution implements SubstitutionValue {
      */
     @Override
     public String getValue(String o) throws Exception {
+        if(o.trim().length()==0){
+            return "";
+        }
         XPathExpression extractor = getXpathExtractor(xpath);
         try {
             // see https://stackoverflow.com/questions/1985509/saxon-xpath-api-returns-tinyelementimpl-instead-of-org-w3c-dom-node
@@ -66,7 +69,7 @@ public class XmlFragmentSubstitution implements SubstitutionValue {
             tx.setOutputProperty("omit-xml-declaration", "yes");
             tx.transform(new DOMSource(node), sr);
             return xmlReformat(sw.toString());
-        } catch (javax.xml.xpath.XPathExpressionException ex) {
+        } catch (javax.xml.xpath.XPathExpressionException | NullPointerException ex) {
             return "";
         }
     }

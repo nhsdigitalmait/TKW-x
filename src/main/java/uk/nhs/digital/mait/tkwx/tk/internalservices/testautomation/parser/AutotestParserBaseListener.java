@@ -1074,6 +1074,18 @@ public class AutotestParserBaseListener implements AutotestParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterHttpHeaderCorrelationCheck(AutotestParser.HttpHeaderCorrelationCheckContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitHttpHeaderCorrelationCheck(AutotestParser.HttpHeaderCorrelationCheckContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterNullCheck(AutotestParser.NullCheckContext ctx) { }
 	/**
 	 * {@inheritDoc}

@@ -32,22 +32,22 @@ public class ImpliesPassFailCheck extends AbstractLogicalOperatorPassFailCheck {
      * return the value of y otherwise return true useful for conditional tests.
      * eg if an optional element is present then it must contain certain text otherwise its a pass
      * @param s
-     * @param copiedInResponse
-     * @param copiedInRequest
+     * @param copiedInSync
+     * @param copiedInAsync
      * @return
      * @throws Exception 
      */
     @Override
-    protected TestResult processSubTests(Script s, byte[] copiedInResponse, byte[] copiedInRequest) throws Exception {
+    protected TestResult processSubTests(Script s, byte[] copiedInSync, byte[] copiedInAsync) throws Exception {
 
         if (subTests.length != 2) {
             throw new Exception("Logical Operator Implies must take two arguments");
         }
-        testResult = copyStreamsRunTest(subTests[0], s, copiedInResponse, copiedInRequest);
+        testResult = copyStreamsRunTest(subTests[0], s, copiedInSync, copiedInAsync);
         description = colourString("Result: ", BLACK);
         if (testResult == TestResult.PASS) {
             description += colourString("Pre-condition evaluates true.", GREEN);
-            testResult = copyStreamsRunTest(subTests[1],s, copiedInResponse, copiedInRequest);
+            testResult = copyStreamsRunTest(subTests[1],s, copiedInSync, copiedInAsync);
             description +=  "<BR/>" + subTests[1].getDescription();
         } else {
             description += colourString("Pre-condition evaluates false.", GREEN);

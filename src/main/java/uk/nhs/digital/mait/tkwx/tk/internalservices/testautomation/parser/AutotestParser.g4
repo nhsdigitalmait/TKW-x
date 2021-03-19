@@ -277,7 +277,8 @@ extractorType : XPATHEXTRACTOR ;
 
 //------------------------------------------------------------------------------
 // passfails
-
+// NB after mods to this revisit ScriptParser.makePassFail, AutotestGrammarCompilerVisitor.makePassFail and also AbstractPassFailCheck.init
+// to see if theres an impact
 passfail :  passFailCheckName passFailCheck NL+ ;
 
 passFailCheckName : IDENTIFIER | DOT_SEPARATED_IDENTIFIER ;
@@ -305,6 +306,7 @@ passFailCheck :  ( // all these are zero argument passfails
                  )
 | xPathCheck
 | httpHeaderCheck
+| httpHeaderCorrelationCheck
 | httpStatusCheck
 | nullCheck
                    
@@ -341,6 +343,8 @@ xpathTypeArg : MATCHES
 ;
 
 httpHeaderCheck : HTTPHEADERCHECK httpHeaderName xpathArg ;
+
+httpHeaderCorrelationCheck : HTTPHEADERCORRELATIONCHECK httpHeaderName httpHeaderName ;
 
 nullCheck : nullCheckType matchString ;
 

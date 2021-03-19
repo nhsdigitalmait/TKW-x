@@ -44,18 +44,18 @@ public abstract class AbstractRequestResponseComparatorPassFailCheck extends Abs
     /**
      *
      * @param s script
-     * @param inResponse response input steam
-     * @param inRequest request input stream
+     * @param inSync response input steam
+     * @param inAsync request input stream
      * @return TestResult
      * @throws Exception
      */
     @Override
-    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest)
+    public TestResult passed(Script s, InputStream inSync, InputStream inAsync)
             throws Exception {
         TestResult p = TestResult.FAIL;
-        String requestBody = getRequestBody(inRequest);
+        String requestBody = getRequestBody(inAsync);
         if (!Utils.isNullOrEmpty(requestBody)) {
-            String responseBody = getResponseBody(inResponse);
+            String responseBody = getResponseBody(inSync);
             if (!Utils.isNullOrEmpty(responseBody)) {
                 p = TestResult.valueOf(doChecks(s, new InputSource(new StringReader(requestBody)), new InputSource(new StringReader(responseBody))));
             } else {

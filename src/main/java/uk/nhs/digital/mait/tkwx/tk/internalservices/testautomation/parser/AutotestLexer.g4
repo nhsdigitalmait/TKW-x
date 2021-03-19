@@ -238,6 +238,7 @@ SECONDRESPONSESYNCTRACKINGIDACKBY3MATCH : 'secondresponsesynctrackingidackby3mat
 
 HTTPHEADERCHECK : 'httpheadercheck' ;
 HTTPSTATUSCHECK : 'httpstatuscheck' ;
+HTTPHEADERCORRELATIONCHECK : 'httpheadercorrelationcheck' ;
 
 // new logical conjunction tests at 3.13
 OR : 'or' ;

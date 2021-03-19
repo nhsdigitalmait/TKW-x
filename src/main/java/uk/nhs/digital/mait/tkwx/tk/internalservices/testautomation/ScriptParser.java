@@ -29,6 +29,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.Autote
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.XPathCheckContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailchecks.PassFailCheck;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.HttpHeaderCorrelationCheckContext;
 
 /**
  *
@@ -287,6 +288,7 @@ public class ScriptParser {
         XPathCheckContext xPathCheckCtx = passfailCheckCtx.xPathCheck();
         HttpHeaderCheckContext httpHeaderCheckCtx = passfailCheckCtx.httpHeaderCheck();
         HttpStatusCheckContext httpStatusCheckCtx = passfailCheckCtx.httpStatusCheck();
+        HttpHeaderCorrelationCheckContext httpHeaderCorrelationCheckCtx = passfailCheckCtx.httpHeaderCorrelationCheck();
 
         String checkType;
         if (xPathCheckCtx != null) {
@@ -295,6 +297,8 @@ public class ScriptParser {
             checkType = httpHeaderCheckCtx.HTTPHEADERCHECK().getText();
         } else if (httpStatusCheckCtx != null) {
             checkType = httpStatusCheckCtx.HTTPSTATUSCHECK().getText();
+        } else if (httpHeaderCorrelationCheckCtx != null) {
+            checkType = httpHeaderCorrelationCheckCtx.HTTPHEADERCORRELATIONCHECK().getText();
         } else {
             NullCheckContext nullCheckContext = passfailCheckCtx.nullCheck();
             if (nullCheckContext != null) {

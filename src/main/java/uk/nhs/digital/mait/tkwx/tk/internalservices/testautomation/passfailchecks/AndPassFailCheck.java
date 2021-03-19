@@ -30,15 +30,15 @@ public class AndPassFailCheck extends AbstractLogicalOperatorPassFailCheck {
      * runs one or more tests the results of which are logically anded under partial
      * evaluation (ie stop evaluation when there is a fail)
      * @param s script object
-     * @param copiedInResponse
-     * @param copiedInRequest
+     * @param copiedInSync
+     * @param copiedInAsync
      * @return
      * @throws Exception 
      */
     @Override
-    protected TestResult processSubTests(Script s, byte[] copiedInResponse, byte[] copiedInRequest) throws Exception {
+    protected TestResult processSubTests(Script s, byte[] copiedInSync, byte[] copiedInAsync) throws Exception {
         for (PassFailCheck pf : subTests) {
-            testResult = copyStreamsRunTest(pf, s, copiedInResponse, copiedInRequest);
+            testResult = copyStreamsRunTest(pf, s, copiedInSync, copiedInAsync);
             // concatenate success reasons
             description += pf.getDescription() + "<BR/>";
             if (testResult == TestResult.FAIL) {

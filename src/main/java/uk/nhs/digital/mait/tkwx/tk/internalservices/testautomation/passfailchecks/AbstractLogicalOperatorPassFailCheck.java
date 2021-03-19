@@ -90,14 +90,14 @@ public abstract class AbstractLogicalOperatorPassFailCheck extends AbstractSynch
      * results of which which are logically joined depending on test type
      *
      * @param s script
-     * @param inResponse response input stream
-     * @param inRequest request input stream
+     * @param inSync response input stream
+     * @param inAsync request input stream
      * @return test result
      * @throws Exception
      */
     @Override
-    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest) throws Exception {
-        return processSubTests(s, streamToByteArray(inResponse), streamToByteArray(inRequest));
+    public TestResult passed(Script s, InputStream inSync, InputStream inAsync) throws Exception {
+        return processSubTests(s, streamToByteArray(inSync), streamToByteArray(inAsync));
     }
 
     /**
@@ -106,13 +106,13 @@ public abstract class AbstractLogicalOperatorPassFailCheck extends AbstractSynch
      *
      * @param pfc Passfail check to run
      * @param s ScriptParser
-     * @param copiedInResponse byte array containing the response message
-     * @param copiedInRequest byte array containing the request message
+     * @param copiedInSync byte array containing the response message
+     * @param copiedInAync byte array containing the request message
      * @return TestResult
      * @throws Exception
      */
-    protected TestResult copyStreamsRunTest(PassFailCheck pfc, Script s, byte[] copiedInResponse, byte[] copiedInRequest) throws Exception {
-        return pfc.passed(s, new ByteArrayInputStream(copiedInResponse), copiedInRequest != null ? new ByteArrayInputStream(copiedInRequest) : null);
+    protected TestResult copyStreamsRunTest(PassFailCheck pfc, Script s, byte[] copiedInSync, byte[] copiedInAync) throws Exception {
+        return pfc.passed(s, new ByteArrayInputStream(copiedInSync), copiedInAync != null ? new ByteArrayInputStream(copiedInAync) : null);
     }
 
     /**
@@ -120,12 +120,12 @@ public abstract class AbstractLogicalOperatorPassFailCheck extends AbstractSynch
      * required conjunction of the test results (and, or etc).
      *
      * @param s The containing script
-     * @param inResponse byte array containing the response message which is
+     * @param inSync byte array containing the response message which is
      * then cloned to a fresh inputStream
-     * @param inRequest byte array containing the request message which is then
+     * @param inAsync byte array containing the request message which is then
      * cloned to a fresh inputStream
      * @return TestResult
      * @throws Exception
      */
-    abstract protected TestResult processSubTests(Script s, byte[] inResponse, byte[] inRequest) throws Exception;
+    abstract protected TestResult processSubTests(Script s, byte[] inSync, byte[] inAsync) throws Exception;
 }

@@ -77,6 +77,8 @@ abstract public class AbstractPassFailCheck
             type = passfailCheckCtx.httpHeaderCheck().HTTPHEADERCHECK().getText();
         } else if (passfailCheckCtx.httpStatusCheck() != null) {
             type = passfailCheckCtx.httpStatusCheck().HTTPSTATUSCHECK().getText();
+        } else if (passfailCheckCtx.httpHeaderCorrelationCheck() != null) {
+            type = passfailCheckCtx.httpHeaderCorrelationCheck().HTTPHEADERCORRELATIONCHECK().getText();
         } else {
             type = passfailCheckCtx.getChild(0).getText();
         }

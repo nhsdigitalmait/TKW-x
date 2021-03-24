@@ -265,19 +265,24 @@ class RequestReader
 
     private ByteArrayInputStream bufferStreamedInput(HttpRequest req, InputStream is)
             throws Exception {
-        byte[] buf = new byte[req.getContentLength()];
+        // handle the scenario where content length is not supplied eg for a get with no payload
+        int contentLength = req.getContentLength();
+        if (contentLength < 0) {
+            contentLength = 0;
+        }
+        byte[] buf = new byte[contentLength];
         int totalRead = 0;
         @SuppressWarnings("UnusedAssignment")
         int dataSize = 0;
-        while (totalRead < req.getContentLength()) {
-            dataSize = is.read(buf, totalRead, req.getContentLength() - totalRead);
+        while (totalRead < contentLength) {
+            dataSize = is.read(buf, totalRead, contentLength - totalRead);
             if (dataSize == -1) {
                 break;
             }
             totalRead += dataSize;
         }
-        if (totalRead != req.getContentLength()) {
-            throw new Exception("Given data is not the same size as content length: " + totalRead + "/" + req.getContentLength());
+        if (totalRead != contentLength) {
+            throw new Exception("Given data is not the same size as content length: " + totalRead + "/" + contentLength);
         }
 
         return new ByteArrayInputStream(buf);

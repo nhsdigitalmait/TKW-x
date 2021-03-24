@@ -74,7 +74,15 @@ public class HttpHeaderManager {
         StringBuilder sb = new StringBuilder();
         for (String key : headers.keySet()) {
             HttpFields httpHeader = headers.get(key);
-            sb.append(httpHeader.getActualHeader()).append(": ").append(httpHeader.getValue()).append("\r\n");
+            if ( !key.equalsIgnoreCase(CONTENT_LENGTH_HEADER) ) {
+                sb.append(httpHeader.getActualHeader()).append(": ").append(httpHeader.getValue()).append("\r\n");
+            } else {
+                // for a get a content length of zero should not be sent the header should be omitted
+                int contentLength = Integer.parseInt(httpHeader.getValue());
+                if (contentLength > 0) {
+                    sb.append(httpHeader.getActualHeader()).append(": ").append(httpHeader.getValue()).append("\r\n");
+                }
+            }
         }
         return sb.toString();
     }

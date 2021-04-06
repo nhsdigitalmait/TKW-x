@@ -146,13 +146,15 @@ public class HttpInterceptorValidator extends Thread {
                     } else {
                         throw new Exception("Cannot extract request: unrecognised content type" + contentType);
                     }
-                } else // null content type
-                if (Arrays.asList("GET", "DELETE", "OPTIONS", "HEADER").contains(httpRequest.getRequestType())) {
-                    // its ok for the methods in the list above not to have content 
-                    //however because we may still need to check headers etc we will still validate
-                } else {
-                    throw new Exception("Cannot extract request: http method = " + httpRequest.getRequestType() + " null content type");
                 }
+//removed to allow all requests to validate e.g. Post plus no content type                
+//                else // null content type
+//                if (Arrays.asList("GET", "DELETE", "OPTIONS", "HEADER").contains(httpRequest.getRequestType())) {
+//                    // its ok for the methods in the list above not to have content 
+//                    //however because we may still need to check headers etc we will still validate
+//                } else {
+//                    throw new Exception("Cannot extract request: http method = " + httpRequest.getRequestType() + " null content type");
+//                }
 
                 if (soapAction == null) {
                     // TODO generic_http is a misnomer its actually expecting a DE to be present

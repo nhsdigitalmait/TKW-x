@@ -461,6 +461,14 @@ public class Substitution {
                 if (subsClass == null) {
                     content = "CONFIGURATION ERROR: Substitution class not set";
                 } else {
+                    if (inputRequest.trim().isEmpty() || inputRequest.trim().startsWith("<")) {
+                    } else if (inputRequest.trim().startsWith("{")) {
+                        // try fhir json to xml conversion this assumes if its json then its fhir json
+                        inputRequest = FHIRJsonXmlAdapter.fhirConvertJson2Xml(inputRequest);
+                    } else {
+                        Logger.getInstance().log(WARNING, Substitution.class.getName(),
+                                "getContent detected non xml or json request content:\r\n" + inputRequest);
+                    }
                     content = subsClass.getValue(inputRequest);
                 }
                 break;

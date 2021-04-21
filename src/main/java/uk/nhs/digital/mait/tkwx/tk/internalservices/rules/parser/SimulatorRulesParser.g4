@@ -71,7 +71,8 @@ substitution_no_arg : UUID_UPPER | UUID_LOWER | HL7_DATETIME | ISO8601_DATETIME 
 // NB this switches to CST Mode 1st param is optional xml match source last is xpath
 substitution_xpath : SUBSTITUTION_XPATH  xpath_arg xpath_arg ? ;  
 substitution_regexp_cardinality : FIRST | ALL ;
-substitution_regexp : SUBSTITUTION_REGEXP  text_match_source? QUOTED_STRING QUOTED_STRING substitution_regexp_cardinality ? ;
+regexp : QUOTED_STRING QUOTED_STRING substitution_regexp_cardinality ? ;
+substitution_regexp : SUBSTITUTION_REGEXP  text_match_source?  regexp + ;
 substitution_literal : LITERAL ANNOTATION_TEXT ;
 // defaults to System properties if no file name provided
 // where > 1 property file value is set in list order

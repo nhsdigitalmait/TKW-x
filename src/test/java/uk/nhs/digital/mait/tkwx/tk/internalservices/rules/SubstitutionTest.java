@@ -144,6 +144,14 @@ public class SubstitutionTest {
         instance.substitute(sbTemplate, req);
         expResult = "ccc thisheaderbit ccc";
         assertEquals(expResult, sbTemplate.toString());
+
+        // Multiple Reg exp substitution match source = http header
+        requestContent = "ContentStartStuffContentEnd";
+        instance = new Substitution(visitor.getSubstitutionCtx().get("__MULTIPLE_RE_CONTENT_TAG__"));
+        sbTemplate = new StringBuffer("aaa __MULTIPLE_RE_CONTENT_TAG__ aaa");
+        instance.substitute(sbTemplate, requestContent);
+        expResult = "aaa StuffStuff aaa";
+        assertEquals(expResult, sbTemplate.toString());
     }
 
     /**

@@ -20,6 +20,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.TimeZone;
 import static java.util.UUID.randomUUID;
@@ -157,13 +158,22 @@ public class Substitution {
             } else {
                 matchSource = MatchSource.CONTENT;
             }
-            data = new String[3];
-            data[0] = ctx.substitution_regexp().QUOTED_STRING(0).getText(); // search reg exp
-            data[1] = ctx.substitution_regexp().QUOTED_STRING(1).getText(); // replace regexp
-            if (ctx.substitution_regexp().substitution_regexp_cardinality() != null) {
-                data[2] = ctx.substitution_regexp().substitution_regexp_cardinality().getText().toLowerCase();
-            } else {
-                data[2] = "first";
+
+            // handle multiple sequences of reg exp
+            data = new String[3 * ctx.substitution_regexp().regexp().size()];
+            Iterator<SimulatorRulesParser.RegexpContext> iter = ctx.substitution_regexp().regexp().iterator();
+            int index = 0;
+            while (iter.hasNext()) {
+                SimulatorRulesParser.RegexpContext regExCtx = iter.next();
+
+                data[index++] = regExCtx.QUOTED_STRING(0).getText(); // search reg exp
+                data[index++] = regExCtx.QUOTED_STRING(1).getText(); // replace regexp
+                if (regExCtx.substitution_regexp_cardinality() != null) {
+                    data[index] = regExCtx.substitution_regexp_cardinality().getText().toLowerCase();
+                } else {
+                    data[index] = "first";
+                }
+                index++;
             }
         }
     }
@@ -475,14 +485,17 @@ public class Substitution {
 
             case REGEXP:
                 if (inputRequest != null) {
-                    switch (data[2]) {
-                        case "all":
-                            content = inputRequest.replaceAll(data[0], data[1]);
-                            break;
-                        case "first":
-                        default:
-                            content = inputRequest.replaceFirst(data[0], data[1]);
-                            break;
+                    content = inputRequest;
+                    for (int offset = 0; offset < data.length; offset += 3) {
+                        switch (data[offset+2]) {
+                            case "all":
+                                content = content.replaceAll(data[offset], data[offset+1]);
+                                break;
+                            case "first":
+                            default:
+                                content = content.replaceFirst(data[offset], data[offset+1]);
+                                break;
+                        }
                     }
                 } else {
                     content = null;

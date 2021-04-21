@@ -169,6 +169,12 @@ public interface SimulatorRulesParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSubstitution_regexp_cardinality(SimulatorRulesParser.Substitution_regexp_cardinalityContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SimulatorRulesParser#regexp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRegexp(SimulatorRulesParser.RegexpContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SimulatorRulesParser#substitution_regexp}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

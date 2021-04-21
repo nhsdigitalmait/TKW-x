@@ -201,6 +201,13 @@ public class SimulatorRulesParserBaseVisitor<T> extends AbstractParseTreeVisitor
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitRegexp(SimulatorRulesParser.RegexpContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitSubstitution_regexp(SimulatorRulesParser.Substitution_regexpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

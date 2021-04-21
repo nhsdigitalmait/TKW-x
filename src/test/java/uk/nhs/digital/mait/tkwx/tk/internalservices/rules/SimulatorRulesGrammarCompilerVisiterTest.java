@@ -35,7 +35,6 @@ import static org.junit.Assert.*;
 
 import uk.nhs.digital.mait.tkwx.tk.internalservices.antlrerrorlisteners.ErrorCountingErrorListener;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.antlrerrorlisteners.VerboseErrorListener;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser;
 
 /**
  *
@@ -246,7 +245,7 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
         System.out.println("getSubstitutions");
         instance.parse(TEST_SIMULATOR_CONFIG);
 
-        int expResult = 36;
+        int expResult = 37;
         HashMap<String, Substitution> result = instance.getSubstitutions();
         assertEquals(expResult, result.size());
     }

@@ -83,7 +83,7 @@ substitution_property : PROPERTY property_file_name * property_name  ;
 // public void setData(String s) throws Exception;  // called on rules file parsing
 // public String getValue(String o) throws Exception; // called when substitution is invoked
 // multiple parameters must be surrounded by *one* set of double quotes
-substitution_class : CLASS  DOT_SEPARATED_IDENTIFIER  ( IDENTIFIER | QUOTED_STRING )? ;
+substitution_class : CLASS  DOT_SEPARATED_IDENTIFIER  text_match_source ? ( IDENTIFIER | QUOTED_STRING )? ;
 
 //------------------------------------------------------------------------------
 // expressions

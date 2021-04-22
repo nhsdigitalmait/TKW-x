@@ -38,6 +38,11 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import org.xml.sax.InputSource;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.*;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.CONTEXT_PATH;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.HTTP_HEADER;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.JWT_HEADER;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.JWT_PAYLOAD;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readPropertiesFile;
 
 /**
@@ -137,6 +142,16 @@ public class Substitution {
         } else if (ctx.substitution_class() != null) {
             type = SubstitutionType.CLASS;
             String className = ctx.substitution_class().DOT_SEPARATED_IDENTIFIER().getText();
+  
+            if (ctx.substitution_class().text_match_source() != null) {
+                matchSource = MatchSource.valueOf(ctx.substitution_class().text_match_source().getChild(0).getText().toUpperCase());
+                if (matchSource == MatchSource.HTTP_HEADER) {
+                    httpHeaderName = ctx.substitution_class().text_match_source().http_header_name().getText();
+                }
+            } else {
+                matchSource = MatchSource.CONTENT;
+            }
+
             try {
                 if (ctx.substitution_class().IDENTIFIER() != null) {
                     initialiseSubstituterClass(className, ctx.substitution_class().IDENTIFIER().getText());
@@ -471,8 +486,10 @@ public class Substitution {
                 if (subsClass == null) {
                     content = "CONFIGURATION ERROR: Substitution class not set";
                 } else {
-                    if (inputRequest.trim().isEmpty() || inputRequest.trim().startsWith("<")) {
-                    } else if (inputRequest.trim().startsWith("{")) {
+                    if (inputRequest.trim().isEmpty() || 
+                            ((matchSource == CONTENT || matchSource == JWT_HEADER || matchSource == JWT_PAYLOAD || matchSource == MESH_CTL) && inputRequest.trim().startsWith("<"))) {
+                    } else if (matchSource == CONTEXT_PATH || matchSource == HTTP_HEADER || matchSource == MESH_DAT || matchSource == VARIABLE)  {
+                    } else if (matchSource == CONTENT && inputRequest.trim().startsWith("{")) {
                         // try fhir json to xml conversion this assumes if its json then its fhir json
                         inputRequest = FHIRJsonXmlAdapter.fhirConvertJson2Xml(inputRequest);
                     } else {

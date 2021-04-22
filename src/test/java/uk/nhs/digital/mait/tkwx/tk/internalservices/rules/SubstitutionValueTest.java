@@ -52,6 +52,7 @@ public class SubstitutionValueTest {
 
     /**
      * Test of getValue method, of class SubstitutionValue.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetValue() throws Exception {

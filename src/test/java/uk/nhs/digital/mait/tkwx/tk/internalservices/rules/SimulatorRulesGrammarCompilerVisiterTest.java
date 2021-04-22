@@ -245,7 +245,7 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
         System.out.println("getSubstitutions");
         instance.parse(TEST_SIMULATOR_CONFIG);
 
-        int expResult = 37;
+        int expResult = 39;
         HashMap<String, Substitution> result = instance.getSubstitutions();
         assertEquals(expResult, result.size());
     }

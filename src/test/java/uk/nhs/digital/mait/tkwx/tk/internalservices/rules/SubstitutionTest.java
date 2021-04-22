@@ -111,7 +111,7 @@ public class SubstitutionTest {
         sbTemplate = new StringBuffer("__CLASS_TAG__");
         instance.substitute(sbTemplate, requestContent);
         assertEquals("", sbTemplate.toString());
-
+        
         // Reg exp substitution match source = content
         requestContent = "ContentStartStuffContentEnd";
         instance = new Substitution(visitor.getSubstitutionCtx().get("__RE_CONTENT_TAG__"));
@@ -152,6 +152,22 @@ public class SubstitutionTest {
         instance.substitute(sbTemplate, requestContent);
         expResult = "aaa StuffStuff aaa";
         assertEquals(expResult, sbTemplate.toString());
+
+        req.setRequestContext("/DocumentReferencethiscpbit");
+        req.setHeader("h1", "StartHeaderthisheaderbitEndHeader");
+
+        // Class substitution from context_path this invokes the delay substitution which returns an empty string
+        instance = new Substitution(visitor.getSubstitutionCtx().get("__CLASS_TAG_CP__"));
+        sbTemplate = new StringBuffer("__CLASS_TAG_CP__");
+        instance.substitute(sbTemplate, req);
+        assertEquals("", sbTemplate.toString());
+
+        // Class substitution from http header this invokes the delay substitution which returns an empty string
+        instance = new Substitution(visitor.getSubstitutionCtx().get("__CLASS_TAG_HEADER__"));
+        sbTemplate = new StringBuffer("__CLASS_TAG_HEADER__");
+        instance.substitute(sbTemplate, req);
+        assertEquals("", sbTemplate.toString());
+
     }
 
     /**

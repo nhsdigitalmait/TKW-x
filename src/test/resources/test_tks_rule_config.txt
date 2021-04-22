@@ -43,6 +43,8 @@ __RE_CP_TAG__ reg_exp context_path "^/DocumentReference(.*)$" "$1"
 __RE_HTTP_HEADER_TAG__ reg_exp http_header h1 "^StartHeader(.*)EndHeader$" "$1"
 SESSION_ID  Literal s1
 __MULTIPLE_RE_CONTENT_TAG__ reg_exp content "^ContentStart(.*)ContentEnd$" "$1" "^(.*)$" "$1$1"
+__CLASS_TAG_CP__ Class uk.nhs.digital.mait.tkwx.tk.internalservices.rules.DelaySubstitution context_path "key 1"
+__CLASS_TAG_HEADER__ Class uk.nhs.digital.mait.tkwx.tk.internalservices.rules.DelaySubstitution http_header h1 "key 1"
 END SUBSTITUTIONS
 #
 #=================================================================================================================================================================================================================================================

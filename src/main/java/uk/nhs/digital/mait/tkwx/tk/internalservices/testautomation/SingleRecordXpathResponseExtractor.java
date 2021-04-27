@@ -22,13 +22,18 @@ import org.xml.sax.InputSource;
 import java.io.StringReader;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import static java.util.logging.Level.SEVERE;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.ExtractorContext;
 import uk.nhs.digital.mait.commonutils.util.ConfigurationTokenSplitter;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.URL_DECODE_HTTP_HEADERS_PROPERTY;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Test.RegexpSubstitution;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 
 /**
  * Implementation of the ResponseExtractor that uses a separate XPath expression
@@ -55,9 +60,12 @@ public class SingleRecordXpathResponseExtractor
     private static class HeaderRegexpSubstitution extends RegexpSubstitution {
 
         private String headerName;
+        private static Configurator configurator = null;
+        private static boolean urlDecodeHttpHeaders = false;
 
         /**
          * No regexp
+         *
          * @param headerName
          */
         public HeaderRegexpSubstitution(String headerName) {
@@ -67,6 +75,7 @@ public class SingleRecordXpathResponseExtractor
 
         /**
          * assumes $1 is the subst parameter
+         *
          * @param headerName
          * @param matchRegExp
          */
@@ -93,10 +102,23 @@ public class SingleRecordXpathResponseExtractor
          */
         public String substitute(HttpHeaderManager hm) {
             String hv = hm.getHttpHeaderValue(headerName);
+            if (configurator == null) {
+                try {
+                    configurator = Configurator.getConfigurator();
+                } catch (Exception ex) {
+                    Logger.getInstance().log(SEVERE, SingleRecordXpathResponseExtractor.class.getName(), ex.getMessage());
+                }
+                urlDecodeHttpHeaders = isY(configurator.getConfiguration(URL_DECODE_HTTP_HEADERS_PROPERTY));
+            }
+            if (urlDecodeHttpHeaders && hv != null) {
+                try {
+                    hv = java.net.URLDecoder.decode(hv, StandardCharsets.UTF_8.name());
+                } catch (UnsupportedEncodingException ex) {
+                }
+            }
             if (hv != null) {
                 return substitute(hv);
-            }
-            else {
+            } else {
                 // header not present return ""
                 return "";
             }

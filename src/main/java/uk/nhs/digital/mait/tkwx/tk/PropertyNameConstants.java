@@ -149,5 +149,9 @@ public class PropertyNameConstants {
     public static final String ORG_REPORT_FILENAME = "uk.nhs.digital.mait.spinetools.spine.messaging.defaultdistributionenvelopehandler.reportfilename";
 
     public static final String DEBUG_DISPLAY_DIGEST_PROPERTY = "tks.debug.displaydigestvalues";
+    
+    // Currently this only applies to the autotest extractor SingleRecordXpathResponseExtractor class
+    // where a supplier was returning a urlencoded Location header
+    public static final String URL_DECODE_HTTP_HEADERS_PROPERTY = "tks.url_decode.httpheaders";
 
 }

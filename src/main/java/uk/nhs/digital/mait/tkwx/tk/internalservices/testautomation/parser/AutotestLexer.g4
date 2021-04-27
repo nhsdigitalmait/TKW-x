@@ -13,7 +13,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-// $Id: AutotestLexer.g4 144 2020-01-23 15:28:57Z sfarrow $
 
 lexer grammar AutotestLexer;
 

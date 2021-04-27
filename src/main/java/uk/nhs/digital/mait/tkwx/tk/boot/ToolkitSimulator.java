@@ -13,7 +13,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-// $Id: ToolkitSimulator.java 176 2020-08-06 18:58:55Z rrobinson $
 package uk.nhs.digital.mait.tkwx.tk.boot;
 
 import java.io.BufferedReader;

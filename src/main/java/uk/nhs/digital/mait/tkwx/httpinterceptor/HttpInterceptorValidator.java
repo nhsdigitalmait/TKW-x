@@ -17,7 +17,6 @@ package uk.nhs.digital.mait.tkwx.httpinterceptor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import static java.util.logging.Level.WARNING;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.jsonconverter.JsonXmlConverter;
@@ -144,7 +143,7 @@ public class HttpInterceptorValidator extends Thread {
                         // In this case the payload has had to be converted from something else but it can be validated as it xml and the clonedXmlHttpRequest will be used
                         extractedXmlRequestContent = new String(clonedXmlHttpRequest.getBody());
                     } else {
-                        throw new Exception("Cannot extract request: unrecognised content type" + contentType);
+                        //throw new Exception("Cannot extract request content: unrecognised content type " + contentType);
                     }
                 }
 //removed to allow all requests to validate e.g. Post plus no content type                

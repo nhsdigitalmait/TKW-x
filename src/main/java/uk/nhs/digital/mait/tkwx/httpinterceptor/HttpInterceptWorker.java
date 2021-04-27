@@ -31,10 +31,6 @@ import java.util.Iterator;
 import java.util.Map;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-import javax.json.Json;
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParser.Event;
-import javax.json.stream.JsonParserFactory;
 import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.httpinterceptor.interceptor.HttpInterceptHandler;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
@@ -120,8 +116,8 @@ public class HttpInterceptWorker {
                 }
             }
             inhibitValidation = isY(config.getConfiguration(INHIBITVALIDATION_PROPERTY));
-            fhirVersion = config.getConfiguration(FHIR_VERSION_PROPERTY) != null ? 
-                    FhirVersionEnum.valueOf(config.getConfiguration(FHIR_VERSION_PROPERTY).toUpperCase()) : DSTU3;
+            fhirVersion = config.getConfiguration(FHIR_VERSION_PROPERTY) != null
+                    ? FhirVersionEnum.valueOf(config.getConfiguration(FHIR_VERSION_PROPERTY).toUpperCase()) : DSTU3;
 
         } catch (Exception e) {
             Logger.getInstance().log(SEVERE, HttpInterceptWorker.class.getName(), "Failure to retrieve forwarding endpoint properties - " + e.toString());
@@ -473,7 +469,9 @@ public class HttpInterceptWorker {
                 resp.setField(TRANSFER_ENCODING_HEADER, TRANSFER_ENCODING_CHUNKED);
                 responseBytes = chunkResponse(responseBytes, chunkSize);
             }
-
+            
+            // remember the length as sent on the wire
+            int lengthAsSent = responseBytes.length;
             try ( OutputStream os = resp.getOutputStream()) {
                 os.write(responseBytes);
                 // NB Don't delete the flush its critical to successful operation of the interceptor
@@ -486,6 +484,9 @@ public class HttpInterceptWorker {
             try ( ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 HttpHeaderManager hm = new HttpHeaderManager();
                 hm.parseHttpHeaders(resp.getHttpHeader());
+                if (lengthAsSent != responseStr.length() ) {
+                    hm.addHttpHeader("X-was-"+CONTENT_LENGTH_HEADER, ""+lengthAsSent);
+                }
                 hm.modifyHttpHeadersForLogging(responseStr.length());
                 baos.write(hm.getFirstLine().getBytes());
                 baos.write(hm.getHttpHeaders().getBytes());
@@ -568,6 +569,12 @@ public class HttpInterceptWorker {
 
         // handle encoding this is only compression at present
         // it must be done last after other content conversions
+
+        // ifs its a wrapped binary then unencode it
+        if (Utils.isBinaryPayloadString(new String(responseBytes))) {
+            responseBytes = Utils.unwrapBinaryPayload(new String(responseBytes));
+        }
+
         String encoding = req.getField(ACCEPT_ENCODING_HEADER);
         if (encoding != null) {
             String[] encodings = encoding.split(",");
@@ -783,7 +790,7 @@ public class HttpInterceptWorker {
     private boolean isZip(String httpHeader) {
         return httpHeader != null && httpHeader.contains("zip");
     }
-    
+
     private boolean isHapiVersionDstu2() {
         return fhirVersion == DSTU2;
     }

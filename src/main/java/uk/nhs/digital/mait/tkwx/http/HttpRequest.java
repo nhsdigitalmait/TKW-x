@@ -121,7 +121,7 @@ public class HttpRequest extends Request {
     }
 
     /**
-     * appends to existsing header values
+     * appends to existing header values
      *
      * @param h field name
      * @param v value
@@ -137,11 +137,13 @@ public class HttpRequest extends Request {
     @Override
     public void setContentLength(int c)
             throws Exception {
-        if (contentLength != -1) {
-            // chunking and compress mean we may well need to call this more than once so we dont throw an exception any more
-            //throw new Exception("Protocol error: content length already set");
-        }
+//        if (contentLength != -1) {
+//            // chunking and compress mean we may well need to call this more than once so we dont throw an exception any more
+//            //throw new Exception("Protocol error: content length already set");
+//        }
         contentLength = c;
+        // make sure that this is in sync with the header
+        httpHeaderManager.addHttpHeader(CONTENT_LENGTH_HEADER, ""+c);
     }
 
     /**
@@ -241,9 +243,6 @@ public class HttpRequest extends Request {
     @Override
     public void setRequestType(String r)
             throws Exception {
-//        if (!(r.compareTo("POST") == 0)) {
-//            throw new Exception("Only POST request type accepted, got " + r);
-//        }
         requestType = r;
     }
 
@@ -302,7 +301,6 @@ public class HttpRequest extends Request {
     /**
      * write the Log to the file specified by logFile FileWriter field
      *
-     * @param loggingFileOutputStream FileOutputStream
      * @param buffer byte array body of the inbound message
      * @param msg byte array outbound message
      * @throws Exception

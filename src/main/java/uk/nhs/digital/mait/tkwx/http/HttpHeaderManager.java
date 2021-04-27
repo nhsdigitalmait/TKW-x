@@ -181,8 +181,10 @@ public class HttpHeaderManager {
     }
 
     /**
-     * Change the headers to correspond to the saved form preserving the
+     * Change the content_encoding header to correspond to the saved form preserving the
      * original values as renamed headers
+     * 
+     * if the message was chunked then set the unchunked content-length to the passed value
      *
      * @param contentLength
      */
@@ -197,9 +199,8 @@ public class HttpHeaderManager {
         if (headerValueCsvIncludes(header, TRANSFER_ENCODING_CHUNKED)) {
             addHttpHeader("X-was-" + headers.get(header).getActualHeader(), headers.get(header).getValue());
             headers.remove(header);
-
-            addHttpHeader(CONTENT_LENGTH_HEADER, Integer.toString(contentLength));
         }
+        addHttpHeader(CONTENT_LENGTH_HEADER, Integer.toString(contentLength));
     }
 
     /**

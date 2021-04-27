@@ -33,6 +33,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -47,6 +48,8 @@ import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactoryConfigurationException;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.Interval;
@@ -59,6 +62,7 @@ import org.w3c.dom.ls.LSSerializer;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import uk.nhs.digital.mait.commonutils.util.xpath.XPathManager;
 
 /**
  * container for useful static methods
@@ -134,7 +138,7 @@ public class Utils {
      * @throws IOException
      */
     public static void writeString2File(File file, String s) throws IOException {
-        try (FileWriter fw = new FileWriter(file)) {
+        try ( FileWriter fw = new FileWriter(file)) {
             fw.write(s);
             fw.flush();
         }
@@ -230,7 +234,7 @@ public class Utils {
         StringWriter stringWriter = new StringWriter();
         Map<String, Boolean> config = buildConfig(JsonGenerator.PRETTY_PRINTING);
         JsonWriterFactory writerFactory = Json.createWriterFactory(config);
-        try (javax.json.JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
+        try ( javax.json.JsonWriter jsonWriter = writerFactory.createWriter(stringWriter)) {
             jsonWriter.write(jobj);
         }
         return stringWriter.toString();
@@ -437,7 +441,7 @@ public class Utils {
         if (new File(propertiesFile).exists()) {
             try {
                 // read the properties file for future use
-                try (FileInputStream fis = new FileInputStream(propertiesFile)) {
+                try ( FileInputStream fis = new FileInputStream(propertiesFile)) {
                     // read the properties file for future use
                     p.load(fis);
                 }
@@ -515,4 +519,81 @@ public class Utils {
         return result;
     }
 
+    // Binary payload helpers
+    
+    //private final static String NAMESPACE_NAME = "nhsd";
+    //private final static String BINARY_NAMESPACE = "uk.nhs.digital.mait.tkwx.binary";
+    private final static String BINARY_TAGNAME = /*BINARY_NAMESPACE + ":"+*/ "bytes";
+
+    /**
+     * does the source file need base 64 encoding and wrapping as a binary
+     * payload?
+     *
+     * @param filename
+     * @return boolean
+     */
+    public static boolean isBinarySourceFile(String filename) {
+        return !filename.matches("^.*\\.(xml|json|txt)$");
+    }
+
+    /**
+     * does the payload string contain binary base64 encoded content?
+     *
+     * @param str
+     * @return boolean
+     */
+    public static boolean isBinaryPayloadString(String str) {
+        return str.startsWith("<" + BINARY_TAGNAME);
+    }
+
+    /**
+     * does the incoming payload bytearray contain binary content?
+     *
+     * @param bytes
+     * @return boolean
+     */
+    public static boolean isBinaryPayload(byte[] bytes) {
+        return bytes[0] != '<' && bytes[0] != '{';
+    }
+
+    /**
+     * base64 encode the binary payload and wrap with an xml
+     * element
+     * 
+     * @param bytes
+     * @return StringBuilder
+     */
+    public static StringBuilder wrapBinaryPayload(byte[] bytes) {
+        StringBuilder msg = new StringBuilder("<" + BINARY_TAGNAME  + " unencoded_length=\""+bytes.length+"\">\r\n");
+        msg.append(Base64.getEncoder().encodeToString(bytes));
+        msg.append("\r\n</" + BINARY_TAGNAME + ">");
+        return msg;
+    }
+
+    /**
+     * base64 decode and return binary payload
+     *
+     * @param str
+     * @return byte array
+     */
+    public static byte[] unwrapBinaryPayload(String str) {
+        try {
+            String base64 = XPathManager.xpathExtractor("/"+ BINARY_TAGNAME + "/text()", str);
+            byte[] bytes = Base64.getDecoder().decode(base64.trim());
+            return bytes;
+        } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
+            Logger.getInstance().log(SEVERE, Utils.class.getName(), "Failed extracting base 64 payload " + ex.getMessage());
+        }
+        return null;
+    }
+    
+    public static int getUnencodedLength(String str) {
+        try {
+            int unencodedLength = Integer.parseInt(XPathManager.xpathExtractor("/"+ BINARY_TAGNAME + "/@unencoded_length", str));
+            return unencodedLength;
+        } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
+            Logger.getInstance().log(SEVERE, Utils.class.getName(), "Failed extracting base 64 unencoded length " + ex.getMessage());
+        }
+        return -1;
+    }
 }

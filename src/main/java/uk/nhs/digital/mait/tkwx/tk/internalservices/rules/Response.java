@@ -17,6 +17,8 @@ package uk.nhs.digital.mait.tkwx.tk.internalservices.rules;
 
 import java.lang.reflect.Constructor;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,6 +28,8 @@ import uk.nhs.digital.mait.tkwx.tk.boot.Request;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor.SettableErrorCode;
 import uk.nhs.digital.mait.tkwx.util.Utils;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isBinarySourceFile;
+import static uk.nhs.digital.mait.tkwx.util.Utils.wrapBinaryPayload;
 
 /**
  * Class for making simulated responses to requests. Can be based on a template
@@ -106,7 +110,7 @@ public class Response {
                 String query = classUri.getQuery();
                 String path = classUri.getPath();
                 // if the passed in URI has query string parse the queries
-                Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+                Map<String, String> query_pairs = new LinkedHashMap<>();
                 String[] pairs = query.split("&");
                 for (String pair : pairs) {
                     int idx = pair.indexOf("=");
@@ -125,7 +129,12 @@ public class Response {
                 responseClass = (Responder) Class.forName(resource).newInstance();
             }
         } else {
-            template = Utils.readFile2String(url);
+            if (isBinarySourceFile(url)) {
+                byte[] bytes = Files.readAllBytes(Paths.get(url));
+                template = wrapBinaryPayload(bytes).toString();
+            } else {
+                template = Utils.readFile2String(url);
+            }
         }
     }
 

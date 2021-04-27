@@ -254,7 +254,8 @@ public class HttpLogFileGenerator {
                 // its now in XML form validate as XML
                 extractedContentType = XML_MIMETYPE;
             } else {
-                throw new Exception("Cannot extract request: unrecognised content type" + contentType);
+                // commented out because we need to process binary files and other types
+                //throw new Exception("Cannot extract request: unrecognised content type " + contentType);
             }
         } else {
             throw new Exception("Cannot extract request: http method = " + req.getRequestType() + " null content type");

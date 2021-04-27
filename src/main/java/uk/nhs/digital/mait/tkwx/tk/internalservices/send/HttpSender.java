@@ -62,8 +62,10 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.ConditionalCompilationContro
 import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.FUNCTION_PREFIX;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isBinaryPayloadString;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import static uk.nhs.digital.mait.tkwx.util.Utils.substitute;
+import static uk.nhs.digital.mait.tkwx.util.Utils.unwrapBinaryPayload;
 
 /**
  * Thread for transmitting SOAP messages.
@@ -145,7 +147,7 @@ public class HttpSender
             }
         }
         start();
-        
+
         // autotest mode requires the transmit to block until the log file has been fully populated.
         if (System.getProperty("tkw.internal.runningautotest") != null) {
             try {
@@ -291,7 +293,10 @@ public class HttpSender
         // log the munged sent message
         HttpHeaderManager hm = new HttpHeaderManager();
         hm.parseHttpHeaders(header);
-        hm.modifyHttpHeadersForLogging(messageBytes.length);
+        if (message.length() != messageBytes.length) {
+            hm.addHttpHeader("X-was-"+CONTENT_LENGTH_HEADER, ""+messageBytes.length);
+        }
+        hm.modifyHttpHeadersForLogging(message.length());
         logFileWriter.write(hm.getFirstLine().getBytes());
         logFileWriter.write(hm.getHttpHeaders().getBytes());
         logFileWriter.write("\r\n".getBytes());
@@ -518,17 +523,24 @@ public class HttpSender
 
         HttpHeaderManager hmResponse = new HttpHeaderManager();
         hmResponse.parseHttpHeaders(new String(baosHeader.toByteArray()));
-        byte[] uncompressed = null;
+        byte[] bytes = baosBody.toByteArray();
+        int onTheWireLength = bytes.length;
         if (hmResponse.headerValueCsvIncludes(CONTENT_ENCODING_HEADER, COMPRESSION_GZIP)) {
-            uncompressed = Compressor.uncompress(baosBody.toByteArray(), Compressor.CompressionType.COMPRESSION_GZIP);
+            bytes = Compressor.uncompress(bytes, Compressor.CompressionType.COMPRESSION_GZIP);
         } else if (hmResponse.headerValueCsvIncludes(CONTENT_ENCODING_HEADER, COMPRESSION_DEFLATE)) {
-            uncompressed = Compressor.uncompress(baosBody.toByteArray(), Compressor.CompressionType.COMPRESSION_DEFLATE);
+            bytes = Compressor.uncompress(bytes, Compressor.CompressionType.COMPRESSION_DEFLATE);
         }
-        if (uncompressed != null) {
-            hmResponse.modifyHttpHeadersForLogging(uncompressed.length);
-        } else {
-            hmResponse.modifyHttpHeadersForLogging(baosBody.toByteArray().length);
+        
+        // if its an incoming binary payload then unencode it
+        if (Utils.isBinaryPayload(bytes)) {
+            bytes = Utils.wrapBinaryPayload(bytes).toString().getBytes();
         }
+        
+        if (onTheWireLength != bytes.length){
+            hmResponse.addHttpHeader("X-was-"+CONTENT_LENGTH_HEADER, ""+onTheWireLength);
+        }
+        hmResponse.modifyHttpHeadersForLogging(bytes.length);
+        
         logFileWriter.write(hmResponse.getFirstLine().getBytes());
         logFileWriter.write(hmResponse.getHttpHeaders().getBytes());
         logFileWriter.write("\r\n".getBytes());
@@ -536,7 +548,7 @@ public class HttpSender
         logFileWriter.flush();
 
         // write the body to the log file
-        logFileWriter.write(uncompressed != null ? uncompressed : baosBody.toByteArray());
+        logFileWriter.write(bytes);
 
         // TODO need to check the contents of this and log any errors
         logFileWriter.flush();
@@ -696,15 +708,26 @@ public class HttpSender
         String encoding = headerManager.getHttpHeaderValue(CONTENT_ENCODING_HEADER);
         if (encoding != null && (encoding.equals(COMPRESSION_GZIP) || encoding.equals(COMPRESSION_DEFLATE))) {
             try {
-                messageBytes = Compressor.compress(message.getBytes(), Compressor.CompressionType.valueOf("COMPRESSION_" + encoding.toUpperCase()));
+                if (isBinaryPayloadString(message)) {
+                    messageBytes = unwrapBinaryPayload(message);
+                    messageBytes = Compressor.compress(messageBytes, Compressor.CompressionType.valueOf("COMPRESSION_" + encoding.toUpperCase()));
+                } else {
+                    messageBytes = Compressor.compress(message.getBytes(), Compressor.CompressionType.valueOf("COMPRESSION_" + encoding.toUpperCase()));
+                }
                 if (chunkSize == 0) {
                     headerManager.addHttpHeader(CONTENT_LENGTH_HEADER, "" + messageBytes.length);
                 }
+
             } catch (IOException ex) {
                 Logger.getInstance().log(SEVERE, HttpSender.class.getName(), "Failed compressing payload " + ex.getMessage());
             }
         } else {
-            messageBytes = message.getBytes();
+            if (isBinaryPayloadString(message)) {
+                messageBytes = unwrapBinaryPayload(message);
+                headerManager.addHttpHeader(CONTENT_LENGTH_HEADER, "" + messageBytes.length);
+            } else {
+                messageBytes = message.getBytes();
+            }
         }
 
         sb.append(headerManager.getHttpHeaders());

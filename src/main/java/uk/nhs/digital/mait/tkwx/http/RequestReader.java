@@ -27,6 +27,8 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.COMPRESSION_DEFLATE;
 import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.COMPRESSION_GZIP;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.Compressor;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isBinaryPayload;
+import static uk.nhs.digital.mait.tkwx.util.Utils.wrapBinaryPayload;
 
 /**
  * Package-private class for reading HTTP headers, and then the input stream.
@@ -192,12 +194,12 @@ class RequestReader
                     // length to the real value. Also set the request input stream to a
                     // ByteArrayInputStream based on the buffered input
                     baosBody = bufferChunkedInput(req, socket.getInputStream());
-                } else  {
+                } else {
                     // Not chunked
                     baosBody = bufferStreamedInput(req, socket.getInputStream());
-                } 
+                }
                 uncompressRequest(req, baosBody);
-                
+
                 req.setResponse(resp);
                 queue.addQueueEntry(req);
                 server.addRequest(req);
@@ -234,25 +236,28 @@ class RequestReader
 
     /**
      * uncompress the incoming request if necessary
+     *
      * @param req
      * @param baosBody
-     * @throws Exception 
+     * @throws Exception
      */
     private void uncompressRequest(HttpRequest req, ByteArrayInputStream baosBody) throws Exception {
-        byte[] uncompressed = null;
+        byte[] bytes = baosBody.readAllBytes();
+        int onTheWireLength = bytes.length;
         if (req.getHeaderManager().headerValueCsvIncludes(CONTENT_ENCODING_HEADER, COMPRESSION_GZIP)) {
-            uncompressed = Compressor.uncompress(baosBody.readAllBytes(), Compressor.CompressionType.COMPRESSION_GZIP);
-            req.getHeaderManager().addHttpHeader("X-was-"+CONTENT_ENCODING_HEADER, COMPRESSION_GZIP);
+            bytes = Compressor.uncompress(bytes, Compressor.CompressionType.COMPRESSION_GZIP);
         } else if (req.getHeaderManager().headerValueCsvIncludes(CONTENT_ENCODING_HEADER, COMPRESSION_DEFLATE)) {
-            uncompressed = Compressor.uncompress(baosBody.readAllBytes(), Compressor.CompressionType.COMPRESSION_DEFLATE);
-            req.getHeaderManager().addHttpHeader("X-was-"+CONTENT_ENCODING_HEADER, COMPRESSION_DEFLATE);
-        } 
-        
-        if (uncompressed != null) {
-            req.setInputStream(new ByteArrayInputStream(uncompressed));
-            req.setContentLength(uncompressed.length);
-        } else {
-            req.setInputStream(baosBody);
+            bytes = Compressor.uncompress(bytes, Compressor.CompressionType.COMPRESSION_DEFLATE);
+        }
+
+        // check if this is a binary request and wrap it up in a bytes xml element
+        if (isBinaryPayload(bytes)) {
+            bytes = wrapBinaryPayload(bytes).toString().getBytes();
+        }
+        req.setInputStream(new ByteArrayInputStream(bytes));
+        if (onTheWireLength != bytes.length) {
+            req.getHeaderManager().addHttpHeader("X-was-" + CONTENT_LENGTH_HEADER, "" + onTheWireLength);
+            req.setContentLength(bytes.length);
         }
     }
 

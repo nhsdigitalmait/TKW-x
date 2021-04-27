@@ -20,6 +20,8 @@ import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitService;
 import java.util.Properties;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
@@ -33,8 +35,10 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.send.SenderRequest;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.util.Utils;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isBinarySourceFile;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import static uk.nhs.digital.mait.tkwx.util.Utils.substitute;
+import static uk.nhs.digital.mait.tkwx.util.Utils.wrapBinaryPayload;
 
 /**
  * Service to implement the TKW "transmit" mode.
@@ -225,7 +229,13 @@ public class HttpTransmitter
      */
     private boolean sendMessage(String dir, String filename)
             throws Exception {
-        StringBuilder msg = new StringBuilder(Utils.readFile2String(dir, filename));
+        StringBuilder msg = null;
+        if (isBinarySourceFile(filename)) {
+            byte[] bytes = Files.readAllBytes(Paths.get(dir + "/" + filename));
+            msg = wrapBinaryPayload(bytes);
+        } else {
+            msg = new StringBuilder(Utils.readFile2String(dir, filename));
+        }
         Date now = new Date();
         String ts = ISO8601FORMATDATE.format(now);
         Calendar cal = Calendar.getInstance();

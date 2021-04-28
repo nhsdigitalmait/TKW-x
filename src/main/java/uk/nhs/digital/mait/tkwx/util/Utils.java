@@ -543,7 +543,7 @@ public class Utils {
      * @return boolean
      */
     public static boolean isBinaryPayloadString(String str) {
-        return str.startsWith("<" + BINARY_TAGNAME);
+        return str.length() > ("<" + BINARY_TAGNAME).length()  && str.startsWith("<" + BINARY_TAGNAME);
     }
 
     /**
@@ -553,7 +553,7 @@ public class Utils {
      * @return boolean
      */
     public static boolean isBinaryPayload(byte[] bytes) {
-        return bytes[0] != '<' && bytes[0] != '{';
+        return bytes.length > 0 && (bytes[0] != '<' && bytes[0] != '{');
     }
 
     /**

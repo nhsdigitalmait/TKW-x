@@ -29,7 +29,7 @@ import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.getRe
 
 /**
  * Returns a fhirformatted SDS adapter query response
- * parameters on setup are sdsdumpfile device_transform endpoint_transform 
+ * parameters on setup are endpoint sdsdumpfile device_transform endpoint_transform 
  * Applies one of two parameterised transforms to an xml version of an SDS extract
  *
  * @author simonfarrow
@@ -37,6 +37,7 @@ import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.getRe
 public class SDSAdapterSubstitution implements SubstitutionValue {
 
     private String[] parameters = null;
+    private String endpoint; // as configured outside any reverse proxy
     private String sdsfile;
     private final HashMap<String, String> hmTransforms = new HashMap<>();
 
@@ -116,6 +117,8 @@ public class SDSAdapterSubstitution implements SubstitutionValue {
             
             transformer.setParameter("org", odsCode);
             transformer.setParameter("int", interaction);
+            transformer.setParameter("cp", o); // this gets escaped on input
+            transformer.setParameter("ep", endpoint);
             
             StringWriter sw = new StringWriter();
             StreamResult r = new StreamResult(sw);
@@ -131,18 +134,19 @@ public class SDSAdapterSubstitution implements SubstitutionValue {
     /**
      * One time setup for substitution
      * Quoted string containing three paths
-     * sdsdumpfile device_transform endpoint_transform 
+     * endpoint sdsdumpfile device_transform endpoint_transform 
      * @param s
      * @throws Exception
      */
     @Override
     public void setData(String s) throws Exception {
         parameters = s.split("\\s");
-        if (parameters.length != 3) {
+        if (parameters.length != 4) {
             throw new IllegalArgumentException("Incorrect parameter count "+parameters.length);
         }
-        sdsfile = parameters[0];
-        hmTransforms.put("Device", parameters[1]);
-        hmTransforms.put("Endpoint", parameters[2]);
+        endpoint = parameters[0];
+        sdsfile = parameters[1];
+        hmTransforms.put("Device", parameters[2]);
+        hmTransforms.put("Endpoint", parameters[3]);
     }
 }

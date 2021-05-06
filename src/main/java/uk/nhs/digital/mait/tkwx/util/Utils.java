@@ -533,7 +533,7 @@ public class Utils {
      * @return boolean
      */
     public static boolean isBinarySourceFile(String filename) {
-        return !filename.matches("^.*\\.(xml|json|txt|msg)$");
+        return !filename.toLowerCase().matches("^.*\\.(xml|json|txt|msg)$");
     }
 
     /**

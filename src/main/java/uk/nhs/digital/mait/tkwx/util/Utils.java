@@ -553,7 +553,7 @@ public class Utils {
      * @return boolean
      */
     public static boolean isBinaryPayload(byte[] bytes) {
-        return bytes.length > 0 && (bytes[0] != '<' && bytes[0] != '{');
+        return bytes.length > 0 && (bytes[0] != '<' && bytes[0] != '{' && !(bytes.length>=4 && bytes[0]=='-'&& bytes[1]=='-'&& bytes[2]=='-'&& bytes[3]=='-'));
     }
 
     /**

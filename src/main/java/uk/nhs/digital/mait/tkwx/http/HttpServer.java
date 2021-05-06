@@ -95,8 +95,11 @@ public class HttpServer {
             }
             return;
         }
-        if (contexts.containsKey(r.getContext())) {
-            c = contexts.get(r.getContext());
+        
+        // #19 strip parameters before searching for a valid handler
+        String cpNoParams = r.getContext().replaceFirst("\\?.*$","");
+        if (contexts.containsKey(cpNoParams)) {
+            c = contexts.get(cpNoParams);
         } else if (!contexts.containsKey("/")) {
             try {
                 OutputStreamWriter w = new OutputStreamWriter(r.getResponse().getOutputStream());

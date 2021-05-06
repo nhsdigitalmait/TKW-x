@@ -140,22 +140,33 @@ public class HttpInterceptWorker {
     }
 
     /**
-     * parse the context path to get request parameters & separated url encoded
-     * value attribute pairs following a question mark
+     * parse the context path of the request to get request parameters & separated url decoded
+     * value attribute pairs following the question mark in  the context path
      *
-     * @param request
+     * @param request HttpRequest
      * @return hashmap of array list of String of get request parameters
      * @throws UnsupportedEncodingException
      */
     private HashMap<String, ArrayList<String>> getRequestParameters(HttpRequest request) throws UnsupportedEncodingException {
         String context = request.getContext();
-        String paramString = context.replaceFirst("^.*?\\?", "");
+        return getRequestParametersFromCP(context);
+    }
+
+    /**
+     * parse the context path string to get request parameters & separated url decoded
+     * value attribute pairs following the question mark in  the context path
+     * @param contextPath
+     * @return hashmap of array list of String of get request parameters
+     * @throws UnsupportedEncodingException 
+     */
+    public static HashMap<String, ArrayList<String>> getRequestParametersFromCP(String contextPath) throws UnsupportedEncodingException {
+        String paramString = contextPath.replaceFirst("^.*?\\?", "");
         String[] params = paramString.split("\\&");
         HashMap<String, ArrayList<String>> hmParams = new HashMap<>();
         for (String param : params) {
             String paramName = param.replaceFirst("=.*$", "");
             if (hmParams.get(paramName) == null) {
-                hmParams.put(paramName, new ArrayList<String>());
+                hmParams.put(paramName, new ArrayList<>());
             }
             hmParams.get(paramName).add(URLDecoder.decode(param.replaceFirst("^.*?=", ""), "UTF-8"));
         }

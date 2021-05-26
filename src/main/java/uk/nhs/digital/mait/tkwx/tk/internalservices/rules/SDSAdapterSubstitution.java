@@ -94,7 +94,7 @@ public class SDSAdapterSubstitution implements SubstitutionValue {
                 break;
 
             default:
-                throw new IllegalArgumentException("Invalid Resource Name " + resourceName);
+                return "";
         }
 
         // pass parameters to the appropriate transform and return the result
@@ -128,7 +128,7 @@ public class SDSAdapterSubstitution implements SubstitutionValue {
         } catch (TransformerConfigurationException ex) {
             Logger.getInstance().log(SEVERE, SDSAdapterSubstitution.class.getName(), "Transform error " + ex.getMessage());
         }
-        return null;
+        return "";
     }
 
     /**

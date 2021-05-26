@@ -40,7 +40,7 @@ public class SDSAdapterSubstitutionTest {
     private final static String DEVICE_CONTEXT_PATH = "/Device?organization="+ORG_SYSTEM+"|"+ORG+"&identifier="+INT_SYSTEM+"|"+INT;
     private final static String ENDPOINT_CONTEXT_PATH = "/Endpoint?organization="+ORG_SYSTEM+"|"+ORG+"&identifier="+INT_SYSTEM+"|"+INT;
 
-    private final static String TAG_PARMS = ROOT + "/sdsdump_opentest.xml " + ROOT + "/sds_device.xsl " + ROOT + "/sds_endpoint.xsl";
+    private final static String TAG_PARMS = "http://localhost " + ROOT + "/sdsdump_opentest.xml " + ROOT + "/sds_device.xsl " + ROOT + "/sds_endpoint.xsl";
 
     private SDSAdapterSubstitution instance = null;
 

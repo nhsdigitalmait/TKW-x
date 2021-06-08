@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +56,8 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.FUNCTION_PREFIX;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.commonutils.util.xpath.XPathManager;
+import uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth.SpineAsynchronousSoapRequestHandler;
+import uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth.SpineSynchronousSoapRequestHandler;
 import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
 
@@ -102,6 +105,7 @@ public class HttpInterceptWorker {
 
     private static FhirVersionEnum fhirVersion;
     protected EvidenceMetaDataHandler evidenceMetaDataHandler;
+    private SpineAsynchronousSoapRequestHandler asynchronousSoapRequestHandler = null;
 
     static {
         try {
@@ -140,8 +144,9 @@ public class HttpInterceptWorker {
     }
 
     /**
-     * parse the context path of the request to get request parameters & separated url decoded
-     * value attribute pairs following the question mark in  the context path
+     * parse the context path of the request to get request parameters &
+     * separated url decoded value attribute pairs following the question mark
+     * in the context path
      *
      * @param request HttpRequest
      * @return hashmap of array list of String of get request parameters
@@ -153,11 +158,13 @@ public class HttpInterceptWorker {
     }
 
     /**
-     * parse the context path string to get request parameters & separated url decoded
-     * value attribute pairs following the question mark in  the context path
+     * parse the context path string to get request parameters & separated url
+     * decoded value attribute pairs following the question mark in the context
+     * path
+     *
      * @param contextPath
      * @return hashmap of array list of String of get request parameters
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     public static HashMap<String, ArrayList<String>> getRequestParametersFromCP(String contextPath) throws UnsupportedEncodingException {
         String paramString = contextPath.replaceFirst("^.*?\\?", "");
@@ -192,7 +199,7 @@ public class HttpInterceptWorker {
                         // if it's a $evaluate request assume that it's a CDSS/EMS validation
                         if (httpRequest.getContext().toLowerCase().contains("$evaluate")) {
                             clonedXmlHttpRequest = CDSSFHIRUnpacker.unpack(httpRequest);
-                            service = clonedXmlHttpRequest.getField(SOAP_ACTION_HEADER);
+                            service = null;
                         }
                         // NB This is a content-type not an encoding type
                         //has been added to capture CDSS Clinical Decision Support validation request which arrive as B64 zip files
@@ -278,6 +285,24 @@ public class HttpInterceptWorker {
                 Logger.getInstance().log(WARNING, HttpInterceptWorker.class.getName(),
                         "Failed to get simulator response for null SOAPaction " + e.getMessage());
             }
+        } else {
+            try {
+                if (httpRequest.getContext().equals("/syncservice-pds/pds")) {
+                    // hard coded to be synchronous - need to develop a patchbay approach
+                    SpineSynchronousSoapRequestHandler sssrh = new SpineSynchronousSoapRequestHandler();
+                    simulatorServiceResponse = sssrh.invoke(httpRequest);
+                } else if (httpRequest.getContext().equals("/reliablemessaging/reliablerequest")) {
+                    // hard coded to be asynchronous - need to develop a patchbay approach
+                    asynchronousSoapRequestHandler = new SpineAsynchronousSoapRequestHandler();
+                    simulatorServiceResponse = asynchronousSoapRequestHandler.invoke(httpRequest);
+                    
+                }
+
+            } catch (Exception e) {
+                Logger.getInstance().log(WARNING, HttpInterceptWorker.class.getName(),
+                        "Failed to get simulator response for non-null SOAPaction " + e.getMessage());
+
+            }
         }
     }  // invokeSimulator
 
@@ -299,7 +324,8 @@ public class HttpInterceptWorker {
                     httpRequest.setInputStream(new ByteArrayInputStream(errorText.getBytes()));
                     //httpRequest.setContentLength(errorText.length());
                     httpRequest.setHeader(CONTENT_LENGTH_HEADER, "" + errorText.length());
-                    Logger.getInstance().log(WARNING, HttpInterceptWorker.class.getName(),
+                    Logger.getInstance().log(WARNING, HttpInterceptWorker.class
+                            .getName(),
                             "Failed to convert fhir xml -> json " + jsonRequestBody);
                 }
             }
@@ -395,126 +421,132 @@ public class HttpInterceptWorker {
             buffer = req.getBody();
         }
         if (simulatorServiceResponse != null) {
-            // Read the response body and get the engine to instantiate it.
-            // needed this for restful rules engine use
-            if (restful) {
-                simulatorServiceResponse = rulesService.instantiateResponse(simulatorServiceResponse, req);
-            }
+                // Read the response body and get the engine to instantiate it.
+                // needed this for restful rules engine use
+                if (restful) {
+                    simulatorServiceResponse = rulesService.instantiateResponse(simulatorServiceResponse, req);
+                }
 
-            // Set the response parameters
-            resp.setStatus(simulatorServiceResponse.getCode(), simulatorServiceResponse.getCodePhrase());
+                // Set the response parameters
+                resp.setStatus(simulatorServiceResponse.getCode(), simulatorServiceResponse.getCodePhrase());
 
-            String responseStr = simulatorServiceResponse.getResponse();
+                String responseStr = simulatorServiceResponse.getResponse();
 
-            // TODO Need to check response code eg -1 => no rules found
-            // response str will not contain a valid response when -1
-            if (simulatorServiceResponse.getCode() == -1) {
-                Logger.getInstance().log(WARNING, HttpInterceptWorker.class.getName(),
-                        "response code = -1");
-            }
-            // If there's no content do not set contentType
-            if (responseStr != null && responseStr.trim().length() > 0) {
-                // TODO merge this into performOutboundConversions
-                determineReturnContentType(req, responseStr, resp);
-            }
-            // get any static http response header values from config
-            try {
-                Map hmResponseHeaders = config.getConfigurationMap("^" + HTTP_HEADER_RESPONSE_PROPERTY_PREFIX + ".*$");
-                Iterator iter = hmResponseHeaders.keySet().iterator();
-                while (iter.hasNext()) {
-                    String key = (String) iter.next();
-                    String headerName = key.replaceFirst("^" + HTTP_HEADER_RESPONSE_PROPERTY_PREFIX, "");
-                    String value = (String) hmResponseHeaders.get(key);
+                // TODO Need to check response code eg -1 => no rules found
+                // response str will not contain a valid response when -1
+                if (simulatorServiceResponse.getCode() == -1) {
+                    Logger.getInstance().log(WARNING, HttpInterceptWorker.class
+                            .getName(),
+                            "response code = -1");
+                }
+                // If there's no content do not set contentType
+                if (responseStr != null && responseStr.trim().length() > 0) {
+                    // TODO merge this into performOutboundConversions
+                    determineReturnContentType(req, responseStr, resp);
+                }
+                // get any static http response header values from config
+                try {
+                    Map hmResponseHeaders = config.getConfigurationMap("^" + HTTP_HEADER_RESPONSE_PROPERTY_PREFIX + ".*$");
+                    Iterator iter = hmResponseHeaders.keySet().iterator();
+                    while (iter.hasNext()) {
+                        String key = (String) iter.next();
+                        String headerName = key.replaceFirst("^" + HTTP_HEADER_RESPONSE_PROPERTY_PREFIX, "");
+                        String value = (String) hmResponseHeaders.get(key);
 
-                    if (value.startsWith(FUNCTION_PREFIX)) {
-                        value = Utils.invokeJavaMethod(value);
+                        if (value.startsWith(FUNCTION_PREFIX)) {
+                            value = Utils.invokeJavaMethod(value);
+                        }
+
+                        // content type has its own accessor and mutator
+                        if (headerName.toLowerCase().equals(CONTENT_TYPE_HEADER.toLowerCase())) {
+                            resp.setContentType(value);
+                        } else {
+                            resp.setField(headerName, value);
+                        }
                     }
 
-                    // content type has its own accessor and mutator
-                    if (headerName.toLowerCase().equals(CONTENT_TYPE_HEADER.toLowerCase())) {
-                        resp.setContentType(value);
+                    // process any Simulator Rules provided headers in the service response
+                    HttpHeaderManager simulatorHttpHeaders = simulatorServiceResponse.getHttpHeaders();
+                    if (simulatorHttpHeaders != null) {
+                        for (String httpHeaderName : simulatorHttpHeaders.getFieldNames()) {
+                            resp.setField(httpHeaderName, simulatorHttpHeaders.getHttpHeaderValue(httpHeaderName));
+                        }
+                    }
+
+                } catch (ClassNotFoundException | IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+                    Logger.getInstance().log(SEVERE, HttpInterceptWorker.class
+                            .getName(),
+                            "Failed to get http response headers " + ex.getMessage());
+                }
+
+                byte[] responseBytes = responseStr.getBytes();
+
+                // no need to set content type/encoding or fhir conversions if no content
+                if (responseBytes != null && responseBytes.length > 0) {
+                    // see also determineReturnContentType
+                    responseBytes = performResponseTypeConversions(req, responseBytes, resp);
+
+                    // get the converted output for logging
+                    responseStr = new String(responseBytes);
+
+                    responseBytes = performResponseEncodingConversions(req, responseBytes, resp);
+                }
+                // set this for now gp connect specific
+                int chunkSize = 0;
+                try {
+                    String s = Configurator.getConfigurator().getConfiguration(CHUNKXMIT_PROPERTY);
+                    if (s != null && !s.trim().isEmpty()) {
+                        chunkSize = Integer.parseInt(s);
+
+                    }
+                } catch (Exception ex) {
+                    Logger.getInstance().log(SEVERE, HttpResponse.class
+                            .getName(),
+                            "Failed to get chunk size from configurator");
+                }
+
+                if (chunkSize > 0) {
+                    resp.setField(TRANSFER_ENCODING_HEADER, TRANSFER_ENCODING_CHUNKED);
+                    responseBytes = chunkResponse(responseBytes, chunkSize);
+                }
+
+                // remember the length as sent on the wire
+                int lengthAsSent = responseBytes.length;
+                try (OutputStream os = resp.getOutputStream()) {
+                    os.write(responseBytes);
+                    // NB Don't delete the flush its critical to successful operation of the interceptor
+                    // because theres an override that causes the final response to be generated
+                    os.flush();
+                }
+                req.setHandled(true);
+
+                // write the log file
+                try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                    HttpHeaderManager hm = new HttpHeaderManager();
+                    hm.parseHttpHeaders(resp.getHttpHeader());
+                    if (lengthAsSent != responseStr.length()) {
+                        hm.addHttpHeader("X-was-" + CONTENT_LENGTH_HEADER, "" + lengthAsSent);
+                    }
+                    hm.modifyHttpHeadersForLogging(responseStr.length());
+                    baos.write(hm.getFirstLine().getBytes());
+                    baos.write(hm.getHttpHeaders().getBytes());
+                    baos.write("\r\n".getBytes());
+
+                    if (ConditionalCompilationControls.LOG_RAW_RESPONSE) {
+                        // this is as is on the wire and may be chunked
+                        // its important that the log contains the response as sent
+                        // rather than a decoded version otherwise the headers become inconsistent
+                        baos.write(responseBytes);
                     } else {
-                        resp.setField(headerName, value);
+                        // string containing uncompressed message json or xml as returned by the simulator
+                        baos.write(responseStr.getBytes());
                     }
+
+                    req.log(buffer, baos.toByteArray());
                 }
-
-                // process any Simulator Rules provided headers in the service response
-                HttpHeaderManager simulatorHttpHeaders = simulatorServiceResponse.getHttpHeaders();
-                if (simulatorHttpHeaders != null) {
-                    for (String httpHeaderName : simulatorHttpHeaders.getFieldNames()) {
-                        resp.setField(httpHeaderName, simulatorHttpHeaders.getHttpHeaderValue(httpHeaderName));
-                    }
+                if(asynchronousSoapRequestHandler!=null && asynchronousSoapRequestHandler.hasAsyncResponse()){
+                    asynchronousSoapRequestHandler.asynchronousResponse(simulatorServiceResponse);
                 }
-
-            } catch (ClassNotFoundException | IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-                Logger.getInstance().log(SEVERE, HttpInterceptWorker.class.getName(),
-                        "Failed to get http response headers " + ex.getMessage());
-            }
-
-            byte[] responseBytes = responseStr.getBytes();
-
-            // no need to set content type/encoding or fhir conversions if no content
-            if (responseBytes != null && responseBytes.length > 0) {
-                // see also determineReturnContentType
-                responseBytes = performResponseTypeConversions(req, responseBytes, resp);
-
-                // get the converted output for logging
-                responseStr = new String(responseBytes);
-
-                responseBytes = performResponseEncodingConversions(req, responseBytes, resp);
-            }
-            // set this for now gp connect specific
-            int chunkSize = 0;
-            try {
-                String s = Configurator.getConfigurator().getConfiguration(CHUNKXMIT_PROPERTY);
-                if (s != null && !s.trim().isEmpty()) {
-                    chunkSize = Integer.parseInt(s);
-
-                }
-            } catch (Exception ex) {
-                Logger.getInstance().log(SEVERE, HttpResponse.class.getName(),
-                        "Failed to get chunk size from configurator");
-            }
-
-            if (chunkSize > 0) {
-                resp.setField(TRANSFER_ENCODING_HEADER, TRANSFER_ENCODING_CHUNKED);
-                responseBytes = chunkResponse(responseBytes, chunkSize);
-            }
-            
-            // remember the length as sent on the wire
-            int lengthAsSent = responseBytes.length;
-            try ( OutputStream os = resp.getOutputStream()) {
-                os.write(responseBytes);
-                // NB Don't delete the flush its critical to successful operation of the interceptor
-                // because theres an override that causes the final response to be generated
-                os.flush();
-            }
-            req.setHandled(true);
-
-            // write the log file
-            try ( ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                HttpHeaderManager hm = new HttpHeaderManager();
-                hm.parseHttpHeaders(resp.getHttpHeader());
-                if (lengthAsSent != responseStr.length() ) {
-                    hm.addHttpHeader("X-was-"+CONTENT_LENGTH_HEADER, ""+lengthAsSent);
-                }
-                hm.modifyHttpHeadersForLogging(responseStr.length());
-                baos.write(hm.getFirstLine().getBytes());
-                baos.write(hm.getHttpHeaders().getBytes());
-                baos.write("\r\n".getBytes());
-
-                if (ConditionalCompilationControls.LOG_RAW_RESPONSE) {
-                    // this is as is on the wire and may be chunked
-                    // its important that the log contains the response as sent
-                    // rather than a decoded version otherwise the headers become inconsistent
-                    baos.write(responseBytes);
-                } else {
-                    // string containing uncompressed message json or xml as returned by the simulator
-                    baos.write(responseStr.getBytes());
-                }
-
-                req.log(buffer, baos.toByteArray());
-            }
 
         } else {
             // No response from the Simulator so use the Forwarder to forward the request to the forwarding endpoint
@@ -522,7 +554,6 @@ public class HttpInterceptWorker {
             f.forward(buffer, resp, req);
             req.setHandled(true);
         }
-
         // Validate the Request if its not inhibited
         if (!inhibitValidation) {
             HttpInterceptorValidator hiv = new HttpInterceptorValidator(config, service, clonedXmlHttpRequest);
@@ -580,7 +611,6 @@ public class HttpInterceptWorker {
 
         // handle encoding this is only compression at present
         // it must be done last after other content conversions
-
         // ifs its a wrapped binary then unencode it
         if (Utils.isBinaryPayloadString(new String(responseBytes))) {
             responseBytes = Utils.unwrapBinaryPayload(new String(responseBytes));

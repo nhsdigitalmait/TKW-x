@@ -27,7 +27,7 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 public class HttpInterceptorMode 
     extends Mode
 {
-    private static final String SERVICELIST = "SpineValidator RulesEngine Validator";
+    private static final String SERVICELIST = "SpineValidator RulesEngine Validator SpineSender";
     
     /**
      * public constructor

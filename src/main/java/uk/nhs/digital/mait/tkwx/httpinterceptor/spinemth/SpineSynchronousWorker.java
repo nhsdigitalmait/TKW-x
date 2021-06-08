@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package uk.nhs.digital.mait.tkwx.tk.handlers;
+package uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth;
 
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
@@ -42,6 +42,9 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessag
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
+import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceInterface;
+import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
 import static uk.nhs.digital.mait.tkwx.util.Utils.substituteHandleNull;
 
@@ -51,10 +54,9 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.substituteHandleNull;
  *
  * @author DAMU2
  */
-class SpineSynchronousWorker implements EvidenceInterface {
+class SpineSynchronousWorker {
 
     protected SpineSynchronousSoapRequestHandler handler = null;
-
     protected static Configurator config;
     protected static boolean inhibitValidation = true;
     protected static boolean scenarioInstantiationTrigger = false;
@@ -76,12 +78,12 @@ class SpineSynchronousWorker implements EvidenceInterface {
     protected String rcvAsid = null;
     protected String sndAsid = null;
 
-    protected LoggingFileOutputStream logfile = null;
-
+//    protected LoggingFileOutputStream logfile = null;
     protected long synchronousResponseDelay = 0;
     protected String subDir = null;
     protected String validationReport = null;
-    protected EvidenceMetaDataHandler evidenceMetaDataHandler;
+//    protected EvidenceMetaDataHandler evidenceMetaDataHandler;
+    ServiceResponse serviceResponse = new ServiceResponse();
 
     static {
         try {
@@ -113,14 +115,15 @@ class SpineSynchronousWorker implements EvidenceInterface {
      * @param resp
      * @throws HttpException
      */
-    public void handle(HttpRequest req, HttpResponse resp)
+    public ServiceResponse handle(HttpRequest req)
             throws HttpException, InterruptedException, IOException {
-        ServiceResponse r = null;
+
         try {
-            if (!doChecks(req, resp)) {
-                return;
+
+            if (!doChecks(req)) {
+                return serviceResponse;
             }
-            req.setLoggingFileOutputStream(logfile);
+//            req.setLoggingFileOutputStream(logfile);
 
             if (synchronousResponseDelay != 0) {
                 try {
@@ -130,61 +133,42 @@ class SpineSynchronousWorker implements EvidenceInterface {
                 }
             }
             ToolkitService svc = ServiceManager.getInstance().getService("RulesEngine");
-            if (svc != null) {
-                r = svc.execute(new String[]{soapaction, sm.getHL7Part()});
-                if (r != null) {
-                    if (r.getCode() == 0) {
-                        doProcessor(req, resp);
-                        return;
-                    }
-                    if (r.getCode() == -1) {
-                        String m = makeSoapFault("soap:Client", "The service/interaction is not supported for the requested URI", "urn:nhs:names:errors:tms", "101", "Error", "HTTP Header - SOAPAction", "The message is not well formed");
-                        synchronousResponse(500, "Internal server error", m, req, resp, "http://www.w3.org/2005/08/addressing/soap/fault");
-                        return;
-                    }
-                    String hresp = null;
-                    if (r.getCode() < 300) {
-                        hresp = "OK";
-                    } else {
-                        hresp = "Internal server error";
-                    }
-                    synchronousResponse(r.getCode(), hresp, r.getResponse(), req, resp, r.getAction());
-                    return;
-                } else {
-                    req.setHandled(true);
-//                    resp.forceClose();
+            serviceResponse = svc.execute(new String[]{soapaction, sm.getHL7Part()});
+            if (serviceResponse != null) {
+                if (serviceResponse.getCode() == 0) {
+                    throw new Exception("No rules or process defined for action: " + soapaction);
                 }
+                if (serviceResponse.getCode() == -1) {
+                    String m = makeSoapFault("soap:Client", "The service/interaction is not supported for the requested URI", "urn:nhs:names:errors:tms", "101", "Error", "HTTP Header - SOAPAction", "The message is not well formed");
+                    synchronousResponse(500, "Internal server error", m, "http://www.w3.org/2005/08/addressing/soap/fault");
+                    return serviceResponse;
+                }
+                String hresp = null;
+                if (serviceResponse.getCode() < 300) {
+                    hresp = "OK";
+                } else {
+                    hresp = "Internal server error";
+                }
+                synchronousResponse(serviceResponse.getCode(), hresp, serviceResponse.getResponse(), serviceResponse.getAction());
+                return serviceResponse;
             } else {
-                doProcessor(req, resp);
+                //Removed req.setHandled(true) and assume that this will be don in the process part of httpinterceptor
+//                    req.setHandled(true);
+                return serviceResponse;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                synchronousResponse(500, "Internal server error", "Error reading message: " + e.getMessage(), req, resp, "http://www.w3.org/2005/08/addressing/soap/fault");
+                synchronousResponse(500, "Internal server error", "Error reading message: " + e.getMessage(), "http://www.w3.org/2005/08/addressing/soap/fault");
+                return serviceResponse;
             } catch (Exception e1) {
                 throw new HttpException("Exception reading request: " + e.getMessage() + " : " + e1.getMessage());
             }
-            throw new HttpException("Exception reading request: " + e.getMessage());
+
         } finally {
-            // Validate the Request if its not inhibited
-            if (!inhibitValidation) {
-                HttpInterceptorValidator hiv = new HttpInterceptorValidator(config, soapaction, null);
-                hiv.validateRequest(req, subDir);
-//                if (scenarioInstantiationTrigger) {
-//                    EvidenceHandler eh = new EvidenceHandler();
-//                    // add the request/response to the handler
-//                    eh.addEvidence(req);
-//                    // add the response payload to the handler
-//                    eh.addEvidence(r);
-//                    // add the validation report 
-//                    eh.addEvidence(validationReport);
-//                    eh.sendEvidence();
-//                }
-            }
+            // indicate to the evidenceMetaDataHandler that the interaction metadata can now be written unless there are unended subthreads
+//            evidenceMetaDataHandler.mainThreadEnded();
         }
-        // indicate to the evidenceMetaDataHandler that the interaction metadata can now be written unless there are unended subthreads
-        evidenceMetaDataHandler.mainThreadEnded();
     }
 
     protected String makeSoapFault(String faultCode, String faultString, String codeContext, String errorCode, String severity, String location, String description)
@@ -200,44 +184,8 @@ class SpineSynchronousWorker implements EvidenceInterface {
         return sb.toString();
     }
 
-    /**
-     * This is a stub in TKW-x since the Process service is not supported
-     *
-     * @param req
-     * @param resp
-     * @throws Exception
-     */
-    private void doProcessor(HttpRequest req, HttpResponse resp)
-            throws Exception {
-//        ServiceResponse r = null;
-//        ToolkitService svc = ServiceManager.getInstance().getService("Processor");
-//        if (svc != null) {
-//            ProcessData p = new ProcessData(soapaction, sm.getHL7Part());
-//            p.setRequestContext(req.getContext());
-//            p.setRequestId(messageId);
-//            r = svc.execute(p);
-//            if (r != null) {
-//                String hresp = null;
-//                if (r.getCode() < 300) {
-//                    hresp = "OK";
-//                    synchronousResponse(r.getCode(), hresp, r.getResponse(), req, resp, r.getAction());
-//                } else {
-//                    ProcessorSoapFaultResponse psfr = r.getProcessorFault();
-//                    String m = makeSoapFault("soap:Client", "The service/interaction is not supported for the requested URI", "urn:nhs:names:errors:tms", "101", "Error", "HTTP Header - SOAPAction", psfr.getErrorMessage());
-//                    synchronousResponse(r.getCode(), "Internal server error", m, req, resp, "http://www.w3.org/2005/08/addressing/soap/fault");
-//                }
-//            } else {
-//                req.setHandled(true);
-////                resp.forceClose();
-//            }
-//        } else {
-        throw new Exception("No rules or process defined for action: " + soapaction);
-//      }
-    }
-
-    protected boolean doChecks(HttpRequest req, HttpResponse resp)
+    protected boolean doChecks(HttpRequest req)
             throws HttpException {
-        ServiceResponse r = null;
         try {
             readMessage(req);
         } catch (Exception e) {
@@ -245,7 +193,7 @@ class SpineSynchronousWorker implements EvidenceInterface {
             try {
                 String m = this.makeSoapFault("soap:Client", "The service/interaction is not supported for the requested URI", "urn:nhs:names:errors:tms", "101", "Error", "HTTP Header - SOAPAction", "Error reading message: " + e.getMessage());
 
-                synchronousResponse(500, "Internal server error", m, req, resp, null);
+                synchronousResponse(500, "Internal server error", m, null);
             } catch (Exception e1) {
                 throw new HttpException("Exception reading request: " + e.getMessage() + " : " + e1.getMessage());
             }
@@ -272,31 +220,41 @@ class SpineSynchronousWorker implements EvidenceInterface {
         return wrapped;
     }
 
-    protected void synchronousResponse(int i, String s, String m, HttpRequest req, HttpResponse resp, String action)
+    protected void synchronousResponse(int i, String s, String m, String action)
             throws Exception {
-        if (m.trim().length() != 0) {
-            resp.setContentType(XML_MIMETYPE);
-        }
+        HttpHeaderManager hhm = serviceResponse.getHttpHeaders();
+//        if (m.trim().length() != 0) {
+//            //resp.setContentType(XML_MIMETYPE);
+//            hhm.addHttpHeader(CONTENT_TYPE_HEADER, XML_MIMETYPE);
+//        }
         if (action != null) {
-            resp.setField(SOAP_ACTION_HEADER, action);
+//            resp.setField(SOAP_ACTION_HEADER, action);
+            hhm.addHttpHeader(SOAP_ACTION_HEADER, action);
         }
+
         if (i == -1) {
-            resp.setStatus(200, "OK");
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream()));
-            bw.write(m);
-            bw.flush();
-            req.setHandled(true);
+//            resp.setStatus(200, "OK");
+            serviceResponse.setCode(200);
+            serviceResponse.setCodePhrase("OK");
+            serviceResponse.setResponse(m);
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream()));
+//            bw.write(m);
+//            bw.flush();
+//            req.setHandled(true);
             return;
         }
         if (i == 202) {
-            resp.setStatus(i, s);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream()));
-            bw.write(m);
-            bw.flush();
-            req.setHandled(true);
+//            resp.setStatus(i, s);
+            serviceResponse.setCode(i);
+            serviceResponse.setCodePhrase(s);
+            serviceResponse.setResponse(m);
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream()));
+//            bw.write(m);
+//            bw.flush();
+//            req.setHandled(true);
             return;
         }
-            String tosend = null;
+        String tosend = null;
         if (i != 500) {
             StringBuilder wrapped = makeWrapper(action);
             Date now = new Date();
@@ -312,17 +270,20 @@ class SpineSynchronousWorker implements EvidenceInterface {
         } else {
             tosend = m;
         }
-        resp.setStatus(i, s);
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream()));
-        bw.write(tosend);
-        bw.flush();
-        req.setHandled(true);
-        logfile.write("\r\n****\r\n");
-        logfile.flush();
-        logfile.write(tosend);
-        logfile.flush();
-        logfile.logComplete();
-        logfile.close();
+//        resp.setStatus(i, s);
+        serviceResponse.setCode(i);
+        serviceResponse.setCodePhrase(s);
+        serviceResponse.setResponse(tosend);
+//        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream()));
+//        bw.write(tosend);
+//        bw.flush();
+//        req.setHandled(true);
+//        logfile.write("\r\n****\r\n");
+//        logfile.flush();
+//        logfile.write(tosend);
+//        logfile.flush();
+//        logfile.logComplete();
+//        logfile.close();
     }
 
     protected void readMessage(HttpRequest req)
@@ -346,43 +307,44 @@ class SpineSynchronousWorker implements EvidenceInterface {
         sm = new SpineMessage(req);
         resolveSndAsid();
         // initialise the evidence Metatdata handler
-        evidenceMetaDataHandler = new EvidenceMetaDataHandler(sndAsid, "ASID");
+//        evidenceMetaDataHandler = new EvidenceMetaDataHandler(sndAsid, "ASID");
 
         resolveMessageId();
-        String smd = handler.getSavedMessagesDirectory();
-        if (smd != null) {
-            subDir = HttpLogFileGenerator.generateSubFolderName(req, soapaction);
-            String rmlog = HttpLogFileGenerator.createLogFile(req, smd, subDir);
-            logfile = new LoggingFileOutputStream(rmlog);
-            logfile.setEvidenceMetaDataHandler(evidenceMetaDataHandler);
-            logfile.setMetaDataDescription("interaction-log","Synchronous Request Log");
-            logfile.write(req.getRequestType());
-            logfile.write(" ");
-            logfile.write(req.getContext());
-            logfile.write(" HTTP/1.1\r\n");
-            for (String s : req.getFieldNames()) {
-                String v = req.getField(s);
-                logfile.write(s);
-                logfile.write(": ");
-                logfile.write(v);
-                logfile.write("\r\n");
-            }
-            logfile.write("\r\n");
-            logfile.write(sm.getHL7Part());
-            logfile.flush();
-            logfile.write("\r\n" + LogMarkers.END_INBOUND_MARKER + "\r\n\r\n");
-            logfile.flush();
-            logfile.logComplete();
-            // commented out scf because synchronousresponse write to this object
-            // so requires it be open
-            // logfile.close();
-            // requires an explicit Y to inhibit
-            if (!isY(System.getProperty(DONTSIGNLOGS_PROPERTY, "N"))) {
-                LogVerifier l = LogVerifier.getInstance();
-                l.makeSignature(rmlog);
-            }
-
-        }
+//        String smd = handler.getSavedMessagesDirectory();
+//        if (smd != null) {
+//            subDir = HttpLogFileGenerator.generateSubFolderName(req, soapaction);
+//            String rmlog = HttpLogFileGenerator.createLogFile(req, smd, subDir);
+//            logfile = new LoggingFileOutputStream(rmlog);
+////            logfile.setEvidenceMetaDataHandler(evidenceMetaDataHandler);
+////            logfile.setMetaDataDescription("interaction-log", "Synchronous Request Log");
+//            logfile.write("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXHHHHHHEEEEEEEEEEEEEELLLLLLLLLLLLLLPPPPPPPPPPPPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+//            logfile.write(req.getRequestType());
+//            logfile.write(" ");
+//            logfile.write(req.getContext());
+//            logfile.write(" HTTP/1.1\r\n");
+//            for (String s : req.getFieldNames()) {
+//                String v = req.getField(s);
+//                logfile.write(s);
+//                logfile.write(": ");
+//                logfile.write(v);
+//                logfile.write("\r\n");
+//            }
+//            logfile.write("\r\n");
+//            logfile.write(sm.getHL7Part());
+//            logfile.flush();
+//            logfile.write("\r\n" + LogMarkers.END_INBOUND_MARKER + "\r\n\r\n");
+//            logfile.flush();
+//            logfile.logComplete();
+//            // commented out scf because synchronousresponse write to this object
+//            // so requires it be open
+//            // logfile.close();
+//            // requires an explicit Y to inhibit
+//            if (!isY(System.getProperty(DONTSIGNLOGS_PROPERTY, "N"))) {
+//                LogVerifier l = LogVerifier.getInstance();
+//                l.makeSignature(rmlog);
+//            }
+//
+//        }
 
         resolveToAddress();
         resolveFromAddress();
@@ -432,11 +394,6 @@ class SpineSynchronousWorker implements EvidenceInterface {
         } catch (Exception e) {
             throw new Exception("Error reading communicationFunctionRcv: Message is not well formed : " + e.getMessage());
         }
-    }
-
-    @Override
-    public void setValidationReport(String s) {
-        validationReport = s;
     }
 
 }

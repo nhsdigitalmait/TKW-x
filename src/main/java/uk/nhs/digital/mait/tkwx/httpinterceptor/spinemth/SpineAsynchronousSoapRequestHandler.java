@@ -35,6 +35,7 @@ import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathEx
 import org.xml.sax.InputSource;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
+import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
@@ -262,8 +263,8 @@ public class SpineAsynchronousSoapRequestHandler
         return null;
     }
     
-    public void asynchronousResponse(ServiceResponse ruleresponse) throws Exception{
-        asynchronousWorker.asynchronousResponse(ruleresponse);
+    public void asynchronousResponse(ServiceResponse ruleresponse, EvidenceMetaDataHandler evidenceMetaDataHandler) throws Exception{
+        asynchronousWorker.asynchronousResponse(ruleresponse, evidenceMetaDataHandler);
     }
      
     public boolean hasAsyncResponse(){

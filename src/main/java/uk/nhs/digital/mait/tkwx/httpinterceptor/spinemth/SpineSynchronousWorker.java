@@ -15,10 +15,7 @@
  */
 package uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth;
 
-import java.io.OutputStreamWriter;
-import java.io.BufferedWriter;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
-import uk.nhs.digital.mait.tkwx.http.HttpResponse;
 import uk.nhs.digital.mait.tkwx.http.HttpException;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitService;
@@ -31,21 +28,14 @@ import java.util.TimeZone;
 import static java.util.UUID.randomUUID;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-import uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptorValidator;
-import uk.nhs.digital.mait.tkwx.httpinterceptor.HttpLogFileGenerator;
-import uk.nhs.digital.mait.tkwx.itklogverifier.LogVerifier;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceManager;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.send.LogMarkers;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
-import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceInterface;
-import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
 import static uk.nhs.digital.mait.tkwx.util.Utils.substituteHandleNull;
 
 /**
@@ -62,7 +52,6 @@ class SpineSynchronousWorker {
     protected static boolean scenarioInstantiationTrigger = false;
 
     private final static SimpleDateFormat ISO8601FORMATDATE = new SimpleDateFormat(ISO8601FORMATDATEMASK);
-    private final static SimpleDateFormat FILEDATE = new SimpleDateFormat(HL7FORMATDATEMASK);
 
     protected String soapaction = null;
 
@@ -78,11 +67,9 @@ class SpineSynchronousWorker {
     protected String rcvAsid = null;
     protected String sndAsid = null;
 
-//    protected LoggingFileOutputStream logfile = null;
     protected long synchronousResponseDelay = 0;
     protected String subDir = null;
     protected String validationReport = null;
-//    protected EvidenceMetaDataHandler evidenceMetaDataHandler;
     ServiceResponse serviceResponse = new ServiceResponse();
 
     static {
@@ -123,7 +110,6 @@ class SpineSynchronousWorker {
             if (!doChecks(req)) {
                 return serviceResponse;
             }
-//            req.setLoggingFileOutputStream(logfile);
 
             if (synchronousResponseDelay != 0) {
                 try {
@@ -165,9 +151,6 @@ class SpineSynchronousWorker {
                 throw new HttpException("Exception reading request: " + e.getMessage() + " : " + e1.getMessage());
             }
 
-        } finally {
-            // indicate to the evidenceMetaDataHandler that the interaction metadata can now be written unless there are unended subthreads
-//            evidenceMetaDataHandler.mainThreadEnded();
         }
     }
 
@@ -237,9 +220,6 @@ class SpineSynchronousWorker {
             serviceResponse.setCode(200);
             serviceResponse.setCodePhrase("OK");
             serviceResponse.setResponse(m);
-//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream()));
-//            bw.write(m);
-//            bw.flush();
 //            req.setHandled(true);
             return;
         }
@@ -248,9 +228,6 @@ class SpineSynchronousWorker {
             serviceResponse.setCode(i);
             serviceResponse.setCodePhrase(s);
             serviceResponse.setResponse(m);
-//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream()));
-//            bw.write(m);
-//            bw.flush();
 //            req.setHandled(true);
             return;
         }
@@ -274,16 +251,8 @@ class SpineSynchronousWorker {
         serviceResponse.setCode(i);
         serviceResponse.setCodePhrase(s);
         serviceResponse.setResponse(tosend);
-//        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resp.getOutputStream()));
-//        bw.write(tosend);
-//        bw.flush();
 //        req.setHandled(true);
-//        logfile.write("\r\n****\r\n");
-//        logfile.flush();
-//        logfile.write(tosend);
-//        logfile.flush();
-//        logfile.logComplete();
-//        logfile.close();
+
     }
 
     protected void readMessage(HttpRequest req)
@@ -306,45 +275,7 @@ class SpineSynchronousWorker {
         }
         sm = new SpineMessage(req);
         resolveSndAsid();
-        // initialise the evidence Metatdata handler
-//        evidenceMetaDataHandler = new EvidenceMetaDataHandler(sndAsid, "ASID");
-
         resolveMessageId();
-//        String smd = handler.getSavedMessagesDirectory();
-//        if (smd != null) {
-//            subDir = HttpLogFileGenerator.generateSubFolderName(req, soapaction);
-//            String rmlog = HttpLogFileGenerator.createLogFile(req, smd, subDir);
-//            logfile = new LoggingFileOutputStream(rmlog);
-////            logfile.setEvidenceMetaDataHandler(evidenceMetaDataHandler);
-////            logfile.setMetaDataDescription("interaction-log", "Synchronous Request Log");
-//            logfile.write("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXHHHHHHEEEEEEEEEEEEEELLLLLLLLLLLLLLPPPPPPPPPPPPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-//            logfile.write(req.getRequestType());
-//            logfile.write(" ");
-//            logfile.write(req.getContext());
-//            logfile.write(" HTTP/1.1\r\n");
-//            for (String s : req.getFieldNames()) {
-//                String v = req.getField(s);
-//                logfile.write(s);
-//                logfile.write(": ");
-//                logfile.write(v);
-//                logfile.write("\r\n");
-//            }
-//            logfile.write("\r\n");
-//            logfile.write(sm.getHL7Part());
-//            logfile.flush();
-//            logfile.write("\r\n" + LogMarkers.END_INBOUND_MARKER + "\r\n\r\n");
-//            logfile.flush();
-//            logfile.logComplete();
-//            // commented out scf because synchronousresponse write to this object
-//            // so requires it be open
-//            // logfile.close();
-//            // requires an explicit Y to inhibit
-//            if (!isY(System.getProperty(DONTSIGNLOGS_PROPERTY, "N"))) {
-//                LogVerifier l = LogVerifier.getInstance();
-//                l.makeSignature(rmlog);
-//            }
-//
-//        }
 
         resolveToAddress();
         resolveFromAddress();

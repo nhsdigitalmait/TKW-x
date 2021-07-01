@@ -146,7 +146,7 @@ public class WrapperHelper {
         }
         return ent;        
     }
-    public HashMap<String,String> getSDSInteractionEntry(String asid, String interactionid) {
+    public synchronized HashMap<String,String> getSDSInteractionEntry(String asid, String interactionid) {
         Element sdsElement = getSDSNode(asid, interactionid);
         return getSDSEntry(sdsElement);
     }

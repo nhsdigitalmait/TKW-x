@@ -8,8 +8,13 @@ Without this configuration present, some functionality in the IDE may be limited
 -->
     <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
         <configurations>
+            <configuration id="EPSHttpInterceptor" profiles="">
+                <property name="javax.net.ssl.trustStore">/home/riro/TKW-5.0.5/TKW/config/SPINE_MTH_EPS_Dispenser_Simulator/certs/opentest.jks</property>
+                <property name="javax.net.ssl.keyStorePassword">password</property>
+                <property name="javax.net.ssl.keyStore">/home/riro/TKW-5.0.5/TKW/config/SPINE_MTH_EPS_Dispenser_Simulator/certs/vpn-client-1094.jks</property>
+                <property name="javax.net.ssl.trustStorePassword">password</property>
+            </configuration>
             <configuration id="SimulatorEPS" profiles=""/>
-            <configuration id="EPSHttpInterceptor" profiles=""/>
         </configurations>
     </config-data>
 </project-shared-configuration>

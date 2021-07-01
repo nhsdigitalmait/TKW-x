@@ -19,7 +19,6 @@ import java.io.IOException;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.http.HttpException;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
-import uk.nhs.digital.mait.tkwx.http.HttpResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitService;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import java.text.SimpleDateFormat;
@@ -32,17 +31,13 @@ import static java.util.logging.Level.WARNING;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.send.SenderRequest;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptorValidator;
 import uk.nhs.digital.mait.tkwx.httpinterceptor.HttpLogFileGenerator;
-import uk.nhs.digital.mait.tkwx.itklogverifier.LogVerifier;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceManager;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.send.LogMarkers;
+import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.send.WrapperHelper;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
-import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import static uk.nhs.digital.mait.tkwx.util.Utils.substituteHandleNull;
 
 /**
@@ -70,8 +65,8 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
     protected Pattern ampPattern = null;
 
     private static final SimpleDateFormat ISO8601FORMATDATE = new SimpleDateFormat(ISO8601FORMATDATEMASK);
-    private static final SimpleDateFormat FILEDATE = new SimpleDateFormat(HL7FORMATDATEMASK);
     private static final String EBXMLERRORACTION = "urn:urn:oasis:names:tc:ebxml-msg:service/MessageError";
+    private static final String EBXMLACKACTION = "urn:urn:oasis:names:tc:ebxml-msg:service/Acknowledgment";
     private long asyncResponseDelay = 0;
 
     protected String toPartyID = null;
@@ -81,7 +76,7 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
     private WrapperHelper wh = null;
     private boolean unreliable = false;
     private boolean fwdReliable = false;
-    private String asyncResponsePayload =null;
+    private String asyncResponsePayload = null;
 
     SpineAsynchronousWorker(SpineAsynchronousSoapRequestHandler asrh) {
         super(asrh);
@@ -107,7 +102,6 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
             if (!doChecks(req)) {
                 return serviceResponse;
             }
-//            req.setLoggingFileOutputStream(logfile);
 
             if (synchronousResponseDelay != 0) {
                 try {
@@ -134,7 +128,7 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
                         }
                         // Put the Async payload into asyncResponse for use later because the synchronousAck will overwrite it
                         asyncResponsePayload = serviceResponse.getResponse();
-                        
+
                         synchronousAck(serviceResponse);
                         if (asyncResponseDelay != 0) {
                             try {
@@ -146,7 +140,7 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
                         // Check to see if a NONE response has been asked for 
                         if (!asyncResponsePayload.equals("")) {
                             asyncHandler.hasAsyncResponse = true;
-//temp removed                            asynchronousResponse(serviceResponse);
+                            subDir = HttpLogFileGenerator.generateSubFolderName(req, soapaction);
                         }
                         return serviceResponse;
                     } else {
@@ -173,31 +167,6 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
             }
             throw new HttpException("Exception reading request: " + e.getMessage());
 
-        } finally {
-
-            // Validate the Request if its not inhibited
-            if (!inhibitValidation) {
-                HttpInterceptorValidator hiv = new HttpInterceptorValidator(config, soapaction, null);
-
-                // Send the simulator evidence and validation report (if available) to the Scheduler
-//                if (scenarioInstantiationTrigger) {
-//                    hiv.registerForReport((EvidenceInterface) this);
-//                }
-                hiv.validateRequest(req, subDir);
-//                if (scenarioInstantiationTrigger) {
-//                    EvidenceHandler eh = new EvidenceHandler();
-//                    // add the request/response to the handler
-//                    eh.addEvidence(req);
-//                    // add the response payload to the handler
-//                    eh.addEvidence(r);
-//                    // add the validation report 
-//                    eh.addEvidence(validationReport);
-//                    eh.sendEvidence();
-//                }
-
-            }
-            // indicate to the evidenceMetaDataHandler that the interaction metadata can now be written unless there are unended subthreads
-//            evidenceMetaDataHandler.mainThreadEnded();
         }
     }
 
@@ -246,7 +215,6 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
 
         // initialise the evidence Metatdata handler
 //        evidenceMetaDataHandler = new EvidenceMetaDataHandler(sndAsid, "ASID");
-
         resolveMessageId();
 
         // Reliability check
@@ -263,39 +231,6 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
             }
         }
 
-//        String smd = handler.getSavedMessagesDirectory();
-//        if (smd != null) {
-//            subDir = HttpLogFileGenerator.generateSubFolderName(req, soapaction);
-//            String rmlog = HttpLogFileGenerator.createLogFile(req, smd, subDir);
-//            logfile = new LoggingFileOutputStream(rmlog);
-//            logfile.setEvidenceMetaDataHandler(evidenceMetaDataHandler);
-//            logfile.setMetaDataDescription("interaction-log", "Async Request Log");
-//            logfile.write(req.getRequestType());
-//            logfile.write(" ");
-//            logfile.write(req.getContext());
-//            logfile.write(" HTTP/1.1\r\n");
-//            for (String s : req.getFieldNames()) {
-//                String v = req.getField(s);
-//                logfile.write(s);
-//                logfile.write(": ");
-//                logfile.write(v);
-//                logfile.write("\r\n");
-//            }
-//            logfile.write("\r\n");
-//            logfile.write(sm.getPresentedFile());
-//            logfile.flush();
-//            logfile.write("\r\n" + LogMarkers.END_INBOUND_MARKER + "\r\n\r\n");
-//            logfile.flush();
-//            logfile.logComplete();
-//            logfile.close();
-//
-//            // requires an explcit Y to inhibit
-//            if (!isY(System.getProperty(DONTSIGNLOGS_PROPERTY, "N"))) {
-//                LogVerifier l = LogVerifier.getInstance();
-//                l.makeSignature(rmlog);
-//            }
-//
-//        }
 
         resolveToAddress();
         resolveFromAddress();
@@ -332,8 +267,10 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
         substituteHandleNull(ack, TIMESTAMP_TAG, ackTime);
         substituteHandleNull(ack, ORIGINALMESSAGEID_TAG, messageId);
         substituteHandleNull(ack, CPAID, CPAId);
-        synchronousResponse(202, "Accepted", ack.toString(), r.getAction());
-    }
+//        synchronousResponse(202, "Accepted", ack.toString(), r.getAction()); // this returned the response soapaction c.f. the acknowledgement soapaction
+        synchronousResponse(202, "Accepted", ack.toString(), EBXMLACKACTION);
+
+        }
 
     protected void synchronousEbXMLError(ServiceResponse r)
             throws Exception {
@@ -467,7 +404,7 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
         return s;
     }
 
-    public void asynchronousResponse(ServiceResponse ruleresponse)
+    public void asynchronousResponse(ServiceResponse ruleresponse, EvidenceMetaDataHandler evidenceMetaDataHandler)
             throws Exception {
         ToolkitService svc = null;
         String wrapper = null;
@@ -490,20 +427,21 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
                     "Unable to resolve endpoint address for " + ruleresponse.getAction() + " to " + toPartyID);
             return;
         }
+
         if (ruleresponse.getCode() < 300) {
             sreq = new SenderRequest(payload, wrapper, replyTo);
             sreq.setRelatesTo(messageId);
             sreq.setAction(ruleresponse.getAction());
-//            sreq.setEvidenceMetaDataHandler(evidenceMetaDataHandler);
-//            sreq.setLoggingSubDir(subDir);
+            sreq.setEvidenceMetaDataHandler(evidenceMetaDataHandler);
+            sreq.setLoggingSubDir(subDir);
             svc.execute(sreq);
         } else {
 // What should be done if a >300 is got?????
             sreq = new SenderRequest(payload, wrapper, faultTo);
             sreq.setAction(ruleresponse.getAction());
             sreq.setRelatesTo(messageId);
-//            sreq.setEvidenceMetaDataHandler(evidenceMetaDataHandler);
-//            sreq.setLoggingSubDir(subDir);
+            sreq.setEvidenceMetaDataHandler(evidenceMetaDataHandler);
+            sreq.setLoggingSubDir(subDir);
             svc.execute(sreq);
         }
     }

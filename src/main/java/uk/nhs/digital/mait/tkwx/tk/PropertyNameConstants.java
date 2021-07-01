@@ -91,6 +91,9 @@ public class PropertyNameConstants {
     public static final String FORWARDINGADDRESSPROPERTY = "tks.httpinterceptor.forwardingaddress";
     public static final String FORWARDINGPORTPROPERTY = "tks.httpinterceptor.forwardingport";
 
+    public static final String SPINESOAPSYNCREQUEST = "tks.HttpTransport.SpineSyncSoapRequest";
+    public static final String SPINESOAPASYNCREQUEST = "tks.HttpTransport.SpineAsyncSoapRequest";
+
     public static final String GENERATE_EVIDENCE_METADATA_PROPERTY = "tks.evidencemetadata.generate";
     public static final String EVIDENCE_METADATA_LOCATION_PROPERTY = "tks.evidencemetadata.location";
     public static final String EVIDENCE_METADATA_URLBASE_PROPERTY = "tks.evidencemetadata.urlbase";

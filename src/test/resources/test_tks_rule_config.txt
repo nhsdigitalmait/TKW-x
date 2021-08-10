@@ -12,10 +12,10 @@
 #=================================================================================================================================================================================================================================================
 #
 BEGIN RESPONSES
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/responses.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/responses.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/responses.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/responses.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/responses.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/responses.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/responses.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/responses.conf
 do_process	NONE	0
 http_header_test NONE 0 WITH_HTTP_HEADERS ( h1 : "v1" h2 : "v2\"*" )
 # added to stop unresolved references
@@ -29,7 +29,7 @@ END RESPONSES
 #=================================================================================================================================================================================================================================================
 #
 BEGIN SUBSTITUTIONS
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/substitutions.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/substitutions.conf
 __LITERAL_TAG__ Literal aaa
 __UC_UUID_TAG__ UUID
 __LC_UUID_TAG__ uuid
@@ -52,10 +52,10 @@ END SUBSTITUTIONS
 #=================================================================================================================================================================================================================================================
 #
 BEGIN EXPRESSIONS
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/expressions.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/expressions.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/expressions.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/expressions.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/expressions.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/expressions.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/expressions.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/expressions.conf
 passthrough	Always
 exp_header_matches               HTTP_HEADER Accept matches ^.*application/xml\+fhir.*$
 exp_contextpath_matches              context_path matches ^.*application/xml\+fhir.*$
@@ -76,8 +76,8 @@ exp_xpathnotmatches xpathnotmatches /fhir:Bundle ^b$
 exp_xpathcompare xpathcompare /fhir:Bundle /fhir:Bundle
 exp_xpathnotcompare xpathnotcompare /fhir:Bundle /fhir:Bundle/fhir:Element
 exp_xslt xslt src/test/resources/testtransform.xsl ERROR
-exp_schema schema /mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/DMS_Schema/ITK_Core/Schemas/distributionEnvelope-v2-0.xsd
-exp_schema_xpath schema /mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/DMS_Schema/ITK_Core/Schemas/distributionEnvelope-v2-0.xsd /soap:Envelope/soap:Body/itk:DistributionEnvelope
+exp_schema schema TKW_ROOT/contrib/DMS_Schema/ITK_Core/Schemas/distributionEnvelope-v2-0.xsd
+exp_schema_xpath schema TKW_ROOT/contrib/DMS_Schema/ITK_Core/Schemas/distributionEnvelope-v2-0.xsd /soap:Envelope/soap:Body/itk:DistributionEnvelope
 exp_always always
 exp_never never
 contains_variable context_path contains $v1
@@ -90,50 +90,50 @@ END EXPRESSIONS
 #
 BEGIN RULE
 urn:nhs-itk:services:201005:SendCDADocument-v2-0
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules_ProfileID.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules_ProfileID.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
 END RULE
 
 BEGIN RULE
 urn:nhs-itk:services:201005:SendBusinessAck-v1-0
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules_ProfileID.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules_ProfileID.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
 END RULE
 
 BEGIN RULE
 urn:nhs-itk:services:201005:SendInfrastructureAck-v1-0
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
 END RULE
 
 BEGIN RULE
 urn:nhs-itk:services:201005:SendDocument-v1-0
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
 END RULE
 
 BEGIN RULE
 urn:nhs-itk:services:201005:BroadcastDocument-v1-0
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
 END RULE
 
 BEGIN RULE
 urn:nhs-itk:services:201005:SendCDADocument-v1-0
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	/mnt/encrypted/home/simonfarrow/Documents/TKW5.0Dev/TKW/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
+INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
 END RULE
 
 BEGIN RULE

@@ -15,6 +15,9 @@ Without this configuration present, some functionality in the IDE may be limited
                 <property name="javax.net.ssl.trustStorePassword">password</property>
             </configuration>
             <configuration id="SimulatorEPS" profiles=""/>
+            <configuration id="uec_consumer_simulator" profiles=""/>
+            <configuration id="uec_provider_simulator" profiles=""/>
+            <configuration id="FHIR_Validator_Server" profiles=""/>
         </configurations>
     </config-data>
 </project-shared-configuration>

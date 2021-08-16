@@ -10,7 +10,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
             </goals>
             <properties>
-                <exec.args>-Djava.net.preferIPv4Stack=true -classpath %classpath uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator -simulator /home/riro/TKW-5.0.5/TKW/config/SPINE_MTH_EPS_Dispenser_Simulator/tkw-x_mth_server_ssl.properties</exec.args>
+                <exec.args>-Djava.net.preferIPv4Stack=true -classpath %classpath uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator -httpinterceptor /home/riro/TKW-5.0.5/TKW/config/FHIR_VALIDATOR_SERVER/tkw-x.properties</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -24,7 +24,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
             </goals>
             <properties>
-                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -Djava.net.preferIPv4Stack=true -classpath %classpath uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator -simulator /home/riro/TKW-5.0.5/TKW/config/SPINE_MTH_EPS_Dispenser_Simulator/tkw-x_mth_server_ssl.properties</exec.args>
+                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -Djava.net.preferIPv4Stack=true -classpath %classpath uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator -httpinterceptor /home/riro/TKW-5.0.5/TKW/config/FHIR_VALIDATOR_SERVER/tkw-x.properties</exec.args>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
             </properties>
@@ -39,7 +39,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
             </goals>
             <properties>
-                <exec.args>-Djava.net.preferIPv4Stack=true -classpath %classpath uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator -simulator /home/riro/TKW-5.0.5/TKW/config/SPINE_MTH_EPS_Dispenser_Simulator/tkw-x_mth_server_ssl.properties</exec.args>
+                <exec.args>-Djava.net.preferIPv4Stack=true -classpath %classpath uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator -httpinterceptor /home/riro/TKW-5.0.5/TKW/config/FHIR_VALIDATOR_SERVER/tkw-x.properties</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

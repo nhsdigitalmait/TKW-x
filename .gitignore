@@ -5,3 +5,4 @@ build.sh
 pom.xml
 TKW-x.jar
 push_tkw_to_dockerhub.sh
+nbactions-*

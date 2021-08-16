@@ -146,7 +146,18 @@ public class ToolkitSimulator {
         if (properties.getProperty(DONTSIGNLOGS_PROPERTY) != null) {
             System.setProperty(DONTSIGNLOGS_PROPERTY, properties.getProperty(DONTSIGNLOGS_PROPERTY));
         }
-        Logger.getInstance().setAppName("TKS", properties.getProperty("tks.logdir"));
+        String logDir = properties.getProperty("tks.logdir");
+        String remoteLogging = properties.getProperty("tks.remotelogging");
+        if(logDir!=null || remoteLogging!=null){
+            Logger.getInstance().setCustomLoggerName("TKS");
+            if (logDir != null) {
+                Logger.getInstance().addCustomLoggerApplicationHandler(properties.getProperty("tks.logdir"));
+            }
+            if (remoteLogging != null && remoteLogging.toUpperCase().charAt(0) == 'Y') {
+                Logger.getInstance().addCustomLoggerRemoteHandler();
+            }
+        }
+
         configurationName = properties.getProperty(TKSNAME, "Not given");
         organisationName = properties.getProperty(TKSORG, "Not given");
         System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);

@@ -1,12 +1,12 @@
 SCRIPT TKWAutotestManager_v123
 # Generated automatically on: 20170306122719395
 # Merged Files:
-# TKW_ROOT/contrib/TKWAutotestManager/tstp/WebServices/host/CO/CO_AMB_PR_XML.tstp
+# /home/riro/TKW-5.0.5/TKW/contrib/TKWAutotestManager/tstp/WebServices/host/CO/CO_AMB_PR_XML.tstp
 
 # NB this references the *internal* autotest simulator rules applied when listening for async messages not the rule set autotest applies which are referenced in the main properties file
-SIMULATOR TKW_ROOT/config/ITK_Correspondence/simulator_config/test_tks_rule_config.txt
+SIMULATOR /home/riro/TKW-5.0.5/TKW/config/ITK_Correspondence/simulator_config/test_tks_rule_config.txt
 
-VALIDATOR TKW_ROOT/config/ITK_Correspondence/validator_config/validator.conf
+VALIDATOR /home/riro/TKW-5.0.5/TKW/config/ITK_Correspondence/validator_config/validator.conf
 
 STOP WHEN COMPLETE
 
@@ -28,7 +28,7 @@ CO_AMB_PR_XML USING CO_AMB_PR_XML_urn:nhs-itk:interaction:primaryRecipientAmbula
 END MESSAGES
 
 BEGIN TEMPLATES
-CO_AMB_PR_XML_urn:nhs-itk:interaction:primaryRecipientAmbulanceServicePatientReport-v1-0_template TKW_ROOT/contrib/ITK_2_01_Test_Messages/Correspondence/Ambulance/POCD_MT030001UK01_SOAPandDIST_Primary.xml
+CO_AMB_PR_XML_urn:nhs-itk:interaction:primaryRecipientAmbulanceServicePatientReport-v1-0_template /home/riro/TKW-5.0.5/TKW/contrib/ITK_2_01_Test_Messages/Correspondence/Ambulance/POCD_MT030001UK01_SOAPandDIST_Primary.xml
 END TEMPLATES
 
 BEGIN PROPERTYSETS

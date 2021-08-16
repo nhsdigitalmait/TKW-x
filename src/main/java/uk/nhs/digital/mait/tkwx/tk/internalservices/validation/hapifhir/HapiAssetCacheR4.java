@@ -20,6 +20,7 @@ import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.validation.ValidationResult;
 import java.io.File;
+import static java.util.logging.Level.SEVERE;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.hl7.fhir.r4.model.Coding;
@@ -35,6 +36,7 @@ import org.hl7.fhir.r4.model.SearchParameter;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r4.model.ValueSet;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
@@ -94,6 +96,7 @@ public class HapiAssetCacheR4 implements HapiAssetCacheInterface {
     public HashMap<String, StructureDefinition> getStructureDefinitions() {
         return StructureDefinitionCache;
     }
+
     @Override
     public HashMap<String, IBaseResource> getStructureDefinitionIBaseResourceCache() {
         return StructureDefinitionIBaseResourceCache;
@@ -115,6 +118,7 @@ public class HapiAssetCacheR4 implements HapiAssetCacheInterface {
     public HashMap<String, CodeSystem> getCodeSystemCache() {
         return codeSystemCache;
     }
+
     @Override
     public HashMap<String, IBaseResource> getCodeSystemIBaseResourceCache() {
         return codeSystemIBaseResourceCache;
@@ -284,7 +288,8 @@ public class HapiAssetCacheR4 implements HapiAssetCacheInterface {
                 url = ((SearchParameter) resource).getUrl();
                 searchParameterCache.put(url, (SearchParameter) resource);
             } else {
-                throw new IllegalArgumentException("Cannot recognise resource type" + r);
+                Logger.getInstance().log(SEVERE, HapiAssetCacheR4.class.getName(), "Cannot recognise resource type" + r );
+//                throw new IllegalArgumentException("Cannot recognise resource type" + r);
             }
 
             resourceCache.put(url, resource);
@@ -349,8 +354,9 @@ public class HapiAssetCacheR4 implements HapiAssetCacheInterface {
     public void setProfileVersionFileName(String name) {
         profileVersionFileName = name;
     }
+
     @Override
-    public String convertValidationResultToOOString(ValidationResult vr,HapiFhirValidatorEngine hfve) {
+    public String convertValidationResultToOOString(ValidationResult vr, HapiFhirValidatorEngine hfve) {
         OperationOutcome oo = (OperationOutcome) vr.toOperationOutcome();
         Meta meta = new Meta();
         Coding hapiVersion = new Coding();
@@ -365,6 +371,7 @@ public class HapiAssetCacheR4 implements HapiAssetCacheInterface {
         resource.setMeta(meta);
         return context.newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);
     }
+
     @Override
     public String getRebuildBusyOOMessage() {
 
@@ -381,6 +388,6 @@ public class HapiAssetCacheR4 implements HapiAssetCacheInterface {
         oo.addIssue().setCode(OperationOutcome.IssueType.INFORMATIONAL)
                 .setSeverity(OperationOutcome.IssueSeverity.INFORMATION)
                 .setDiagnostics("Server Profile Rebuild Successful");
-         return context.newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);
+        return context.newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);
     }
 }

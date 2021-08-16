@@ -22,6 +22,7 @@ import ca.uhn.fhir.validation.ValidationResult;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import static java.util.logging.Level.SEVERE;
 import org.hl7.fhir.dstu3.model.CapabilityStatement;
 import org.hl7.fhir.dstu3.model.CodeSystem;
 import org.hl7.fhir.dstu3.model.Coding;
@@ -35,6 +36,7 @@ import org.hl7.fhir.dstu3.model.SearchParameter;
 import org.hl7.fhir.dstu3.model.StructureDefinition;
 import org.hl7.fhir.dstu3.model.ValueSet;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
@@ -286,7 +288,8 @@ public class HapiAssetCacheStu3 implements HapiAssetCacheInterface {
                 url = ((SearchParameter) resource).getUrl();
                 searchParameterCache.put(url, (SearchParameter) resource);
             } else {
-                throw new IllegalArgumentException("Cannot recognise resource type" + r);
+                Logger.getInstance().log(SEVERE, HapiAssetCacheR4.class.getName(), "Cannot recognise resource type" + r );
+//                throw new IllegalArgumentException("Cannot recognise resource type" + r);
             }
 
             resourceCache.put(url, resource);

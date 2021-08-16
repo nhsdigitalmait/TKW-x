@@ -46,6 +46,8 @@ import org.hl7.fhir.common.hapi.validation.support.RemoteTerminologyServiceValid
 import org.hl7.fhir.common.hapi.validation.support.SnapshotGeneratingValidationSupport;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
 
 /**
@@ -96,6 +98,10 @@ public class HapiFhirValidatorEngine {
     private HapiAssetCacheInterface hapiAssetCacheInterface = null;
     private FhirVersionEnum fhirVersionEnum = null;
     private String primingResourceLocation = null;
+    private RemoteTerminologyServiceValidationSupport remoteTermSvc = null;
+    private String terminologyAccessToken = null;
+    private String terminologyAccessTokenLocation = null;
+    private BearerTokenAuthInterceptor authInterceptor = null;
 
     public String getRebuildBusyOOMessage() {
         return hapiAssetCacheInterface.getRebuildBusyOOMessage();
@@ -155,6 +161,16 @@ public class HapiFhirValidatorEngine {
             } else {
                 try {
                     URL url = new URL(remoteTerminologyServiceUrl);
+                    //if so check if an access token is necessary
+                    String systemTerminologyAccessTokenLocation = System.getProperty("uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir." + hapiFhirInstanceName + ".terminologyserveraccesstokenlocation");
+                    if (systemTerminologyAccessTokenLocation != null && systemTerminologyAccessTokenLocation.trim() != "") {
+                        terminologyAccessTokenLocation = systemTerminologyAccessTokenLocation;
+                    } else {
+                        terminologyAccessTokenLocation = config.getConfiguration(HapiFhirInstancePath + ".terminologyserveraccesstokenlocation");
+                    }
+                    if (terminologyAccessTokenLocation != null) {
+                        terminologyAccessToken = readFile2String(terminologyAccessTokenLocation);
+                    }
                 } catch (MalformedURLException m) {
                     remoteTerminologyServiceUrl = null;
                     Logger.getInstance().log(java.util.logging.Level.WARNING, HapiFhirValidatorEngine.class.getName(), "Terminology Server URL is Malformed: " + m.getMessage());
@@ -294,8 +310,11 @@ public class HapiFhirValidatorEngine {
 
 // Create a module that uses a remote terminology service
             if (remoteTerminologyServiceUrl != null) {
-                RemoteTerminologyServiceValidationSupport remoteTermSvc = new RemoteTerminologyServiceValidationSupport(context);
+                remoteTermSvc = new RemoteTerminologyServiceValidationSupport(context);
+                authInterceptor = new BearerTokenAuthInterceptor(terminologyAccessToken);
+                remoteTermSvc.addClientInterceptor(authInterceptor);
                 remoteTermSvc.setBaseUrl(remoteTerminologyServiceUrl);
+
                 supportChain.addValidationSupport(remoteTermSvc);
             }
             CachingValidationSupport cachingValidationSupport = new CachingValidationSupport(supportChain);
@@ -339,7 +358,7 @@ public class HapiFhirValidatorEngine {
                 // prime the hapi fhir validator
                 System.out.println("Priming HAPI FHIR Validator");
                 String primingResource = readFile2String(primingResourceLocation);
-                validate(primingResource); // We don't care about the validation
+                validate(primingResource); // We don't care about the validation outcome
             }
 
         } catch (Exception e) {
@@ -365,6 +384,12 @@ public class HapiFhirValidatorEngine {
             resource = jsonParser.parseResource(o);
         } else {
             throw new Exception("Message format of message to be validated cannot be determined as json or XML");
+        }
+        //Check if the authorisation token for the FHIR Terminology Server has changed
+        if (remoteTermSvc != null) {
+            if (hasTerminologyAccessTokenChanged()) {
+                updateFhirTerminologyServerAccessToken();
+            }
         }
         ValidationResult result = fhirValidator.validateWithResult(resource);
         List<SingleValidationMessage> svmList = new ArrayList<>();
@@ -425,5 +450,28 @@ public class HapiFhirValidatorEngine {
 
     String getFhirVersion() {
         return fhirVersionEnum.toString();
+    }
+
+    private boolean hasTerminologyAccessTokenChanged() throws Exception {
+        if (terminologyAccessTokenLocation != null) {
+            String tat = readFile2String(terminologyAccessTokenLocation);
+            if (terminologyAccessToken.equals(tat)) {
+                System.out.println("No Change in Access Token");
+                return false;
+            } else {
+                terminologyAccessToken = tat;
+                System.out.println("New Access Token");
+                return true;
+            }
+        } else {
+            return false;
+        }
+
+    }
+
+    void updateFhirTerminologyServerAccessToken() {
+        if (remoteTermSvc != null && terminologyAccessToken != null) {
+            authInterceptor.setToken(terminologyAccessToken);
+        }
     }
 }

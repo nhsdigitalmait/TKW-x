@@ -97,7 +97,6 @@ httpstatuscheck206 httpstatuscheck 206
 nullrq nullrequest "^Failed.*$"
 nullresp nullresponse "^Failed.*$"
 httpheadercorrelation httpheadercorrelationcheck Header1 Header2
-Header1 Header2
 END PASSFAIL
 
 BEGIN SUBSTITUTION_TAGS

@@ -279,7 +279,7 @@ public class AutotestGrammarCompilerVisitorTest {
     @Test
     public void testGetPassfailchecks() {
         System.out.println("getPassfailchecks");
-        int expResult = 22;
+        int expResult = 23;
         HashMap<String, PassFailCheck> result = instance.getPassfailchecks();
         assertEquals(expResult, result.size());
     }

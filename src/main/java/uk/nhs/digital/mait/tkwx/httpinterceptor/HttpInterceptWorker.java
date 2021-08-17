@@ -535,7 +535,7 @@ public class HttpInterceptWorker {
 
             // remember the length as sent on the wire
             int lengthAsSent = responseBytes.length;
-            try (OutputStream os = resp.getOutputStream()) {
+            try ( OutputStream os = resp.getOutputStream()) {
                 os.write(responseBytes);
                 // NB Don't delete the flush its critical to successful operation of the interceptor
                 // because theres an override that causes the final response to be generated
@@ -544,7 +544,7 @@ public class HttpInterceptWorker {
             req.setHandled(true);
 
             // write the log file
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            try ( ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 HttpHeaderManager hm = new HttpHeaderManager();
                 hm.parseHttpHeaders(resp.getHttpHeader());
                 if (lengthAsSent != responseStr.length()) {
@@ -816,6 +816,12 @@ public class HttpInterceptWorker {
                 } else if (isHapIVersionNewerThanDstu2()) {
                     resp.setContentType(FHIR_XML_MIMETYPE_STU3);
                 }
+            } else if (isJsonFhir(accept)) {
+                if (isHapiVersionDstu2()) {
+                    resp.setContentType(FHIR_JSON_MIMETYPE_DSTU2);
+                } else if (isHapIVersionNewerThanDstu2()) {
+                    resp.setContentType(FHIR_JSON_MIMETYPE_STU3);
+                }
             } else {
                 resp.setContentType(XML_MIMETYPE);
             }
@@ -825,6 +831,12 @@ public class HttpInterceptWorker {
                     resp.setContentType(FHIR_JSON_MIMETYPE_DSTU2);
                 } else if (isHapIVersionNewerThanDstu2()) {
                     resp.setContentType(FHIR_JSON_MIMETYPE_STU3);
+                }
+            } else if (isXmlFhir(accept)) {
+                if (isHapiVersionDstu2()) {
+                    resp.setContentType(FHIR_XML_MIMETYPE_DSTU2);
+                } else if (isHapIVersionNewerThanDstu2()) {
+                    resp.setContentType(FHIR_XML_MIMETYPE_STU3);
                 }
             } else {
                 resp.setContentType(JSON_MIMETYPE);

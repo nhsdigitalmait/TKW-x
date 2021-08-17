@@ -1,12 +1,12 @@
 SCRIPT TKWAutotestManager_v117
 # Generated automatically on: 20160404183408696
 # Merged Files:
-# /home/riro/TKW-5.0.5/TKW/contrib/TKWAutotestManager/tstp/WebServices/host/CO/DE_EMPPID.tstp
+# TKW_ROOT/contrib/TKWAutotestManager/tstp/WebServices/host/CO/DE_EMPPID.tstp
 
 # NB this references the *internal* autotest simulator rules applied when listening for async messages not the rule set autotest applies which are referenced in the main properties file
-SIMULATOR /home/riro/TKW-5.0.5/TKW/config/ITK_Correspondence/simulator_config/test_tks_rule_config.txt
+SIMULATOR TKW_ROOT/config/ITK_Correspondence/simulator_config/test_tks_rule_config.txt
 
-VALIDATOR /home/riro/TKW-5.0.5/TKW/config/ITK_Correspondence/validator_config/validator.conf
+VALIDATOR TKW_ROOT/config/ITK_Correspondence/validator_config/validator.conf
 
 STOP WHEN COMPLETE
 
@@ -18,7 +18,7 @@ DE_EMPPID TESTS DE_EMPPID_test1 DE_EMPPID_test2 DE_EMPPID_test3 DE_EMPPID_test4 
 END SCHEDULES
 
 BEGIN TESTS
-DE_EMPPID_test1 SEND_TKW DE_EMPPID TO http://127.0.0.1:4848/syncsoap FROM http://127.0.0.1:4000/syncsoap  PRETRANSFORM /home/riro/TKW-5.0.5/TKW/contrib/TKWAutotestManager/transforms/extract_de.xslt+/home/riro/TKW-5.0.5/TKW/contrib/TKWAutotestManager/transforms/DE_EMPPID.xslt APPLYPRETRANSFORMTO data+final SYNC fail WITH_PROPERTYSET base+webservices WITH_HTTPHEADERS headerset1 TEXT "DE_EMPPID_1: HTTP Response must be HTTP 500"
+DE_EMPPID_test1 SEND_TKW DE_EMPPID TO http://127.0.0.1:4848/syncsoap FROM http://127.0.0.1:4000/syncsoap  PRETRANSFORM TKW_ROOT/contrib/TKWAutotestManager/transforms/extract_de.xslt+TKW_ROOT/contrib/TKWAutotestManager/transforms/DE_EMPPID.xslt APPLYPRETRANSFORMTO data+final SYNC fail WITH_PROPERTYSET base+webservices WITH_HTTPHEADERS headerset1 TEXT "DE_EMPPID_1: HTTP Response must be HTTP 500"
 DE_EMPPID_test2 CHAIN SYNC errorcodeexists TEXT "DE_EMPPID_2: ErrorCode in ITK Fault Block must exist"
 DE_EMPPID_test3 CHAIN SYNC error_1000 TEXT "DE_EMPPID_3: ErrorCode in ITK Fault Block must equal 1000"
 DE_EMPPID_test4 CHAIN SYNC messageidexists TEXT "DE_EMPPID_4: The MessageID in the SOAP Header must exist"
@@ -35,7 +35,7 @@ DE_EMPPID USING DE_EMPPID_urn:nhs-itk:services:201005:SendCDADocument-v2-0_templ
 END MESSAGES
 
 BEGIN TEMPLATES
-DE_EMPPID_urn:nhs-itk:services:201005:SendCDADocument-v2-0_template  /home/riro/TKW-5.0.5/TKW/contrib/ITK_2_01_Test_Messages/Correspondence/Ambulance/POCD_MT030001UK01_SOAPandDIST_Primary.xml
+DE_EMPPID_urn:nhs-itk:services:201005:SendCDADocument-v2-0_template  TKW_ROOT/contrib/ITK_2_01_Test_Messages/Correspondence/Ambulance/POCD_MT030001UK01_SOAPandDIST_Primary.xml
 END TEMPLATES
 
 BEGIN PROPERTYSETS

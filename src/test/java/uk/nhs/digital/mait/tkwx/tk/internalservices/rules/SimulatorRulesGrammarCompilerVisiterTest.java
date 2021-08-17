@@ -213,7 +213,7 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
         System.out.println("getResponses");
         instance.parse(TEST_SIMULATOR_CONFIG);
 
-        int expResult = 22;
+        int expResult = 21;
         HashMap<String, Response> result = instance.getResponses();
         assertEquals(expResult, result.size());
     }

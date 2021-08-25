@@ -12,10 +12,6 @@
 #=================================================================================================================================================================================================================================================
 #
 BEGIN RESPONSES
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/responses.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/responses.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/responses.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/responses.conf
 do_process	NONE	0
 http_header_test NONE 0 WITH_HTTP_HEADERS ( h1 : "v1" h2 : "v2\"*" )
 # added to stop unresolved references
@@ -29,7 +25,6 @@ END RESPONSES
 #=================================================================================================================================================================================================================================================
 #
 BEGIN SUBSTITUTIONS
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/substitutions.conf
 __LITERAL_TAG__ Literal aaa
 __UC_UUID_TAG__ UUID
 __LC_UUID_TAG__ uuid
@@ -52,10 +47,6 @@ END SUBSTITUTIONS
 #=================================================================================================================================================================================================================================================
 #
 BEGIN EXPRESSIONS
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/expressions.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/expressions.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/expressions.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/expressions.conf
 passthrough	Always
 exp_header_matches               HTTP_HEADER Accept matches ^.*application/xml\+fhir.*$
 exp_contextpath_matches              context_path matches ^.*application/xml\+fhir.*$
@@ -88,54 +79,6 @@ END EXPRESSIONS
 #RULES
 #=================================================================================================================================================================================================================================================
 #
-BEGIN RULE
-urn:nhs-itk:services:201005:SendCDADocument-v2-0
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules_ProfileID.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
-END RULE
-
-BEGIN RULE
-urn:nhs-itk:services:201005:SendBusinessAck-v1-0
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules_ProfileID.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
-END RULE
-
-BEGIN RULE
-urn:nhs-itk:services:201005:SendInfrastructureAck-v1-0
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
-END RULE
-
-BEGIN RULE
-urn:nhs-itk:services:201005:SendDocument-v1-0
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
-END RULE
-
-BEGIN RULE
-urn:nhs-itk:services:201005:BroadcastDocument-v1-0
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
-END RULE
-
-BEGIN RULE
-urn:nhs-itk:services:201005:SendCDADocument-v1-0
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/autotest/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/_all_ITK_services/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/fault/rules.conf
-INCLUDE	TKW_ROOT/contrib/Common/simulator_packs/acknowledgment_framework_2_1/rules.conf
-END RULE
-
 BEGIN RULE
 test
 # these reference responses created by the test harness

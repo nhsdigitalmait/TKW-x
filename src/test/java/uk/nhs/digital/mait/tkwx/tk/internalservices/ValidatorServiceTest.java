@@ -162,37 +162,6 @@ public class ValidatorServiceTest {
     }
 
     /**
-     * Test of execute method, of class ValidatorService. Only called from
-     * ErsValidationRequest
-     *
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testExecute_String_String() throws Exception {
-        System.out.println("execute");
-        boot(System.getenv("TKWROOT") + "/config/REST_ERS/interceptor.properties");
-
-        String vm = new String(Files.readAllBytes(
-                Paths.get(System.getenv("TKWROOT") + "/config/REST_ERS/simulator_config/sample_put.json")));
-        // convert the json prior to validation
-        vm = JsonXmlConverter.jsonToXmlString(vm.toCharArray());
-        String service = "POST::ers-person-service:session:session%3Aqnnqshhqdea6pasjo4ll0bsp17";
-        // the test validation has a deliberate pass and fail
-        int expResult = ServiceResponse.NOTALLPASSED;
-        ServiceResponse result = instance.execute(new String[]{vm, service});
-        assertEquals(expResult, result.getCode());
-
-        String reportName = result.getResponse();
-        assertTrue(reportName.contains("ers-person-service"));
-
-        String reportFolder = properties.get(VALIDATOR_REPORT_PROPERTY).toString();
-        File reportFile = new File(reportFolder + "/" + reportName);
-        assertTrue(reportFile.exists());
-
-        reportFile.delete();
-    }
-
-    /**
      * Test of reconfigure method, of class ValidatorService.
      *
      * @throws java.lang.Exception

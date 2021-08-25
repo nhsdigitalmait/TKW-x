@@ -24,8 +24,10 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.junit.After;
@@ -85,7 +87,7 @@ public class ValidationGrammarCompilerVisiterTest {
         bootProperties.put("tks.validator.check.notequals", "uk.nhs.digital.mait.tkwx.tk.internalservices.validation.TextAssertionValidator");
         bootProperties.put("tks.validator.check.contains", "uk.nhs.digital.mait.tkwx.tk.internalservices.validation.TextAssertionValidator");
         //bootProperties.put("tks.validator.check.notcontains", "uk.nhs.digital.mait.tkwx.tk.internalservices.validation.TextAssertionValidator");
-        
+
         // add an unchecked test
         bootProperties.put("tks.validator.check.notcontains", "uk.nhs.digital.mait.tkwx.tk.internalservices.validation.TextAssertionValidator");
 
@@ -145,22 +147,29 @@ public class ValidationGrammarCompilerVisiterTest {
             FileSystems.getDefault().getPath(System.getenv("TKWROOT") + "/contrib/Common/include/")
         };
 
+        final List<String> VALID_TKWX_DOMAINS = Arrays.asList(new String[]{
+            "ITK_Autotest",
+            "FHIR_MESH",
+            "SPINE_MTH",
+            "SPINE_ITKTrunk_Client",
+            "HTTP_INTERCEPTOR",
+            "GP_CONNECT",
+            "FHIR_111_UEC"});
+
         for (Path path : paths) {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
                         throws IOException {
-                    // TODO REST_ERS has very old paths in it same with MLLP
                     String fileName = file.toString();
                     if ((fileName.contains("validator_config") || fileName.contains("include"))
-                            && fileName.endsWith(".conf")
-                            && !fileName.contains("REST_ERS") // old file refs
-                            && !fileName.contains("MLLP") // old file refs
-                            && !fileName.contains("ITK") // exclude for TKW-x
-                            ) {
-                        System.out.println("Parsing " + fileName);
-                        instance.parse(fileName);
-                        assertEquals(0, countingErrorListener.getErrorCount());
+                            && fileName.endsWith(".conf")) {
+                        String domainName = fileName.replaceFirst("^(.*/config/)([^/]+)(/.*)$", "$2");
+                        if (VALID_TKWX_DOMAINS.contains(domainName)) {
+                            System.out.println("Parsing " + fileName);
+                            instance.parse(fileName);
+                            assertEquals(0, countingErrorListener.getErrorCount());
+                        }
                     }
                     return FileVisitResult.CONTINUE;
                 }
@@ -345,7 +354,9 @@ public class ValidationGrammarCompilerVisiterTest {
     }
 
     /**
-     * Test of getValidationSets method, of class ValidationGrammarCompilerVisiter.
+     * Test of getValidationSets method, of class
+     * ValidationGrammarCompilerVisiter.
+     *
      * @throws java.io.IOException
      */
     @Test
@@ -361,6 +372,7 @@ public class ValidationGrammarCompilerVisiterTest {
 
     /**
      * Test of getSubroutines method, of class ValidationGrammarCompilerVisiter.
+     *
      * @throws java.io.IOException
      */
     @Test
@@ -374,19 +386,20 @@ public class ValidationGrammarCompilerVisiterTest {
         assertEquals(expResult, result.size());
     }
 
-
     /**
-     * Test of setCustomErrorListeners method, of class ValidationGrammarCompilerVisiter.
+     * Test of setCustomErrorListeners method, of class
+     * ValidationGrammarCompilerVisiter.
      */
     @Test
     public void testSetCustomErrorListeners() {
         System.out.println("setCustomErrorListeners");
-        BaseErrorListener[] customErrorListeners = new BaseErrorListener[] {countingErrorListener};
+        BaseErrorListener[] customErrorListeners = new BaseErrorListener[]{countingErrorListener};
         instance.setCustomErrorListeners(customErrorListeners);
     }
 
     /**
-     * Test of setCustomErrorListener method, of class ValidationGrammarCompilerVisiter.
+     * Test of setCustomErrorListener method, of class
+     * ValidationGrammarCompilerVisiter.
      */
     @Test
     public void testSetCustomErrorListener() {

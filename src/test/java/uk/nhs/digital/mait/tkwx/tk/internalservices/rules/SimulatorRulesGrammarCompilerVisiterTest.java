@@ -22,7 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -106,7 +108,8 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
     }
 
     /**
-     * Test of visitInclude_statement method, of class SimulatorRulesGrammarCompilerVisiter.
+     * Test of visitInclude_statement method, of class
+     * SimulatorRulesGrammarCompilerVisiter.
      */
     @Test
     public void testVisitInclude_statement() {
@@ -138,27 +141,39 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
 
         HashMap<String, Integer> hm = new HashMap<>();
 
+        final List<String> VALID_TKWX_DOMAINS = Arrays.asList(new String[]{
+            "ITK_Autotest", 
+            "FHIR_MESH", 
+            "SPINE_MTH", 
+            "SPINE_ITKTrunk_Client", 
+            "HTTP_INTERCEPTOR", 
+            "GP_CONNECT", 
+            "FHIR_111_UEC"});
+
         Files.walkFileTree(simulatorFiles, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
                     throws IOException {
                 String fileName = file.toString();
                 if (fileName.contains("simulator_config") && fileName.toLowerCase().contains("rule") && fileName.endsWith(".txt")) {
-                    System.out.println("Parsing " + fileName);
-                    instance.parse(fileName);
-                    if (countingErrorListener.getErrorCount() > 0) {
-                        hm.put(fileName, countingErrorListener.getErrorCount());
+                    String domainName = fileName.replaceFirst("^(.*/config/)([^/]+)(/.*)$","$2");
+                    if (VALID_TKWX_DOMAINS.contains(domainName)) {
+                        System.out.println("Parsing " + fileName);
+                        instance.parse(fileName);
+                        if (countingErrorListener.getErrorCount() > 0) {
+                            hm.put(fileName, countingErrorListener.getErrorCount());
+                        }
                     }
                 }
                 return FileVisitResult.CONTINUE;
             }
         });
-        
-        if (!hm.isEmpty()){
+
+        if (!hm.isEmpty()) {
             for (String key : hm.keySet()) {
                 System.out.println(key + " : " + hm.get(key));
             }
-            fail("Parsing errors detected in "+hm.keySet().size() + " files");
+            fail("Parsing errors detected in " + hm.keySet().size() + " files");
         }
     }
 
@@ -213,7 +228,7 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
         System.out.println("getResponses");
         instance.parse(TEST_SIMULATOR_CONFIG);
 
-        int expResult = 21;
+        int expResult = 5;
         HashMap<String, Response> result = instance.getResponses();
         assertEquals(expResult, result.size());
     }
@@ -229,7 +244,7 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
         System.out.println("getExpressions");
         instance.parse(TEST_SIMULATOR_CONFIG);
 
-        int expResult = 75;
+        int expResult = 26;
         HashMap<String, Expression> result = instance.getExpressions();
         assertEquals(expResult, result.size());
     }
@@ -245,7 +260,7 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
         System.out.println("getSubstitutions");
         instance.parse(TEST_SIMULATOR_CONFIG);
 
-        int expResult = 39;
+        int expResult = 15;
         HashMap<String, Substitution> result = instance.getSubstitutions();
         assertEquals(expResult, result.size());
     }
@@ -260,7 +275,7 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
         System.out.println("getRules");
         instance.parse(TEST_SIMULATOR_CONFIG);
 
-        int expResult = 7;
+        int expResult = 1;
         HashMap<String, RuleSet> result = instance.getRules();
         assertEquals(expResult, result.size());
     }

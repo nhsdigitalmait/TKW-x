@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?><PORX_IN020101UK31 xmlns="urn:hl7-org:v3">
+   <id root="576D1B17-0B8D-B85A-E050-D20AE3A25F9D"/>
+   <creationTime value="20170823145830"/>
+   <versionCode code="V3NPfIT3.0"/>
+   <interactionId extension="PORX_IN020101UK31" root="2.16.840.1.113883.2.1.3.2.4.12"/>
+   <processingCode code="P"/>
+   <processingModeCode code="T"/>
+   <acceptAckCode code="NE"/>
+   <communicationFunctionRcv>
+      <device classCode="DEV" determinerCode="INSTANCE">
+         <id extension="567456789789" root="1.2.826.0.1285.0.2.0.107"/>
+      </device>
+   </communicationFunctionRcv>
+   <communicationFunctionSnd>
+      <device classCode="DEV" determinerCode="INSTANCE">
+         <id extension="918999199246" root="1.2.826.0.1285.0.2.0.107"/>
+      </device>
+   </communicationFunctionSnd>
+   <ControlActEvent classCode="CACT" moodCode="EVN">
+      <author typeCode="AUT">
+         <AgentPersonSDS classCode="AGNT">
+            <id extension="B0090,B0100,B1510" root="1.2.826.0.1285.0.2.0.67"/>
+            <agentPersonSDS classCode="PSN" determinerCode="INSTANCE">
+               <id extension="687227875014" root="1.2.826.0.1285.0.2.0.65"/>
+            </agentPersonSDS>
+            <part typeCode="PART">
+               <partSDSRole classCode="ROL">
+                  <id extension="S0080:G0450:R5080" root="1.2.826.0.1285.0.2.1.104"/>
+               </partSDSRole>
+            </part>
+         </AgentPersonSDS>
+      </author>
+      <author1 typeCode="AUT">
+         <AgentSystemSDS classCode="AGNT">
+            <agentSystemSDS classCode="DEV" determinerCode="INSTANCE">
+               <id extension="747225912019" root="1.2.826.0.1285.0.2.0.107"/>
+            </agentSystemSDS>
+         </AgentSystemSDS>
+      </author1>
+      <subject>
+         <ParentPrescription classCode="INFO" moodCode="EVN">
+            <id root="413DD5F7-E1A8-C373-4B1F-20607726506D"/>
+            <code code="163501000000109" codeSystem="2.16.840.1.113883.2.1.3.2.4.15">
+               <originalText>Prescription - FocusActOrEvent </originalText>
+            </code>
+            <effectiveTime value="20170823120800"/>
+            <typeId extension="PORX_MT132004UK31" root="2.16.840.1.113883.2.1.3.2.4.18.7"/>
+            <recordTarget typeCode="RCT">
+               <Patient classCode="PAT">
+                  <id extension="9453740748" root="2.16.840.1.113883.2.1.4.1"/>
+                  <addr use="H">
+                     <streetAddressLine>108 WHITAKER ROAD</streetAddressLine>
+                     <streetAddressLine>DERBY</streetAddressLine>
+                     <postalCode>DE23 6AP</postalCode>
+                     <addressKey>5912932</addressKey>
+                     <desc/>
+                  </addr>
+                  <patientPerson classCode="PSN" determinerCode="INSTANCE">
+                     <name use="L">
+                        <prefix>MR</prefix>
+                        <given>XAVIER</given>
+                        <given>GLEN</given>
+                        <family>STRZODA</family>
+                        <suffix/>
+                     </name>
+                     <administrativeGenderCode code="1"/>
+                     <birthTime value="19930504"/>
+                     <playedProviderPatient classCode="PAT">
+                        <subjectOf typeCode="SBJ">
+                           <patientCareProvision classCode="PCPR" moodCode="EVN">
+                              <code code="1" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.37"/>
+                              <responsibleParty typeCode="RESP">
+                                 <healthCareProvider classCode="PROV">
+                                    <id extension="B83002" root="1.2.826.0.1285.0.1.10"/>
+                                 </healthCareProvider>
+                              </responsibleParty>
+                           </patientCareProvision>
+                        </subjectOf>
+                     </playedProviderPatient>
+                  </patientPerson>
+               </Patient>
+            </recordTarget>
+            <pertinentInformation1 contextConductionInd="true" typeCode="PERT">
+               <templateId extension="CSAB_RM-NPfITUK10.pertinentInformation" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+               <pertinentPrescription classCode="SBADM" moodCode="RQO">
+                  <id root="576A7874-B877-9FF2-E050-D20AE3A2458D"/>
+                  <id extension="012508-B83002-E45B1H" root="2.16.840.1.113883.2.1.3.2.4.18.8"/>
+                  <code code="225426007" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+                  <effectiveTime nullFlavor="NA"/>
+                  <repeatNumber>
+                     <low value="1"/>
+                     <high value="1"/>
+                  </repeatNumber>
+                  <author contextControlCode="OP" typeCode="AUT">
+                     <time value="20170823120800"/>
+                     <signatureText><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference><Transforms><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>2HKRcWvapVJ3bsbp+M1zpsPL6Z0=</DigestValue></Reference></SignedInfo><SignatureValue>Cl3xf5covWMUD/wWf7t+A723OTSrTpOzfT8jpSnAieVk2/bUH9/j2abPA9TJlLP8p/lxLX6bADd+
+/NAuJyWdeO8HMZjUeyqOsJI2MJOWjV/K/UnXOLPGQ1NFh/kPLvKqJAsV5wbjriZKXS1/61J8xlJo
+4+cW5z0R0K8CccB180IMpKmr0VPvEN39oQsLybFgCyFQX1AKDD43Nkhgw72TgQ10meFlWIkYxpjx
+5UMlMElWFv0ezv/HAxdErVndWYdSbz04S+M41/0C0budouz/NNWTzRnbjgRFsxuJSJRwyyAn2LGY
+NhyfjkNz+zvxMVlSMMcUirpD9hUXSuaUgXLlSA==</SignatureValue><KeyInfo><X509Data><X509Certificate>MIIC/DCCAeSgAwIBAgIBBjANBgkqhkiG9w0BAQUFADBIMQ4wDAYDVQQKEwVIU0NJQzERMA8GA1UE
+CxMIT3BlbnRlc3QxIzAhBgNVBAMTGkVQUyBOb24tcmVwdWRpYXRpb24gc3ViIENBMB4XDTE2MDEy
+NzAwMDAwMFoXDTIwMDEyNjIzNTk1OVowOzEOMAwGA1UEChMFSFNDSUMxGzAZBgNVBAsTElNvbHV0
+aW9uIEFzc3VyYW5jZTEMMAoGA1UEAxMDRU1VMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAtVzD2REUbkaHXmiiOpZv2HydnbsmWiEswrcoZjOn7smt6MFbTqFfYcGn1BuZdD8QLe1uRVhH
+26XGrEUAfu7CJbZR+mRCs1+84cIxxtB2UxH90FzrehSOrgi06hv8lRzDCxF6KKgCyLPMdJCnAQCX
+yyQUh08AX9OEirHJ3mSrVY/bXNXVBaHPNyFrGzg0GJkTNo8iVO73QRYUlJhn5sFZlGWXIbXabc/Q
++Yf9J/NYqid4rXJTIS1qUuAXK5GDHxSAxdoxZQ8+fogDrnyU7Yl7dAATcgk8HUjyhzuInnlpD+nF
+I06iOlJg0HJ+TYEmAKgtjL+fxpldP+rPnYJ4cLiCmQIDAQABMA0GCSqGSIb3DQEBBQUAA4IBAQAe
++vIX0QFBMKEcIwTnPEFk8bgrGRMHbKSiVCOM6dgotFlMqfPTuAsRKL0h+2/wqfBs4olM/mjCJ7rk
+wUX9BRMdRSfC+SOWvUHG3cUicQETPK3KiJRIQBB48JfR5f/eZIuu9zne4AuSVZYB/qBDnGf+9V/7
+I77/4yGpPtOTaDZfZMVB5oNY96B+2/Hd/hTJujljs7KsLSaLkePxlVSa70mSjWJ26cOIk26Q2P82
+dl8pqr5R2VLa+0Umdd+LzwFH8m32ufz5hkhahQCiUHRw2NvdkJCsDA6IZQEHchTlr2sMWWxHcoPi
+rj2XDBzswwSSYQQ+a3rEFLAREfcd7cSTfbHY</X509Certificate></X509Data></KeyInfo></Signature></signatureText>
+                     <AgentPerson classCode="AGNT">
+                        <id extension="100119087984" root="1.2.826.0.1285.0.2.0.67"/>
+                        <code code="R0260" codeSystem="1.2.826.0.1285.0.2.1.104"/>
+                        <telecom use="WP" value="tel:01943604455"/>
+                        <agentPerson classCode="PSN" determinerCode="INSTANCE">
+                           <id extension="9605215" root="1.2.826.0.1285.0.2.0.65"/>
+                           <name use="L">COCKSHOOT</name>
+                        </agentPerson>
+                        <representedOrganization classCode="ORG" determinerCode="INSTANCE">
+                           <id extension="B83002" root="1.2.826.0.1285.0.1.10"/>
+                           <code code="001" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.94"/>
+                           <name>ILKLEY &amp; WHARFEDALE MEDICAL PRACTICE</name>
+                           <telecom use="WP" value="tel:01943604455"/>
+                           <addr use="WP">
+                              <streetAddressLine>SPRINGS LANE</streetAddressLine>
+                              <streetAddressLine>ILKLEY</streetAddressLine>
+                              <streetAddressLine>WEST YORKSHIRE</streetAddressLine>
+                              <postalCode>LS29 8TH</postalCode>
+                           </addr>
+                           <healthCareProviderLicense classCode="PROV">
+                              <Organization classCode="ORG" determinerCode="INSTANCE">
+                                 <id extension="5AW" root="1.2.826.0.1285.0.1.10"/>
+                                 <code code="005" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.94"/>
+                              </Organization>
+                           </healthCareProviderLicense>
+                        </representedOrganization>
+                     </AgentPerson>
+                  </author>
+                  <responsibleParty contextControlCode="OP" typeCode="RESP">
+                     <AgentPerson classCode="AGNT">
+                        <id extension="100099914989" root="1.2.826.0.1285.0.2.0.67"/>
+                        <code code="R0260" codeSystem="1.2.826.0.1285.0.2.1.104"/>
+                        <telecom use="WP" value="tel:01943604455"/>
+                        <agentPerson classCode="PSN" determinerCode="INSTANCE">
+                           <id extension="G33315" root="1.2.826.0.1285.0.2.0.65"/>
+                           <name use="L">RAWLING</name>
+                        </agentPerson>
+                        <representedOrganization classCode="ORG" determinerCode="INSTANCE">
+                           <id extension="B83002" root="1.2.826.0.1285.0.1.10"/>
+                           <code code="001" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.94"/>
+                           <name>ILKLEY &amp; WHARFEDALE MEDICAL PRACTICE</name>
+                           <telecom use="WP" value="tel:01943604455"/>
+                           <addr use="WP">
+                              <streetAddressLine>SPRINGS LANE</streetAddressLine>
+                              <streetAddressLine>ILKLEY</streetAddressLine>
+                              <streetAddressLine>WEST YORKSHIRE</streetAddressLine>
+                              <postalCode>LS29 8TH</postalCode>
+                           </addr>
+                        </representedOrganization>
+                     </AgentPerson>
+                  </responsibleParty>
+                  <component1 typeCode="COMP">
+                     <seperatableInd value="true"/>
+                     <daysSupply classCode="SPLY" moodCode="RQO">
+                        <code code="373784005" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+                        <effectiveTime>
+                           <low value="20170823"/>
+                           <high value="20180219"/>
+                        </effectiveTime>
+                        <expectedUseTime>
+                           <width unit="d" value="28"/>
+                        </expectedUseTime>
+                     </daysSupply>
+                  </component1>
+                  <pertinentInformation7 contextConductionInd="true" typeCode="PERT">
+                     <seperatableInd value="false"/>
+                     <pertinentReviewDate classCode="OBS" moodCode="EVN">
+                        <code code="RD" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+                        <value value="20180219"/>
+                     </pertinentReviewDate>
+                  </pertinentInformation7>
+                  <pertinentInformation5 contextConductionInd="true" typeCode="PERT">
+                     <seperatableInd value="false"/>
+                     <pertinentPrescriptionTreatmentType classCode="OBS" moodCode="EVN">
+                        <code code="PTT" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+                        <value code="0002" codeSystem="2.16.840.1.113883.2.1.3.2.4.16.36"/>
+                     </pertinentPrescriptionTreatmentType>
+                  </pertinentInformation5>
+                  <pertinentInformation1 contextConductionInd="true" typeCode="PERT">
+                     <seperatableInd value="true"/>
+                     <pertinentDispensingSitePreference classCode="OBS" moodCode="EVN">
+                        <code code="DSP" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+                        <value code="0004" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.21"/>
+                     </pertinentDispensingSitePreference>
+                  </pertinentInformation1>
+                  <pertinentInformation2 contextConductionInd="true" inversionInd="false" negationInd="false" typeCode="PERT">
+                     <seperatableInd value="true"/>
+                     <templateId extension="CSAB_RM-NPfITUK10.sourceOf2" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+                     <pertinentLineItem classCode="SBADM" moodCode="RQO">
+                        <id root="576A7874-BF2A-9FF2-E050-D20AE3A2458D"/>
+                        <code code="225426007" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+                        <effectiveTime nullFlavor="NA"/>
+                        <repeatNumber>
+                           <low value="1"/>
+                           <high value="1"/>
+                        </repeatNumber>
+                        <product contextControlCode="OP" typeCode="PRD">
+                           <manufacturedProduct classCode="MANU">
+                              <manufacturedRequestedMaterial classCode="MMAT" determinerCode="KIND">
+                                 <code code="354027002" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="Betamethasone 0.1% ear/eye/nose drops"/>
+                              </manufacturedRequestedMaterial>
+                           </manufacturedProduct>
+                        </product>
+                        <component typeCode="COMP">
+                           <seperatableInd value="true"/>
+                           <lineItemQuantity classCode="SPLY" moodCode="RQO">
+                              <code code="373784005" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+                              <quantity unit="1" value="10">
+                                 <translation code="258773002" codeSystem="2.16.840.1.113883.2.1.3.2.4.15" displayName="ml" value="10">
+                                    <originalText/>
+                                 </translation>
+                              </quantity>
+                           </lineItemQuantity>
+                        </component>
+                        <pertinentInformation1 contextConductionInd="true" typeCode="PERT">
+                           <seperatableInd value="false"/>
+                           <pertinentAdditionalInstructions classCode="OBS" moodCode="EVN">
+                              <code code="AI" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+                              <value>&lt;medication&gt;Betamethasone 0.1% ear/eye/nose drops&lt;/medication&gt;&lt;patientInfo&gt; Please call the practice. &lt;/patientInfo&gt;</value>
+                           </pertinentAdditionalInstructions>
+                        </pertinentInformation1>
+                        <pertinentInformation2 contextConductionInd="true" typeCode="PERT">
+                           <seperatableInd value="false"/>
+                           <pertinentDosageInstructions classCode="OBS" moodCode="EVN">
+                              <code code="DI" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+                              <value>As Directed</value>
+                           </pertinentDosageInstructions>
+                        </pertinentInformation2>
+                     </pertinentLineItem>
+                  </pertinentInformation2>
+                  <pertinentInformation8 contextConductionInd="true" typeCode="PERT">
+                     <seperatableInd value="false"/>
+                     <pertinentTokenIssued classCode="OBS" moodCode="EVN">
+                        <code code="TI" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+                        <value value="false"/>
+                     </pertinentTokenIssued>
+                  </pertinentInformation8>
+                  <pertinentInformation4 contextConductionInd="true" typeCode="PERT">
+                     <seperatableInd value="false"/>
+                     <pertinentPrescriptionType classCode="OBS" moodCode="EVN">
+                        <code code="PT" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.30"/>
+                        <value code="0101" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.25"/>
+                     </pertinentPrescriptionType>
+                  </pertinentInformation4>
+               </pertinentPrescription>
+            </pertinentInformation1>
+            <pertinentInformation2 typeCode="PERT">
+               <templateId extension="CSAB_RM-NPfITUK10.pertinentInformation1" root="2.16.840.1.113883.2.1.3.2.4.18.2"/>
+               <pertinentCareRecordElementCategory classCode="CATEGORY" moodCode="EVN">
+                  <code code="185361000000102" codeSystem="2.16.840.1.113883.2.1.3.2.4.15"/>
+                  <component typeCode="COMP">
+                     <actRef classCode="SBADM" moodCode="RQO">
+                        <id root="576A7874-BF2A-9FF2-E050-D20AE3A2458D"/>
+                     </actRef>
+                  </component>
+               </pertinentCareRecordElementCategory>
+            </pertinentInformation2>
+         </ParentPrescription>
+      </subject>
+   </ControlActEvent>
+</PORX_IN020101UK31>

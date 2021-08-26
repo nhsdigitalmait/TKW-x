@@ -43,17 +43,16 @@ public class PrescriptionSignatureValidatorTest {
     private PrescriptionSignatureValidator instance;
     private static SpineMessage spineMessage;
     private static SpineMessage badSpineMessage;
+    private static final String MESSAGE = "20170824080922015662_1F1E2A_16231864152232495815_anon.xml";
 
     public PrescriptionSignatureValidatorTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        spineMessage = new SpineMessage(System.getenv("TKWROOT") + "/config/SPINE_ETP_Prescribing_Validation/messages_for_validation",
-                "20170824080922015662_1F1E2A_16231864152232495815_anon.xml");
+        spineMessage = new SpineMessage("src/test/resources", MESSAGE);
         
-        String badSpineMessageStr = new String(Files.readAllBytes(Paths.get(System.getenv("TKWROOT") + 
-                "/config/SPINE_ETP_Prescribing_Validation/messages_for_validation/20170824080922015662_1F1E2A_16231864152232495815_anon.xml")));
+        String badSpineMessageStr = new String(Files.readAllBytes(Paths.get("src/test/resources/"+MESSAGE)));
         // Modify the patients name so that it should now fail verification
         badSpineMessageStr = badSpineMessageStr.replaceFirst("(?s)STRZODA", "STRZODAXXXX");
         badSpineMessage = new SpineMessage(badSpineMessageStr);

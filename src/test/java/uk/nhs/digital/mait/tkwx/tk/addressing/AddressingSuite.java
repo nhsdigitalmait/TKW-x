@@ -27,7 +27,7 @@ import org.junit.runners.Suite;
  * @author sifa2
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ResolverTest.class, DistributionResolverTest.class, ResolverTreeEntryTest.class, AddressingExceptionTest.class, RoutingSolutionTest.class, PhysicalAddressTest.class})
+@Suite.SuiteClasses({ResolverTest.class, ResolverTreeEntryTest.class, AddressingExceptionTest.class, RoutingSolutionTest.class, PhysicalAddressTest.class})
 public class AddressingSuite {
 
     @BeforeClass

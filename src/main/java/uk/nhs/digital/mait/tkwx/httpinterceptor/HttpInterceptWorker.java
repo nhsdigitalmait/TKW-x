@@ -614,9 +614,11 @@ public class HttpInterceptWorker {
 
         setResponseContentType(req, resp);
 
-        // convert back to json if required
-        if (isJsonFhir(resp.getContentType())) {
-            responseBytes = fhirConvertXml2Json(new String(responseBytes)).getBytes();
+        String responseString = new String(responseBytes);
+        
+        // convert back to json if required, dont convert if this is a binary payload
+        if (isJsonFhir(resp.getContentType()) && ! Utils.isBinaryPayloadString(responseString)) {
+            responseBytes = fhirConvertXml2Json(responseString).getBytes();
         }
         return responseBytes;
     }

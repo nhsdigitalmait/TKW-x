@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +61,6 @@ import uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth.SpineAsynchronousSoapRe
 import uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth.SpineSynchronousSoapRequestHandler;
 import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.send.SPSetter;
 
 /**
  * This class represents a http request. This may be incorporated into the
@@ -84,7 +82,7 @@ public class HttpInterceptWorker {
     private HttpInterceptHandler handler = null;
     private String service;
     private boolean restful = false;
-    private boolean contentTypeSet;
+    private boolean responseContentTypeSet; // used to log reports if the response content type has been set
     protected LoggingFileOutputStream logfile = null;
     private HttpRequest clonedXmlHttpRequest = null; //used for simulator and validator when request is json
 
@@ -411,7 +409,7 @@ public class HttpInterceptWorker {
     /**
      * To process a request deciding whether to respond with a simulated
      * response based upon the context path of the request or to pass through to
-     * the Forwarder. All messages which have content are validated.
+     * the Forwarder. All messages are validated regardless of whether they have content.
      *
      * @param req HttpRequest object of the incoming HTTP request
      * @param resp HttpResponse object of the outgoing HTTP response
@@ -464,7 +462,6 @@ public class HttpInterceptWorker {
             }
             // If there's no content do not set contentType
             if (responseStr != null && responseStr.trim().length() > 0) {
-                // TODO merge this into performOutboundConversions
                 determineReturnContentType(req, responseStr, resp);
             }
             // get any static http response header values from config
@@ -507,7 +504,7 @@ public class HttpInterceptWorker {
             // no need to set content type/encoding or fhir conversions if no content
             if (responseBytes != null && responseBytes.length > 0) {
                 // see also determineReturnContentType
-                responseBytes = performResponseTypeConversions(req, responseBytes, resp);
+                responseBytes = performResponseContentTypeConversion(req, responseBytes, resp);
 
                 // get the converted output for logging
                 responseStr = new String(responseBytes);
@@ -610,24 +607,26 @@ public class HttpInterceptWorker {
      * @return byte array containing response body to be returned to client
      * @throws IOException
      */
-    private byte[] performResponseTypeConversions(HttpRequest req, byte[] responseBytes, HttpResponse resp) throws IOException {
+    private byte[] performResponseContentTypeConversion(HttpRequest req, byte[] responseBytes, HttpResponse resp) throws IOException {
 
-        setResponseContentType(req, resp);
+        modifyResponseContentTypeApplyingFormatParameter(req, resp);
 
         String responseString = new String(responseBytes);
-        
+
         // convert back to json if required, dont convert if this is a binary payload
-        if (isJsonFhir(resp.getContentType()) && ! Utils.isBinaryPayloadString(responseString)) {
+        if (isJsonFhir(resp.getContentType()) && !Utils.isBinaryPayloadString(responseString)) {
             responseBytes = fhirConvertXml2Json(responseString).getBytes();
         }
         return responseBytes;
     }
 
     /**
-     * perform outbound encoding conversions if required
+     * perform outbound repsonse encoding conversions if required
+     * unpack base64 encoded binary if its an internal binary then
+     * compress using gzip or deflate as per accept-encoding header
      *
      * @param req http request object
-     * @param responseBytes
+     * @param responseBytes byte array
      * @param resp http response object
      * @return byte array containing response body to be returned to client
      * @throws IOException
@@ -635,8 +634,8 @@ public class HttpInterceptWorker {
     private byte[] performResponseEncodingConversions(HttpRequest req, byte[] responseBytes, HttpResponse resp) throws IOException {
 
         // handle encoding this is only compression at present
-        // it must be done last after other content conversions
-        // ifs its a wrapped binary then unencode it
+        // it must be done after content-type conversions
+        // ifs its a wrapped binary then base64 decode it
         if (Utils.isBinaryPayloadString(new String(responseBytes))) {
             responseBytes = Utils.unwrapBinaryPayload(new String(responseBytes));
         }
@@ -667,30 +666,30 @@ public class HttpInterceptWorker {
     }
 
     /**
-     * TODO This needs merging with another related method sets the response
-     * content-type depending on values in the request uses three variables
-     * accept_header, request_content-type header and fhir _format parameter
-     *
-     * @param req
-     * @param resp
+     * This method implements the rules surrounding situations where both an http accept header and a _format url parameter are present in the request
+     * it can adjust an already set content type if the _format parameter is present
+     * @param req HttpRequest object
+     * @param resp HttpResponse object
      * @throws UnsupportedEncodingException
      */
-    private void setResponseContentType(HttpRequest req, HttpResponse resp) throws UnsupportedEncodingException {
+    private void modifyResponseContentTypeApplyingFormatParameter(HttpRequest req, HttpResponse resp) throws UnsupportedEncodingException {
 
-        if (resp.getContentType() != null) {
-            contentTypeSet = true;
+        // fhir specific stuff this is probably built into a "fhir server"
+        HashMap<String, ArrayList<String>> hmParams = getRequestParameters(req);
+        ArrayList<String> fhirFormatParameters = hmParams.get("_format");
+        String fhirFormatParameter = fhirFormatParameters != null && !fhirFormatParameters.isEmpty() ? fhirFormatParameters.get(0) : null;
+        
+        
+        if (resp.getContentType() != null && fhirFormatParameter == null) {
+            // this is onyly true if there isn't an overriding format parameter as provisioned by fhir
+            responseContentTypeSet = true;
         } else {
             // handle content-type
             String acceptHeader = req.getField(ACCEPT_HEADER);
             String requestContentTypeHeader = req.getField(CONTENT_TYPE_HEADER);
 
-            // fhir specific stuff this is probably built into a "fhir server"
-            HashMap<String, ArrayList<String>> hmParams = getRequestParameters(req);
-            ArrayList<String> fhirFormatParameters = hmParams.get("_format");
-            String fhirFormatParameter = fhirFormatParameters != null && !fhirFormatParameters.isEmpty() ? fhirFormatParameters.get(0) : null;
-
             // determine outbound content type
-            contentTypeSet = false;
+            responseContentTypeSet = false;
             if (acceptHeader == null) {
                 // content type can be null for a GET
                 if (isValidFhirFormatParameter(fhirFormatParameter) && (requestContentTypeHeader == null || isValidFhirContentType(requestContentTypeHeader))) {
@@ -716,7 +715,7 @@ public class HttpInterceptWorker {
                 }
             }
 
-            if (!contentTypeSet) {
+            if (!responseContentTypeSet) {
                 Logger.getInstance().log(WARNING, HttpInterceptWorker.class
                         .getName(),
                         "Response content-type not set. accept header: " + acceptHeader
@@ -726,14 +725,20 @@ public class HttpInterceptWorker {
         }
     }
 
+    /**
+     * determines and sets the required response content type
+     * tracked in terms of always setting the boolean recording the event
+     * @param resp HttpResponse object
+     * @param httpValue String containing response content type
+     */
     private void trackedSetContentType(HttpResponse resp, String httpValue) {
         resp.setContentType(determineContentType(httpValue));
-        contentTypeSet = true;
+        responseContentTypeSet = true;
     }
 
     /**
      *
-     * @param httpValue could be a header value or an http get parameter
+     * @param httpValue http accept header value
      * @return boolean
      */
     private boolean isValidFhirContentType(String httpValue) {
@@ -741,8 +746,8 @@ public class HttpInterceptWorker {
     }
 
     /**
+     * is the fhir url parameter _format in the correct form?
      * see https://www.hl7.org/fhir/http.html
-     *
      * @param parameterValue is a http get parameter
      * @return boolean
      */
@@ -799,12 +804,13 @@ public class HttpInterceptWorker {
     }
 
     /**
-     * TODO This needs merging with performOutbondConversions This is based on
-     * an examination of the content and can handle non fhir requests
-     *
-     * @param req
-     * @param responseStr
-     * @param resp
+     * This method focusses on setting the correct content-type given the fhir version if present
+     * It derives the content type from the response body and the hapi fhir version being used.
+     * It will handle non fhir responses.
+     * For fhir responses this content type may be modified later if a url _format paremeter is supplied. see modifyResponseContentTypeApplyingFormatParameter
+     * @param req HttpRequest Object
+     * @param responseStr String containing response body - used to determine if response is json or xml
+     * @param resp HttpResponse Object
      * @throws UnsupportedEncodingException
      */
     private void determineReturnContentType(HttpRequest req, String responseStr, HttpResponse resp) throws UnsupportedEncodingException {
@@ -825,9 +831,11 @@ public class HttpInterceptWorker {
                     resp.setContentType(FHIR_JSON_MIMETYPE_STU3);
                 }
             } else {
+                // default to text/xml
                 resp.setContentType(XML_MIMETYPE);
             }
         } else if (responseStr.trim().startsWith("{")) {
+            // TODO is this block ever entered? Suspect all *fhir* responses are xml at this point.
             if (isJsonFhir(accept)) {
                 if (isHapiVersionDstu2()) {
                     resp.setContentType(FHIR_JSON_MIMETYPE_DSTU2);

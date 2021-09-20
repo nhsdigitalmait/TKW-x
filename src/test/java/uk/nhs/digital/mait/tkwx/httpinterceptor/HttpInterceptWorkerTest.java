@@ -19,9 +19,11 @@ import static com.helger.commons.http.CHttpHeader.CONTENT_LENGTH;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +35,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static uk.nhs.digital.mait.jwttools.AuthorisationGenerator.getJWT;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.http.HttpResponse;
 import uk.nhs.digital.mait.tkwx.httpinterceptor.interceptor.HttpInterceptHandler;
@@ -43,11 +46,14 @@ import uk.nhs.digital.mait.tkwx.util.Utils;
 import uk.nhs.digital.mait.tkwx.ProcessStreamDumper;
 import static uk.nhs.digital.mait.tkwx.httpinterceptor.interceptor.HttpInterceptHandlerTest.TEMP_PROPERTIES_FILE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.FORWARDINGPORTPROPERTY;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
 import static uk.nhs.digital.mait.tkwx.util.Utils.folderExists;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readPropertiesFile;
 
 /**
+ * Setup creates a request which is submitted to a worker instance which then
+ * forwards the request to the GP_CONNECT endpoint.
  *
  * @author SIFA2
  */
@@ -55,37 +61,61 @@ public class HttpInterceptWorkerTest {
 
     private static Process process;
 
-    private HttpInterceptWorker instance;
+    private HttpInterceptWorker xmlInstanceSimulateRules;
+    private HttpInterceptWorker xmlInstanceForwarding;
+    private HttpInterceptWorker jsonInstanceSimulateRules;
     private ByteArrayOutputStream ostream;
 
     private static final String TESTSAVED_MESSAGES_FOLDER = "src/test/resources/saved_messages_folder";
     private static final String ENDPOINT_FOLDER = TESTSAVED_MESSAGES_FOLDER + "/127.0.0.1/";
-    private HttpRequest request;
+    private HttpRequest xmlRequestSimulateRules;
+    private HttpRequest xmlRequestForewarding;
+    private HttpRequest jsonRequestSimulateRules;
 
     private static String simulatorListenPortNo;
     private static final String INTERCEPTOR_LOG = "src/test/resources/interceptor.log";
+
+    private static final String GET_STRUCTURED_RECORD_URL = "/gpconnect-demonstrator/v1/fhir/Patient/$gpc.getstructuredrecord";
+    private static final String GET_STRUCTURED_RECORD_INT_ID = "urn:nhs:names:services:gpconnect:fhir:operation:gpc.getstructuredrecord-1";
 
     public HttpInterceptWorkerTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        // start an GP_CONNECT host responder
+        // start an GP_CONNECT host responder this is used for testing forwarded interactions that don't match the ruleset in the httpinterceptor
+        // we don't care if the endpoint returns an error since we are not interested in the response content
         String simulatorPropsPath = System.getenv("TKWROOT") + "/config/GP_CONNECT/tkw-x.properties";
         Properties simulatorProperties = new Properties();
         readPropertiesFile(simulatorPropsPath, simulatorProperties);
         simulatorListenPortNo = simulatorProperties.getProperty("tks.HttpTransport.listenport");
 
         ProcessBuilder pb = new ProcessBuilder();
-        pb.command("java", "-jar", System.getenv("TKWROOT") + "/TKW-x.jar", "-simulator", simulatorPropsPath);
+        pb.command("java", "-jar", System.getenv("TKWROOT") + "/TKW-x.jar", "-httpinterceptor", simulatorPropsPath);
         process = pb.start();
         ProcessStreamDumper.dumpProcessStreams(process);
 
-        String interceptorPropsPath = System.getenv("TKWROOT") + "/config/HTTP_Interceptor/tkw-x.properties";
+        // This ruleset is closed ie all conditions are handled by a rule so there is no forwarding
+        startInterceptor("GP_CONNECT", 5001);
+    }
+
+    /**
+     * Start the interceptor into which we are injecting requests that either
+     * get serviced by simulator rules or else forwarded
+     *
+     * @param domain
+     * @param listenPort
+     * @throws IOException
+     * @throws Exception
+     */
+    private static void startInterceptor(String domain, int listenPort) throws IOException, Exception {
+        String interceptorPropsPath = System.getenv("TKWROOT") + "/config/" + domain + "/tkw-x-forwarding.properties";
         Properties interceptorProperties = new Properties();
         readPropertiesFile(interceptorPropsPath, interceptorProperties);
         // set the interceptor to forward to whichever port the responder is listening on
         interceptorProperties.setProperty(FORWARDINGPORTPROPERTY, simulatorListenPortNo);
+        // set the interceptor listenport
+        interceptorProperties.setProperty("tks.HttpTransport.listenport", "" + listenPort);
 
         try ( FileWriter fw = new FileWriter(TEMP_PROPERTIES_FILE)) {
             for (Object key : interceptorProperties.keySet()) {
@@ -109,28 +139,65 @@ public class HttpInterceptWorkerTest {
         new File(TESTSAVED_MESSAGES_FOLDER).mkdirs();
         handler.setSavedMessagesDirectory(TESTSAVED_MESSAGES_FOLDER);
 
-        String message = Utils.readFile2String("src/test/resources/get_structured_record.xml");
+        String xmlMessage = Utils.readFile2String("src/test/resources/get_structured_record.xml");
+
+        String xmlMessage0 = xmlMessage.replaceAll("__NNN__", "9690937316"); // patient 22 is only in the forwarder config
+        xmlRequestSimulateRules = setupRequest(xmlMessage0);
+        xmlInstanceSimulateRules = new HttpInterceptWorker(xmlRequestSimulateRules, handler);
+        xmlInstanceSimulateRules.logfile = new LoggingFileOutputStream(new File(INTERCEPTOR_LOG));
+
+        String xmlMessage1 = xmlMessage.replaceAll("__NNN__", "9690937286"); // patient 2 1.5 meds is only in the forwarded config
+        //String xmlMessage1 = xmlMessage.replaceAll("__NNN__", "9658218873"); // patient 2 1.2 meds is only in the forwarded config
+        
+        xmlRequestForewarding = setupRequest(xmlMessage1);
+        xmlInstanceForwarding = new HttpInterceptWorker(xmlRequestForewarding, handler);
+        xmlInstanceForwarding.logfile = new LoggingFileOutputStream(new File(INTERCEPTOR_LOG));
+
+        String jsonMessage = FHIRJsonXmlAdapter.fhirConvertXml2Json(xmlMessage0);
+        jsonRequestSimulateRules = setupRequest(jsonMessage);
+        jsonRequestSimulateRules.setHeader("Accept", FHIR_JSON_MIMETYPE_STU3);
+        jsonRequestSimulateRules.setHeader(CONTENT_TYPE_HEADER, FHIR_JSON_MIMETYPE_STU3);
+        jsonInstanceSimulateRules = new HttpInterceptWorker(jsonRequestSimulateRules, handler);
+        jsonInstanceSimulateRules.logfile = new LoggingFileOutputStream(new File(INTERCEPTOR_LOG));
+
+        ostream = new ByteArrayOutputStream();
+    }
+
+    /**
+     * Constructs an HttpRequest object
+     *
+     * @param message String containing payload (xml or json)
+     * @return HttpRequest populated request object
+     * @throws Exception
+     * @throws FileNotFoundException
+     * @throws UnknownHostException
+     */
+    private HttpRequest setupRequest(String message) throws Exception, FileNotFoundException, UnknownHostException {
         byte[] buf = message.getBytes();
         ByteArrayInputStream bis = new ByteArrayInputStream(buf);
 
-        request = new HttpRequest("id");
-        request.setHeader(SSP_INTERACTION_ID_HEADER, "urn:nhs:names:services:gpconnect:fhir:operation:gpc.getcarerecord");
-        request.setHeader("ssp-from", "from");
-        request.setHeader("ssp-to", "to");
+        HttpRequest request = new HttpRequest("id");
+        request.setHeader(SSP_INTERACTION_ID_HEADER, GET_STRUCTURED_RECORD_INT_ID);
+        request.setHeader("ssp-from", "123456789012");
+        request.setHeader("ssp-to", "918999198738"); // 1.5 O/T asid
+        request.setHeader("ssp-traceid", "trid");
+        // note that this template does not contain __NNN__
+        String authorization = getJWT("src/test/resources/gp_connect_jwt_template.fhir3.txt", "practitionerID", "9999999999", "secret", "true", "false");
+        request.setHeader("Authorization", "Bearer " + authorization);
+        request.setHeader("Accept", FHIR_XML_MIMETYPE_STU3);
 
-        request.setHeader("host", "localhost:"+simulatorListenPortNo);
+        request.setHeader("host", "localhost:" + simulatorListenPortNo);
         request.setRequestType("POST");
-        request.setRequestContext("/gpconnect-demonstrator/v0/fhir/Patient/$gpc.getcarerecord");
+        request.setRequestContext(GET_STRUCTURED_RECORD_URL);
         request.setRemoteAddress(InetAddress.getByName("127.0.0.1"));
         // NB This protocol setting is *essential*
         request.setProtocol("HTTP/1.1");
         request.setInputStream(bis);
-        request.setHeader(CONTENT_LENGTH, "" + buf.length);
-        request.setHeader(CONTENT_TYPE_HEADER, XML_MIMETYPE);
-
-        instance = new HttpInterceptWorker(request, handler);
-        instance.logfile = new LoggingFileOutputStream(new File(INTERCEPTOR_LOG));
-        ostream = new ByteArrayOutputStream();
+        if (buf.length > 0) {
+            request.setHeader(CONTENT_LENGTH, "" + buf.length);
+            request.setHeader(CONTENT_TYPE_HEADER, FHIR_XML_MIMETYPE_STU3);
+        }
+        return request;
     }
 
     @After
@@ -148,49 +215,151 @@ public class HttpInterceptWorkerTest {
     }
 
     /**
-     * Test of getSpineAddress method, of class HttpInterceptWorker.
+     * Test of getForwardingAddress method, of class HttpInterceptWorker.
      */
     @Test
     public void testGetForwardingAddress() {
         System.out.println("getForwardingAddress");
         String expResult = "127.0.0.1";
-        String result = instance.getForwardingAddress();
+        String result = xmlInstanceSimulateRules.getForwardingAddress();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of getSpinePort method, of class HttpInterceptWorker.
+     * Test of getForwardingPort method, of class HttpInterceptWorker.
      */
     @Test
     public void testGetForwardingPort() {
         System.out.println("getForwardingPort");
         int expResult = Integer.parseInt(simulatorListenPortNo);
-        int result = instance.getForwardingPort();
+        int result = xmlInstanceSimulateRules.getForwardingPort();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of process method, of class HttpInterceptWorker.
+     * Test of forward method, of class HttpInterceptWorker. No matching
+     * simulator rule response so this request is forwarded on
      *
      * @throws java.lang.Exception
      */
     @Test
-    public void testProcess() throws Exception {
-        System.out.println("process");
+    public void testForward() throws Exception {
         assertTrue(!folderExists(ENDPOINT_FOLDER));
         HttpResponse resp = new HttpResponse(ostream);
-        instance.process(request, resp);
-        int timeoutCount = 0;
-        // wait for worker thread to complete. This takes quite a long time
-        while (Thread.activeCount() > 4 && ++timeoutCount < 12) {
-            Thread.sleep(1000);
-        }
+        xmlInstanceForwarding.process(xmlRequestForewarding, resp);
+        String log = waitForFile();
+        // need to test the response log
+        // resp.getHttpHeader() is null for responses from forwarded end points
+        assertEquals(null, resp.getHttpHeader());
+    }
 
-        File endPointFolder = new File(ENDPOINT_FOLDER);
-        assertTrue(endPointFolder.exists());
-        int expResult = 1;
-        assertEquals(expResult, endPointFolder.listFiles().length);
-        assertTrue(endPointFolder.listFiles()[0].length() > 0);
+    /**
+     * Test of processXmlAcceptXml method, of class HttpInterceptWorker.
+     * Matching simulator rule response
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testProcessXmlAcceptXml() throws Exception {
+        System.out.println("processXmlAcceptXml");
+        assertTrue(!folderExists(ENDPOINT_FOLDER));
+        HttpResponse resp = new HttpResponse(ostream);
+        xmlInstanceSimulateRules.process(xmlRequestSimulateRules, resp);
+        String log = waitForFile();
+
+        checkReturnContentType(resp, FHIR_XML_MIMETYPE_STU3);
+    }
+
+    /**
+     * Test of processXmlAcceptXmlFormatJson method, of class
+     * HttpInterceptWorker. Matching simulator rule response
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testProcessXmlAcceptXmlFormatJson() throws Exception {
+        System.out.println("processXmlAcceptXmlFormatJson");
+        assertTrue(!folderExists(ENDPOINT_FOLDER));
+        HttpResponse resp = new HttpResponse(ostream);
+        xmlRequestSimulateRules.setRequestContext(GET_STRUCTURED_RECORD_URL + "?_format=json");
+        xmlInstanceSimulateRules.process(xmlRequestSimulateRules, resp);
+        String log = waitForFile();
+
+        checkReturnContentType(resp, FHIR_JSON_MIMETYPE_STU3);
+    }
+
+    /**
+     * Test of processXmlAcceptJson method, of class HttpInterceptWorker.
+     * Matching simulator rule response
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testProcessXmlAcceptJson() throws Exception {
+        System.out.println("processXmlAcceptJson");
+        assertTrue(!folderExists(ENDPOINT_FOLDER));
+        HttpResponse resp = new HttpResponse(ostream);
+
+        xmlRequestSimulateRules.setHeader("Accept", FHIR_JSON_MIMETYPE_STU3);
+        xmlInstanceSimulateRules.process(xmlRequestSimulateRules, resp);
+        String log = waitForFile();
+
+        checkReturnContentType(resp, FHIR_JSON_MIMETYPE_STU3);
+    }
+
+    /**
+     * Test of processJsonAcceptJson method, of class HttpInterceptWorker.
+     * Matching simulator rule response
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testProcessJsonAcceptJson() throws Exception {
+        System.out.println("processJsonAcceptJson");
+        assertTrue(!folderExists(ENDPOINT_FOLDER));
+        HttpResponse resp = new HttpResponse(ostream);
+        jsonRequestSimulateRules.setHeader("Accept", FHIR_JSON_MIMETYPE_STU3);
+        jsonInstanceSimulateRules.process(jsonRequestSimulateRules, resp);
+        String log = waitForFile();
+
+        checkReturnContentType(resp, FHIR_JSON_MIMETYPE_STU3);
+    }
+
+    /**
+     * Test of processJsonAcceptJsonFormatXml method, of class
+     * HttpInterceptWorker. Matching simulator rule response
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testProcessJsonAcceptJsonFormatXml() throws Exception {
+        System.out.println("processJsonAcceptJsonFormatXml");
+        assertTrue(!folderExists(ENDPOINT_FOLDER));
+        HttpResponse resp = new HttpResponse(ostream);
+        jsonRequestSimulateRules.setHeader("Accept", FHIR_JSON_MIMETYPE_STU3);
+        jsonRequestSimulateRules.setRequestContext(GET_STRUCTURED_RECORD_URL + "?_format=xml");
+        jsonInstanceSimulateRules.process(jsonRequestSimulateRules, resp);
+        String log = waitForFile();
+
+        checkReturnContentType(resp, FHIR_XML_MIMETYPE_STU3);
+    }
+
+    /**
+     * Test of processJsonAcceptXml method, of class HttpInterceptWorker.
+     * Matching simulator rule response
+     *
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testProcessJsonAcceptXml() throws Exception {
+        System.out.println("process_json_accept_xml");
+        assertTrue(!folderExists(ENDPOINT_FOLDER));
+        HttpResponse resp = new HttpResponse(ostream);
+        jsonRequestSimulateRules.setHeader("Accept", FHIR_XML_MIMETYPE_STU3);
+        jsonInstanceSimulateRules.process(jsonRequestSimulateRules, resp);
+        String log = waitForFile();
+
+        checkReturnContentType(resp, FHIR_XML_MIMETYPE_STU3);
     }
 
     /**
@@ -205,4 +374,35 @@ public class HttpInterceptWorkerTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     * wait for worker thread to complete. This takes quite a long time check
+     * non zero file
+     *
+     * @return content of file
+     * @throws InterruptedException
+     */
+    private String waitForFile() throws InterruptedException, Exception {
+        int timeoutCount = 0;
+        // wait for worker thread to complete. This takes quite a long time
+        while (Thread.activeCount() > 4 && ++timeoutCount < 12) {
+            Thread.sleep(1000);
+        }
+
+        File endPointFolder = new File(ENDPOINT_FOLDER);
+        assertTrue(endPointFolder.exists());
+        int expResult = 1;
+        assertEquals(expResult, endPointFolder.listFiles().length);
+
+        // check non zero file length
+        assertTrue(endPointFolder.listFiles()[0].length() > 0);
+        String log = Utils.readFile2String(endPointFolder.listFiles()[0].getAbsolutePath());
+        System.out.println(log);
+        return log;
+    }
+
+    private void checkReturnContentType(HttpResponse resp, String expResult) {
+        uk.nhs.digital.mait.tkwx.http.HttpHeaderManager hm = new uk.nhs.digital.mait.tkwx.http.HttpHeaderManager();
+        hm.parseHttpHeaders(resp.getHttpHeader());
+        assertEquals(expResult, hm.getHttpHeaderValue(CONTENT_TYPE_HEADER));
+    }
 }

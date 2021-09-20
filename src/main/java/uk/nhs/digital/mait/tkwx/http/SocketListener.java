@@ -117,10 +117,10 @@ public class SocketListener
 
     @Override
     public void run() {
-        this.setName("SocketListenerThread");
+        this.setName("SocketListenerThread:"+port);
         try {
             serverSocket = new ServerSocket();
-            if (host.contentEquals("0.0.0.0.")) {
+            if (host.contentEquals("0.0.0.0")) {
                 serverSocket.bind(new InetSocketAddress((java.net.Inet4Address) null, port), ssbacklog);
             } else {
                 serverSocket.bind(new InetSocketAddress(host, port), ssbacklog);

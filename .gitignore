@@ -1,9 +1,13 @@
 /target/
 /nbproject/
-nbactions.xml
+nbactions*.xml
 build.sh
-pom.xml
 TKW-x.jar
 push_tkw_to_dockerhub.sh
 nbactions-*
 nb-configuration.xml
+dependency-reduced-pom.xml
+TKW-x.jar
+src/test/resources/test.tdv
+src/test/resources/test.metadata
+*.backup

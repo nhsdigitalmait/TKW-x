@@ -15,10 +15,15 @@
  */
 package uk.nhs.digital.mait.tkwx.http;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
+import static java.util.logging.Level.SEVERE;
+import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 
 /**
  * HTTP Server to support test and reference applications. This class is
@@ -35,11 +40,19 @@ public class HttpServer {
 
     private final ArrayList<Listener> listeners;
     private final HashMap<String, HttpContext> contexts;
+    private String reporterClass;
 
     /**
      * Creates a new instance of HttpServer
      */
     public HttpServer() {
+        try {
+            Configurator config = Configurator.getConfigurator();
+            reporterClass = config.getConfiguration("tks.classname.LastResortReporter");
+        } catch (Exception e) {
+            Logger.getInstance().log(SEVERE, HttpResponse.class.getName(),
+                    "Error getting configurator : " + e.getMessage());
+        }
         listeners = new ArrayList<>();
         contexts = new HashMap<>();
     }
@@ -87,11 +100,11 @@ public class HttpServer {
                 w.write(r.getBadRequestReason());
                 w.flush();
                 System.err.println(HttpServer.class.getName()+".addRequest Bad request from " + r.getRemoteAddr() + " : " + r.getBadRequestReason());
-            } catch (Exception e) {
+            } catch (IOException e) {
                 String s = "Request from " + r.getSourceId() + " server configuration error, no default or root context handler found: " + e.getMessage();
                 System.err.println(s);
                 System.err.println(HttpServer.class.getName()+".addRequest Bad request from " + r.getRemoteAddr() + " : " + r.getBadRequestReason());
-                LastResortReporter.report(s, r.getResponse().getOutputStream());
+                runLastResortReporter(s, r);
             }
             return;
         }
@@ -105,11 +118,11 @@ public class HttpServer {
                 OutputStreamWriter w = new OutputStreamWriter(r.getResponse().getOutputStream());
                 w.write("HTTP/1.1 500 Server configuration error, no default or root context handler found");
                 w.flush();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 String s = "Request from " + r.getSourceId() + " server configuration error, no default or root context handler found: " + e.getMessage();
                 System.err.println(HttpServer.class.getName()+".addRequest "+s);
 //                   System.out.println("HTTPSERVER1Last");
-                LastResortReporter.report(s, r.getResponse().getOutputStream());
+                runLastResortReporter(s, r);
             }
             return;
         } else {
@@ -123,21 +136,37 @@ public class HttpServer {
                 if (r.isHandled()) {
                     break;
                 }
-            } catch (Exception e) {
+            } catch (HttpException e) {
                 String s = "Request from " + r.getSourceId() + " exception in handler chain: " + e.getMessage();
                 System.err.println(s);
 //                System.out.println("prelastresort");
 //                System.out.println("HTTPSERVER2Last");
-
-                // TODO This synthesises a NASP spine error which is not suitable for ITK or REST
-                LastResortReporter.report(s, r.getResponse().getOutputStream());
+                runLastResortReporter(s, r);
                 return;
             }
         }
         if (!r.isHandled()) {
             System.err.println("Request from " + r.getSourceId() + " not handled by anything");
 //            System.out.println("HTTPSERVER2Last");
-            LastResortReporter.report(null, r.getResponse().getOutputStream());
+            runLastResortReporter(null, r);
+        }
+    }
+
+    private void runLastResortReporter(String s, HttpRequest r) {
+        try {
+            LastResortReporter reporter
+                    = (LastResortReporter) Class
+                            .forName(reporterClass)
+                            .getConstructor()
+                            .newInstance();
+            reporter.report(s, r.getResponse().getOutputStream());
+        } catch (ClassNotFoundException
+                | NoSuchMethodException
+                | InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException ex) {
+            Logger.getInstance().log(SEVERE, HttpServer.class.getName(),
+                    "Cannot start last resort reporter");
         }
     }
 }

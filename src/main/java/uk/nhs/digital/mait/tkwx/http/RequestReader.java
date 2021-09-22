@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.util.StringTokenizer;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import static uk.nhs.digital.mait.tkwx.util.HttpChunker.unchunk;
 import uk.nhs.digital.mait.commonutils.util.Logger;
@@ -62,7 +63,7 @@ class RequestReader
             Configurator config = Configurator.getConfigurator();
             reporterClass = config.getConfiguration("tks.classname.LastResortReporter");
         } catch (Exception e) {
-            Logger.getInstance().log(SEVERE, HttpResponse.class.getName(),
+            Logger.getInstance().log(WARNING, RequestReader.class.getName(),
                     "Error getting configurator : " + e.getMessage());
         }
         socket = s;

@@ -101,7 +101,7 @@ public class HttpServer {
                 w.write(r.getBadRequestReason());
                 w.flush();
                 System.err.println(HttpServer.class.getName()+".addRequest Bad request from " + r.getRemoteAddr() + " : " + r.getBadRequestReason());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 String s = "Request from " + r.getSourceId() + " server configuration error, no default or root context handler found: " + e.getMessage();
                 System.err.println(s);
                 System.err.println(HttpServer.class.getName()+".addRequest Bad request from " + r.getRemoteAddr() + " : " + r.getBadRequestReason());
@@ -119,7 +119,7 @@ public class HttpServer {
                 OutputStreamWriter w = new OutputStreamWriter(r.getResponse().getOutputStream());
                 w.write("HTTP/1.1 500 Server configuration error, no default or root context handler found");
                 w.flush();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 String s = "Request from " + r.getSourceId() + " server configuration error, no default or root context handler found: " + e.getMessage();
                 System.err.println(HttpServer.class.getName()+".addRequest "+s);
 //                   System.out.println("HTTPSERVER1Last");
@@ -137,7 +137,7 @@ public class HttpServer {
                 if (r.isHandled()) {
                     break;
                 }
-            } catch (HttpException e) {
+            } catch (Exception e) {
                 String s = "Request from " + r.getSourceId() + " exception in handler chain: " + e.getMessage();
                 System.err.println(s);
 //                System.out.println("prelastresort");

@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 
@@ -50,7 +51,7 @@ public class HttpServer {
             Configurator config = Configurator.getConfigurator();
             reporterClass = config.getConfiguration("tks.classname.LastResortReporter");
         } catch (Exception e) {
-            Logger.getInstance().log(SEVERE, HttpResponse.class.getName(),
+            Logger.getInstance().log(WARNING, HttpServer.class.getName(),
                     "Error getting configurator : " + e.getMessage());
         }
         listeners = new ArrayList<>();

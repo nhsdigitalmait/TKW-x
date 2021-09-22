@@ -17,7 +17,12 @@ package uk.nhs.digital.mait.tkwx.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 
 /**
  * A class to orchestrate the processing of pipelining HTTP requests. Each
@@ -34,6 +39,7 @@ public class PipeliningQueue extends Thread {
     private final OutputStream outputStream;
     private boolean closeOnCompletion = false;
     private RequestReader reader = null;
+    private String reporterClass;
 
     /**
      *
@@ -41,6 +47,13 @@ public class PipeliningQueue extends Thread {
      * @param r RequestReader
      */
     PipeliningQueue(OutputStream os, RequestReader r) {
+        try {
+            Configurator config = Configurator.getConfigurator();
+            reporterClass = config.getConfiguration("tks.classname.LastResortReporter");
+        } catch (Exception e) {
+            Logger.getInstance().log(WARNING, PipeliningQueue.class.getName(),
+                    "Error getting configurator : " + e.getMessage());
+        }
         this.tQueue = new LinkedList<>();
         outputStream = os;
         reader = r;
@@ -161,7 +174,21 @@ public class PipeliningQueue extends Thread {
             String s = "Error writing response: " + e.getClass().toString() + " : " + e.getMessage();
             System.err.println(s);
 //            System.out.println("pipeliningLast - hash "+ this.hashCode());
-            LastResortReporter.report(s, outputStream);
+            try {
+                LastResortReporter reporter =
+                        (LastResortReporter) Class
+                                .forName(reporterClass)
+                                .getConstructor()
+                                .newInstance();
+                reporter.report(s, outputStream);
+            } catch (ClassNotFoundException
+                    | NoSuchMethodException
+                    | InstantiationException
+                    | IllegalAccessException
+                    | InvocationTargetException ex) {
+                Logger.getInstance().log(SEVERE, PipeliningQueue.class.getName(),
+                        "Cannot start last resort reporter");
+            }
         }
     }
 }

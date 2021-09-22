@@ -27,7 +27,7 @@ import org.junit.runners.Suite;
  * @author sifa2
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({NotifyOnFlushOutputStreamTest.class, SocketListenerTest.class, HttpInputStreamTest.class, HttpRequestTest.class, HttpExceptionTest.class, HttpResponseTest.class, HttpServerExceptionTest.class, HttpServerTest.class, LastResortReporterTest.class, SSLSocketListenerTest.class, HttpContextTest.class, HttpFieldsTest.class, RequestReaderTest.class, PipeliningQueueTest.class, ListenerTest.class, NullHandlerTest.class, HttpTimerTest.class, HandlerTest.class})
+@Suite.SuiteClasses({NotifyOnFlushOutputStreamTest.class, SocketListenerTest.class, HttpInputStreamTest.class, HttpRequestTest.class, HttpExceptionTest.class, HttpResponseTest.class, HttpServerExceptionTest.class, HttpServerTest.class, LastResortReporterTest.class, NaspLastResortReporterTest.class, FhirLastResortReporterTest.class, SSLSocketListenerTest.class, HttpContextTest.class, HttpFieldsTest.class, RequestReaderTest.class, PipeliningQueueTest.class, ListenerTest.class, NullHandlerTest.class, HttpTimerTest.class, HandlerTest.class})
 public class HttpSuite {
 
     @BeforeClass

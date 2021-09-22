@@ -15,14 +15,10 @@
  */
 package uk.nhs.digital.mait.tkwx.http;
 
-import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  *
@@ -30,7 +26,6 @@ import org.junit.Test;
  */
 public class LastResortReporterTest {
 
-    private OutputStream ostream;
 
     public LastResortReporterTest() {
     }
@@ -45,22 +40,10 @@ public class LastResortReporterTest {
 
     @Before
     public void setUp() {
-        ostream = new ByteArrayOutputStream();
     }
 
     @After
-    public void tearDown() throws IOException {
-        ostream.close();
-    }
-
-    /**
-     * Test of report method, of class LastResortReporter.
-     */
-    @Test
-    public void testReport() {
-        System.out.println("report");
-        String errorMessage = "testmessage";
-        LastResortReporter.report(errorMessage, ostream);
+    public void tearDown() {
     }
 
 }

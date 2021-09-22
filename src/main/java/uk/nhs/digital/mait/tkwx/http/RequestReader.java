@@ -18,12 +18,15 @@ package uk.nhs.digital.mait.tkwx.http;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.util.StringTokenizer;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import static uk.nhs.digital.mait.tkwx.util.HttpChunker.unchunk;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.COMPRESSION_DEFLATE;
 import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.COMPRESSION_GZIP;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.Compressor;
@@ -50,11 +53,19 @@ class RequestReader
 //    static long min = 999999999;
 //    static long max = 0;
     private static final int MARKSIZE = 1024;
+    private String reporterClass;
 
     /**
      * Creates a new instance of RequestReader
      */
     RequestReader(Socket s, HttpServer h, String id) {
+        try {
+            Configurator config = Configurator.getConfigurator();
+            reporterClass = config.getConfiguration("tks.classname.LastResortReporter");
+        } catch (Exception e) {
+            Logger.getInstance().log(WARNING, RequestReader.class.getName(),
+                    "Error getting configurator : " + e.getMessage());
+        }
         socket = s;
         server = h;
         connectionId = id;
@@ -212,15 +223,30 @@ class RequestReader
 //          System.out.println("end wait@" + new Date());
         } catch (Exception e) {
             exception = e;
-
-            queue.stopQueue();
+            if (queue != null) {
+                queue.stopQueue();
+            }
             String report = "Exception creating request on socket " + connectionId + ", request processing exiting: " + e.getMessage();
             Logger.getInstance().log(SEVERE, RequestReader.class.getName(), report);
             try {
-                LastResortReporter.report(report, socket.getOutputStream());
+                LastResortReporter reporter
+                        = (LastResortReporter) Class
+                                .forName(reporterClass)
+                                .getConstructor()
+                                .newInstance();
+                reporter.report(report, socket.getOutputStream());
                 this.wait();
-            } catch (IOException | InterruptedException e1) {
-                Logger.getInstance().log(SEVERE, RequestReader.class.getName(), "... socket output stream dead");
+            } catch (IOException
+                    | InterruptedException e1) {
+                Logger.getInstance().log(SEVERE, RequestReader.class.getName(),
+                        "... socket output stream dead");
+            } catch (ClassNotFoundException
+                    | NoSuchMethodException
+                    | InstantiationException
+                    | IllegalAccessException
+                    | InvocationTargetException e2) {
+                Logger.getInstance().log(SEVERE, RequestReader.class.getName(),
+                        "Cannot start last resort reporter");
             }
         }
 //        long duration = System.currentTimeMillis() - start;

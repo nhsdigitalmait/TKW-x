@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 import static java.util.logging.Level.SEVERE;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 
 /**
  * Emergency class for returning FHIR errors
@@ -32,6 +33,7 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 public class FhirLastResortReporter extends LastResortReporter {
 
     private final String HTTP_LINE_SEPARATOR = "\r\n";
+    private final String DEFAULTERROR = "Unexpected internal server error.";
     private final String INITIAL_HEADERS = String.join(HTTP_LINE_SEPARATOR, List.of(
             "HTTP/1.1 500 OK",
             "Content-Length: "
@@ -42,7 +44,7 @@ public class FhirLastResortReporter extends LastResortReporter {
             "",
             ""
     ));
-    private final String RESPONSE = String.join(HTTP_LINE_SEPARATOR, List.of(
+    private final String RESPONSE_START = String.join(HTTP_LINE_SEPARATOR, List.of(
             "<OperationOutcome xmlns=\"http://hl7.org/fhir\">",
             "<id value=\"" + UUID.randomUUID().toString() + "\"/>",
             "<meta>",
@@ -58,17 +60,23 @@ public class FhirLastResortReporter extends LastResortReporter {
             "<display value=\"Unexpected internal server error.\"/>",
             "</coding>",
             "</details>",
-            "<diagnostics value=\"Unexpected internal server error.\"/>",
+            "<diagnostics value=\""
+    ));
+    private final String RESPONSE_END = String.join(HTTP_LINE_SEPARATOR, List.of(
+            "\"/>",
             "</issue>",
             "</OperationOutcome>"
     ));
 
     @Override
     public void report(String errorMessage, OutputStream out) {
+        String error = isNullOrEmpty(errorMessage) ? DEFAULTERROR : errorMessage;
         StringBuilder sb = new StringBuilder(INITIAL_HEADERS);
-        sb.append(Long.toString(RESPONSE.length()));
+        sb.append(Long.toString(RESPONSE_START.length() + error.length() + RESPONSE_END.length()));
         sb.append(CONTENT_TYPE_HEADER);
-        sb.append(RESPONSE);
+        sb.append(RESPONSE_START);
+        sb.append(error);
+        sb.append(RESPONSE_END);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out))) {
             bw.write(sb.toString());
             bw.flush();

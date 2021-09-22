@@ -67,6 +67,8 @@ public class FhirLastResortReporterTest {
                 s.startsWith("HTTP/1.1 500 OK"));
         assertTrue("report must contain a fhir operation outcome",
                 s.contains("<OperationOutcome xmlns=\"http://hl7.org/fhir\">"));
+        assertTrue("report must contain the supplied error message",
+                s.contains("hello"));
     }
 
 }

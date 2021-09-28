@@ -270,6 +270,6 @@
     <tkwx-automation-path>${internal_services_root}/testautomation/parser</tkwx-automation-path>
     <tkwx-validation-path>${internal_services_root}/validation/parser</tkwx-validation-path>
     <tkwx-rules-path>${internal_services_root}/rules/parser</tkwx-rules-path>
-    <hapi.version>5.1.0</hapi.version>
+    <hapi.version>5.4.0</hapi.version>
   </properties>
 </project>

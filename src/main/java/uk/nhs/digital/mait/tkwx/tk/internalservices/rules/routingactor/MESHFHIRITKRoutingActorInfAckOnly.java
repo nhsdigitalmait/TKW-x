@@ -79,7 +79,7 @@ public class MESHFHIRITKRoutingActorInfAckOnly
     }
 
     @Override
-    public String makeResponse(HashMap<String,Substitution> substitutions, Object obj)
+    public String makeResponse(HashMap<String, Substitution> substitutions, Object obj)
             throws Exception {
         MeshRequest meshReq = (MeshRequest) obj;
         MeshMessage mm = meshReq.getRequestMeshMessage();

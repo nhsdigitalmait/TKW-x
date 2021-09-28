@@ -74,6 +74,7 @@ public class HapiFhirValidatorEngine {
     private final String PREPOPULATED = ".prepopulated";
     private final String INMEMORYTERMINOLOGYSERVER = ".inmemoryterminologyserver";
     private final String COMMONCODESYSTEMSTERMINOLOGYSERVICE = ".commoncodesystemsterminologyservice";
+    private final String CACHING = ".caching";
     private final String REMOTETERMINOLOGYSERVICEURL = ".remoteterminologyserviceurl";
     private final String FHIRVERSION = ".fhir.version";
     private final String PRIMINGRESOURCELOCATION = ".primingresource";
@@ -88,6 +89,7 @@ public class HapiFhirValidatorEngine {
     private boolean prepopulatedValidationSupport = true;
     private boolean inMemoryTerminologyServerValidationSupport = true;
     private boolean commonCodeSystemTerminologyServiceValidationSupport = true;
+    private boolean cachingValidationSupport = true;
     private String remoteTerminologyServiceUrl = null;
     private int minimumReportLevel = 0;
     private FhirContext context;
@@ -133,6 +135,7 @@ public class HapiFhirValidatorEngine {
             prepopulatedValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + PREPOPULATED));
             inMemoryTerminologyServerValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + INMEMORYTERMINOLOGYSERVER));
             commonCodeSystemTerminologyServiceValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + COMMONCODESYSTEMSTERMINOLOGYSERVICE));
+            cachingValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + CACHING));
 
             String c = config.getConfiguration(HapiFhirInstancePath + MINIMUMREPORTLEVEL);
 
@@ -317,10 +320,13 @@ public class HapiFhirValidatorEngine {
 
                 supportChain.addValidationSupport(remoteTermSvc);
             }
-            CachingValidationSupport cachingValidationSupport = new CachingValidationSupport(supportChain);
-
-            FhirInstanceValidator fhirInstanceValidator = new FhirInstanceValidator(cachingValidationSupport);
-//            fhirInstanceValidator.setNoTerminologyChecks(noTerminologyChecks);
+            FhirInstanceValidator fhirInstanceValidator = null;
+            if (cachingValidationSupport) {
+                CachingValidationSupport cachingVS = new CachingValidationSupport(supportChain);
+                fhirInstanceValidator = new FhirInstanceValidator(cachingVS);
+            } else {
+                fhirInstanceValidator = new FhirInstanceValidator(supportChain);
+            }
 
             xmlParser = context.newXmlParser();
             jsonParser = context.newJsonParser();

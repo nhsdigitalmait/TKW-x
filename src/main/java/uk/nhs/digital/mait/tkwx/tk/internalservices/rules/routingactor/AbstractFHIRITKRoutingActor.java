@@ -42,6 +42,7 @@ public abstract class AbstractFHIRITKRoutingActor extends RoutingActor implement
             errorText = getPropertyValue(FHIRPREFIX + type + "." + ERROR_TEXT);
             issueCode = getPropertyValue(FHIRPREFIX + type + "." + ISSUE_CODE);
             issueSeverity = getPropertyValue(FHIRPREFIX + type + "." + ISSUE_SEVERITY);
+            infAckRequested = getPropertyValue(FHIRPREFIX + type + "." + INF_ACK_REQUESTED);
         }
 
         /**
@@ -60,6 +61,7 @@ public abstract class AbstractFHIRITKRoutingActor extends RoutingActor implement
             errorText = getPropertyValue(FHIRPREFIX + ackType + "." + ERROR_TEXT, errorLabel);
             issueCode = getPropertyValue(FHIRPREFIX + ackType + "." + ISSUE_CODE, errorLabel);
             issueSeverity = getPropertyValue(FHIRPREFIX + ackType + "." + ISSUE_SEVERITY, errorLabel);
+            infAckRequested = getPropertyValue(FHIRPREFIX + ackType + "." + INF_ACK_REQUESTED, errorLabel);
         }
 
         /**
@@ -74,6 +76,7 @@ public abstract class AbstractFHIRITKRoutingActor extends RoutingActor implement
             substitute(sb, "__ISSUE_CODE__", issueCode);
             substitute(sb, "__ERRORCODE__", errorCode);
             substitute(sb, "__ERRORTEXT__", errorText);
+            substitute(sb, "__INF_ACK_REQUESTED__", infAckRequested);
         }
 
         /**
@@ -111,6 +114,7 @@ public abstract class AbstractFHIRITKRoutingActor extends RoutingActor implement
         private final String errorText;
         private final String issueCode;
         private final String issueSeverity;
+        private final String infAckRequested;
 
         private static final String FHIRPREFIX = "tks.routingactor.fhir.";
 
@@ -119,7 +123,8 @@ public abstract class AbstractFHIRITKRoutingActor extends RoutingActor implement
                 ERROR_TEXT = "errortext",
                 RESPONSE_CODE = "responsecode",
                 ISSUE_CODE = "issuetext",
-                ISSUE_SEVERITY = "issueseverity";
+                ISSUE_SEVERITY = "issueseverity",
+                INF_ACK_REQUESTED = "infackrequested";
 
     } // class AckDetails
 

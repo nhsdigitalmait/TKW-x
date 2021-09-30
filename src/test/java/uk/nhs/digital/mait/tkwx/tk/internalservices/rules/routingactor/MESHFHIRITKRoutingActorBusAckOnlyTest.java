@@ -74,6 +74,7 @@ public class MESHFHIRITKRoutingActorBusAckOnlyTest {
         System.setProperty("tks.routingactor.fhir.ia.responsecode", "100");
         System.setProperty("tks.routingactor.fhir.ia.issuetext", "it");
         System.setProperty("tks.routingactor.fhir.ia.issueseverity", "is");
+        System.setProperty("tks.routingactor.fhir.ia.infackrequested", "irq");
 
         System.setProperty("tks.routingactor.fhir.ba.errorcode", "100");
         System.setProperty("tks.routingactor.fhir.ba.errortext", "ert");

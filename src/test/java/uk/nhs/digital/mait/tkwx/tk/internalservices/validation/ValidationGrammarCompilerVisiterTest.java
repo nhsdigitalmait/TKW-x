@@ -189,17 +189,6 @@ public class ValidationGrammarCompilerVisiterTest {
     }
 
     /**
-     * Test of parse method, of class ValidationGrammarCompilerVisiter.
-     *
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testParseITK_Dashboards() throws Exception {
-        System.out.println("parseITK_Dashboards");
-        testParse("ITK_Dashboards");
-    }
-
-    /**
      * Test of getMetadata method, of class ValidationGrammarCompilerVisiter.
      *
      * @throws java.io.IOException

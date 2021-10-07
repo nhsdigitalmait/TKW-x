@@ -11,3 +11,4 @@ TKW-x.jar
 src/test/resources/test.tdv
 src/test/resources/test.metadata
 *.backup
+TKW-x_TestLog.txt

@@ -27,7 +27,7 @@ import org.junit.runners.Suite;
  * @author simonfarrow
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir.HapiAssetCacheTest.class, uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir.HapiFhirValidatorTest.class})
+@Suite.SuiteClasses({uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir.HapiAssetCacheStu3Test.class, uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir.HapiFhirValidatorTest.class})
 public class HapifhirSuite {
 
     @BeforeClass

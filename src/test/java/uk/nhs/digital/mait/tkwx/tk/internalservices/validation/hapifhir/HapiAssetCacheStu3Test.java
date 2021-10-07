@@ -16,6 +16,7 @@
 package uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.validation.ValidationResult;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,17 +38,20 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  *
  * @author simonfarrow
  */
-public class HapiAssetCacheTest {
+public class HapiAssetCacheStu3Test {
 
     private HapiAssetCacheStu3 instance;
     private final static String ROOT = System.getenv("TKWROOT")+"/config/GP_CONNECT/validator_config/fhir_assets/STU3-FHIR-Assets/";
+    private static final String PROFILE_VERSION = "100";
+    private static final String SOFTWARE_VERSION = "99";
     
-    public HapiAssetCacheTest() {
+    public HapiAssetCacheStu3Test() {
     }
     
     @BeforeClass
@@ -351,6 +355,51 @@ public class HapiAssetCacheTest {
         boolean expResult = false;
         boolean result = instance.ignore(r);
         assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of convertValidationResultToOOString method, of class HapiAssetCacheStu3.
+     */
+    @Test
+    public void testConvertValidationResultToOOString() throws Exception {
+        System.out.println("convertValidationResultToOOString");
+
+        String expResult = "<OperationOutcome xmlns=\"http://hl7.org/fhir\">";
+        
+        // pick a fhir v3 source file
+
+        System.setProperty("tks.validator.hapifhirvalidator.softwareversion", SOFTWARE_VERSION);
+        System.setProperty("tks.validator.hapifhirvalidator.profileversion", PROFILE_VERSION);
+        HapiFhirValidatorEngine hfve = new HapiFhirValidatorEngine(null);
+        String o = Utils.readFile2String("src/test/resources/slots.json");
+        ValidationResult vr = hfve.validate(o);
+
+        String result = instance.convertValidationResultToOOString(vr, hfve);
+        assertTrue(result.startsWith(expResult));
+
+
+    }
+
+    /**
+     * Test of getRebuildBusyOOMessage method, of class HapiAssetCacheStu3.
+     */
+    @Test
+    public void testGetRebuildBusyOOMessage() {
+        System.out.println("getRebuildBusyOOMessage");
+        String expResult = "Server is busy whilst Profile is being Rebuilt - try again later";
+        String result = instance.getRebuildBusyOOMessage();
+        assertTrue(result.contains(expResult));
+    }
+
+    /**
+     * Test of getRebuildSuccessOOMessage method, of class HapiAssetCacheStu3.
+     */
+    @Test
+    public void testGetRebuildSuccessOOMessage() {
+        System.out.println("getRebuildSuccessOOMessage");
+        String expResult = "Server Profile Rebuild Successful";
+        String result = instance.getRebuildSuccessOOMessage();
+        assertTrue(result.contains(expResult));
     }
 
 }

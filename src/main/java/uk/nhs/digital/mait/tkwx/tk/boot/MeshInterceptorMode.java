@@ -19,6 +19,7 @@ import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 
 /**
  * Interceptor mode using MESH
@@ -49,12 +50,20 @@ public class MeshInterceptorMode
         Properties p = t.getProperties();
         String tr = p.getProperty(TRANSPORTLIST_PROPERTY);
         if (tr == null) {
-            Logger.getInstance().log(SEVERE,MeshInterceptorMode.class.getName(),"No transports defined for simulator: " + TRANSPORTLIST_PROPERTY + " not defined");
+            Logger.getInstance().log(SEVERE,
+                    MeshInterceptorMode.class.getName(),
+                    "No transports defined for simulator: "
+                            + TRANSPORTLIST_PROPERTY
+                            + " not defined");
             return;
         }
         String sn = p.getProperty(ToolkitSimulator.SERVICES);
-        if (sn == null || sn.trim().length()==0) {
-            Logger.getInstance().log(SEVERE,MeshInterceptorMode.class.getName(),"property " + ToolkitSimulator.SERVICES + " not defined");
+        if (isNullOrEmpty(sn)) {
+            Logger.getInstance().log(SEVERE,
+                    MeshInterceptorMode.class.getName(),
+                    "property "
+                            + ToolkitSimulator.SERVICES
+                            + " not defined");
             return;
         }
         p.setProperty(SERVICELISTPROPERTY, tr.trim() + " " + sn); 

@@ -27,7 +27,8 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 public class AutoTestMode 
     extends TransmitterMode
 {
-    private static final String SERVICELIST = "AutoTest RulesEngine Sender Validator";    
+    private static final String SERVICELIST
+            = "AutoTest RulesEngine Sender Validator";    
     
     public AutoTestMode() {
     }
@@ -38,7 +39,11 @@ public class AutoTestMode
         Properties p = t.getProperties();
         String tr = p.getProperty(TRANSPORTLIST_PROPERTY);
         if (tr == null) {
-            Logger.getInstance().log(SEVERE,AutoTestMode.class.getName(), "No transports defined for simulator: " + TRANSPORTLIST_PROPERTY + " not defined");
+            Logger.getInstance().log(SEVERE,
+                    AutoTestMode.class.getName(),
+                    "No transports defined for simulator: "
+                            + TRANSPORTLIST_PROPERTY
+                            + " not defined");
             return;
         }
         serviceList = tr.trim() + " " + SERVICELIST;

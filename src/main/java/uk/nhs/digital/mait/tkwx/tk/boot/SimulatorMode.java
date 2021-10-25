@@ -19,6 +19,7 @@ import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 
 /**
  *
@@ -41,7 +42,11 @@ public class SimulatorMode
         Properties p = t.getProperties();
         String tr = p.getProperty(TRANSPORTLIST_PROPERTY);
         if (tr == null) {
-            Logger.getInstance().log(SEVERE,SimulatorMode.class.getName(),"No transports defined for simulator: " + TRANSPORTLIST_PROPERTY + " not defined");
+            Logger.getInstance().log(SEVERE,
+                    SimulatorMode.class.getName(),
+                    "No transports defined for simulator: "
+                            + TRANSPORTLIST_PROPERTY
+                            + " not defined");
             return;
         }
 
@@ -59,7 +64,7 @@ public class SimulatorMode
         super.init(t);
 
         String sn = p.getProperty(ToolkitSimulator.SERVICES);
-        if (sn == null || sn.trim().length() == 0) {
+        if (isNullOrEmpty(sn)) {
             p.setProperty(SERVICELISTPROPERTY, tr.trim());
         } else {
             p.setProperty(SERVICELISTPROPERTY, tr.trim() + " " + sn);

@@ -129,7 +129,7 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
                         // Put the Async payload into asyncResponse for use later because the synchronousAck will overwrite it
                         asyncResponsePayload = serviceResponse.getResponse();
 
-                        synchronousAck(serviceResponse);
+                        synchronousAck();
                         if (asyncResponseDelay != 0) {
                             try {
                                 Thread.sleep(asyncResponseDelay);
@@ -242,7 +242,7 @@ class SpineAsynchronousWorker extends SpineSynchronousWorker {
 
     }
 
-    protected void synchronousAck(ServiceResponse r)
+    protected void synchronousAck()
             throws Exception {
         if (asyncHandler.getAckLoadException() != null) {
             throw asyncHandler.getAckLoadException();

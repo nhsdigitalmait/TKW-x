@@ -25,9 +25,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.distributionenvelopetools.itk.distributionenvelope.Address;
 import uk.nhs.digital.mait.distributionenvelopetools.itk.distributionenvelope.DistributionEnvelope;
 import uk.nhs.digital.mait.distributionenvelopetools.itk.distributionenvelope.Payload;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import uk.nhs.digital.mait.tkwx.util.Utils;
@@ -36,6 +38,7 @@ import uk.nhs.digital.mait.tkwx.util.Utils;
  *
  * @author SIFA2
  */
+@Category(RestartJVMTest.class)
 public class ApplicationAcknowledgmentTest {
 
     @Rule

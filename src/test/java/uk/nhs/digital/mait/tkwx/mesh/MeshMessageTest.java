@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.MESH_CTL_FILE;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.MESH_MESSAGE;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.MESH_MESSAGE_FILE;
@@ -45,6 +47,7 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.fileExists;
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class MeshMessageTest {
 
     private MeshMessage instance;

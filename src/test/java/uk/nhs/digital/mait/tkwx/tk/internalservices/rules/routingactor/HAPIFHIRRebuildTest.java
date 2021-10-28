@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.SimulatorMode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Substitution;
@@ -23,6 +25,7 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class HAPIFHIRRebuildTest {
 
     
@@ -68,5 +71,4 @@ public class HAPIFHIRRebuildTest {
         String result = instance.makeResponse(substitutions, obj);
         assertTrue(result.startsWith(expResult));
     }
-    
 }

@@ -29,6 +29,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.CONTENT_TYPE_HEADER;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.SEND_CDA_V2_SERVICE;
@@ -41,6 +43,7 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.ORG_DEFAULT_SYST
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class HttpLogFileGeneratorTest {
 
     private static final String TEST_FILE = "test.txt";
@@ -222,5 +225,6 @@ public class HttpLogFileGeneratorTest {
     @Test
     public void testGenerateSubFolderName() throws Exception {
         System.out.println("generateSubFolderName");
+        // TODO why no content?
     }
 }

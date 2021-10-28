@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
@@ -31,6 +33,7 @@ import uk.nhs.digital.mait.tkwx.util.Utils;
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class SOAPTransmitTest {
 
     private SOAPTransmit instance;

@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.meshinterceptor.MeshInterceptHandlerTest.MAILBOXID;
 import static uk.nhs.digital.mait.tkwx.meshinterceptor.MeshInterceptHandlerTest.SAVED_MESSAGES_FOLDER;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitMeshHandler;
@@ -36,6 +38,7 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.fileExists;
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class MeshMailboxWatcherTest {
 
     private MeshMailboxWatcher instance;

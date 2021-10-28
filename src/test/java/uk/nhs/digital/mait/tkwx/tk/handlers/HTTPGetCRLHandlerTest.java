@@ -25,15 +25,18 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.http.HttpResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.HttpTransport;
 import static org.mockito.Mockito.*;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 
 /**
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class HTTPGetCRLHandlerTest extends AbstractHandler {
 
     @Rule

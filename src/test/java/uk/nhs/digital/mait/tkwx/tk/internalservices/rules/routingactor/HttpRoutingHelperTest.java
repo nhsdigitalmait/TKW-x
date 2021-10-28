@@ -21,6 +21,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor.HttpRoutingHelper.MAXACKDELAY;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor.HttpRoutingHelper.MAXRESPDELAY;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor.HttpRoutingHelper.MINACKDELAY;
@@ -30,6 +32,7 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor.Ht
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class HttpRoutingHelperTest {
 
     private HttpRoutingHelper instance;

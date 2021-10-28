@@ -23,11 +23,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 
 /**
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class ApacheServiceTest {
     @Rule
     public final ExpectedSystemExit exit = ExpectedSystemExit.none();

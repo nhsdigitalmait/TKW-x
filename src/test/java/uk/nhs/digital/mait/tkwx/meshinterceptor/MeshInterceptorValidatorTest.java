@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonSetup;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonTeardown;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.deleteFolderAndContents;
@@ -40,12 +41,14 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor.ME
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.xpathExtractor;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 
 /**
  * The MeshInterceptorValidator creates a validation report in the config reports folder
  * then copies it and the request message to the mailboxid validation reports folder
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class MeshInterceptorValidatorTest {
 
     private MeshInterceptorValidator instance = null;
@@ -104,6 +107,7 @@ public class MeshInterceptorValidatorTest {
      * @throws java.lang.InterruptedException
      */
     @Test
+    @Category(RestartJVMTest.class)
     public void testValidateRequest() throws InterruptedException, Exception {
         System.out.println("validateRequest");
         boolean inhibitLogs = isY(System.getProperty(DONTSIGNLOGS_PROPERTY));

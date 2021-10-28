@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.deleteFolderAndContents;
 import uk.nhs.digital.mait.tkwx.tk.boot.Mode;
@@ -32,6 +33,7 @@ import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.tk.boot.ValidatorMode;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceInterface;
@@ -42,6 +44,7 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class HttpInterceptorValidatorTest {
 
     private static File reportsFolder;

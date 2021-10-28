@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
@@ -45,11 +46,13 @@ import static uk.nhs.digital.mait.tkwx.tk.handlers.SpineAsynchronousWorkerTest.C
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 
 /**
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class SpineSynchronousSoapRequestHandlerTest extends AbstractHandler {
 
     private static Document d;

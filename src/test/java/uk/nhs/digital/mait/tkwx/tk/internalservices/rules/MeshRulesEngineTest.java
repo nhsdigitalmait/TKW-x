@@ -42,7 +42,7 @@ import uk.nhs.digital.mait.tkwx.tk.boot.Request;
 public class MeshRulesEngineTest {
 
     private MeshRulesEngine instance;
-    private final static String MESH_RULES_FILE = System.getenv("TKWROOT")+"/config/FHIR_MESH/simulator_config/test_tks_rule_config-x.txt";
+    private final static String MESH_RULES_FILE = System.getenv("TKWROOT")+"/config/FHIR_MESH/simulator_config/test_tks_rule_config.txt";
     
     public MeshRulesEngineTest() {
     }

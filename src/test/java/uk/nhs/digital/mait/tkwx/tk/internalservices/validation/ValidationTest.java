@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.SpineValidatorService;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.ValidatorService;
@@ -38,6 +40,7 @@ import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.SEND_CDA_V2_SERVICE;
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class ValidationTest {
 
     // TODO there are more types than this eg hl7_

@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.mesh.MeshData;
 import uk.nhs.digital.mait.tkwx.mesh.MeshDataTest;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.MESH_MESSAGE;
@@ -46,6 +48,7 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class MESHFHIRITKRoutingActorBusAckOnlyTest {
 
     private static final String XREF_FILE = System.getenv("TKWROOT") + "/config/FHIR_MESH/simulator_config/MeshWorkflowIdXRef.txt";

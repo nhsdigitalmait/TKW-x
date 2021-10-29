@@ -28,6 +28,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.AutoTestMode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
@@ -36,6 +38,7 @@ import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class AutoTestServiceTest {
 
     private AutoTestService instance;

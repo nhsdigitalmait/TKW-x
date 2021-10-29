@@ -29,6 +29,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.meshinterceptor.MeshInterceptHandlerTest.MAILBOXID;
 import static uk.nhs.digital.mait.tkwx.meshinterceptor.MeshInterceptHandlerTest.SAVED_MESSAGES_FOLDER;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
@@ -37,6 +39,7 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
  *
  * @author riro
  */
+@Category(RestartJVMTest.class)
 public class MeshDataTest {
 
     @Rule

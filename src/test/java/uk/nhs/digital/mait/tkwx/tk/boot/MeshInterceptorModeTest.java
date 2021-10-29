@@ -21,11 +21,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 
 /**
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class MeshInterceptorModeTest {
 
     private static ToolkitSimulator t;

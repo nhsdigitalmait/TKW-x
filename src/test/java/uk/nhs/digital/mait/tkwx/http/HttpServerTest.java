@@ -28,6 +28,8 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.Mode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceManager;
@@ -39,6 +41,7 @@ import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class HttpServerTest {
 
     @Rule

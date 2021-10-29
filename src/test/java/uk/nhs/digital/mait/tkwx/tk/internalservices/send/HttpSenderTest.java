@@ -26,13 +26,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.ProcessStreamDumper;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 
 /**
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class HttpSenderTest {
 
     private static Process process;

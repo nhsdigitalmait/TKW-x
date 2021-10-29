@@ -21,6 +21,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.util.dsig.CryptoProviderFactory.GOOD;
 import static uk.nhs.digital.mait.tkwx.util.dsig.CryptoProviderFactory.GOOD_KEYSTORE;
 import static uk.nhs.digital.mait.tkwx.util.dsig.CryptoProviderFactory.GOOD_PASSWORD;
@@ -30,6 +32,7 @@ import static uk.nhs.digital.mait.tkwx.util.dsig.CryptoProviderFactory.GOOD_USER
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class CryptoProviderFactoryTest {
     
     public CryptoProviderFactoryTest() {

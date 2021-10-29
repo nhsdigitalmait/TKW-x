@@ -15,7 +15,6 @@
  */
 package uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth;
 
-import uk.nhs.digital.mait.tkwx.tk.handlers.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -30,6 +29,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.http.HttpResponse;
@@ -41,12 +42,12 @@ import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.SimulatorMode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import static uk.nhs.digital.mait.tkwx.tk.handlers.SpineAsynchronousWorkerTest.CLIENT_ASID;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
 
 /**
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class SpineSynchronousWorkerTest extends AbstractHandler {
 
     private HttpRequest req;

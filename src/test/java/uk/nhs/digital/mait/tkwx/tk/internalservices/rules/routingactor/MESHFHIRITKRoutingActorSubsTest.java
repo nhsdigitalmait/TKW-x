@@ -23,7 +23,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.commonutils.util.xpath.XPathManager;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonSetup;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonTeardown;
 import uk.nhs.digital.mait.tkwx.mesh.MeshRequest;
@@ -34,6 +36,7 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor.ME
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class MESHFHIRITKRoutingActorSubsTest {
     
     public MESHFHIRITKRoutingActorSubsTest() {

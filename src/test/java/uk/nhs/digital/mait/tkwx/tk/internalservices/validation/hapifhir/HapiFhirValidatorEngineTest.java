@@ -23,12 +23,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class HapiFhirValidatorEngineTest {
 
     private HapiFhirValidatorEngine instance;

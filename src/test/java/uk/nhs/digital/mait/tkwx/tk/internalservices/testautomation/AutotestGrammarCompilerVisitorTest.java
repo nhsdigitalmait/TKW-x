@@ -33,6 +33,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailchecks.PassFailCheck;
 
@@ -40,6 +42,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailcheck
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class AutotestGrammarCompilerVisitorTest {
 
     private AutotestGrammarCompilerVisitor instance;

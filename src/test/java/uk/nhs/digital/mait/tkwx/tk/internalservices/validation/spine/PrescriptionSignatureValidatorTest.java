@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationReport;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidatorOutput;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.VariableProvider;
@@ -38,6 +40,7 @@ import static uk.nhs.digital.mait.tkwx.util.dsig.CryptoProviderFactory.GOOD_USER
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class PrescriptionSignatureValidatorTest {
 
     private PrescriptionSignatureValidator instance;

@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
@@ -41,6 +43,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidatorFactory;
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class AbstractValidatorServiceTest {
 
     private AbstractValidatorServiceImpl instance;

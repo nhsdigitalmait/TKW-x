@@ -25,6 +25,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.TEST_MESH_CTL;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.TEST_MESH_FROM_DTS;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.TEST_MESH_TO_DTS;
@@ -37,6 +39,7 @@ import static uk.nhs.digital.mait.tkwx.meshinterceptor.MeshInterceptHandlerTest.
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class MeshControlStatusTest {
 
     static {

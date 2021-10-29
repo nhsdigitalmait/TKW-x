@@ -30,6 +30,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.CONTENT_TYPE_HEADER;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.SOAP_ACTION_HEADER;
@@ -43,6 +45,7 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.copyFile;
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class SpineValidatorServiceTest {
 
     private SpineValidatorService instance;

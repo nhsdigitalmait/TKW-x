@@ -19,22 +19,24 @@ import java.io.IOException;
 import uk.nhs.digital.mait.tkwx.AbstractHandler;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.http.HttpResponse;
 import static org.mockito.Mockito.*;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.HttpTransport;
 
 /**
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class HTTPGetCRLWorkerTest extends AbstractHandler {
 
     @Rule

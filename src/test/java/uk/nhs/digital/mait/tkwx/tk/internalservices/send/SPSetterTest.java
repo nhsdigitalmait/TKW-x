@@ -25,9 +25,11 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.experimental.categories.Category;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.commonutils.util.configurator.ResettablePropertiesConfigurator;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 
 /**
  *
@@ -35,6 +37,7 @@ import uk.nhs.digital.mait.commonutils.util.configurator.ResettablePropertiesCon
  * Configurator/Properties allows execution of lambda on success and log of
  * failure text or exception thrown on failure
  */
+@Category(RestartJVMTest.class)
 public class SPSetterTest {
 
     @Rule

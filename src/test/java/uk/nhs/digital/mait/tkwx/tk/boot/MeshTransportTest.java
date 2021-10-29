@@ -23,12 +23,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.TOOLKIT_SIMULATOR;
 
 /**
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class MeshTransportTest {
 
     private final static String SERVICE = "MeshTransport";

@@ -22,6 +22,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonSetup;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonTeardown;
 import static uk.nhs.digital.mait.tkwx.meshinterceptor.MeshInterceptHandlerTest.MAILBOXID;
@@ -30,6 +32,7 @@ import static uk.nhs.digital.mait.tkwx.meshinterceptor.MeshInterceptHandlerTest.
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class OpenMeshMessageRegisterTest {
 
     private OpenMeshMessageRegister instance;

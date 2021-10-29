@@ -29,8 +29,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
-import uk.nhs.digital.mait.tkwx.jsonconverter.JsonXmlConverter;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import static uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse.NOTALLPASSED;
@@ -42,6 +43,7 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.fileExists;
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class ValidatorServiceTest {
 
     private ValidatorService instance;

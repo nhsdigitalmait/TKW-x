@@ -30,6 +30,8 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.IntegrationTest;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.http.HttpResponse;
 import uk.nhs.digital.mait.tkwx.httpinterceptor.interceptor.HttpInterceptHandler;
@@ -48,7 +50,8 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.readPropertiesFile;
  *
  * @author simonfarrow
  */
-public class HttpForwarderTest {
+    @Category(IntegrationTest.class)
+    public class HttpForwarderTest {
 
     private static Process process;
 

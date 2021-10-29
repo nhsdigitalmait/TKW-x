@@ -35,30 +35,91 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M4</version>
-                <configuration>
-                    <!--
-                    <argLine>-Dsurefire.junit4.upgradecheck</argLine>
-                    <testFailureIgnore>true</testFailureIgnore>
-                    <testErrorIgnore>true</testErrorIgnore>
-                    -->
+                <version>3.0.0-M5</version>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <reuseForks>true</reuseForks>
+
+                            <excludedGroups>uk.nhs.digital.mait.tkwx.IntegrationTest,uk.nhs.digital.mait.tkwx.RestartJVMTest</excludedGroups>
+                        </configuration> 
+                    </execution>
+                    <execution>
+                        <id>restartjvm-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <groups>uk.nhs.digital.mait.tkwx.RestartJVMTest</groups>
+                        </configuration> 
+                    </execution>
+                </executions>
+                <configuration>                        
+                    <!-- overrides the defaults which included **/Test*.java which caused some test to run twice -->
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+
                     <!-- This  (Setting forkCount to 1) is critical otherwise all the tests run in a single jvm 
                    This plays havoc due to singletons like configurator not being reset between test classes
                    see http://maven.apache.org/surefire/maven-surefire-plugin/examples/fork-options-and-parallel-execution.html 
                     -->
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
+                    <argLine>-Dsurefire.junit4.upgradecheck</argLine>
                     
+                    <!--
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <testErrorIgnore>true</testErrorIgnore>
+                    -->
+
                     <!-- set this to true for a development cycle that is shorter than war and peace -->
-                    <skipTests>true</skipTests>
-                    
+                    <skipTests>false</skipTests>
+
+                    <excludedGroups>uk.nhs.digital.mait.tkwx.IntegrationTest</excludedGroups>
+
+                    <!--
+                    <parallel>methods</parallel>
+                    <threadCount>10</threadCount>
+                    -->
+                </configuration>
+            </plugin> 
+            
+            <!-- used for integration testing -unlike surefire does not automatically halt after failures 
+                default masks are: */IT.java, **/*IT.java, and **/*ITCase.java
+                (these are overidden)
+                if invoked with mvn integration-test this will include unit tests
+                but will exclude unit tests when invoked with mvn failsafe:integration-test
+            --> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
-
-                </configuration> 
-            </plugin> 
-
+                    <groups>uk.nhs.digital.mait.tkwx.IntegrationTest</groups>
+                </configuration>
+            </plugin>
+            
             <!-- build the shaded jar including all dependencies -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -230,6 +291,14 @@
                 </executions>
             </plugin>
             -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
     <dependencies>
@@ -388,7 +457,7 @@
         <dependency>
             <groupId>uk.nhs.digital.mait</groupId>
             <artifactId>commonutils</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </dependency>
         
         <dependency>

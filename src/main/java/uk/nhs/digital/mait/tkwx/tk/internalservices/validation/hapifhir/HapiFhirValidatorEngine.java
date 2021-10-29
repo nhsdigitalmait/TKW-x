@@ -48,6 +48,7 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
+import ca.uhn.fhir.util.VersionUtil;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
 
 /**
@@ -74,6 +75,7 @@ public class HapiFhirValidatorEngine {
     private final String PREPOPULATED = ".prepopulated";
     private final String INMEMORYTERMINOLOGYSERVER = ".inmemoryterminologyserver";
     private final String COMMONCODESYSTEMSTERMINOLOGYSERVICE = ".commoncodesystemsterminologyservice";
+    private final String SNAPSHOTGENERATING = ".snapshotgenerating";
     private final String CACHING = ".caching";
     private final String REMOTETERMINOLOGYSERVICEURL = ".remoteterminologyserviceurl";
     private final String FHIRVERSION = ".fhir.version";
@@ -89,11 +91,11 @@ public class HapiFhirValidatorEngine {
     private boolean prepopulatedValidationSupport = true;
     private boolean inMemoryTerminologyServerValidationSupport = true;
     private boolean commonCodeSystemTerminologyServiceValidationSupport = true;
+    private boolean snapshotGeneratingValidationSupport = true;
     private boolean cachingValidationSupport = true;
     private String remoteTerminologyServiceUrl = null;
     private int minimumReportLevel = 0;
     private FhirContext context;
-    private String softwareVersion;
     private String profileVersion;
     private Configurator config;
     private CustomHapiFhirErrorHandler customHapiFhirErrorHandler = new CustomHapiFhirErrorHandler();
@@ -135,6 +137,7 @@ public class HapiFhirValidatorEngine {
             prepopulatedValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + PREPOPULATED));
             inMemoryTerminologyServerValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + INMEMORYTERMINOLOGYSERVER));
             commonCodeSystemTerminologyServiceValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + COMMONCODESYSTEMSTERMINOLOGYSERVICE));
+            snapshotGeneratingValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + SNAPSHOTGENERATING));
             cachingValidationSupport = isYDefaultY(config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + CACHING));
 
             String c = config.getConfiguration(HapiFhirInstancePath + MINIMUMREPORTLEVEL);
@@ -154,10 +157,7 @@ public class HapiFhirValidatorEngine {
             }
 
             ArrayList<File> ignoreList = new ArrayList<>();
-            softwareVersion = config.getConfiguration(HapiFhirInstancePath + SOFTWAREVERSION);
-            if (softwareVersion == null || softwareVersion.trim().equals("")) {
-                softwareVersion = "Version number not configured";
-            }
+
             remoteTerminologyServiceUrl = config.getConfiguration(HapiFhirInstancePath + INCLUDEVALIDATIONSUPPORTMODULE + REMOTETERMINOLOGYSERVICEURL);
             if (remoteTerminologyServiceUrl == null || remoteTerminologyServiceUrl.trim().equals("")) {
                 remoteTerminologyServiceUrl = null;
@@ -199,9 +199,11 @@ public class HapiFhirValidatorEngine {
             context.setParserErrorHandler(customHapiFhirErrorHandler);
 
             ValidationSupportChain supportChain = new ValidationSupportChain();
+            System.out.println("Validation Support Chain created");
 
             DefaultProfileValidationSupport defaultProfileValidationSupport = new DefaultProfileValidationSupport(context);
             supportChain.addValidationSupport(defaultProfileValidationSupport);
+            System.out.println("Default Profile Validation Support created and added to the support chain");
 
             if (prepopulatedValidationSupport) {
                 // Version number of additional FHIR profiles 
@@ -298,18 +300,25 @@ public class HapiFhirValidatorEngine {
                 }
                 PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(context, hapiAssetCacheInterface.getStructureDefinitionIBaseResourceCache(), hapiAssetCacheInterface.getValueSetIBaseResourceCache(), hapiAssetCacheInterface.getCodeSystemIBaseResourceCache());
                 supportChain.addValidationSupport(prePopulatedSupport);
+                System.out.println("PrePopulated Validation Support created and added to the support chain");
+            }
+
+            if (commonCodeSystemTerminologyServiceValidationSupport) {
+                CommonCodeSystemsTerminologyService codeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(context);
+                supportChain.addValidationSupport(codeSystemsTerminologyService);
+                System.out.println("Common Code Systems Terminology Service Validation Support created and added to the support chain");
             }
 
             if (inMemoryTerminologyServerValidationSupport) {
                 InMemoryTerminologyServerValidationSupport inMemoryTerminologyServer = new InMemoryTerminologyServerValidationSupport(context);
                 supportChain.addValidationSupport(inMemoryTerminologyServer);
+                System.out.println("In Memory Terminology Validation Support created and added to the support chain");
             }
-            if (commonCodeSystemTerminologyServiceValidationSupport) {
-                CommonCodeSystemsTerminologyService codeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(context);
-                supportChain.addValidationSupport(codeSystemsTerminologyService);
+            if (snapshotGeneratingValidationSupport) {
+                SnapshotGeneratingValidationSupport generatingValidationSupport = new SnapshotGeneratingValidationSupport(context);
+                supportChain.addValidationSupport(generatingValidationSupport);
+                System.out.println("Snapshot Generating Validation Support created and added to the support chain");
             }
-            SnapshotGeneratingValidationSupport generatingValidationSupport = new SnapshotGeneratingValidationSupport(context);
-            supportChain.addValidationSupport(generatingValidationSupport);
 
 // Create a module that uses a remote terminology service
             if (remoteTerminologyServiceUrl != null) {
@@ -319,10 +328,13 @@ public class HapiFhirValidatorEngine {
                 remoteTermSvc.setBaseUrl(remoteTerminologyServiceUrl);
 
                 supportChain.addValidationSupport(remoteTermSvc);
+                System.out.println("Remote Terminology Validation Support created and added to the support chain");
             }
             FhirInstanceValidator fhirInstanceValidator = null;
             if (cachingValidationSupport) {
                 CachingValidationSupport cachingVS = new CachingValidationSupport(supportChain);
+                System.out.println("Support chain added to caching Validation Support created");
+
                 fhirInstanceValidator = new FhirInstanceValidator(cachingVS);
             } else {
                 fhirInstanceValidator = new FhirInstanceValidator(supportChain);
@@ -360,7 +372,7 @@ public class HapiFhirValidatorEngine {
 
             //Optionally call a dummy message to validate at startup to fully prime the validator
             primingResourceLocation = config.getConfiguration(HapiFhirInstancePath + PRIMINGRESOURCELOCATION);
-            if (primingResourceLocation != null && !softwareVersion.trim().equals("")) {
+            if (primingResourceLocation != null) {
                 // prime the hapi fhir validator
                 System.out.println("Priming HAPI FHIR Validator");
                 String primingResource = readFile2String(primingResourceLocation);
@@ -427,7 +439,7 @@ public class HapiFhirValidatorEngine {
     }
 
     public String getSoftwareVersion() {
-        return softwareVersion;
+        return VersionUtil.getVersion();
     }
 
     public String getProfileVersion() {
@@ -448,6 +460,13 @@ public class HapiFhirValidatorEngine {
 
     public boolean isCommonCodeSystemTerminologyServiceValidationSupport() {
         return commonCodeSystemTerminologyServiceValidationSupport;
+    }
+
+    public boolean isSnapshotGeneratingValidationSupport() {
+        return snapshotGeneratingValidationSupport;
+    }
+    public boolean isCachingValidationSupport() {
+        return cachingValidationSupport;
     }
 
     public String getRemoteTerminologyServiceUrl() {

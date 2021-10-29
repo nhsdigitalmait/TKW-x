@@ -356,14 +356,51 @@ public class HapiAssetCacheR5 implements HapiAssetCacheInterface {
     public String convertValidationResultToOOString(ValidationResult vr,HapiFhirValidatorEngine hfve) {
         OperationOutcome oo = (OperationOutcome) vr.toOperationOutcome();
         Meta meta = new Meta();
+        //HAPI FHIR Version
         Coding hapiVersion = new Coding();
         hapiVersion.setVersion(hfve.getSoftwareVersion());
+//        hapiVersion.setVersion(hfve.getSoftwareVersion());
         hapiVersion.setSystem("urn:nhs:digital:fhir:validator:version");
         meta.addTag(hapiVersion);
-        Coding profileVersion = new Coding();
-        profileVersion.setVersion(hfve.getProfileVersion());
-        profileVersion.setSystem("urn:nhs:digital:fhir:profile:version");
-        meta.addTag(profileVersion);
+
+        //Prepoulation Validation Support
+        Coding prepopulated = new Coding();
+        prepopulated.setCode(hfve.isPrepopulatedValidationSupport() ? "true" : "false");
+        prepopulated.setSystem("urn:nhs:digital:fhir:prepopulatedvalidationsupport");
+        meta.addTag(prepopulated);
+
+        //FHIR Profile Version
+        if (hfve.isPrepopulatedValidationSupport()) {
+            Coding profileVersion = new Coding();
+            profileVersion.setVersion(hfve.getProfileVersion());
+            profileVersion.setSystem("urn:nhs:digital:fhir:profile:version");
+            meta.addTag(profileVersion);
+        }
+
+        //CommonCodeSystemTerminologyService Validation Support
+        Coding commoncodesystemterminology = new Coding();
+        commoncodesystemterminology.setCode(hfve.isCommonCodeSystemTerminologyServiceValidationSupport() ? "true" : "false");
+        commoncodesystemterminology.setSystem("urn:nhs:digital:fhir:commoncodesystemterminologyvalidationsupport");
+        meta.addTag(commoncodesystemterminology);
+
+        //InMemoryTerminologyService Validation Support
+        Coding inmemoryterminology = new Coding();
+        inmemoryterminology.setCode(hfve.isInMemoryTerminologyServerValidationSupport() ? "true" : "false");
+        inmemoryterminology.setSystem("urn:nhs:digital:fhir:inmemoryterminologyvalidationsupport");
+        meta.addTag(inmemoryterminology);
+
+        //snapshotgeneratingTerminologyService Validation Support
+        Coding snapshotgenerating = new Coding();
+        snapshotgenerating.setCode(hfve.isSnapshotGeneratingValidationSupport() ? "true" : "false");
+        snapshotgenerating.setSystem("urn:nhs:digital:fhir:snapshotgeneratingvalidationsupport");
+        meta.addTag(snapshotgenerating);
+
+        //caching Validation Support
+        Coding caching = new Coding();
+        caching.setCode(hfve.isCachingValidationSupport() ? "true" : "false");
+        caching.setSystem("urn:nhs:digital:fhir:cachingvalidationsupport");
+        meta.addTag(caching);
+
         Resource resource = (Resource) oo;
         resource.setMeta(meta);
         return context.newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);

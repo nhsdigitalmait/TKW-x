@@ -21,11 +21,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 
 /**
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class ModeTest {
 
     private ToolkitSimulator t;

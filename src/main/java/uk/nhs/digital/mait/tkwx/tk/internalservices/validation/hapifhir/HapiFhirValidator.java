@@ -16,6 +16,7 @@
 package uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir;
 
 import ca.uhn.fhir.parser.DataFormatException;
+import ca.uhn.fhir.util.VersionUtil;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationResult;
 import java.util.ArrayList;
@@ -368,7 +369,7 @@ public class HapiFhirValidator
             }
             ;
             vsb.append("<li>").append("HAPI FHIR Validator FHIR Version: ").append(hfvEngine.getFhirVersion()).append("</li>");
-            vsb.append("<li>").append("INSTALLED: Caching Validation Support module installed").append("</li>");
+            vsb.append("<li>").append(hfvEngine.isCachingValidationSupport() ? "INSTALLED: " : "NOT INSTALLED: ").append("Caching Validation Support module").append("</li>");
             vsb.append("<li>").append("INSTALLED: Default Validation Support module installed").append("</li>");
             vsb.append("<li>").append(hfvEngine.isPrepopulatedValidationSupport()? "INSTALLED: " : "NOT INSTALLED: ").append("Prepopulated Validation Support Module").append("</li>");
             if (hfvEngine.isPrepopulatedValidationSupport()) {
@@ -380,6 +381,7 @@ public class HapiFhirValidator
             }
             vsb.append("<li>").append(hfvEngine.isInMemoryTerminologyServerValidationSupport() ? "INSTALLED: " : "NOT INSTALLED: ").append("In Memory Terminology Server Validation Support Module").append("</li>");
             vsb.append("<li>").append(hfvEngine.isCommonCodeSystemTerminologyServiceValidationSupport()? "INSTALLED: " : "NOT INSTALLED: ").append("Common Code System Terminology Service Validation Support Module").append("</li>");
+            vsb.append("<li>").append(hfvEngine.isSnapshotGeneratingValidationSupport()? "INSTALLED: " : "NOT INSTALLED: ").append("Snapshot Generating Support Module").append("</li>");
             vsb.append("<li>").append((hfvEngine.getRemoteTerminologyServiceUrl()!=null)? "INSTALLED: " : "NOT INSTALLED: ").append("Remote Terminology Server Validation Support Module");
             if (hfvEngine.getRemoteTerminologyServiceUrl() != null) {
                 vsb.append(". Base URL: ").append(hfvEngine.getRemoteTerminologyServiceUrl()).append("</li>");

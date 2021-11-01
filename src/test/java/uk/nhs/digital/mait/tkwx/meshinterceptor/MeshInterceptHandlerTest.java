@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshControlStatusTest.TEST_MESH_CTL_WITH_STATUS;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshControlStatusTest.createControlFileWithStatus;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshControlStatusTest.deleteControlFileWithStatus;
@@ -41,11 +42,13 @@ import uk.nhs.digital.mait.tkwx.tk.boot.SimulatorMode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor.MESHFHIRITKRoutingActorBusAckOnlyTest;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 
 /**
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class MeshInterceptHandlerTest {
 
     public final static String SAVED_MESSAGES_FOLDER = "src/test/resources";

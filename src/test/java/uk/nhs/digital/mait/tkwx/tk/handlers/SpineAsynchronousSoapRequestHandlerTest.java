@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.http.HttpResponse;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.deleteFolderAndContents;
@@ -41,6 +43,7 @@ import static uk.nhs.digital.mait.tkwx.tk.handlers.SpineAsynchronousWorkerTest.C
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class SpineAsynchronousSoapRequestHandlerTest extends AbstractHandler {
 
     private static String m;

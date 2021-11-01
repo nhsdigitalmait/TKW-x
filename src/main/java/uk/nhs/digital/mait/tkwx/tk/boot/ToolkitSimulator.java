@@ -26,7 +26,6 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.ConfigurationStringTokeniser;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
-import uk.nhs.digital.mait.commonutils.util.configurator.ResettablePropertiesConfigurator;
 // Rev 176  Update to support json Hapi Fhir profiles
 // Rev 175  Recommit as ANTLR artefacts didnt recreate on previous commit
 // Rev 174  Updated CDSS functionality and extended HAPI FHIR to be able to validate multiple configurations
@@ -150,7 +149,7 @@ public class ToolkitSimulator {
         configurationName = properties.getProperty(TKSNAME, "Not given");
         organisationName = properties.getProperty(TKSORG, "Not given");
         System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);
-        ResettablePropertiesConfigurator c = (uk.nhs.digital.mait.commonutils.util.configurator.ResettablePropertiesConfigurator) Configurator.getConfigurator();
+        Configurator c = Configurator.getConfigurator();
         c.setProperties(properties);
     }
 

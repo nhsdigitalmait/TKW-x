@@ -60,21 +60,25 @@ public class HAPIFHIRRebuild
     private void initialise(String instanceName) {
         this.hapiFhirValidatorInstanceName = instanceName;
         hfvEngine = orchestrator.getEngine(hapiFhirValidatorInstanceName);
-        busyMessage = hfvEngine.getRebuildBusyOOMessage();
-        successMessage = hfvEngine.getRebuildSuccessOOMessage();
+        if (hfvEngine.isPrepopulatedValidationSupport()) {
+            busyMessage = hfvEngine.getRebuildBusyOOMessage();
+            successMessage = hfvEngine.getRebuildSuccessOOMessage();
+        }
     }
 
     @Override
     public String makeResponse(HashMap<String, Substitution> substitutions, Object obj)
             throws Exception {
 
-        RuleService rulesService = (RuleService) ServiceManager.getInstance().getService("RulesEngine");
-        rulesService.setBusy(true, busyMessage);
+        if (hfvEngine.isPrepopulatedValidationSupport()) {
+            RuleService rulesService = (RuleService) ServiceManager.getInstance().getService("RulesEngine");
+            rulesService.setBusy(true, busyMessage);
 
-        hfvEngine.rebuild(hapiFhirValidatorInstanceName);
-        
+            hfvEngine.rebuild(hapiFhirValidatorInstanceName);
 
-        rulesService.setBusy(false, "");
-        return successMessage;
+            rulesService.setBusy(false, "");
+            return successMessage;
+        }
+        return "";
     }
 }

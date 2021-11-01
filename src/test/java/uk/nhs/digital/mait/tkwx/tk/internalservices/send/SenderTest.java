@@ -20,12 +20,15 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 
 /**
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class SenderTest {
 
     public SenderTest() {

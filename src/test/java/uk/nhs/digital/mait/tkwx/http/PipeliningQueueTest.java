@@ -26,7 +26,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.contrib.java.lang.system.RestoreSystemProperties;
+import org.junit.experimental.categories.Category;
 import static org.mockito.Mockito.mock;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.http.HttpResponse.SUPPRESS_CLOSE_PROPERTY;
 
 /**
@@ -35,6 +37,7 @@ import static uk.nhs.digital.mait.tkwx.http.HttpResponse.SUPPRESS_CLOSE_PROPERTY
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class PipeliningQueueTest {
 
     @Rule

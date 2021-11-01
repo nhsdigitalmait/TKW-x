@@ -16,8 +16,6 @@
 package uk.nhs.digital.mait.tkwx.mesh;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import org.junit.After;
@@ -26,6 +24,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonSetup;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonTeardown;
 import static uk.nhs.digital.mait.tkwx.meshinterceptor.MeshInterceptHandlerTest.MAILBOXID;
@@ -36,6 +36,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class MeshRequestTest {
 
     private MeshRequest instance;

@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import org.w3c.dom.Node;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonSetup;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.commonTeardown;
@@ -33,16 +34,18 @@ import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.TEST_MESH_OUT_FOLDER;
 import uk.nhs.digital.mait.tkwx.mesh.MeshRequest;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.xpathExtractor;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.Request;
 
 /**
  *
  * @author simonfarrow
  */
+@Category(RestartJVMTest.class)
 public class MeshRulesEngineTest {
 
     private MeshRulesEngine instance;
-    private final static String MESH_RULES_FILE = System.getenv("TKWROOT")+"/config/FHIR_MESH/simulator_config/test_tks_rule_config-x.txt";
+    private final static String MESH_RULES_FILE = System.getenv("TKWROOT")+"/config/FHIR_MESH/simulator_config/test_tks_rule_config.txt";
     
     public MeshRulesEngineTest() {
     }

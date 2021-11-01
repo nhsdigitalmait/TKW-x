@@ -25,16 +25,19 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.BasicMessageIdCorrelatorTest.TKWROOT;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.commonutils.util.configurator.SingleSetPropertiesConfigurator;
+import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.util.Utils.copyFile;
 
 /**
  *
  * @author sifa2
  */
+@Category(RestartJVMTest.class)
 public class NamedPropertySetTest {
 
     private static AutotestParser.NamedPropertySetContext namedPropertySetCtx;

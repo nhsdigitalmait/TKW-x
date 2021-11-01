@@ -80,7 +80,7 @@
                     -->
 
                     <!-- set this to true for a development cycle that is shorter than war and peace -->
-                    <skipTests>false</skipTests>
+                    <skipTests>true</skipTests>
 
                     <excludedGroups>uk.nhs.digital.mait.tkwx.IntegrationTest</excludedGroups>
 
@@ -117,6 +117,9 @@
                         <include>**/*Test.java</include>
                     </includes>
                     <groups>uk.nhs.digital.mait.tkwx.IntegrationTest</groups>
+                    
+                    <!-- set this to true for a development cycle that is shorter than war and peace -->
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
             

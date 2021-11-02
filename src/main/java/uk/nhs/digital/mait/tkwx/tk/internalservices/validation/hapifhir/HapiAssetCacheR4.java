@@ -404,7 +404,13 @@ public class HapiAssetCacheR4 implements HapiAssetCacheInterface {
         caching.setCode(hfve.isCachingValidationSupport() ? "true" : "false");
         caching.setSystem("urn:nhs:digital:fhir:cachingvalidationsupport");
         meta.addTag(caching);
-
+        
+        //Remote Terminology Server
+        Coding remoteTerm = new Coding();
+        remoteTerm.setCode((hfve.getRemoteTerminologyServiceUrl()!=null) ? "true" : "false");
+        remoteTerm.setSystem("urn:nhs:digital:fhir:remoteterminologyservicesupport");
+        meta.addTag(remoteTerm);
+        
         Resource resource = (Resource) oo;
         resource.setMeta(meta);
         return context.newXmlParser().setPrettyPrint(true).encodeResourceToString(oo);

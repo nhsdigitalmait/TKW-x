@@ -203,7 +203,7 @@ public class HapiFhirValidatorEngine {
 
             DefaultProfileValidationSupport defaultProfileValidationSupport = new DefaultProfileValidationSupport(context);
             supportChain.addValidationSupport(defaultProfileValidationSupport);
-            System.out.println("Default Profile Validation Support created and added to the support chain");
+            System.out.println("Default Profile Validation Support created and added to the support chain - " + fhirVersion);
 
             if (prepopulatedValidationSupport) {
                 // Version number of additional FHIR profiles 
@@ -300,24 +300,24 @@ public class HapiFhirValidatorEngine {
                 }
                 PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(context, hapiAssetCacheInterface.getStructureDefinitionIBaseResourceCache(), hapiAssetCacheInterface.getValueSetIBaseResourceCache(), hapiAssetCacheInterface.getCodeSystemIBaseResourceCache());
                 supportChain.addValidationSupport(prePopulatedSupport);
-                System.out.println("PrePopulated Validation Support created and added to the support chain");
+                System.out.println("PrePopulated Validation Support created and added to the support chain - " + fhirVersion);
             }
 
             if (commonCodeSystemTerminologyServiceValidationSupport) {
                 CommonCodeSystemsTerminologyService codeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(context);
                 supportChain.addValidationSupport(codeSystemsTerminologyService);
-                System.out.println("Common Code Systems Terminology Service Validation Support created and added to the support chain");
+                System.out.println("Common Code Systems Terminology Service Validation Support created and added to the support chain - " + fhirVersion);
             }
 
             if (inMemoryTerminologyServerValidationSupport) {
                 InMemoryTerminologyServerValidationSupport inMemoryTerminologyServer = new InMemoryTerminologyServerValidationSupport(context);
                 supportChain.addValidationSupport(inMemoryTerminologyServer);
-                System.out.println("In Memory Terminology Validation Support created and added to the support chain");
+                System.out.println("In Memory Terminology Validation Support created and added to the support chain - " + fhirVersion);
             }
             if (snapshotGeneratingValidationSupport) {
                 SnapshotGeneratingValidationSupport generatingValidationSupport = new SnapshotGeneratingValidationSupport(context);
                 supportChain.addValidationSupport(generatingValidationSupport);
-                System.out.println("Snapshot Generating Validation Support created and added to the support chain");
+                System.out.println("Snapshot Generating Validation Support created and added to the support chain - " + fhirVersion);
             }
 
 // Create a module that uses a remote terminology service
@@ -328,12 +328,12 @@ public class HapiFhirValidatorEngine {
                 remoteTermSvc.setBaseUrl(remoteTerminologyServiceUrl);
 
                 supportChain.addValidationSupport(remoteTermSvc);
-                System.out.println("Remote Terminology Validation Support created and added to the support chain");
+                System.out.println("Remote Terminology Validation Support created and added to the support chain - " + fhirVersion);
             }
             FhirInstanceValidator fhirInstanceValidator = null;
             if (cachingValidationSupport) {
                 CachingValidationSupport cachingVS = new CachingValidationSupport(supportChain);
-                System.out.println("Support chain added to caching Validation Support created");
+                System.out.println("Support chain added to caching Validation Support created - " + fhirVersion);
 
                 fhirInstanceValidator = new FhirInstanceValidator(cachingVS);
             } else {

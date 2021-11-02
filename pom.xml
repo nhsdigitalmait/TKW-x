@@ -13,6 +13,7 @@
         <tkwx-rules-path>${internal_services_root}/rules/parser</tkwx-rules-path>
         <tkwx-automation-path>${internal_services_root}/testautomation/parser</tkwx-automation-path>
         <tkwx-validation-path>${internal_services_root}/validation/parser</tkwx-validation-path>
+        <skiptests>true</skiptests>
     </properties>    
     
     <build>
@@ -80,7 +81,7 @@
                     -->
 
                     <!-- set this to true for a development cycle that is shorter than war and peace -->
-                    <skipTests>false</skipTests>
+					<skipTests>${skiptests}</skipTests>
 
                     <excludedGroups>uk.nhs.digital.mait.tkwx.IntegrationTest</excludedGroups>
 
@@ -117,6 +118,9 @@
                         <include>**/*Test.java</include>
                     </includes>
                     <groups>uk.nhs.digital.mait.tkwx.IntegrationTest</groups>
+                    
+                    <!-- set this to true for a development cycle that is shorter than war and peace -->
+					<skipTests>${skiptests}</skipTests>
                 </configuration>
             </plugin>
             

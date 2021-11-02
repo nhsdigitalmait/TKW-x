@@ -19,7 +19,7 @@ import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.Logger;
-import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  * Interceptor mode using MESH
@@ -58,7 +58,7 @@ public class MeshInterceptorMode
             return;
         }
         String sn = p.getProperty(ToolkitSimulator.SERVICES);
-        if (isNullOrEmpty(sn)) {
+        if (Utils.isNullOrEmpty(sn)) {
             Logger.getInstance().log(SEVERE,
                     MeshInterceptorMode.class.getName(),
                     "property "

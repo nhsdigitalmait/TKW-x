@@ -147,34 +147,46 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
 
         String prop = null;
         prop = bootProperties.getProperty(VALIDATOR_SOURCE_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
+        if (Utils.isNullOrEmpty(prop)) {
 // Removed as a directory is not required for validation as part of simulator response 
 //            throw new Exception("Validator source directory property " + VALIDATOR_SOURCE_PROPERTY + " not set");
         } else {
             sourceDirectory = new File(prop);
             if (!sourceDirectory.exists()) {
-                throw new Exception("Validator source directory " + prop + " not found");
+                throw new Exception("Validator source directory "
+                        + prop
+                        + " not found");
             }
             if (!sourceDirectory.canRead()) {
-                throw new Exception("Validator source directory " + prop + " not readable");
+                throw new Exception("Validator source directory "
+                        + prop
+                        + " not readable");
             }
         }
 
         prop = bootProperties.getProperty(VALIDATOR_REPORT_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("Validator report directory property " + VALIDATOR_REPORT_PROPERTY + " not set");
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("Validator report directory property "
+                    + VALIDATOR_REPORT_PROPERTY
+                    + " not set");
         }
         reportDirectory = new File(prop);
         if (!reportDirectory.exists()) {
-            throw new Exception("Validator report directory " + prop + " not found");
+            throw new Exception("Validator report directory "
+                    + prop
+                    + " not found");
         }
         if (!reportDirectory.canWrite()) {
-            throw new Exception("Validator report directory " + prop + " not writable");
+            throw new Exception("Validator report directory "
+                    + prop
+                    + " not writable");
         }
 
         validatorConfig = bootProperties.getProperty(VALIDATOR_CONFIG_PROPERTY);
-        if ((validatorConfig == null) || (validatorConfig.trim().length() == 0)) {
-            throw new Exception("Validator configuration file property " + VALIDATOR_CONFIG_PROPERTY + " not set");
+        if (Utils.isNullOrEmpty(validatorConfig)) {
+            throw new Exception("Validator configuration file property "
+                    + VALIDATOR_CONFIG_PROPERTY
+                    + " not set");
         }
     }
 
@@ -197,10 +209,14 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
         if (what.equals(VALIDATOR_SOURCE_PROPERTY)) {
             sourceDirectory = new File(value);
             if (!sourceDirectory.exists()) {
-                throw new Exception("Validator source directory " + value + " not found");
+                throw new Exception("Validator source directory "
+                        + value
+                        + " not found");
             }
             if (!sourceDirectory.canRead()) {
-                throw new Exception("Validator source directory " + value + " not readable");
+                throw new Exception("Validator source directory "
+                        + value +
+                        " not readable");
             }
 
             ValidatorFactory.getInstance().clear();
@@ -209,10 +225,14 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
         if (what.equals(VALIDATOR_REPORT_PROPERTY)) {
             reportDirectory = new File(value);
             if (!reportDirectory.exists()) {
-                throw new Exception("Validator report directory " + value + " not found");
+                throw new Exception("Validator report directory "
+                        + value
+                        + " not found");
             }
             if (!reportDirectory.canWrite()) {
-                throw new Exception("Validator report directory " + value + " not writable");
+                throw new Exception("Validator report directory "
+                        + value +
+                        " not writable");
             }
 
             ValidatorFactory.getInstance().clear();
@@ -221,8 +241,10 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
 
         if (what.equals(VALIDATOR_CONFIG_PROPERTY)) {
             validatorConfig = value;
-            if ((validatorConfig == null) || (validatorConfig.trim().length() == 0)) {
-                throw new Exception("Validator configuration file property " + VALIDATOR_CONFIG_PROPERTY + " not set");
+            if (Utils.isNullOrEmpty(validatorConfig)) {
+                throw new Exception("Validator configuration file property "
+                        + VALIDATOR_CONFIG_PROPERTY
+                        + " not set");
             }
 
             ValidatorFactory.getInstance().clear();

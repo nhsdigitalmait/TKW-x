@@ -77,7 +77,7 @@ public class SpineTransmitter
             throw new Exception("Transmitter: Unable to read source directory " + prop);
         }
         prop = bootProperties.getProperty(TXTTL_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
+        if (Utils.isNullOrEmpty(prop)) {
             throw new Exception("Transmitter: null or empty TTL given " + TXTTL_PROPERTY);
         }
         try {
@@ -86,13 +86,13 @@ public class SpineTransmitter
             throw new Exception("Transmitter: Invalid TTL: " + prop);
         }
         prop = bootProperties.getProperty(ADDRESS_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
+        if (Utils.isNullOrEmpty(prop)) {
             throw new Exception("Transmitter: null or empty address given " + ADDRESS_PROPERTY);
         }
         address = new String(prop);
         nosend = isY(bootProperties.getProperty(TXNOSEND_PROPERTY));
         prop = bootProperties.getProperty(CHUNKXMIT_PROPERTY);
-        if ((prop != null) && prop.trim().length() > 0) {
+        if (!Utils.isNullOrEmpty(prop)) {
             chunkSize = Integer.parseInt(prop);
         }
         System.out.println(serviceName + " started, class: " + this.getClass().getCanonicalName());

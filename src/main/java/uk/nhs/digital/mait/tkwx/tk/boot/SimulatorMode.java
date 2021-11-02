@@ -19,7 +19,7 @@ import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.Logger;
-import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  *
@@ -64,7 +64,7 @@ public class SimulatorMode
         super.init(t);
 
         String sn = p.getProperty(ToolkitSimulator.SERVICES);
-        if (isNullOrEmpty(sn)) {
+        if (Utils.isNullOrEmpty(sn)) {
             p.setProperty(SERVICELISTPROPERTY, tr.trim());
         } else {
             p.setProperty(SERVICELISTPROPERTY, tr.trim() + " " + sn);

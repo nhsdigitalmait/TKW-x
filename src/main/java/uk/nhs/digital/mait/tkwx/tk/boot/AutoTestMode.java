@@ -28,7 +28,7 @@ public class AutoTestMode
     extends TransmitterMode
 {
     private static final String SERVICELIST
-            = "AutoTest RulesEngine Sender Validator";    
+            = "AutoTest RulesEngine Sender Validator";
     
     public AutoTestMode() {
     }

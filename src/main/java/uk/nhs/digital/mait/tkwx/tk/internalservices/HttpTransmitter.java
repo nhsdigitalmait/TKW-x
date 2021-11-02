@@ -190,7 +190,9 @@ public class HttpTransmitter
             httpMethod = prop;
         }
 
-        System.out.println(serviceName + " started, class: " + this.getClass().getCanonicalName());
+        System.out.println(serviceName
+                + " started, class: "
+                + this.getClass().getCanonicalName());
     }
 
     /**

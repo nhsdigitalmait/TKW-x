@@ -69,25 +69,30 @@ public class SpineTransmitter
 
         String prop = null;
         prop = bootProperties.getProperty(TRANSMITDIR_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("Transmitter: null or empty source directory " + TRANSMITDIR_PROPERTY);
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("Transmitter: null or empty source directory "
+                    + TRANSMITDIR_PROPERTY);
         }
         sourceDirectory = new File(prop);
         if (!sourceDirectory.canRead()) {
-            throw new Exception("Transmitter: Unable to read source directory " + prop);
+            throw new Exception("Transmitter: Unable to read source directory "
+                    + prop);
         }
         prop = bootProperties.getProperty(TXTTL_PROPERTY);
         if (Utils.isNullOrEmpty(prop)) {
-            throw new Exception("Transmitter: null or empty TTL given " + TXTTL_PROPERTY);
+            throw new Exception("Transmitter: null or empty TTL given "
+                    + TXTTL_PROPERTY);
         }
         try {
             ttl = Integer.parseInt(prop);
         } catch (NumberFormatException e) {
-            throw new Exception("Transmitter: Invalid TTL: " + prop);
+            throw new Exception("Transmitter: Invalid TTL: "
+                    + prop);
         }
         prop = bootProperties.getProperty(ADDRESS_PROPERTY);
         if (Utils.isNullOrEmpty(prop)) {
-            throw new Exception("Transmitter: null or empty address given " + ADDRESS_PROPERTY);
+            throw new Exception("Transmitter: null or empty address given "
+                    + ADDRESS_PROPERTY);
         }
         address = new String(prop);
         nosend = isY(bootProperties.getProperty(TXNOSEND_PROPERTY));
@@ -95,7 +100,9 @@ public class SpineTransmitter
         if (!Utils.isNullOrEmpty(prop)) {
             chunkSize = Integer.parseInt(prop);
         }
-        System.out.println(serviceName + " started, class: " + this.getClass().getCanonicalName());
+        System.out.println(serviceName
+                + " started, class: "
+                + this.getClass().getCanonicalName());
     }
 
     /**

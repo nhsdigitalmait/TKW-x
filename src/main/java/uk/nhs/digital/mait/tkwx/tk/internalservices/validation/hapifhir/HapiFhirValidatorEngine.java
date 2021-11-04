@@ -63,7 +63,6 @@ public class HapiFhirValidatorEngine {
     private final String HAPIFHIR = "tks.validator.hapifhirvalidator";
     private final String ASSETDIR = ".assetdir";
     private final String IGNORELIST = ".ignore";
-    private final String SOFTWAREVERSION = ".softwareversion";
     private final String PROFILEVERSION = ".profileversion";
     private final String PROFILEVERSIONFILELOCATION = ".profileversionfilelocation";
     private final String STRICTPARSERVALIDATION = ".strictparservalidation";

@@ -15,7 +15,6 @@
  */
 package uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth;
 
-import uk.nhs.digital.mait.tkwx.tk.handlers.*;
 import java.io.File;
 import java.io.FileReader;
 import uk.nhs.digital.mait.tkwx.AbstractHandler;
@@ -363,5 +362,16 @@ public class SpineSynchronousSoapRequestHandlerTest extends AbstractHandler {
         // result is an xml response
         String expResult = "<";
         assertTrue(result.startsWith(expResult));
+    }
+
+    /**
+     * Test of handle method, of class SpineSynchronousSoapRequestHandler.
+     */
+    @Test
+    public void testHandle() throws Exception {
+        System.out.println("handle");
+        String pathIgnored = "";
+        String paramsIgnored = "";
+        instance.handle(pathIgnored, paramsIgnored, req, resp);
     }
 }

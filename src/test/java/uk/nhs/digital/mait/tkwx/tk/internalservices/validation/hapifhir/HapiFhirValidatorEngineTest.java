@@ -16,6 +16,7 @@
 package uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.util.VersionUtil;
 import ca.uhn.fhir.validation.ValidationResult;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -37,7 +38,6 @@ public class HapiFhirValidatorEngineTest {
     private HapiFhirValidatorEngine instance;
 
     private static final String PROFILE_VERSION = "100";
-    private static final String SOFTWARE_VERSION = "99";
 
     public HapiFhirValidatorEngineTest() {
     }
@@ -52,7 +52,6 @@ public class HapiFhirValidatorEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        System.setProperty("tks.validator.hapifhirvalidator.softwareversion", SOFTWARE_VERSION);
         System.setProperty("tks.validator.hapifhirvalidator.profileversion", PROFILE_VERSION);
         instance = new HapiFhirValidatorEngine(null);
     }
@@ -106,7 +105,7 @@ public class HapiFhirValidatorEngineTest {
     @Test
     public void testGetSoftwareVersion() {
         System.out.println("getSoftwareVersion");
-        String expResult = SOFTWARE_VERSION;
+        String expResult = VersionUtil.getVersion();
         String result = instance.getSoftwareVersion();
         assertEquals(expResult, result);
     }

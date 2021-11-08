@@ -16,7 +16,6 @@
 
 package uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth;
 
-import uk.nhs.digital.mait.tkwx.tk.handlers.*;
 import java.io.StringReader;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;

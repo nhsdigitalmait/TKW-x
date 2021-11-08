@@ -38,6 +38,7 @@ import uk.nhs.digital.mait.tkwx.tk.boot.HttpTransport;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.SimulatorMode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
+import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import static uk.nhs.digital.mait.tkwx.tk.handlers.SpineAsynchronousWorkerTest.CLIENT_ASID;
 
 /**
@@ -273,6 +274,41 @@ public class SpineAsynchronousSoapRequestHandlerTest extends AbstractHandler {
         System.out.println("getTimestampOffset");
         int expResult = 0;
         int result = instance.getTimestampOffset();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of handle method, of class SpineAsynchronousSoapRequestHandler.
+     */
+    @Test
+    public void testHandle() throws Exception {
+        System.out.println("handle");
+        String path = "";
+        String params = "";
+        instance.handle(path, params, req, resp);
+    }
+
+    /**
+     * Test of asynchronousResponse method, of class
+     * SpineAsynchronousSoapRequestHandler.
+     */
+    @Test
+    public void testAsynchronousResponse() throws Exception {
+        System.out.println("asynchronousResponse");
+        ServiceResponse ruleresponse = instance.invoke(req);
+        EvidenceMetaDataHandler evidenceMetaDataHandler = null;
+        instance.asynchronousResponse(ruleresponse, evidenceMetaDataHandler);
+    }
+
+    /**
+     * Test of hasAsyncResponse method, of class
+     * SpineAsynchronousSoapRequestHandler.
+     */
+    @Test
+    public void testHasAsyncResponse() {
+        System.out.println("hasAsyncResponse");
+        boolean expResult = false;
+        boolean result = instance.hasAsyncResponse();
         assertEquals(expResult, result);
     }
 }

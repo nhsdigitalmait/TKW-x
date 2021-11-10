@@ -73,6 +73,7 @@ public class SpineTransmitter
             throw new Exception("Transmitter: null or empty source directory "
                     + TRANSMITDIR_PROPERTY);
         }
+        Utils.createFolderIfMissing(prop);
         sourceDirectory = new File(prop);
         if (!sourceDirectory.canRead()) {
             throw new Exception("Transmitter: Unable to read source directory "

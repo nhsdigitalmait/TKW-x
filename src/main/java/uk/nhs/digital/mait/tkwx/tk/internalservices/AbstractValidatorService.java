@@ -147,16 +147,10 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
 
         String prop = null;
         prop = bootProperties.getProperty(VALIDATOR_SOURCE_PROPERTY);
-        if (Utils.isNullOrEmpty(prop)) {
-// Removed as a directory is not required for validation as part of simulator response 
-//            throw new Exception("Validator source directory property " + VALIDATOR_SOURCE_PROPERTY + " not set");
-        } else {
+        // A directory is not required for validation as part of the simulator response
+        if (!Utils.isNullOrEmpty(prop)) {
+            Utils.createFolderIfMissing(prop);
             sourceDirectory = new File(prop);
-            if (!sourceDirectory.exists()) {
-                throw new Exception("Validator source directory "
-                        + prop
-                        + " not found");
-            }
             if (!sourceDirectory.canRead()) {
                 throw new Exception("Validator source directory "
                         + prop
@@ -170,12 +164,8 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
                     + VALIDATOR_REPORT_PROPERTY
                     + " not set");
         }
+        Utils.createFolderIfMissing(prop);
         reportDirectory = new File(prop);
-        if (!reportDirectory.exists()) {
-            throw new Exception("Validator report directory "
-                    + prop
-                    + " not found");
-        }
         if (!reportDirectory.canWrite()) {
             throw new Exception("Validator report directory "
                     + prop
@@ -207,12 +197,8 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
     public String reconfigure(String what, String value) throws Exception {
 
         if (what.equals(VALIDATOR_SOURCE_PROPERTY)) {
+            Utils.createFolderIfMissing(value);
             sourceDirectory = new File(value);
-            if (!sourceDirectory.exists()) {
-                throw new Exception("Validator source directory "
-                        + value
-                        + " not found");
-            }
             if (!sourceDirectory.canRead()) {
                 throw new Exception("Validator source directory "
                         + value +
@@ -223,12 +209,8 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
             ValidatorFactory.getInstance().init(bootProperties);
         }
         if (what.equals(VALIDATOR_REPORT_PROPERTY)) {
+            Utils.createFolderIfMissing(value);
             reportDirectory = new File(value);
-            if (!reportDirectory.exists()) {
-                throw new Exception("Validator report directory "
-                        + value
-                        + " not found");
-            }
             if (!reportDirectory.canWrite()) {
                 throw new Exception("Validator report directory "
                         + value +

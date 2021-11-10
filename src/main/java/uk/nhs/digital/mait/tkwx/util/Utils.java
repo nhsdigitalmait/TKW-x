@@ -32,6 +32,7 @@ import java.lang.reflect.Method;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.Base64;
 import java.util.HashMap;
@@ -497,6 +498,25 @@ public class Utils {
     public static boolean folderExists(String path) {
         File f = new File(path);
         return f.exists() && f.isDirectory();
+    }
+
+    /**
+     * Creates folder (and any prerequisite folders) at the specified path.
+     * This will check for existence and write the folder atomically,
+     * and will silently pass if the folder already exists.
+     * 
+     * @param path
+     * @throws IOException 
+     */
+    public static void createFolderIfMissing(String path) throws IOException {
+        try {
+            Files.createDirectories(Paths.get(path));
+        } catch (IOException e) {
+            Logger.getInstance().log(Level.SEVERE, Utils.class.getName(),
+                    "Error creating folder: " + e.getMessage());
+            throw new IOException("Error creating folder at path: " + path,
+                    e);
+        }
     }
 
     /**

@@ -26,6 +26,7 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.ConfigurationStringTokeniser;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 // Rev 176  Update to support json Hapi Fhir profiles
 // Rev 175  Recommit as ANTLR artefacts didnt recreate on previous commit
 // Rev 174  Updated CDSS functionality and extended HAPI FHIR to be able to validate multiple configurations
@@ -145,7 +146,9 @@ public class ToolkitSimulator {
         if (properties.getProperty(DONTSIGNLOGS_PROPERTY) != null) {
             System.setProperty(DONTSIGNLOGS_PROPERTY, properties.getProperty(DONTSIGNLOGS_PROPERTY));
         }
-        Logger.getInstance().setAppName("TKS", properties.getProperty("tks.logdir"));
+        String logFolder = properties.getProperty("tks.logdir");
+        Utils.createFolderIfMissing(logFolder);
+        Logger.getInstance().setAppName("TKS", logFolder);
         configurationName = properties.getProperty(TKSNAME, "Not given");
         organisationName = properties.getProperty(TKSORG, "Not given");
         System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);

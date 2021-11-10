@@ -91,6 +91,7 @@ public class SpineSenderService
         if (Utils.isNullOrEmpty(destinationDirectory)) {
             throw new Exception("SpineSender: null or empty destination directory " + TRANSMITLOG_PROPERTY);
         }
+        Utils.createFolderIfMissing(destinationDirectory);
         File f = new File(destinationDirectory);
         if (!f.canWrite()) {
             throw new Exception("SpineSender: Unable to write to destination directory " + destinationDirectory);

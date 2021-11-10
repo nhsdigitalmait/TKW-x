@@ -495,6 +495,21 @@ public class UtilsTest {
     }
 
     /**
+     * Test of createFolderIfMissing method, of class Utils.
+     * 
+     * @throws java.io.IOException
+     */
+    @Test
+    public void testCreateFolderIfMissing() throws IOException {
+        System.out.println("createFolderIfMissing");
+        String path = "src/test/resources/testfolder";
+        Utils.createFolderIfMissing(path);
+        boolean expResult = true;
+        boolean result = Utils.folderExists(path);
+        assertEquals(expResult, result);
+    }
+
+    /**
      * Test of isYDefaultY method, of class Utils.
      */
     @Test

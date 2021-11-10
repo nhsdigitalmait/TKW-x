@@ -78,7 +78,13 @@ public class EvidenceMetaDataHandler {
             config = Configurator.getConfigurator();
             // is the functionality to generate metadata files enabled?
             defaultEvidenceMetadataLocation = config.getConfiguration(PropertyNameConstants.EVIDENCE_METADATA_LOCATION_PROPERTY);
-            generateEvidence = isY(config.getConfiguration(PropertyNameConstants.GENERATE_EVIDENCE_METADATA_PROPERTY)) && !Utils.isNullOrEmpty(defaultEvidenceMetadataLocation);
+            generateEvidence = isY(
+                    config.getConfiguration(
+                            PropertyNameConstants.GENERATE_EVIDENCE_METADATA_PROPERTY))
+                    && !Utils.isNullOrEmpty(defaultEvidenceMetadataLocation);
+            if (generateEvidence) {
+                Utils.createFolderIfMissing(defaultEvidenceMetadataLocation);
+            }
             tss_name = config.getConfiguration("tks.configname");
         } catch (Exception e) {
             Logger.getInstance().log(SEVERE, EvidenceMetaDataHandler.class.getName(), "Failure to retrieve evidence metadata generation property - " + e.toString());

@@ -98,6 +98,7 @@ public class SenderService
         if (Utils.isNullOrEmpty(destinationDirectory)) {
             throw new Exception("Sender: null or empty destination directory " + TRANSMITLOG_PROPERTY);
         }
+        Utils.createFolderIfMissing(destinationDirectory);
         File f = new File(destinationDirectory);
         if (!f.canWrite()) {
             throw new Exception("Sender: Unable to write to destination directory " + destinationDirectory);

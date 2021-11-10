@@ -105,7 +105,6 @@ public class SpineToolsTransmitter
             throw new Exception("SpineTools Transmitter: null or empty source directory "
                     + TRANSMITDIR_PROPERTY);
         }
-        Utils.createFolderIfMissing(prop);
         sourceDirectory = new File(prop);
         if (!sourceDirectory.canRead()) {
             throw new Exception("SpineTools Transmitter: Unable to read source directory "

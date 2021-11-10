@@ -184,7 +184,7 @@ public class HttpTransmitter
         systemvariablename = bootProperties.getProperty(SYSTEMPROPNAME);
 
         prop = bootProperties.getProperty(HTTP_METHOD);
-        if ((Utils.isNullOrEmpty(prop))) {
+        if (Utils.isNullOrEmpty(prop)) {
             httpMethod = "POST";
         } else {
             httpMethod = prop;

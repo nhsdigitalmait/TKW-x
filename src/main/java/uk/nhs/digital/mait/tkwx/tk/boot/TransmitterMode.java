@@ -19,6 +19,7 @@ import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.ConfigurationStringTokeniser;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 /**
  * 
  * @author Damian Murphy murff@warlock.org
@@ -42,18 +43,30 @@ public class TransmitterMode
         p.setProperty(SERVICELISTPROPERTY, serviceList);       
         String tr = p.getProperty(TRANSMITTERMODE_PROPERTY);
         if (tr == null) {
-            Logger.getInstance().log(SEVERE,TransmitterMode.class.getName(),"There is no transport defined for transmitter: " + TRANSMITTERMODE_PROPERTY + " not defined");
+            Logger.getInstance().log(SEVERE,
+                    TransmitterMode.class.getName(),
+                    "There is no transport defined for transmitter: "
+                            + TRANSMITTERMODE_PROPERTY
+                            + " not defined");
             return;
         }
         String sn = p.getProperty(ToolkitSimulator.SERVICES);
-        if (sn == null || sn.trim().length()==0) {
-            Logger.getInstance().log(SEVERE,TransmitterMode.class.getName(),"property " + ToolkitSimulator.SERVICES + " not defined");
+        if (Utils.isNullOrEmpty(sn)) {
+            Logger.getInstance().log(SEVERE,
+                    TransmitterMode.class.getName(),
+                    "property "
+                            + ToolkitSimulator.SERVICES
+                            + " not defined");
             return;
         }
         ConfigurationStringTokeniser cst = new ConfigurationStringTokeniser(tr);
         
         if (cst.countTokens()!=1) {
-            Logger.getInstance().log(SEVERE,TransmitterMode.class.getName(),"property " + ToolkitSimulator.SERVICES + " not defined");
+            Logger.getInstance().log(SEVERE,
+                    TransmitterMode.class.getName(),
+                    "property "
+                            + ToolkitSimulator.SERVICES
+                            + " not defined");
             return;
         }
         toolkitServiceName = tr.trim()+ "Transmitter";

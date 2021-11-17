@@ -25,6 +25,7 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.send.SPSetter;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.send.SenderRequest;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 
 /**
@@ -87,9 +88,10 @@ public class SpineSenderService
             }
         }
         destinationDirectory = bootProperties.getProperty(TRANSMITLOG_PROPERTY);
-        if ((destinationDirectory == null) || (destinationDirectory.trim().length() == 0)) {
+        if (Utils.isNullOrEmpty(destinationDirectory)) {
             throw new Exception("SpineSender: null or empty destination directory " + TRANSMITLOG_PROPERTY);
         }
+        Utils.createFolderIfMissing(destinationDirectory);
         File f = new File(destinationDirectory);
         if (!f.canWrite()) {
             throw new Exception("SpineSender: Unable to write to destination directory " + destinationDirectory);

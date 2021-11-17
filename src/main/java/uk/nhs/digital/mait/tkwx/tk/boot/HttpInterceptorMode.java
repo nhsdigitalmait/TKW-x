@@ -19,6 +19,7 @@ import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  * Interceptor mode using SpineValidator
@@ -27,7 +28,8 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 public class HttpInterceptorMode 
     extends Mode
 {
-    private static final String SERVICELIST = "SpineValidator RulesEngine Validator SpineSender";
+    private static final String SERVICELIST
+            = "SpineValidator RulesEngine Validator SpineSender";
     
     /**
      * public constructor
@@ -49,12 +51,20 @@ public class HttpInterceptorMode
         Properties p = t.getProperties();
         String tr = p.getProperty(TRANSPORTLIST_PROPERTY);
         if (tr == null) {
-            Logger.getInstance().log(SEVERE,HttpInterceptorMode.class.getName(),"No transports defined for simulator: " + TRANSPORTLIST_PROPERTY + " not defined");
+            Logger.getInstance().log(SEVERE,
+                    HttpInterceptorMode.class.getName(),
+                    "No transports defined for simulator: "
+                            + TRANSPORTLIST_PROPERTY
+                            + " not defined");
             return;
         }
         String sn = p.getProperty(ToolkitSimulator.SERVICES);
-        if (sn == null || sn.trim().length()==0) {
-            Logger.getInstance().log(SEVERE,HttpInterceptorMode.class.getName(),"property " + ToolkitSimulator.SERVICES + " not defined");
+        if (Utils.isNullOrEmpty(sn)) {
+            Logger.getInstance().log(SEVERE,
+                    HttpInterceptorMode.class.getName(),
+                    "property "
+                            + ToolkitSimulator.SERVICES
+                            + " not defined");
             return;
         }
         p.setProperty(SERVICELISTPROPERTY, tr.trim() + " " + sn); 

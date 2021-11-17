@@ -21,12 +21,12 @@ import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import java.io.File;
 import static java.util.logging.Level.WARNING;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
-import uk.nhs.digital.mait.tkwx.tk.boot.TransmitterMode;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.send.SPSetter;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.send.Sender;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.send.SenderRequest;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Schedule.SPINETOOLS_TRANSMITTER_MODE;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 
 /**
@@ -83,7 +83,7 @@ public class SenderService
         serviceName = s;
         simulator = t;
         transmitterMode = p.getProperty(TRANSMITTERMODE_PROPERTY);
-        if (transmitterMode == null || transmitterMode.trim().length() == 0) {
+        if (Utils.isNullOrEmpty(transmitterMode)) {
             throw new Exception("Sender: null or empty tranmitter mode " + TRANSMITTERMODE_PROPERTY);
         }
         String tls = p.getProperty(SEND_USETLS_PROPERTY);
@@ -95,9 +95,10 @@ public class SenderService
             }
         }
         destinationDirectory = bootProperties.getProperty(TRANSMITLOG_PROPERTY);
-        if ((destinationDirectory == null) || (destinationDirectory.trim().length() == 0)) {
+        if (Utils.isNullOrEmpty(destinationDirectory)) {
             throw new Exception("Sender: null or empty destination directory " + TRANSMITLOG_PROPERTY);
         }
+        Utils.createFolderIfMissing(destinationDirectory);
         File f = new File(destinationDirectory);
         if (!f.canWrite()) {
             throw new Exception("Sender: Unable to write to destination directory " + destinationDirectory);

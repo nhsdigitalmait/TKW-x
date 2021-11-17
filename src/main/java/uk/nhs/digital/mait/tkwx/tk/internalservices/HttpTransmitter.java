@@ -120,67 +120,79 @@ public class HttpTransmitter
         ISO8601FORMATDATE.setTimeZone(TimeZone.getTimeZone("GMT"));
         String prop = null;
         prop = bootProperties.getProperty(TRANSMITDIR_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("Transmitter: null or empty source directory " + TRANSMITDIR_PROPERTY);
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("Transmitter: null or empty source directory "
+                    + TRANSMITDIR_PROPERTY);
         }
         sourceDirectory = new File(prop);
         if (!sourceDirectory.canRead()) {
-            throw new Exception("Transmitter: Unable to read source directory " + prop);
+            throw new Exception("Transmitter: Unable to read source directory "
+                    + prop);
         }
 
         prop = bootProperties.getProperty(TXTTL_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("Transmitter: null or empty TTL given " + TXTTL_PROPERTY);
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("Transmitter: null or empty TTL given "
+                    + TXTTL_PROPERTY);
         }
         try {
             ttl = Integer.parseInt(prop);
         } catch (NumberFormatException e) {
-            throw new Exception("Transmitter: Invalid TTL: " + prop);
+            throw new Exception("Transmitter: Invalid TTL: "
+                    + prop);
         }
 
         prop = bootProperties.getProperty(ADDRESS_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("Transmitter: null or empty address given " + ADDRESS_PROPERTY);
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("Transmitter: null or empty address given "
+                    + ADDRESS_PROPERTY);
         }
         address = prop;
 
         nosend = isY(bootProperties.getProperty(TXNOSEND_PROPERTY));
 
         prop = bootProperties.getProperty(CHUNKXMIT_PROPERTY);
-        if ((prop != null) && prop.trim().length() > 0) {
+        if (!Utils.isNullOrEmpty(prop)) {
             chunkSize = Integer.parseInt(prop);
         }
 
         prop = bootProperties.getProperty(REPLYTO_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("ReplyTo: null or empty address given " + REPLYTO_PROPERTY);
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("ReplyTo: null or empty address given "
+                    + REPLYTO_PROPERTY);
         }
         replyto = prop;
 
         prop = bootProperties.getProperty(FAULTTO_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("FaultTo: null or empty address given " + FAULTTO_PROPERTY);
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("FaultTo: null or empty address given "
+                    + FAULTTO_PROPERTY);
         }
         faultto = prop;
 
         prop = bootProperties.getProperty(OFFSET);
-        if ((prop != null) && (prop.trim().length() > 0)) {
+        if (!Utils.isNullOrEmpty(prop)) {
             try {
                 offsetSeconds = Integer.parseInt(prop);
             } catch (NumberFormatException e) {
-                Logger.getInstance().log(WARNING, HttpTransmitter.class.getName(), "timestamp offset parse error, should be integer seconds, setting to 0: " + prop);
+                Logger.getInstance().log(WARNING,
+                        HttpTransmitter.class.getName(),
+                        "timestamp offset parse error, should be integer seconds, setting to 0: "
+                                + prop);
             }
         }
         systemvariablename = bootProperties.getProperty(SYSTEMPROPNAME);
 
         prop = bootProperties.getProperty(HTTP_METHOD);
-        if ((prop == null) || (prop.trim().length() == 0)) {
+        if (Utils.isNullOrEmpty(prop)) {
             httpMethod = "POST";
         } else {
             httpMethod = prop;
         }
 
-        System.out.println(serviceName + " started, class: " + this.getClass().getCanonicalName());
+        System.out.println(serviceName
+                + " started, class: "
+                + this.getClass().getCanonicalName());
     }
 
     /**

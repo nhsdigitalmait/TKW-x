@@ -101,35 +101,41 @@ public class SpineToolsTransmitter
         ISO8601FORMATDATE.setTimeZone(TimeZone.getTimeZone("GMT"));
         String prop = null;
         prop = bootProperties.getProperty(TRANSMITDIR_PROPERTY);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("SpineTools Transmitter: null or empty source directory " + TRANSMITDIR_PROPERTY);
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("SpineTools Transmitter: null or empty source directory "
+                    + TRANSMITDIR_PROPERTY);
         }
         sourceDirectory = new File(prop);
         if (!sourceDirectory.canRead()) {
-            throw new Exception("SpineTools Transmitter: Unable to read source directory " + prop);
+            throw new Exception("SpineTools Transmitter: Unable to read source directory "
+                    + prop);
         }
         prop = bootProperties.getProperty(SVCIA);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("SpineTools Transmitter: SvcIA - service-qualified interaction id cannot be null: " + SVCIA);
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("SpineTools Transmitter: SvcIA - service-qualified interaction id cannot be null: "
+                    + SVCIA);
         }
         action = prop;
         prop = bootProperties.getProperty(ODS);
-        if ((prop == null) || (prop.trim().length() == 0)) {
-            throw new Exception("SpineTools Transmitter: ODS code, cannot be null: " + ODS);
+        if (Utils.isNullOrEmpty(prop)) {
+            throw new Exception("SpineTools Transmitter: ODS code, cannot be null: "
+                    + ODS);
         }
         ods = prop;
         prop = bootProperties.getProperty(ASID);
-        if ((prop == null) || prop.equals("null") || (prop.trim().length() == 0)) {
+        if (Utils.isNullOrEmpty(prop) || prop.equals("null")) {
             prop = null;
         }
         asid = prop;
         prop = bootProperties.getProperty(TOPARTYKEY);
-        if ((prop == null) || prop.equals("null") || (prop.trim().length() == 0)) {
+        if (Utils.isNullOrEmpty(prop) || prop.equals("null")) {
             prop = null;
         }
         partyKey = prop;
 
-        System.out.println(serviceName + " started, class: " + this.getClass().getCanonicalName());
+        System.out.println(serviceName
+                + " started, class: "
+                + this.getClass().getCanonicalName());
     }
 
     /**

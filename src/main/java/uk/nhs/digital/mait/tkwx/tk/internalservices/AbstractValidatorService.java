@@ -36,7 +36,6 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.RulesetMetadata;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationReport;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidatorFactory;
 import uk.nhs.digital.mait.commonutils.util.Logger;
-import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceInterface;
 import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
@@ -64,7 +63,6 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
     protected boolean allPassed = true;
     private String htmlHeader = null;
     StringBuilder sbSummaryByTestTable;
-    protected EvidenceInterface evidenceInterface = null;
     protected EvidenceMetaDataHandler evidenceMetaData = null;
 
     // sorted hashmap
@@ -525,9 +523,6 @@ public abstract class AbstractValidatorService implements ToolkitService, Reconf
         hmCategorySummary.clear();
     }
 
-    public void registerForReport(EvidenceInterface ei) {
-        evidenceInterface = ei;
-    }
     // allow the use of evidenceMetaData to services which do not use httprequest
     public void setEvidenceMetaData(EvidenceMetaDataHandler emd) {
         evidenceMetaData = emd;

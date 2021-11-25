@@ -27,7 +27,7 @@ import org.junit.runners.Suite;
  * @author sifa2
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({HTTPGetUUIDWorkerTest.class, SpineAsynchronousSoapRequestHandlerTest.class, HTTPGetCRLWorkerTest.class, DiagnosticHandlerTest.class, SpineSynchronousWorkerTest.class, HTTPGetUUIDHandlerTest.class, SpineSynchronousSoapRequestHandlerTest.class, SpineAsynchronousWorkerTest.class, HTTPPostSimulatorRulesetHandlerTest.class, HTTPPostSimulatorRulesetWorkerTest.class, HTTPGetCRLHandlerTest.class, BadUriHandlerTest.class})
+@Suite.SuiteClasses({HTTPGetUUIDWorkerTest.class, HTTPGetCRLWorkerTest.class, DiagnosticHandlerTest.class, HTTPGetUUIDHandlerTest.class, HTTPPostSimulatorRulesetHandlerTest.class, HTTPPostSimulatorRulesetWorkerTest.class, HTTPGetCRLHandlerTest.class, BadUriHandlerTest.class})
 public class HandlersSuite {
 
     @BeforeClass

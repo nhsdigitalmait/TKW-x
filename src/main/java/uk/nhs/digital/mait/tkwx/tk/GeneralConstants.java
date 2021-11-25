@@ -90,7 +90,7 @@ public class GeneralConstants {
     public static final String MESSAGEID_TAG = "__MESSAGEID__";
     public static final String ACTION_TAG = "__ACTION__";
     public static final String ORIGINALMESSAGEID_TAG = "__ORIGINAL_MESSAGEID__";
-    public static final String FROMADDRESS_TAG = "__FROMADDRESS__";
+    public static final String FROMADDRESS_TAG = "__FROM_ADDRESS__";
     public static final String RCVASID_TAG = "__RCV_ASID__";
     public static final String SNDASID_TAG = "__SND_ASID__";
     public static final String OFFSETEXPIRES_TAG = "__OFFSETEXPIRES__";

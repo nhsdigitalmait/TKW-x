@@ -36,7 +36,6 @@ import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
-import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceInterface;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 
@@ -144,14 +143,6 @@ public class HttpInterceptorValidatorTest {
         //instance.run();
     }
 
-    /**
-     * Test of registerForReport method, of class HttpInterceptorValidator.
-     */
-    @Test
-    public void testRegisterForReport() {
-        System.out.println("registerForReport");
-        EvidenceInterface ei = null;
-        instance.registerForReport(ei);
-    }
+
 
 }

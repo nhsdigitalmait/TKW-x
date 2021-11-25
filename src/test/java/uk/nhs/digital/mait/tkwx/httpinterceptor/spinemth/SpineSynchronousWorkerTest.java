@@ -34,6 +34,7 @@ import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.http.HttpResponse;
+import static uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth.SpineAsynchronousWorkerTest.CLIENT_ASID;
 import static uk.nhs.digital.mait.tkwx.mesh.MeshDataTest.deleteFolderAndContents;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
@@ -41,7 +42,6 @@ import uk.nhs.digital.mait.tkwx.tk.boot.HttpTransport;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.SimulatorMode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
-import static uk.nhs.digital.mait.tkwx.tk.handlers.SpineAsynchronousWorkerTest.CLIENT_ASID;
 
 /**
  *

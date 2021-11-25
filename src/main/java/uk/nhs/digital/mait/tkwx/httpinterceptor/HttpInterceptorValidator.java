@@ -25,7 +25,6 @@ import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceManager;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitService;
-import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceInterface;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.fhirConvertJson2Xml;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.Reconfigurable;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.send.LogMarkers.END_INBOUND_MARKER;
@@ -34,7 +33,6 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessag
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.EvidenceInterfaceRegister;
 
 /**
  * Class to execute inline validation of simulator requests in their own thread
@@ -53,7 +51,6 @@ public class HttpInterceptorValidator extends Thread {
     private static final String ITK_SCHEMA_VALIDATOR_CLASS = "uk.nhs.digital.mait.tkwx.tk.internalservices.validation.SchemaValidator";
 
     private static final Object lock = new Object();
-    private EvidenceInterface evidenceInterface = null;
     private HttpRequest httpRequest;
     private String subDir;
 
@@ -179,9 +176,6 @@ public class HttpInterceptorValidator extends Thread {
                         validationReportRoot = baseFolder;
                     }
 
-                    // register with the Validator Service to be given a String representation of the HTML report
-                    EvidenceInterfaceRegister eir = (EvidenceInterfaceRegister) validatorService;
-                    eir.registerForReport(evidenceInterface);
                     // if there's a cloned xml version (converted from json) use that otherwise submit the original
                     ServiceResponse sr = validatorService.execute(new Object[]{soapAction, clonedXmlHttpRequest != null ? clonedXmlHttpRequest : httpRequest});
 
@@ -228,10 +222,6 @@ public class HttpInterceptorValidator extends Thread {
         sb.append("\r\n" + END_INBOUND_MARKER + "\r\n");
         Utils.writeString2File(root + "/"
                 + reportFileName.replaceFirst("^validation_report_(.*).html", "$1.log"), sb.toString());
-    }
-
-    public void registerForReport(EvidenceInterface ei) {
-        evidenceInterface = ei;
     }
 
 }

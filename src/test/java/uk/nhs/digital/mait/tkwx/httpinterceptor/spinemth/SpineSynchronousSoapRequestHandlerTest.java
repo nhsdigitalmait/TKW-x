@@ -42,11 +42,11 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.SAVEDMESSAGES_PR
 import uk.nhs.digital.mait.tkwx.tk.boot.HttpTransport;
 import uk.nhs.digital.mait.tkwx.tk.boot.SimulatorMode;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
-import static uk.nhs.digital.mait.tkwx.tk.handlers.SpineAsynchronousWorkerTest.CLIENT_ASID;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import uk.nhs.digital.mait.tkwx.RestartJVMTest;
+import static uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth.SpineAsynchronousWorkerTest.CLIENT_ASID;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 
 /**

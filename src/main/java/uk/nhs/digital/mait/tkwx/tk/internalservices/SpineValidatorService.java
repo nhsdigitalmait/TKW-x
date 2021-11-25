@@ -38,7 +38,7 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
  *
  * @author Damian Murphy murff@warlock.org
  */
-public class SpineValidatorService extends AbstractValidatorService implements EvidenceInterfaceRegister{
+public class SpineValidatorService extends AbstractValidatorService{
 
     /**
      * Creates a new instance of ValidatorService
@@ -123,10 +123,7 @@ public class SpineValidatorService extends AbstractValidatorService implements E
         }
 
         appendPostamble(sb);
-        // write out HTML report to evidence for use by registering classes
-        if (evidenceInterface != null) {
-            evidenceInterface.setValidationReport(sb.toString());
-        }
+
 
         String filename = getFileName(service, dateString);
         writeFile(outputDirectory, filename, sb.toString());

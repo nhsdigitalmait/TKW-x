@@ -32,7 +32,6 @@ import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
-import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceInterface;
 import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.AbstractValidatorService.ValidationResults;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.RulesetMetadata;
@@ -297,16 +296,6 @@ public class AbstractValidatorServiceTest {
     public void testResetSummaryCounts() {
         System.out.println("resetSummaryCounts");
         instance.resetSummaryCounts();
-    }
-
-    /**
-     * Test of registerForReport method, of class AbstractValidatorService.
-     */
-    @Test
-    public void testRegisterForReport() {
-        System.out.println("registerForReport");
-        EvidenceInterface ei = null;
-        instance.registerForReport(ei);
     }
 
     /**

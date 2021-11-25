@@ -48,8 +48,6 @@ public class PropertyNameConstants {
 
     public static final String INHIBITVALIDATION_PROPERTY = "tks.httpinterceptor.inhibit.validation";
 
-    public static final String SCENARIO_INSTANTIATION_TRIGGER_PROPERTY = "tks.httpinterceptor.scenarioinstantiationtrigger";
-
     public static final String SYNCHRONOUSRESPONSEDELAY_PROPERTY = "tks.synchronousreply.delay";
 
     public static final String LOGFILELOCKER_PROPERTY = "tks.Toolkit.logfilelocker";

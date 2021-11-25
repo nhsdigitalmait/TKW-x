@@ -13,7 +13,7 @@
         <tkwx-rules-path>${internal_services_root}/rules/parser</tkwx-rules-path>
         <tkwx-automation-path>${internal_services_root}/testautomation/parser</tkwx-automation-path>
         <tkwx-validation-path>${internal_services_root}/validation/parser</tkwx-validation-path>
-        <skiptests>true</skiptests>
+        <skiptests>false</skiptests>
     </properties>    
     
     <build>

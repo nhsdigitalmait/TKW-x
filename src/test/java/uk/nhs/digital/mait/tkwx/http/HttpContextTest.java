@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import uk.nhs.digital.mait.tkwx.tk.handlers.SpineSynchronousSoapRequestHandler;
+import uk.nhs.digital.mait.tkwx.tk.handlers.HTTPGetUnixTimestampHandler;
 
 /**
  *
@@ -82,7 +82,7 @@ public class HttpContextTest {
     @Test
     public void testAddHandler() throws Exception {
         System.out.println("addHandler");
-        instance.addHandler(new SpineSynchronousSoapRequestHandler());
+        instance.addHandler(new HTTPGetUnixTimestampHandler());
     }
 
     /**

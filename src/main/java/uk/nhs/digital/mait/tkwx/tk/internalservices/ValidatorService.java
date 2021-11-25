@@ -61,7 +61,7 @@ import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathEx
  *
  * @author Damian Murphy murff@warlock.org
  */
-public class ValidatorService extends AbstractValidatorService implements EvidenceInterfaceRegister{
+public class ValidatorService extends AbstractValidatorService{
 
     private XPathExpression soapActionExtractor = null;
     private XPathExpression distributionEnvelopeServiceExtractor = null;
@@ -419,10 +419,6 @@ public class ValidatorService extends AbstractValidatorService implements Eviden
 
         String filename = VALIDATION_REPORT_PREFIX + "_" + service2Filename(rname.toString()) + ".html";
         writeFile(reportDirectory, filename, sb.toString());
-        // write out HTML report to evidence for use by registering classes
-        if (evidenceInterface != null) {
-            evidenceInterface.setValidationReport(sb.toString());
-        }
 
         File f = new File(reportDirectory, filename);
         // requires an explicit Y to inhibit

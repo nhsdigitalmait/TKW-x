@@ -49,7 +49,6 @@ class SpineSynchronousWorker {
     protected SpineSynchronousSoapRequestHandler handler = null;
     protected static Configurator config;
     protected static boolean inhibitValidation = true;
-    protected static boolean scenarioInstantiationTrigger = false;
 
     private final static SimpleDateFormat ISO8601FORMATDATE = new SimpleDateFormat(ISO8601FORMATDATEMASK);
 
@@ -76,7 +75,6 @@ class SpineSynchronousWorker {
         try {
             config = Configurator.getConfigurator();
             inhibitValidation = isY(config.getConfiguration(INHIBITVALIDATION_PROPERTY));
-            scenarioInstantiationTrigger = isY(config.getConfiguration(SCENARIO_INSTANTIATION_TRIGGER_PROPERTY));
         } catch (Exception e) {
             Logger.getInstance().log(SEVERE, SpineSynchronousWorker.class.getName(), "Configurator error - " + e.toString());
         }

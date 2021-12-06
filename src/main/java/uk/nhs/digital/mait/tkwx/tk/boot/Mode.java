@@ -15,7 +15,7 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.boot;
 
-import java.util.Properties;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 
 /**
@@ -32,14 +32,14 @@ public abstract class Mode {
 
     public void init(ToolkitSimulator t)
             throws Exception {
-        Properties p = t.getProperties();
+        Configurator config = Configurator.getConfigurator();
         // if there's any servicenames defined in the .properties config dont throw them away
-        String sn = p.getProperty(ToolkitSimulator.SERVICES);
+        String sn = config.getConfiguration(ToolkitSimulator.SERVICES);
 
         if (sn != null) {
             serviceList = serviceList.concat(" ").concat(sn);
         }
-        p.setProperty(SERVICELISTPROPERTY, serviceList);
+        config.setConfiguration(SERVICELISTPROPERTY, serviceList);
 
     }
 

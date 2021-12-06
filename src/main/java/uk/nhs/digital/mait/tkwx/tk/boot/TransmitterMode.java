@@ -14,11 +14,11 @@
    limitations under the License.
  */
 package uk.nhs.digital.mait.tkwx.tk.boot;
-import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.ConfigurationStringTokeniser;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 /**
  * 
@@ -39,9 +39,9 @@ public class TransmitterMode
             throws Exception
     {
         super.init(t);
-        Properties p = t.getProperties();
-        p.setProperty(SERVICELISTPROPERTY, serviceList);       
-        String tr = p.getProperty(TRANSMITTERMODE_PROPERTY);
+        Configurator config = Configurator.getConfigurator();
+        config.setConfiguration(SERVICELISTPROPERTY, serviceList);
+        String tr = config.getConfiguration(TRANSMITTERMODE_PROPERTY);
         if (tr == null) {
             Logger.getInstance().log(SEVERE,
                     TransmitterMode.class.getName(),
@@ -50,7 +50,7 @@ public class TransmitterMode
                             + " not defined");
             return;
         }
-        String sn = p.getProperty(ToolkitSimulator.SERVICES);
+        String sn = config.getConfiguration(ToolkitSimulator.SERVICES);
         if (Utils.isNullOrEmpty(sn)) {
             Logger.getInstance().log(SEVERE,
                     TransmitterMode.class.getName(),
@@ -70,7 +70,7 @@ public class TransmitterMode
             return;
         }
         toolkitServiceName = tr.trim()+ "Transmitter";
-        p.setProperty(SERVICELISTPROPERTY, toolkitServiceName + " " + sn); 
+        config.setConfiguration(SERVICELISTPROPERTY, toolkitServiceName + " " + sn);
         t.boot();
         rootService = ServiceManager.getInstance().getService(toolkitServiceName);        
     }

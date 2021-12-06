@@ -15,10 +15,10 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.boot;
 
-import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 
 /**
  *
@@ -36,8 +36,8 @@ public class AutoTestMode
     public void init(ToolkitSimulator t)
             throws Exception
     {
-        Properties p = t.getProperties();
-        String tr = p.getProperty(TRANSPORTLIST_PROPERTY);
+        Configurator config = Configurator.getConfigurator();
+        String tr = config.getConfiguration(TRANSPORTLIST_PROPERTY);
         if (tr == null) {
             Logger.getInstance().log(SEVERE,
                     AutoTestMode.class.getName(),

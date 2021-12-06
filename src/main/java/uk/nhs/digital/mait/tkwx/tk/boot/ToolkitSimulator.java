@@ -156,10 +156,6 @@ public class ToolkitSimulator {
         c.setProperties(properties);
     }
 
-    public Properties getProperties() {
-        return properties;
-    }
-
     public String getConfigurationName() {
         return configurationName;
     }

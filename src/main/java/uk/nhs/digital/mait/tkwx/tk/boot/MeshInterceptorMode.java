@@ -15,10 +15,10 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.boot;
 
-import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
@@ -47,8 +47,8 @@ public class MeshInterceptorMode
             throws Exception
     {
         super.init(t);
-        Properties p = t.getProperties();
-        String tr = p.getProperty(TRANSPORTLIST_PROPERTY);
+        Configurator config = Configurator.getConfigurator();
+        String tr = config.getConfiguration(TRANSPORTLIST_PROPERTY);
         if (tr == null) {
             Logger.getInstance().log(SEVERE,
                     MeshInterceptorMode.class.getName(),
@@ -57,7 +57,7 @@ public class MeshInterceptorMode
                             + " not defined");
             return;
         }
-        String sn = p.getProperty(ToolkitSimulator.SERVICES);
+        String sn = config.getConfiguration(ToolkitSimulator.SERVICES);
         if (Utils.isNullOrEmpty(sn)) {
             Logger.getInstance().log(SEVERE,
                     MeshInterceptorMode.class.getName(),
@@ -66,7 +66,7 @@ public class MeshInterceptorMode
                             + " not defined");
             return;
         }
-        p.setProperty(SERVICELISTPROPERTY, tr.trim() + " " + sn); 
+        config.setConfiguration(SERVICELISTPROPERTY, tr.trim() + " " + sn);
         t.boot();
     }
     

@@ -15,7 +15,6 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.boot;
 
-import java.util.Properties;
 import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -53,16 +52,6 @@ public class ToolkitSimulatorTest {
 
     @After
     public void tearDown() {
-    }
-
-    /**
-     * Test of getProperties method, of class ToolkitSimulator.
-     */
-    @Test
-    public void testGetProperties() {
-        System.out.println("getProperties");
-        Properties result = instance.getProperties();
-        assertNotNull(result);
     }
 
     /**

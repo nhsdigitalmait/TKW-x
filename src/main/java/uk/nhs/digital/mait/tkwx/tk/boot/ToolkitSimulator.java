@@ -21,7 +21,9 @@ import java.util.StringTokenizer;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map.Entry;
 import static java.util.logging.Level.SEVERE;
+import org.apache.commons.text.StringSubstitutor;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.ConfigurationStringTokeniser;
 import uk.nhs.digital.mait.commonutils.util.Logger;
@@ -105,11 +107,11 @@ public class ToolkitSimulator {
         // This is important for the internal http call i.e. getUUID post the addition of HTTP streaming to TKW
         // TODO check this still works under OSGi
         System.setProperty("http.keepAlive", "false");
-        properties = new Properties();
+        Properties prop = new Properties();
 
         // load the Internal TKW properties file first so that the external file can overwrite it
         InputStream is = getClass().getResourceAsStream(INTERNALPROPERTIES);
-        properties.load(is);
+        prop.load(is);
 
         try ( // load the External TKW properties - Port names for the request handlers MUST be appended
                  BufferedReader br = new BufferedReader(new FileReader(propertiesfile))) {
@@ -133,14 +135,22 @@ public class ToolkitSimulator {
                 }
                 // Add extra context names to the namelist
                 if (key.equals("tks.HttpTransport.namelist")) {
-                    value.insert(0, properties.getProperty("tks.HttpTransport.namelist") + " ");
+                    value.insert(0, prop.getProperty("tks.HttpTransport.namelist") + " ");
                 }
                 // Copy any properties to system properties needed for the any of the server's SSL listeners.
                 if (key.endsWith(".usesslcontext") || key.endsWith(".sslcontextpass") || key.endsWith(".sslalgorithm")) {
                     System.setProperty(key, value.toString());
                 }
-                properties.setProperty(key, value.toString());
+                prop.setProperty(key, value.toString());
             }
+        }
+
+        properties = new Properties();
+        for (Entry entry: prop.entrySet()) {
+            String key = (String) entry.getKey();
+            String oldValue = (String) entry.getValue();
+            String newValue = replaceTkwroot(replaceEnvVars(oldValue));
+            properties.setProperty(key, newValue);
         }
 
         if (properties.getProperty(DONTSIGNLOGS_PROPERTY) != null) {
@@ -154,6 +164,18 @@ public class ToolkitSimulator {
         System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);
         Configurator c = Configurator.getConfigurator();
         c.setProperties(properties);
+    }
+
+    private static String replaceEnvVars(String s) {
+        StringSubstitutor sub = new StringSubstitutor(System.getenv());
+        return sub.replace(s);
+    }
+
+    private static String replaceTkwroot(String s) {
+        if (!Utils.isNullOrEmpty(System.getenv("TKWROOT"))) {
+            return s.replaceAll("TKW_ROOT", System.getenv("TKWROOT"));
+        }
+        return s;
     }
 
     public String getConfigurationName() {

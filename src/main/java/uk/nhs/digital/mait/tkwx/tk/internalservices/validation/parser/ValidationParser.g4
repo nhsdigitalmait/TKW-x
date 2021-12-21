@@ -84,6 +84,9 @@ test_statement : no_arg_test |
                  xpath_one_arg_test | 
                  xpath_two_arg_test | 
                  xpath_multi_arg_test |
+                 jsonpath_one_arg_test | 
+                 jsonpath_two_arg_test | 
+                 jsonpath_multi_arg_test |
                  unchecked_test
 ;
 
@@ -167,7 +170,7 @@ jsonpath_two_arg_comparison_type : JSONPATHEQUALS | JSONPATHNOTEQUALS |
                      JSONPATHCONTAINS | JSONPATHNOTCONTAINS |
                      JSONPATHCONTAINSIGNORECASE | JSONPATHNOTCONTAINSIGNORECASE;
 
-jsonpath_two_arg_test : xpath_two_arg_type xpath_arg xpath_arg + ;
+jsonpath_two_arg_test : jsonpath_two_arg_type xpath_arg xpath_arg + ;
 jsonpath_two_arg_type : (  json_match_source? jsonpath_two_arg_comparison_type ) 
 ;
 

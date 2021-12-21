@@ -103,6 +103,7 @@ HL7_DATETIME : 'HL7datetime' ;
 ISO8601_DATETIME : 'ISO8601datetime' ;  
 RFC822_DATETIME : 'RFC822datetime' ;  
 SUBSTITUTION_XPATH : X P A T H -> mode(CST_MODE) ;  
+SUBSTITUTION_JSONPATH : J S O N P A T H -> mode(CST_MODE) ;  
 SUBSTITUTION_REGEXP : R E G '_' E X P ;  
 LITERAL : 'Literal'  -> mode(ANNOTATION_MODE) ;  
 PROPERTY : 'Property' ;  

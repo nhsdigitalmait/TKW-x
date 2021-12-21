@@ -37,7 +37,11 @@ public class ValidationParser extends Parser {
 		VALIDATION_RULESET_VERSION=69, VALIDATION_RULESET_TIMESTAMP=70, VALIDATION_RULESET_AUTHOR=71, 
 		VALIDATE=72, SET=73, CHECK=74, ANNOTATION=75, SUBSET=76, DOLLAR=77, IDENTIFIER=78, 
 		VARIABLE=79, DOT_SEPARATED_IDENTIFIER=80, URL=81, PATH=82, XPATH=83, SPACES=84, 
-		DEFAULT=85, ANNOTATION_TEXT=86, SP=87, CST=88, LF=89;
+		DEFAULT=85, ANNOTATION_TEXT=86, SP=87, CST=88, LF=89, JSONPATHEXISTS=90, 
+		JSONPATHNOTEXISTS=91, JSONPATHEQUALS=92, JSONPATHNOTEQUALS=93, JSONPATHEQUALSIGNORECASE=94, 
+		JSONPATHNOTEQUALSIGNORECASE=95, JSONPATHMATCHES=96, JSONPATHNOTMATCHES=97, 
+		JSONPATHCOMPARE=98, JSONPATHCONTAINS=99, JSONPATHNOTCONTAINS=100, JSONPATHCONTAINSIGNORECASE=101, 
+		JSONPATHNOTCONTAINSIGNORECASE=102, JSONPATHIN=103;
 	public static final int
 		RULE_input = 0, RULE_validation_header = 1, RULE_validation_header_type = 2, 
 		RULE_validate_statement = 3, RULE_service_name = 4, RULE_validate_directives = 5, 
@@ -48,11 +52,14 @@ public class ValidationParser extends Parser {
 		RULE_schema_path = 20, RULE_schema_xpath = 21, RULE_hapifhirvalidator_id = 22, 
 		RULE_no_arg_test = 23, RULE_xml_match_source = 24, RULE_xpath_one_arg_test = 25, 
 		RULE_xpath_one_arg_comparison_type = 26, RULE_xpath_one_arg_type = 27, 
-		RULE_text_match_type = 28, RULE_text_match_source = 29, RULE_http_header_name = 30, 
-		RULE_xpath_arg = 31, RULE_xpath_two_arg_comparison_type = 32, RULE_xpath_two_arg_test = 33, 
-		RULE_xpath_two_arg_type = 34, RULE_xpath_multi_arg_test = 35, RULE_xpath_multi_arg_type = 36, 
-		RULE_annotation_directive = 37, RULE_subset_statement = 38, RULE_subset_name = 39, 
-		RULE_include_statement = 40;
+		RULE_json_match_source = 28, RULE_jsonpath_one_arg_test = 29, RULE_jsonpath_one_arg_comparison_type = 30, 
+		RULE_jsonpath_one_arg_type = 31, RULE_text_match_type = 32, RULE_text_match_source = 33, 
+		RULE_http_header_name = 34, RULE_xpath_arg = 35, RULE_xpath_two_arg_comparison_type = 36, 
+		RULE_xpath_two_arg_test = 37, RULE_xpath_two_arg_type = 38, RULE_xpath_multi_arg_test = 39, 
+		RULE_xpath_multi_arg_type = 40, RULE_jsonpath_arg = 41, RULE_jsonpath_two_arg_comparison_type = 42, 
+		RULE_jsonpath_two_arg_test = 43, RULE_jsonpath_two_arg_type = 44, RULE_jsonpath_multi_arg_test = 45, 
+		RULE_jsonpath_multi_arg_type = 46, RULE_annotation_directive = 47, RULE_subset_statement = 48, 
+		RULE_subset_name = 49, RULE_include_statement = 50;
 	public static final String[] ruleNames = {
 		"input", "validation_header", "validation_header_type", "validate_statement", 
 		"service_name", "validate_directives", "validate_directive", "check_directive", 
@@ -60,10 +67,13 @@ public class ValidationParser extends Parser {
 		"else_clause", "endif", "test_statement", "unchecked_test", "unchecked_test_name", 
 		"schema_test", "schema_type", "schema_path", "schema_xpath", "hapifhirvalidator_id", 
 		"no_arg_test", "xml_match_source", "xpath_one_arg_test", "xpath_one_arg_comparison_type", 
-		"xpath_one_arg_type", "text_match_type", "text_match_source", "http_header_name", 
+		"xpath_one_arg_type", "json_match_source", "jsonpath_one_arg_test", "jsonpath_one_arg_comparison_type", 
+		"jsonpath_one_arg_type", "text_match_type", "text_match_source", "http_header_name", 
 		"xpath_arg", "xpath_two_arg_comparison_type", "xpath_two_arg_test", "xpath_two_arg_type", 
-		"xpath_multi_arg_test", "xpath_multi_arg_type", "annotation_directive", 
-		"subset_statement", "subset_name", "include_statement"
+		"xpath_multi_arg_test", "xpath_multi_arg_type", "jsonpath_arg", "jsonpath_two_arg_comparison_type", 
+		"jsonpath_two_arg_test", "jsonpath_two_arg_type", "jsonpath_multi_arg_test", 
+		"jsonpath_multi_arg_type", "annotation_directive", "subset_statement", 
+		"subset_name", "include_statement"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
@@ -94,7 +104,11 @@ public class ValidationParser extends Parser {
 		"VALIDATION_RULESET_VERSION", "VALIDATION_RULESET_TIMESTAMP", "VALIDATION_RULESET_AUTHOR", 
 		"VALIDATE", "SET", "CHECK", "ANNOTATION", "SUBSET", "DOLLAR", "IDENTIFIER", 
 		"VARIABLE", "DOT_SEPARATED_IDENTIFIER", "URL", "PATH", "XPATH", "SPACES", 
-		"DEFAULT", "ANNOTATION_TEXT", "SP", "CST", "LF"
+		"DEFAULT", "ANNOTATION_TEXT", "SP", "CST", "LF", "JSONPATHEXISTS", "JSONPATHNOTEXISTS", 
+		"JSONPATHEQUALS", "JSONPATHNOTEQUALS", "JSONPATHEQUALSIGNORECASE", "JSONPATHNOTEQUALSIGNORECASE", 
+		"JSONPATHMATCHES", "JSONPATHNOTMATCHES", "JSONPATHCOMPARE", "JSONPATHCONTAINS", 
+		"JSONPATHNOTCONTAINS", "JSONPATHCONTAINSIGNORECASE", "JSONPATHNOTCONTAINSIGNORECASE", 
+		"JSONPATHIN"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -192,31 +206,31 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(86); 
+			setState(106); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(86);
+				setState(106);
 				switch (_input.LA(1)) {
 				case VALIDATION_RULESET_NAME:
 				case VALIDATION_RULESET_VERSION:
 				case VALIDATION_RULESET_TIMESTAMP:
 				case VALIDATION_RULESET_AUTHOR:
 					{
-					setState(82);
+					setState(102);
 					validation_header();
 					}
 					break;
 				case VALIDATE:
 					{
-					setState(83);
+					setState(103);
 					validate_statement();
 					}
 					break;
 				case SUBSET:
 					{
-					setState(84);
+					setState(104);
 					subset_statement();
 					}
 					break;
@@ -226,7 +240,7 @@ public class ValidationParser extends Parser {
 				case CHECK:
 				case ANNOTATION:
 					{
-					setState(85);
+					setState(105);
 					validate_directive();
 					}
 					break;
@@ -234,11 +248,11 @@ public class ValidationParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(88); 
+				setState(108); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==IF || _la==INCLUDE || ((((_la - 68)) & ~0x3f) == 0 && ((1L << (_la - 68)) & ((1L << (VALIDATION_RULESET_NAME - 68)) | (1L << (VALIDATION_RULESET_VERSION - 68)) | (1L << (VALIDATION_RULESET_TIMESTAMP - 68)) | (1L << (VALIDATION_RULESET_AUTHOR - 68)) | (1L << (VALIDATE - 68)) | (1L << (SET - 68)) | (1L << (CHECK - 68)) | (1L << (ANNOTATION - 68)) | (1L << (SUBSET - 68)))) != 0) );
-			setState(90);
+			setState(110);
 			match(EOF);
 			}
 		}
@@ -275,9 +289,9 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(92);
+			setState(112);
 			validation_header_type();
-			setState(93);
+			setState(113);
 			match(ANNOTATION_TEXT);
 			}
 		}
@@ -315,7 +329,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(95);
+			setState(115);
 			_la = _input.LA(1);
 			if ( !(((((_la - 68)) & ~0x3f) == 0 && ((1L << (_la - 68)) & ((1L << (VALIDATION_RULESET_NAME - 68)) | (1L << (VALIDATION_RULESET_VERSION - 68)) | (1L << (VALIDATION_RULESET_TIMESTAMP - 68)) | (1L << (VALIDATION_RULESET_AUTHOR - 68)))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -360,11 +374,11 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(97);
+			setState(117);
 			match(VALIDATE);
-			setState(98);
+			setState(118);
 			service_name();
-			setState(99);
+			setState(119);
 			validate_directives();
 			}
 		}
@@ -402,7 +416,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(101);
+			setState(121);
 			_la = _input.LA(1);
 			if ( !(_la==INTEGER || ((((_la - 78)) & ~0x3f) == 0 && ((1L << (_la - 78)) & ((1L << (IDENTIFIER - 78)) | (1L << (DOT_SEPARATED_IDENTIFIER - 78)) | (1L << (URL - 78)))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -447,19 +461,19 @@ public class ValidationParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(106);
+			setState(126);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(103);
+					setState(123);
 					validate_directive();
 					}
 					} 
 				}
-				setState(108);
+				setState(128);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			}
@@ -507,40 +521,40 @@ public class ValidationParser extends Parser {
 		Validate_directiveContext _localctx = new Validate_directiveContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_validate_directive);
 		try {
-			setState(114);
+			setState(134);
 			switch (_input.LA(1)) {
 			case CHECK:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(109);
+				setState(129);
 				check_directive();
 				}
 				break;
 			case SET:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(110);
+				setState(130);
 				set_directive();
 				}
 				break;
 			case IF:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(111);
+				setState(131);
 				if_directive();
 				}
 				break;
 			case ANNOTATION:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(112);
+				setState(132);
 				annotation_directive();
 				}
 				break;
 			case INCLUDE:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(113);
+				setState(133);
 				include_statement();
 				}
 				break;
@@ -585,16 +599,16 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(116);
+			setState(136);
 			match(CHECK);
-			setState(120);
+			setState(140);
 			switch (_input.LA(1)) {
 			case SUB:
 				{
 				{
-				setState(117);
+				setState(137);
 				match(SUB);
-				setState(118);
+				setState(138);
 				sub_name();
 				}
 				}
@@ -651,7 +665,7 @@ public class ValidationParser extends Parser {
 			case JWT_PAYLOAD:
 			case XPATHIN:
 				{
-				setState(119);
+				setState(139);
 				test_statement();
 				}
 				break;
@@ -702,13 +716,13 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(123); 
+			setState(143); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(122);
+				setState(142);
 				_la = _input.LA(1);
 				if ( !(((((_la - 78)) & ~0x3f) == 0 && ((1L << (_la - 78)) & ((1L << (IDENTIFIER - 78)) | (1L << (PATH - 78)) | (1L << (XPATH - 78)))) != 0)) ) {
 				_errHandler.recoverInline(this);
@@ -717,7 +731,7 @@ public class ValidationParser extends Parser {
 				}
 				}
 				}
-				setState(125); 
+				setState(145); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( ((((_la - 78)) & ~0x3f) == 0 && ((1L << (_la - 78)) & ((1L << (IDENTIFIER - 78)) | (1L << (PATH - 78)) | (1L << (XPATH - 78)))) != 0) );
@@ -760,13 +774,13 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(127);
+			setState(147);
 			match(SET);
-			setState(128);
+			setState(148);
 			set_type();
-			setState(129);
+			setState(149);
 			((Set_directiveContext)_localctx).VARIABLE = match(VARIABLE);
-			setState(130);
+			setState(150);
 			((Set_directiveContext)_localctx).ANNOTATION_TEXT = match(ANNOTATION_TEXT);
 			 if ( DEBUG ) System.out.println("Variable " + (((Set_directiveContext)_localctx).VARIABLE!=null?((Set_directiveContext)_localctx).VARIABLE.getText():null) + " set to " + (((Set_directiveContext)_localctx).ANNOTATION_TEXT!=null?((Set_directiveContext)_localctx).ANNOTATION_TEXT.getText():null));
 			}
@@ -803,7 +817,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(133);
+			setState(153);
 			_la = _input.LA(1);
 			if ( !(_la==LITERAL || _la==XPATH_) ) {
 			_errHandler.recoverInline(this);
@@ -857,26 +871,26 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(135);
+			setState(155);
 			match(IF);
-			setState(136);
+			setState(156);
 			test_statement();
-			setState(137);
+			setState(157);
 			match(THEN);
-			setState(138);
+			setState(158);
 			then_clause();
-			setState(141);
+			setState(161);
 			_la = _input.LA(1);
 			if (_la==ELSE) {
 				{
-				setState(139);
+				setState(159);
 				match(ELSE);
-				setState(140);
+				setState(160);
 				else_clause();
 				}
 			}
 
-			setState(143);
+			setState(163);
 			endif();
 			}
 		}
@@ -912,7 +926,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(145);
+			setState(165);
 			validate_directives();
 			}
 		}
@@ -948,7 +962,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(147);
+			setState(167);
 			validate_directives();
 			}
 		}
@@ -982,7 +996,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(149);
+			setState(169);
 			match(ENDIF);
 			}
 		}
@@ -1031,48 +1045,48 @@ public class ValidationParser extends Parser {
 		Test_statementContext _localctx = new Test_statementContext(_ctx, getState());
 		enterRule(_localctx, 30, RULE_test_statement);
 		try {
-			setState(157);
+			setState(177);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(151);
+				setState(171);
 				no_arg_test();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(152);
+				setState(172);
 				schema_test();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(153);
+				setState(173);
 				xpath_one_arg_test();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(154);
+				setState(174);
 				xpath_two_arg_test();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(155);
+				setState(175);
 				xpath_multi_arg_test();
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(156);
+				setState(176);
 				unchecked_test();
 				}
 				break;
@@ -1118,23 +1132,23 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(159);
+			setState(179);
 			match(UNCHECKED);
-			setState(160);
+			setState(180);
 			unchecked_test_name();
-			setState(161);
+			setState(181);
 			xpath_arg();
-			setState(165);
+			setState(185);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==CST) {
 				{
 				{
-				setState(162);
+				setState(182);
 				xpath_arg();
 				}
 				}
-				setState(167);
+				setState(187);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1170,7 +1184,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(168);
+			setState(188);
 			match(CST);
 			}
 		}
@@ -1213,15 +1227,15 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(170);
+			setState(190);
 			schema_type();
-			setState(171);
+			setState(191);
 			schema_path();
-			setState(173);
+			setState(193);
 			_la = _input.LA(1);
 			if (_la==PATH || _la==XPATH) {
 				{
-				setState(172);
+				setState(192);
 				schema_xpath();
 				}
 			}
@@ -1260,7 +1274,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(175);
+			setState(195);
 			_la = _input.LA(1);
 			if ( !(_la==SCHEMA || _la==CDA_CONFORMANCE_SCHEMA) ) {
 			_errHandler.recoverInline(this);
@@ -1299,7 +1313,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(177);
+			setState(197);
 			match(PATH);
 			}
 		}
@@ -1335,7 +1349,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(179);
+			setState(199);
 			_la = _input.LA(1);
 			if ( !(_la==PATH || _la==XPATH) ) {
 			_errHandler.recoverInline(this);
@@ -1377,7 +1391,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(181);
+			setState(201);
 			_la = _input.LA(1);
 			if ( !(_la==INTEGER || _la==IDENTIFIER || _la==DOT_SEPARATED_IDENTIFIER) ) {
 			_errHandler.recoverInline(this);
@@ -1423,26 +1437,26 @@ public class ValidationParser extends Parser {
 		enterRule(_localctx, 46, RULE_no_arg_test);
 		int _la;
 		try {
-			setState(192);
+			setState(212);
 			switch (_input.LA(1)) {
 			case SIGNATURE:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(183);
+				setState(203);
 				match(SIGNATURE);
 				}
 				break;
 			case CDA_RENDERER:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(184);
+				setState(204);
 				match(CDA_RENDERER);
 				}
 				break;
 			case CDA_TEMPLATE_LIST:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(185);
+				setState(205);
 				match(CDA_TEMPLATE_LIST);
 				}
 				break;
@@ -1450,13 +1464,13 @@ public class ValidationParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				{
-				setState(186);
+				setState(206);
 				match(HAPIFHIRVALIDATOR);
-				setState(188);
+				setState(208);
 				_la = _input.LA(1);
 				if (_la==INTEGER || _la==IDENTIFIER || _la==DOT_SEPARATED_IDENTIFIER) {
 					{
-					setState(187);
+					setState(207);
 					hapifhirvalidator_id();
 					}
 				}
@@ -1467,14 +1481,14 @@ public class ValidationParser extends Parser {
 			case FHIRRESOURCEVALIDATOR:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(190);
+				setState(210);
 				match(FHIRRESOURCEVALIDATOR);
 				}
 				break;
 			case TERMINOLOGYVALIDATOR:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(191);
+				setState(211);
 				match(TERMINOLOGYVALIDATOR);
 				}
 				break;
@@ -1514,7 +1528,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(194);
+			setState(214);
 			_la = _input.LA(1);
 			if ( !(_la==CONTENT || _la==JWT_PAYLOAD) ) {
 			_errHandler.recoverInline(this);
@@ -1556,9 +1570,9 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(196);
+			setState(216);
 			xpath_one_arg_type();
-			setState(197);
+			setState(217);
 			match(CST);
 			}
 		}
@@ -1594,7 +1608,7 @@ public class ValidationParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(199);
+			setState(219);
 			_la = _input.LA(1);
 			if ( !(_la==XPATHEXISTS || _la==XPATHNOTEXISTS) ) {
 			_errHandler.recoverInline(this);
@@ -1649,23 +1663,23 @@ public class ValidationParser extends Parser {
 		enterRule(_localctx, 54, RULE_xpath_one_arg_type);
 		int _la;
 		try {
-			setState(210);
+			setState(230);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
 				{
-				setState(202);
+				setState(222);
 				_la = _input.LA(1);
 				if (_la==CONTENT || _la==JWT_PAYLOAD) {
 					{
-					setState(201);
+					setState(221);
 					xml_match_source();
 					}
 				}
 
-				setState(204);
+				setState(224);
 				xpath_one_arg_comparison_type();
 				}
 				}
@@ -1673,7 +1687,7 @@ public class ValidationParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(205);
+				setState(225);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << HL7_XPATHEXISTS) | (1L << HL7_XPATHNOTEXISTS) | (1L << SOAP_XPATHEXISTS) | (1L << SOAP_XPATHNOTEXISTS) | (1L << EBXML_XPATHEXISTS) | (1L << EBXML_XPATHNOTEXISTS))) != 0)) ) {
 				_errHandler.recoverInline(this);
@@ -1686,16 +1700,218 @@ public class ValidationParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				{
-				setState(207);
+				setState(227);
 				_la = _input.LA(1);
 				if (((((_la - 63)) & ~0x3f) == 0 && ((1L << (_la - 63)) & ((1L << (CONTEXT_PATH - 63)) | (1L << (CONTENT - 63)) | (1L << (HTTP_HEADER - 63)) | (1L << (JWT_PAYLOAD - 63)))) != 0)) {
 					{
-					setState(206);
+					setState(226);
 					text_match_source();
 					}
 				}
 
-				setState(209);
+				setState(229);
+				text_match_type();
+				}
+				}
+				break;
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Json_match_sourceContext extends ParserRuleContext {
+		public TerminalNode CONTENT() { return getToken(ValidationParser.CONTENT, 0); }
+		public TerminalNode JWT_PAYLOAD() { return getToken(ValidationParser.JWT_PAYLOAD, 0); }
+		public Json_match_sourceContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_json_match_source; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJson_match_source(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Json_match_sourceContext json_match_source() throws RecognitionException {
+		Json_match_sourceContext _localctx = new Json_match_sourceContext(_ctx, getState());
+		enterRule(_localctx, 56, RULE_json_match_source);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(232);
+			_la = _input.LA(1);
+			if ( !(_la==CONTENT || _la==JWT_PAYLOAD) ) {
+			_errHandler.recoverInline(this);
+			} else {
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Jsonpath_one_arg_testContext extends ParserRuleContext {
+		public Jsonpath_one_arg_typeContext jsonpath_one_arg_type() {
+			return getRuleContext(Jsonpath_one_arg_typeContext.class,0);
+		}
+		public TerminalNode CST() { return getToken(ValidationParser.CST, 0); }
+		public Jsonpath_one_arg_testContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jsonpath_one_arg_test; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJsonpath_one_arg_test(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Jsonpath_one_arg_testContext jsonpath_one_arg_test() throws RecognitionException {
+		Jsonpath_one_arg_testContext _localctx = new Jsonpath_one_arg_testContext(_ctx, getState());
+		enterRule(_localctx, 58, RULE_jsonpath_one_arg_test);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(234);
+			jsonpath_one_arg_type();
+			setState(235);
+			match(CST);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Jsonpath_one_arg_comparison_typeContext extends ParserRuleContext {
+		public TerminalNode JSONPATHEXISTS() { return getToken(ValidationParser.JSONPATHEXISTS, 0); }
+		public TerminalNode JSONPATHNOTEXISTS() { return getToken(ValidationParser.JSONPATHNOTEXISTS, 0); }
+		public Jsonpath_one_arg_comparison_typeContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jsonpath_one_arg_comparison_type; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJsonpath_one_arg_comparison_type(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Jsonpath_one_arg_comparison_typeContext jsonpath_one_arg_comparison_type() throws RecognitionException {
+		Jsonpath_one_arg_comparison_typeContext _localctx = new Jsonpath_one_arg_comparison_typeContext(_ctx, getState());
+		enterRule(_localctx, 60, RULE_jsonpath_one_arg_comparison_type);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(237);
+			_la = _input.LA(1);
+			if ( !(_la==JSONPATHEXISTS || _la==JSONPATHNOTEXISTS) ) {
+			_errHandler.recoverInline(this);
+			} else {
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Jsonpath_one_arg_typeContext extends ParserRuleContext {
+		public Jsonpath_one_arg_comparison_typeContext jsonpath_one_arg_comparison_type() {
+			return getRuleContext(Jsonpath_one_arg_comparison_typeContext.class,0);
+		}
+		public Json_match_sourceContext json_match_source() {
+			return getRuleContext(Json_match_sourceContext.class,0);
+		}
+		public Text_match_typeContext text_match_type() {
+			return getRuleContext(Text_match_typeContext.class,0);
+		}
+		public Text_match_sourceContext text_match_source() {
+			return getRuleContext(Text_match_sourceContext.class,0);
+		}
+		public Jsonpath_one_arg_typeContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jsonpath_one_arg_type; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJsonpath_one_arg_type(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Jsonpath_one_arg_typeContext jsonpath_one_arg_type() throws RecognitionException {
+		Jsonpath_one_arg_typeContext _localctx = new Jsonpath_one_arg_typeContext(_ctx, getState());
+		enterRule(_localctx, 62, RULE_jsonpath_one_arg_type);
+		int _la;
+		try {
+			setState(247);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,17,_ctx) ) {
+			case 1:
+				enterOuterAlt(_localctx, 1);
+				{
+				{
+				setState(240);
+				_la = _input.LA(1);
+				if (_la==CONTENT || _la==JWT_PAYLOAD) {
+					{
+					setState(239);
+					json_match_source();
+					}
+				}
+
+				setState(242);
+				jsonpath_one_arg_comparison_type();
+				}
+				}
+				break;
+			case 2:
+				enterOuterAlt(_localctx, 2);
+				{
+				{
+				setState(244);
+				_la = _input.LA(1);
+				if (((((_la - 63)) & ~0x3f) == 0 && ((1L << (_la - 63)) & ((1L << (CONTEXT_PATH - 63)) | (1L << (CONTENT - 63)) | (1L << (HTTP_HEADER - 63)) | (1L << (JWT_PAYLOAD - 63)))) != 0)) {
+					{
+					setState(243);
+					text_match_source();
+					}
+				}
+
+				setState(246);
 				text_match_type();
 				}
 				}
@@ -1733,12 +1949,12 @@ public class ValidationParser extends Parser {
 
 	public final Text_match_typeContext text_match_type() throws RecognitionException {
 		Text_match_typeContext _localctx = new Text_match_typeContext(_ctx, getState());
-		enterRule(_localctx, 56, RULE_text_match_type);
+		enterRule(_localctx, 64, RULE_text_match_type);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(212);
+			setState(249);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQUALS) | (1L << NOTEQUALS) | (1L << MATCHES) | (1L << NOTMATCHES) | (1L << CONTAINS) | (1L << NOTCONTAINS))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -1779,17 +1995,17 @@ public class ValidationParser extends Parser {
 
 	public final Text_match_sourceContext text_match_source() throws RecognitionException {
 		Text_match_sourceContext _localctx = new Text_match_sourceContext(_ctx, getState());
-		enterRule(_localctx, 58, RULE_text_match_source);
+		enterRule(_localctx, 66, RULE_text_match_source);
 		int _la;
 		try {
-			setState(217);
+			setState(254);
 			switch (_input.LA(1)) {
 			case CONTEXT_PATH:
 			case CONTENT:
 			case JWT_PAYLOAD:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(214);
+				setState(251);
 				_la = _input.LA(1);
 				if ( !(((((_la - 63)) & ~0x3f) == 0 && ((1L << (_la - 63)) & ((1L << (CONTEXT_PATH - 63)) | (1L << (CONTENT - 63)) | (1L << (JWT_PAYLOAD - 63)))) != 0)) ) {
 				_errHandler.recoverInline(this);
@@ -1802,9 +2018,9 @@ public class ValidationParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				{
-				setState(215);
+				setState(252);
 				match(HTTP_HEADER);
-				setState(216);
+				setState(253);
 				http_header_name();
 				}
 				}
@@ -1839,11 +2055,11 @@ public class ValidationParser extends Parser {
 
 	public final Http_header_nameContext http_header_name() throws RecognitionException {
 		Http_header_nameContext _localctx = new Http_header_nameContext(_ctx, getState());
-		enterRule(_localctx, 60, RULE_http_header_name);
+		enterRule(_localctx, 68, RULE_http_header_name);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(219);
+			setState(256);
 			match(IDENTIFIER);
 			}
 		}
@@ -1873,11 +2089,11 @@ public class ValidationParser extends Parser {
 
 	public final Xpath_argContext xpath_arg() throws RecognitionException {
 		Xpath_argContext _localctx = new Xpath_argContext(_ctx, getState());
-		enterRule(_localctx, 62, RULE_xpath_arg);
+		enterRule(_localctx, 70, RULE_xpath_arg);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(221);
+			setState(258);
 			match(CST);
 			}
 		}
@@ -1918,12 +2134,12 @@ public class ValidationParser extends Parser {
 
 	public final Xpath_two_arg_comparison_typeContext xpath_two_arg_comparison_type() throws RecognitionException {
 		Xpath_two_arg_comparison_typeContext _localctx = new Xpath_two_arg_comparison_typeContext(_ctx, getState());
-		enterRule(_localctx, 64, RULE_xpath_two_arg_comparison_type);
+		enterRule(_localctx, 72, RULE_xpath_two_arg_comparison_type);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(223);
+			setState(260);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << XPATHEQUALS) | (1L << XPATHNOTEQUALS) | (1L << XPATHEQUALSIGNORECASE) | (1L << XPATHNOTEQUALSIGNORECASE) | (1L << XPATHMATCHES) | (1L << XPATHNOTMATCHES) | (1L << XPATHCOMPARE) | (1L << XPATHCONTAINS) | (1L << XPATHNOTCONTAINS) | (1L << XPATHCONTAINSIGNORECASE) | (1L << XPATHNOTCONTAINSIGNORECASE) | (1L << XSLT))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -1966,26 +2182,26 @@ public class ValidationParser extends Parser {
 
 	public final Xpath_two_arg_testContext xpath_two_arg_test() throws RecognitionException {
 		Xpath_two_arg_testContext _localctx = new Xpath_two_arg_testContext(_ctx, getState());
-		enterRule(_localctx, 66, RULE_xpath_two_arg_test);
+		enterRule(_localctx, 74, RULE_xpath_two_arg_test);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(225);
+			setState(262);
 			xpath_two_arg_type();
-			setState(226);
+			setState(263);
 			xpath_arg();
-			setState(228); 
+			setState(265); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(227);
+				setState(264);
 				xpath_arg();
 				}
 				}
-				setState(230); 
+				setState(267); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==CST );
@@ -2033,10 +2249,10 @@ public class ValidationParser extends Parser {
 
 	public final Xpath_two_arg_typeContext xpath_two_arg_type() throws RecognitionException {
 		Xpath_two_arg_typeContext _localctx = new Xpath_two_arg_typeContext(_ctx, getState());
-		enterRule(_localctx, 68, RULE_xpath_two_arg_type);
+		enterRule(_localctx, 76, RULE_xpath_two_arg_type);
 		int _la;
 		try {
-			setState(237);
+			setState(274);
 			switch (_input.LA(1)) {
 			case XPATHEQUALS:
 			case XPATHNOTEQUALS:
@@ -2055,16 +2271,16 @@ public class ValidationParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				{
-				setState(233);
+				setState(270);
 				_la = _input.LA(1);
 				if (_la==CONTENT || _la==JWT_PAYLOAD) {
 					{
-					setState(232);
+					setState(269);
 					xml_match_source();
 					}
 				}
 
-				setState(235);
+				setState(272);
 				xpath_two_arg_comparison_type();
 				}
 				}
@@ -2082,7 +2298,7 @@ public class ValidationParser extends Parser {
 			case CDA_CONFORMANCE_XSLT:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(236);
+				setState(273);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << HL7_XPATHEQUALS) | (1L << HL7_XPATHNOTEQUALS) | (1L << EBXML_XPATHEQUALS) | (1L << EBXML_XPATHNOTEQUALS) | (1L << SOAP_XPATHEQUALS) | (1L << SOAP_XPATHNOTEQUALS) | (1L << HL7_XPATHMATCHES) | (1L << HL7_XPATHNOTMATCHES) | (1L << HL7_XSLT) | (1L << EBXML_XSLT) | (1L << CDA_CONFORMANCE_XSLT))) != 0)) ) {
 				_errHandler.recoverInline(this);
@@ -2132,36 +2348,36 @@ public class ValidationParser extends Parser {
 
 	public final Xpath_multi_arg_testContext xpath_multi_arg_test() throws RecognitionException {
 		Xpath_multi_arg_testContext _localctx = new Xpath_multi_arg_testContext(_ctx, getState());
-		enterRule(_localctx, 70, RULE_xpath_multi_arg_test);
+		enterRule(_localctx, 78, RULE_xpath_multi_arg_test);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(240);
+			setState(277);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,19,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,22,_ctx) ) {
 			case 1:
 				{
-				setState(239);
+				setState(276);
 				xml_match_source();
 				}
 				break;
 			}
-			setState(242);
+			setState(279);
 			xpath_multi_arg_type();
-			setState(243);
+			setState(280);
 			xpath_arg();
-			setState(245); 
+			setState(282); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(244);
+				setState(281);
 				xpath_arg();
 				}
 				}
-				setState(247); 
+				setState(284); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==CST );
@@ -2196,22 +2412,335 @@ public class ValidationParser extends Parser {
 
 	public final Xpath_multi_arg_typeContext xpath_multi_arg_type() throws RecognitionException {
 		Xpath_multi_arg_typeContext _localctx = new Xpath_multi_arg_typeContext(_ctx, getState());
-		enterRule(_localctx, 72, RULE_xpath_multi_arg_type);
+		enterRule(_localctx, 80, RULE_xpath_multi_arg_type);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(250);
+			setState(287);
 			_la = _input.LA(1);
 			if (_la==CONTENT || _la==JWT_PAYLOAD) {
 				{
-				setState(249);
+				setState(286);
 				xml_match_source();
 				}
 			}
 
-			setState(252);
+			setState(289);
 			match(XPATHIN);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Jsonpath_argContext extends ParserRuleContext {
+		public TerminalNode CST() { return getToken(ValidationParser.CST, 0); }
+		public Jsonpath_argContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jsonpath_arg; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJsonpath_arg(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Jsonpath_argContext jsonpath_arg() throws RecognitionException {
+		Jsonpath_argContext _localctx = new Jsonpath_argContext(_ctx, getState());
+		enterRule(_localctx, 82, RULE_jsonpath_arg);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(291);
+			match(CST);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Jsonpath_two_arg_comparison_typeContext extends ParserRuleContext {
+		public TerminalNode JSONPATHEQUALS() { return getToken(ValidationParser.JSONPATHEQUALS, 0); }
+		public TerminalNode JSONPATHNOTEQUALS() { return getToken(ValidationParser.JSONPATHNOTEQUALS, 0); }
+		public TerminalNode JSONPATHEQUALSIGNORECASE() { return getToken(ValidationParser.JSONPATHEQUALSIGNORECASE, 0); }
+		public TerminalNode JSONPATHNOTEQUALSIGNORECASE() { return getToken(ValidationParser.JSONPATHNOTEQUALSIGNORECASE, 0); }
+		public TerminalNode JSONPATHMATCHES() { return getToken(ValidationParser.JSONPATHMATCHES, 0); }
+		public TerminalNode JSONPATHNOTMATCHES() { return getToken(ValidationParser.JSONPATHNOTMATCHES, 0); }
+		public TerminalNode JSONPATHCOMPARE() { return getToken(ValidationParser.JSONPATHCOMPARE, 0); }
+		public TerminalNode JSONPATHCONTAINS() { return getToken(ValidationParser.JSONPATHCONTAINS, 0); }
+		public TerminalNode JSONPATHNOTCONTAINS() { return getToken(ValidationParser.JSONPATHNOTCONTAINS, 0); }
+		public TerminalNode JSONPATHCONTAINSIGNORECASE() { return getToken(ValidationParser.JSONPATHCONTAINSIGNORECASE, 0); }
+		public TerminalNode JSONPATHNOTCONTAINSIGNORECASE() { return getToken(ValidationParser.JSONPATHNOTCONTAINSIGNORECASE, 0); }
+		public Jsonpath_two_arg_comparison_typeContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jsonpath_two_arg_comparison_type; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJsonpath_two_arg_comparison_type(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Jsonpath_two_arg_comparison_typeContext jsonpath_two_arg_comparison_type() throws RecognitionException {
+		Jsonpath_two_arg_comparison_typeContext _localctx = new Jsonpath_two_arg_comparison_typeContext(_ctx, getState());
+		enterRule(_localctx, 84, RULE_jsonpath_two_arg_comparison_type);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(293);
+			_la = _input.LA(1);
+			if ( !(((((_la - 92)) & ~0x3f) == 0 && ((1L << (_la - 92)) & ((1L << (JSONPATHEQUALS - 92)) | (1L << (JSONPATHNOTEQUALS - 92)) | (1L << (JSONPATHEQUALSIGNORECASE - 92)) | (1L << (JSONPATHNOTEQUALSIGNORECASE - 92)) | (1L << (JSONPATHMATCHES - 92)) | (1L << (JSONPATHNOTMATCHES - 92)) | (1L << (JSONPATHCOMPARE - 92)) | (1L << (JSONPATHCONTAINS - 92)) | (1L << (JSONPATHNOTCONTAINS - 92)) | (1L << (JSONPATHCONTAINSIGNORECASE - 92)) | (1L << (JSONPATHNOTCONTAINSIGNORECASE - 92)))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			} else {
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Jsonpath_two_arg_testContext extends ParserRuleContext {
+		public Xpath_two_arg_typeContext xpath_two_arg_type() {
+			return getRuleContext(Xpath_two_arg_typeContext.class,0);
+		}
+		public List<Xpath_argContext> xpath_arg() {
+			return getRuleContexts(Xpath_argContext.class);
+		}
+		public Xpath_argContext xpath_arg(int i) {
+			return getRuleContext(Xpath_argContext.class,i);
+		}
+		public Jsonpath_two_arg_testContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jsonpath_two_arg_test; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJsonpath_two_arg_test(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Jsonpath_two_arg_testContext jsonpath_two_arg_test() throws RecognitionException {
+		Jsonpath_two_arg_testContext _localctx = new Jsonpath_two_arg_testContext(_ctx, getState());
+		enterRule(_localctx, 86, RULE_jsonpath_two_arg_test);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(295);
+			xpath_two_arg_type();
+			setState(296);
+			xpath_arg();
+			setState(298); 
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			do {
+				{
+				{
+				setState(297);
+				xpath_arg();
+				}
+				}
+				setState(300); 
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			} while ( _la==CST );
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Jsonpath_two_arg_typeContext extends ParserRuleContext {
+		public Jsonpath_two_arg_comparison_typeContext jsonpath_two_arg_comparison_type() {
+			return getRuleContext(Jsonpath_two_arg_comparison_typeContext.class,0);
+		}
+		public Json_match_sourceContext json_match_source() {
+			return getRuleContext(Json_match_sourceContext.class,0);
+		}
+		public Jsonpath_two_arg_typeContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jsonpath_two_arg_type; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJsonpath_two_arg_type(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Jsonpath_two_arg_typeContext jsonpath_two_arg_type() throws RecognitionException {
+		Jsonpath_two_arg_typeContext _localctx = new Jsonpath_two_arg_typeContext(_ctx, getState());
+		enterRule(_localctx, 88, RULE_jsonpath_two_arg_type);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			{
+			setState(303);
+			_la = _input.LA(1);
+			if (_la==CONTENT || _la==JWT_PAYLOAD) {
+				{
+				setState(302);
+				json_match_source();
+				}
+			}
+
+			setState(305);
+			jsonpath_two_arg_comparison_type();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Jsonpath_multi_arg_testContext extends ParserRuleContext {
+		public Jsonpath_multi_arg_typeContext jsonpath_multi_arg_type() {
+			return getRuleContext(Jsonpath_multi_arg_typeContext.class,0);
+		}
+		public List<Jsonpath_argContext> jsonpath_arg() {
+			return getRuleContexts(Jsonpath_argContext.class);
+		}
+		public Jsonpath_argContext jsonpath_arg(int i) {
+			return getRuleContext(Jsonpath_argContext.class,i);
+		}
+		public Json_match_sourceContext json_match_source() {
+			return getRuleContext(Json_match_sourceContext.class,0);
+		}
+		public Jsonpath_multi_arg_testContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jsonpath_multi_arg_test; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJsonpath_multi_arg_test(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Jsonpath_multi_arg_testContext jsonpath_multi_arg_test() throws RecognitionException {
+		Jsonpath_multi_arg_testContext _localctx = new Jsonpath_multi_arg_testContext(_ctx, getState());
+		enterRule(_localctx, 90, RULE_jsonpath_multi_arg_test);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(308);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,27,_ctx) ) {
+			case 1:
+				{
+				setState(307);
+				json_match_source();
+				}
+				break;
+			}
+			setState(310);
+			jsonpath_multi_arg_type();
+			setState(311);
+			jsonpath_arg();
+			setState(313); 
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			do {
+				{
+				{
+				setState(312);
+				jsonpath_arg();
+				}
+				}
+				setState(315); 
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			} while ( _la==CST );
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Jsonpath_multi_arg_typeContext extends ParserRuleContext {
+		public TerminalNode JSONPATHIN() { return getToken(ValidationParser.JSONPATHIN, 0); }
+		public Json_match_sourceContext json_match_source() {
+			return getRuleContext(Json_match_sourceContext.class,0);
+		}
+		public Jsonpath_multi_arg_typeContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jsonpath_multi_arg_type; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ValidationParserVisitor ) return ((ValidationParserVisitor<? extends T>)visitor).visitJsonpath_multi_arg_type(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Jsonpath_multi_arg_typeContext jsonpath_multi_arg_type() throws RecognitionException {
+		Jsonpath_multi_arg_typeContext _localctx = new Jsonpath_multi_arg_typeContext(_ctx, getState());
+		enterRule(_localctx, 92, RULE_jsonpath_multi_arg_type);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(318);
+			_la = _input.LA(1);
+			if (_la==CONTENT || _la==JWT_PAYLOAD) {
+				{
+				setState(317);
+				json_match_source();
+				}
+			}
+
+			setState(320);
+			match(JSONPATHIN);
 			}
 		}
 		catch (RecognitionException re) {
@@ -2241,13 +2770,13 @@ public class ValidationParser extends Parser {
 
 	public final Annotation_directiveContext annotation_directive() throws RecognitionException {
 		Annotation_directiveContext _localctx = new Annotation_directiveContext(_ctx, getState());
-		enterRule(_localctx, 74, RULE_annotation_directive);
+		enterRule(_localctx, 94, RULE_annotation_directive);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(254);
+			setState(322);
 			match(ANNOTATION);
-			setState(255);
+			setState(323);
 			match(ANNOTATION_TEXT);
 			}
 		}
@@ -2283,15 +2812,15 @@ public class ValidationParser extends Parser {
 
 	public final Subset_statementContext subset_statement() throws RecognitionException {
 		Subset_statementContext _localctx = new Subset_statementContext(_ctx, getState());
-		enterRule(_localctx, 76, RULE_subset_statement);
+		enterRule(_localctx, 96, RULE_subset_statement);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(257);
+			setState(325);
 			match(SUBSET);
-			setState(258);
+			setState(326);
 			subset_name();
-			setState(259);
+			setState(327);
 			validate_directives();
 			}
 		}
@@ -2321,11 +2850,11 @@ public class ValidationParser extends Parser {
 
 	public final Subset_nameContext subset_name() throws RecognitionException {
 		Subset_nameContext _localctx = new Subset_nameContext(_ctx, getState());
-		enterRule(_localctx, 78, RULE_subset_name);
+		enterRule(_localctx, 98, RULE_subset_name);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(261);
+			setState(329);
 			match(IDENTIFIER);
 			}
 		}
@@ -2356,13 +2885,13 @@ public class ValidationParser extends Parser {
 
 	public final Include_statementContext include_statement() throws RecognitionException {
 		Include_statementContext _localctx = new Include_statementContext(_ctx, getState());
-		enterRule(_localctx, 80, RULE_include_statement);
+		enterRule(_localctx, 100, RULE_include_statement);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(263);
+			setState(331);
 			match(INCLUDE);
-			setState(264);
+			setState(332);
 			match(PATH);
 			}
 		}
@@ -2378,92 +2907,118 @@ public class ValidationParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3[\u010d\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3i\u0151\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
 		"\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36\4\37\t\37\4 \t \4!"+
-		"\t!\4\"\t\"\4#\t#\4$\t$\4%\t%\4&\t&\4\'\t\'\4(\t(\4)\t)\4*\t*\3\2\3\2"+
-		"\3\2\3\2\6\2Y\n\2\r\2\16\2Z\3\2\3\2\3\3\3\3\3\3\3\4\3\4\3\5\3\5\3\5\3"+
-		"\5\3\6\3\6\3\7\7\7k\n\7\f\7\16\7n\13\7\3\b\3\b\3\b\3\b\3\b\5\bu\n\b\3"+
-		"\t\3\t\3\t\3\t\5\t{\n\t\3\n\6\n~\n\n\r\n\16\n\177\3\13\3\13\3\13\3\13"+
-		"\3\13\3\13\3\f\3\f\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u0090\n\r\3\r\3\r\3\16"+
-		"\3\16\3\17\3\17\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21\5\21\u00a0\n\21"+
-		"\3\22\3\22\3\22\3\22\7\22\u00a6\n\22\f\22\16\22\u00a9\13\22\3\23\3\23"+
-		"\3\24\3\24\3\24\5\24\u00b0\n\24\3\25\3\25\3\26\3\26\3\27\3\27\3\30\3\30"+
-		"\3\31\3\31\3\31\3\31\3\31\5\31\u00bf\n\31\3\31\3\31\5\31\u00c3\n\31\3"+
-		"\32\3\32\3\33\3\33\3\33\3\34\3\34\3\35\5\35\u00cd\n\35\3\35\3\35\3\35"+
-		"\5\35\u00d2\n\35\3\35\5\35\u00d5\n\35\3\36\3\36\3\37\3\37\3\37\5\37\u00dc"+
-		"\n\37\3 \3 \3!\3!\3\"\3\"\3#\3#\3#\6#\u00e7\n#\r#\16#\u00e8\3$\5$\u00ec"+
-		"\n$\3$\3$\5$\u00f0\n$\3%\5%\u00f3\n%\3%\3%\3%\6%\u00f8\n%\r%\16%\u00f9"+
-		"\3&\5&\u00fd\n&\3&\3&\3\'\3\'\3\'\3(\3(\3(\3(\3)\3)\3*\3*\3*\3*\2\2+\2"+
-		"\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@BDFHJL"+
-		"NPR\2\20\3\2FI\5\2\5\5PPRS\4\2PPTU\3\2\r\16\4\2\22\22\24\24\3\2TU\5\2"+
-		"\5\5PPRR\4\2BBDD\3\2\33\34\3\2\35\"\3\2#(\4\2ABDD\5\2)*\61\64\67<\5\2"+
-		"+\60\65\66=?\u0107\2X\3\2\2\2\4^\3\2\2\2\6a\3\2\2\2\bc\3\2\2\2\ng\3\2"+
-		"\2\2\fl\3\2\2\2\16t\3\2\2\2\20v\3\2\2\2\22}\3\2\2\2\24\u0081\3\2\2\2\26"+
-		"\u0087\3\2\2\2\30\u0089\3\2\2\2\32\u0093\3\2\2\2\34\u0095\3\2\2\2\36\u0097"+
-		"\3\2\2\2 \u009f\3\2\2\2\"\u00a1\3\2\2\2$\u00aa\3\2\2\2&\u00ac\3\2\2\2"+
-		"(\u00b1\3\2\2\2*\u00b3\3\2\2\2,\u00b5\3\2\2\2.\u00b7\3\2\2\2\60\u00c2"+
-		"\3\2\2\2\62\u00c4\3\2\2\2\64\u00c6\3\2\2\2\66\u00c9\3\2\2\28\u00d4\3\2"+
-		"\2\2:\u00d6\3\2\2\2<\u00db\3\2\2\2>\u00dd\3\2\2\2@\u00df\3\2\2\2B\u00e1"+
-		"\3\2\2\2D\u00e3\3\2\2\2F\u00ef\3\2\2\2H\u00f2\3\2\2\2J\u00fc\3\2\2\2L"+
-		"\u0100\3\2\2\2N\u0103\3\2\2\2P\u0107\3\2\2\2R\u0109\3\2\2\2TY\5\4\3\2"+
-		"UY\5\b\5\2VY\5N(\2WY\5\16\b\2XT\3\2\2\2XU\3\2\2\2XV\3\2\2\2XW\3\2\2\2"+
-		"YZ\3\2\2\2ZX\3\2\2\2Z[\3\2\2\2[\\\3\2\2\2\\]\7\2\2\3]\3\3\2\2\2^_\5\6"+
-		"\4\2_`\7X\2\2`\5\3\2\2\2ab\t\2\2\2b\7\3\2\2\2cd\7J\2\2de\5\n\6\2ef\5\f"+
-		"\7\2f\t\3\2\2\2gh\t\3\2\2h\13\3\2\2\2ik\5\16\b\2ji\3\2\2\2kn\3\2\2\2l"+
-		"j\3\2\2\2lm\3\2\2\2m\r\3\2\2\2nl\3\2\2\2ou\5\20\t\2pu\5\24\13\2qu\5\30"+
-		"\r\2ru\5L\'\2su\5R*\2to\3\2\2\2tp\3\2\2\2tq\3\2\2\2tr\3\2\2\2ts\3\2\2"+
-		"\2u\17\3\2\2\2vz\7L\2\2wx\7\17\2\2x{\5\22\n\2y{\5 \21\2zw\3\2\2\2zy\3"+
-		"\2\2\2{\21\3\2\2\2|~\t\4\2\2}|\3\2\2\2~\177\3\2\2\2\177}\3\2\2\2\177\u0080"+
-		"\3\2\2\2\u0080\23\3\2\2\2\u0081\u0082\7K\2\2\u0082\u0083\5\26\f\2\u0083"+
-		"\u0084\7Q\2\2\u0084\u0085\7X\2\2\u0085\u0086\b\13\1\2\u0086\25\3\2\2\2"+
-		"\u0087\u0088\t\5\2\2\u0088\27\3\2\2\2\u0089\u008a\7\7\2\2\u008a\u008b"+
-		"\5 \21\2\u008b\u008c\7\b\2\2\u008c\u008f\5\32\16\2\u008d\u008e\7\t\2\2"+
-		"\u008e\u0090\5\34\17\2\u008f\u008d\3\2\2\2\u008f\u0090\3\2\2\2\u0090\u0091"+
-		"\3\2\2\2\u0091\u0092\5\36\20\2\u0092\31\3\2\2\2\u0093\u0094\5\f\7\2\u0094"+
-		"\33\3\2\2\2\u0095\u0096\5\f\7\2\u0096\35\3\2\2\2\u0097\u0098\7\n\2\2\u0098"+
-		"\37\3\2\2\2\u0099\u00a0\5\60\31\2\u009a\u00a0\5&\24\2\u009b\u00a0\5\64"+
-		"\33\2\u009c\u00a0\5D#\2\u009d\u00a0\5H%\2\u009e\u00a0\5\"\22\2\u009f\u0099"+
-		"\3\2\2\2\u009f\u009a\3\2\2\2\u009f\u009b\3\2\2\2\u009f\u009c\3\2\2\2\u009f"+
-		"\u009d\3\2\2\2\u009f\u009e\3\2\2\2\u00a0!\3\2\2\2\u00a1\u00a2\7@\2\2\u00a2"+
-		"\u00a3\5$\23\2\u00a3\u00a7\5@!\2\u00a4\u00a6\5@!\2\u00a5\u00a4\3\2\2\2"+
-		"\u00a6\u00a9\3\2\2\2\u00a7\u00a5\3\2\2\2\u00a7\u00a8\3\2\2\2\u00a8#\3"+
-		"\2\2\2\u00a9\u00a7\3\2\2\2\u00aa\u00ab\7Z\2\2\u00ab%\3\2\2\2\u00ac\u00ad"+
-		"\5(\25\2\u00ad\u00af\5*\26\2\u00ae\u00b0\5,\27\2\u00af\u00ae\3\2\2\2\u00af"+
-		"\u00b0\3\2\2\2\u00b0\'\3\2\2\2\u00b1\u00b2\t\6\2\2\u00b2)\3\2\2\2\u00b3"+
-		"\u00b4\7T\2\2\u00b4+\3\2\2\2\u00b5\u00b6\t\7\2\2\u00b6-\3\2\2\2\u00b7"+
-		"\u00b8\t\b\2\2\u00b8/\3\2\2\2\u00b9\u00c3\7\25\2\2\u00ba\u00c3\7\26\2"+
-		"\2\u00bb\u00c3\7\27\2\2\u00bc\u00be\7\30\2\2\u00bd\u00bf\5.\30\2\u00be"+
-		"\u00bd\3\2\2\2\u00be\u00bf\3\2\2\2\u00bf\u00c3\3\2\2\2\u00c0\u00c3\7\31"+
-		"\2\2\u00c1\u00c3\7\32\2\2\u00c2\u00b9\3\2\2\2\u00c2\u00ba\3\2\2\2\u00c2"+
-		"\u00bb\3\2\2\2\u00c2\u00bc\3\2\2\2\u00c2\u00c0\3\2\2\2\u00c2\u00c1\3\2"+
-		"\2\2\u00c3\61\3\2\2\2\u00c4\u00c5\t\t\2\2\u00c5\63\3\2\2\2\u00c6\u00c7"+
-		"\58\35\2\u00c7\u00c8\7Z\2\2\u00c8\65\3\2\2\2\u00c9\u00ca\t\n\2\2\u00ca"+
-		"\67\3\2\2\2\u00cb\u00cd\5\62\32\2\u00cc\u00cb\3\2\2\2\u00cc\u00cd\3\2"+
-		"\2\2\u00cd\u00ce\3\2\2\2\u00ce\u00d5\5\66\34\2\u00cf\u00d5\t\13\2\2\u00d0"+
-		"\u00d2\5<\37\2\u00d1\u00d0\3\2\2\2\u00d1\u00d2\3\2\2\2\u00d2\u00d3\3\2"+
-		"\2\2\u00d3\u00d5\5:\36\2\u00d4\u00cc\3\2\2\2\u00d4\u00cf\3\2\2\2\u00d4"+
-		"\u00d1\3\2\2\2\u00d59\3\2\2\2\u00d6\u00d7\t\f\2\2\u00d7;\3\2\2\2\u00d8"+
-		"\u00dc\t\r\2\2\u00d9\u00da\7C\2\2\u00da\u00dc\5> \2\u00db\u00d8\3\2\2"+
-		"\2\u00db\u00d9\3\2\2\2\u00dc=\3\2\2\2\u00dd\u00de\7P\2\2\u00de?\3\2\2"+
-		"\2\u00df\u00e0\7Z\2\2\u00e0A\3\2\2\2\u00e1\u00e2\t\16\2\2\u00e2C\3\2\2"+
-		"\2\u00e3\u00e4\5F$\2\u00e4\u00e6\5@!\2\u00e5\u00e7\5@!\2\u00e6\u00e5\3"+
-		"\2\2\2\u00e7\u00e8\3\2\2\2\u00e8\u00e6\3\2\2\2\u00e8\u00e9\3\2\2\2\u00e9"+
-		"E\3\2\2\2\u00ea\u00ec\5\62\32\2\u00eb\u00ea\3\2\2\2\u00eb\u00ec\3\2\2"+
-		"\2\u00ec\u00ed\3\2\2\2\u00ed\u00f0\5B\"\2\u00ee\u00f0\t\17\2\2\u00ef\u00eb"+
-		"\3\2\2\2\u00ef\u00ee\3\2\2\2\u00f0G\3\2\2\2\u00f1\u00f3\5\62\32\2\u00f2"+
-		"\u00f1\3\2\2\2\u00f2\u00f3\3\2\2\2\u00f3\u00f4\3\2\2\2\u00f4\u00f5\5J"+
-		"&\2\u00f5\u00f7\5@!\2\u00f6\u00f8\5@!\2\u00f7\u00f6\3\2\2\2\u00f8\u00f9"+
-		"\3\2\2\2\u00f9\u00f7\3\2\2\2\u00f9\u00fa\3\2\2\2\u00faI\3\2\2\2\u00fb"+
-		"\u00fd\5\62\32\2\u00fc\u00fb\3\2\2\2\u00fc\u00fd\3\2\2\2\u00fd\u00fe\3"+
-		"\2\2\2\u00fe\u00ff\7E\2\2\u00ffK\3\2\2\2\u0100\u0101\7M\2\2\u0101\u0102"+
-		"\7X\2\2\u0102M\3\2\2\2\u0103\u0104\7N\2\2\u0104\u0105\5P)\2\u0105\u0106"+
-		"\5\f\7\2\u0106O\3\2\2\2\u0107\u0108\7P\2\2\u0108Q\3\2\2\2\u0109\u010a"+
-		"\7\13\2\2\u010a\u010b\7T\2\2\u010bS\3\2\2\2\30XZltz\177\u008f\u009f\u00a7"+
-		"\u00af\u00be\u00c2\u00cc\u00d1\u00d4\u00db\u00e8\u00eb\u00ef\u00f2\u00f9"+
-		"\u00fc";
+		"\t!\4\"\t\"\4#\t#\4$\t$\4%\t%\4&\t&\4\'\t\'\4(\t(\4)\t)\4*\t*\4+\t+\4"+
+		",\t,\4-\t-\4.\t.\4/\t/\4\60\t\60\4\61\t\61\4\62\t\62\4\63\t\63\4\64\t"+
+		"\64\3\2\3\2\3\2\3\2\6\2m\n\2\r\2\16\2n\3\2\3\2\3\3\3\3\3\3\3\4\3\4\3\5"+
+		"\3\5\3\5\3\5\3\6\3\6\3\7\7\7\177\n\7\f\7\16\7\u0082\13\7\3\b\3\b\3\b\3"+
+		"\b\3\b\5\b\u0089\n\b\3\t\3\t\3\t\3\t\5\t\u008f\n\t\3\n\6\n\u0092\n\n\r"+
+		"\n\16\n\u0093\3\13\3\13\3\13\3\13\3\13\3\13\3\f\3\f\3\r\3\r\3\r\3\r\3"+
+		"\r\3\r\5\r\u00a4\n\r\3\r\3\r\3\16\3\16\3\17\3\17\3\20\3\20\3\21\3\21\3"+
+		"\21\3\21\3\21\3\21\5\21\u00b4\n\21\3\22\3\22\3\22\3\22\7\22\u00ba\n\22"+
+		"\f\22\16\22\u00bd\13\22\3\23\3\23\3\24\3\24\3\24\5\24\u00c4\n\24\3\25"+
+		"\3\25\3\26\3\26\3\27\3\27\3\30\3\30\3\31\3\31\3\31\3\31\3\31\5\31\u00d3"+
+		"\n\31\3\31\3\31\5\31\u00d7\n\31\3\32\3\32\3\33\3\33\3\33\3\34\3\34\3\35"+
+		"\5\35\u00e1\n\35\3\35\3\35\3\35\5\35\u00e6\n\35\3\35\5\35\u00e9\n\35\3"+
+		"\36\3\36\3\37\3\37\3\37\3 \3 \3!\5!\u00f3\n!\3!\3!\5!\u00f7\n!\3!\5!\u00fa"+
+		"\n!\3\"\3\"\3#\3#\3#\5#\u0101\n#\3$\3$\3%\3%\3&\3&\3\'\3\'\3\'\6\'\u010c"+
+		"\n\'\r\'\16\'\u010d\3(\5(\u0111\n(\3(\3(\5(\u0115\n(\3)\5)\u0118\n)\3"+
+		")\3)\3)\6)\u011d\n)\r)\16)\u011e\3*\5*\u0122\n*\3*\3*\3+\3+\3,\3,\3-\3"+
+		"-\3-\6-\u012d\n-\r-\16-\u012e\3.\5.\u0132\n.\3.\3.\3/\5/\u0137\n/\3/\3"+
+		"/\3/\6/\u013c\n/\r/\16/\u013d\3\60\5\60\u0141\n\60\3\60\3\60\3\61\3\61"+
+		"\3\61\3\62\3\62\3\62\3\62\3\63\3\63\3\64\3\64\3\64\3\64\2\2\65\2\4\6\b"+
+		"\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@BDFHJLNPRTVX"+
+		"Z\\^`bdf\2\22\3\2FI\5\2\5\5PPRS\4\2PPTU\3\2\r\16\4\2\22\22\24\24\3\2T"+
+		"U\5\2\5\5PPRR\4\2BBDD\3\2\33\34\3\2\35\"\3\2\\]\3\2#(\4\2ABDD\5\2)*\61"+
+		"\64\67<\5\2+\60\65\66=?\3\2^h\u0149\2l\3\2\2\2\4r\3\2\2\2\6u\3\2\2\2\b"+
+		"w\3\2\2\2\n{\3\2\2\2\f\u0080\3\2\2\2\16\u0088\3\2\2\2\20\u008a\3\2\2\2"+
+		"\22\u0091\3\2\2\2\24\u0095\3\2\2\2\26\u009b\3\2\2\2\30\u009d\3\2\2\2\32"+
+		"\u00a7\3\2\2\2\34\u00a9\3\2\2\2\36\u00ab\3\2\2\2 \u00b3\3\2\2\2\"\u00b5"+
+		"\3\2\2\2$\u00be\3\2\2\2&\u00c0\3\2\2\2(\u00c5\3\2\2\2*\u00c7\3\2\2\2,"+
+		"\u00c9\3\2\2\2.\u00cb\3\2\2\2\60\u00d6\3\2\2\2\62\u00d8\3\2\2\2\64\u00da"+
+		"\3\2\2\2\66\u00dd\3\2\2\28\u00e8\3\2\2\2:\u00ea\3\2\2\2<\u00ec\3\2\2\2"+
+		">\u00ef\3\2\2\2@\u00f9\3\2\2\2B\u00fb\3\2\2\2D\u0100\3\2\2\2F\u0102\3"+
+		"\2\2\2H\u0104\3\2\2\2J\u0106\3\2\2\2L\u0108\3\2\2\2N\u0114\3\2\2\2P\u0117"+
+		"\3\2\2\2R\u0121\3\2\2\2T\u0125\3\2\2\2V\u0127\3\2\2\2X\u0129\3\2\2\2Z"+
+		"\u0131\3\2\2\2\\\u0136\3\2\2\2^\u0140\3\2\2\2`\u0144\3\2\2\2b\u0147\3"+
+		"\2\2\2d\u014b\3\2\2\2f\u014d\3\2\2\2hm\5\4\3\2im\5\b\5\2jm\5b\62\2km\5"+
+		"\16\b\2lh\3\2\2\2li\3\2\2\2lj\3\2\2\2lk\3\2\2\2mn\3\2\2\2nl\3\2\2\2no"+
+		"\3\2\2\2op\3\2\2\2pq\7\2\2\3q\3\3\2\2\2rs\5\6\4\2st\7X\2\2t\5\3\2\2\2"+
+		"uv\t\2\2\2v\7\3\2\2\2wx\7J\2\2xy\5\n\6\2yz\5\f\7\2z\t\3\2\2\2{|\t\3\2"+
+		"\2|\13\3\2\2\2}\177\5\16\b\2~}\3\2\2\2\177\u0082\3\2\2\2\u0080~\3\2\2"+
+		"\2\u0080\u0081\3\2\2\2\u0081\r\3\2\2\2\u0082\u0080\3\2\2\2\u0083\u0089"+
+		"\5\20\t\2\u0084\u0089\5\24\13\2\u0085\u0089\5\30\r\2\u0086\u0089\5`\61"+
+		"\2\u0087\u0089\5f\64\2\u0088\u0083\3\2\2\2\u0088\u0084\3\2\2\2\u0088\u0085"+
+		"\3\2\2\2\u0088\u0086\3\2\2\2\u0088\u0087\3\2\2\2\u0089\17\3\2\2\2\u008a"+
+		"\u008e\7L\2\2\u008b\u008c\7\17\2\2\u008c\u008f\5\22\n\2\u008d\u008f\5"+
+		" \21\2\u008e\u008b\3\2\2\2\u008e\u008d\3\2\2\2\u008f\21\3\2\2\2\u0090"+
+		"\u0092\t\4\2\2\u0091\u0090\3\2\2\2\u0092\u0093\3\2\2\2\u0093\u0091\3\2"+
+		"\2\2\u0093\u0094\3\2\2\2\u0094\23\3\2\2\2\u0095\u0096\7K\2\2\u0096\u0097"+
+		"\5\26\f\2\u0097\u0098\7Q\2\2\u0098\u0099\7X\2\2\u0099\u009a\b\13\1\2\u009a"+
+		"\25\3\2\2\2\u009b\u009c\t\5\2\2\u009c\27\3\2\2\2\u009d\u009e\7\7\2\2\u009e"+
+		"\u009f\5 \21\2\u009f\u00a0\7\b\2\2\u00a0\u00a3\5\32\16\2\u00a1\u00a2\7"+
+		"\t\2\2\u00a2\u00a4\5\34\17\2\u00a3\u00a1\3\2\2\2\u00a3\u00a4\3\2\2\2\u00a4"+
+		"\u00a5\3\2\2\2\u00a5\u00a6\5\36\20\2\u00a6\31\3\2\2\2\u00a7\u00a8\5\f"+
+		"\7\2\u00a8\33\3\2\2\2\u00a9\u00aa\5\f\7\2\u00aa\35\3\2\2\2\u00ab\u00ac"+
+		"\7\n\2\2\u00ac\37\3\2\2\2\u00ad\u00b4\5\60\31\2\u00ae\u00b4\5&\24\2\u00af"+
+		"\u00b4\5\64\33\2\u00b0\u00b4\5L\'\2\u00b1\u00b4\5P)\2\u00b2\u00b4\5\""+
+		"\22\2\u00b3\u00ad\3\2\2\2\u00b3\u00ae\3\2\2\2\u00b3\u00af\3\2\2\2\u00b3"+
+		"\u00b0\3\2\2\2\u00b3\u00b1\3\2\2\2\u00b3\u00b2\3\2\2\2\u00b4!\3\2\2\2"+
+		"\u00b5\u00b6\7@\2\2\u00b6\u00b7\5$\23\2\u00b7\u00bb\5H%\2\u00b8\u00ba"+
+		"\5H%\2\u00b9\u00b8\3\2\2\2\u00ba\u00bd\3\2\2\2\u00bb\u00b9\3\2\2\2\u00bb"+
+		"\u00bc\3\2\2\2\u00bc#\3\2\2\2\u00bd\u00bb\3\2\2\2\u00be\u00bf\7Z\2\2\u00bf"+
+		"%\3\2\2\2\u00c0\u00c1\5(\25\2\u00c1\u00c3\5*\26\2\u00c2\u00c4\5,\27\2"+
+		"\u00c3\u00c2\3\2\2\2\u00c3\u00c4\3\2\2\2\u00c4\'\3\2\2\2\u00c5\u00c6\t"+
+		"\6\2\2\u00c6)\3\2\2\2\u00c7\u00c8\7T\2\2\u00c8+\3\2\2\2\u00c9\u00ca\t"+
+		"\7\2\2\u00ca-\3\2\2\2\u00cb\u00cc\t\b\2\2\u00cc/\3\2\2\2\u00cd\u00d7\7"+
+		"\25\2\2\u00ce\u00d7\7\26\2\2\u00cf\u00d7\7\27\2\2\u00d0\u00d2\7\30\2\2"+
+		"\u00d1\u00d3\5.\30\2\u00d2\u00d1\3\2\2\2\u00d2\u00d3\3\2\2\2\u00d3\u00d7"+
+		"\3\2\2\2\u00d4\u00d7\7\31\2\2\u00d5\u00d7\7\32\2\2\u00d6\u00cd\3\2\2\2"+
+		"\u00d6\u00ce\3\2\2\2\u00d6\u00cf\3\2\2\2\u00d6\u00d0\3\2\2\2\u00d6\u00d4"+
+		"\3\2\2\2\u00d6\u00d5\3\2\2\2\u00d7\61\3\2\2\2\u00d8\u00d9\t\t\2\2\u00d9"+
+		"\63\3\2\2\2\u00da\u00db\58\35\2\u00db\u00dc\7Z\2\2\u00dc\65\3\2\2\2\u00dd"+
+		"\u00de\t\n\2\2\u00de\67\3\2\2\2\u00df\u00e1\5\62\32\2\u00e0\u00df\3\2"+
+		"\2\2\u00e0\u00e1\3\2\2\2\u00e1\u00e2\3\2\2\2\u00e2\u00e9\5\66\34\2\u00e3"+
+		"\u00e9\t\13\2\2\u00e4\u00e6\5D#\2\u00e5\u00e4\3\2\2\2\u00e5\u00e6\3\2"+
+		"\2\2\u00e6\u00e7\3\2\2\2\u00e7\u00e9\5B\"\2\u00e8\u00e0\3\2\2\2\u00e8"+
+		"\u00e3\3\2\2\2\u00e8\u00e5\3\2\2\2\u00e99\3\2\2\2\u00ea\u00eb\t\t\2\2"+
+		"\u00eb;\3\2\2\2\u00ec\u00ed\5@!\2\u00ed\u00ee\7Z\2\2\u00ee=\3\2\2\2\u00ef"+
+		"\u00f0\t\f\2\2\u00f0?\3\2\2\2\u00f1\u00f3\5:\36\2\u00f2\u00f1\3\2\2\2"+
+		"\u00f2\u00f3\3\2\2\2\u00f3\u00f4\3\2\2\2\u00f4\u00fa\5> \2\u00f5\u00f7"+
+		"\5D#\2\u00f6\u00f5\3\2\2\2\u00f6\u00f7\3\2\2\2\u00f7\u00f8\3\2\2\2\u00f8"+
+		"\u00fa\5B\"\2\u00f9\u00f2\3\2\2\2\u00f9\u00f6\3\2\2\2\u00faA\3\2\2\2\u00fb"+
+		"\u00fc\t\r\2\2\u00fcC\3\2\2\2\u00fd\u0101\t\16\2\2\u00fe\u00ff\7C\2\2"+
+		"\u00ff\u0101\5F$\2\u0100\u00fd\3\2\2\2\u0100\u00fe\3\2\2\2\u0101E\3\2"+
+		"\2\2\u0102\u0103\7P\2\2\u0103G\3\2\2\2\u0104\u0105\7Z\2\2\u0105I\3\2\2"+
+		"\2\u0106\u0107\t\17\2\2\u0107K\3\2\2\2\u0108\u0109\5N(\2\u0109\u010b\5"+
+		"H%\2\u010a\u010c\5H%\2\u010b\u010a\3\2\2\2\u010c\u010d\3\2\2\2\u010d\u010b"+
+		"\3\2\2\2\u010d\u010e\3\2\2\2\u010eM\3\2\2\2\u010f\u0111\5\62\32\2\u0110"+
+		"\u010f\3\2\2\2\u0110\u0111\3\2\2\2\u0111\u0112\3\2\2\2\u0112\u0115\5J"+
+		"&\2\u0113\u0115\t\20\2\2\u0114\u0110\3\2\2\2\u0114\u0113\3\2\2\2\u0115"+
+		"O\3\2\2\2\u0116\u0118\5\62\32\2\u0117\u0116\3\2\2\2\u0117\u0118\3\2\2"+
+		"\2\u0118\u0119\3\2\2\2\u0119\u011a\5R*\2\u011a\u011c\5H%\2\u011b\u011d"+
+		"\5H%\2\u011c\u011b\3\2\2\2\u011d\u011e\3\2\2\2\u011e\u011c\3\2\2\2\u011e"+
+		"\u011f\3\2\2\2\u011fQ\3\2\2\2\u0120\u0122\5\62\32\2\u0121\u0120\3\2\2"+
+		"\2\u0121\u0122\3\2\2\2\u0122\u0123\3\2\2\2\u0123\u0124\7E\2\2\u0124S\3"+
+		"\2\2\2\u0125\u0126\7Z\2\2\u0126U\3\2\2\2\u0127\u0128\t\21\2\2\u0128W\3"+
+		"\2\2\2\u0129\u012a\5N(\2\u012a\u012c\5H%\2\u012b\u012d\5H%\2\u012c\u012b"+
+		"\3\2\2\2\u012d\u012e\3\2\2\2\u012e\u012c\3\2\2\2\u012e\u012f\3\2\2\2\u012f"+
+		"Y\3\2\2\2\u0130\u0132\5:\36\2\u0131\u0130\3\2\2\2\u0131\u0132\3\2\2\2"+
+		"\u0132\u0133\3\2\2\2\u0133\u0134\5V,\2\u0134[\3\2\2\2\u0135\u0137\5:\36"+
+		"\2\u0136\u0135\3\2\2\2\u0136\u0137\3\2\2\2\u0137\u0138\3\2\2\2\u0138\u0139"+
+		"\5^\60\2\u0139\u013b\5T+\2\u013a\u013c\5T+\2\u013b\u013a\3\2\2\2\u013c"+
+		"\u013d\3\2\2\2\u013d\u013b\3\2\2\2\u013d\u013e\3\2\2\2\u013e]\3\2\2\2"+
+		"\u013f\u0141\5:\36\2\u0140\u013f\3\2\2\2\u0140\u0141\3\2\2\2\u0141\u0142"+
+		"\3\2\2\2\u0142\u0143\7i\2\2\u0143_\3\2\2\2\u0144\u0145\7M\2\2\u0145\u0146"+
+		"\7X\2\2\u0146a\3\2\2\2\u0147\u0148\7N\2\2\u0148\u0149\5d\63\2\u0149\u014a"+
+		"\5\f\7\2\u014ac\3\2\2\2\u014b\u014c\7P\2\2\u014ce\3\2\2\2\u014d\u014e"+
+		"\7\13\2\2\u014e\u014f\7T\2\2\u014fg\3\2\2\2 ln\u0080\u0088\u008e\u0093"+
+		"\u00a3\u00b3\u00bb\u00c3\u00d2\u00d6\u00e0\u00e5\u00e8\u00f2\u00f6\u00f9"+
+		"\u0100\u010d\u0110\u0114\u0117\u011e\u0121\u012e\u0131\u0136\u013d\u0140";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

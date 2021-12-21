@@ -181,6 +181,30 @@ public interface ValidationParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitXpath_one_arg_type(ValidationParser.Xpath_one_arg_typeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ValidationParser#json_match_source}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJson_match_source(ValidationParser.Json_match_sourceContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidationParser#jsonpath_one_arg_test}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonpath_one_arg_test(ValidationParser.Jsonpath_one_arg_testContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidationParser#jsonpath_one_arg_comparison_type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonpath_one_arg_comparison_type(ValidationParser.Jsonpath_one_arg_comparison_typeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidationParser#jsonpath_one_arg_type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonpath_one_arg_type(ValidationParser.Jsonpath_one_arg_typeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ValidationParser#text_match_type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -234,6 +258,42 @@ public interface ValidationParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitXpath_multi_arg_type(ValidationParser.Xpath_multi_arg_typeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidationParser#jsonpath_arg}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonpath_arg(ValidationParser.Jsonpath_argContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidationParser#jsonpath_two_arg_comparison_type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonpath_two_arg_comparison_type(ValidationParser.Jsonpath_two_arg_comparison_typeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidationParser#jsonpath_two_arg_test}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonpath_two_arg_test(ValidationParser.Jsonpath_two_arg_testContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidationParser#jsonpath_two_arg_type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonpath_two_arg_type(ValidationParser.Jsonpath_two_arg_typeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidationParser#jsonpath_multi_arg_test}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonpath_multi_arg_test(ValidationParser.Jsonpath_multi_arg_testContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ValidationParser#jsonpath_multi_arg_type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJsonpath_multi_arg_type(ValidationParser.Jsonpath_multi_arg_typeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ValidationParser#annotation_directive}.
 	 * @param ctx the parse tree

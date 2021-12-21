@@ -121,6 +121,12 @@ xpath_one_arg_type : ( xml_match_source? xpath_one_arg_comparison_type ) |
                      ( text_match_source? text_match_type )
 ;
 
+json_match_source : CONTENT | JWT_PAYLOAD ;
+jsonpath_one_arg_test : jsonpath_one_arg_type CST ;
+jsonpath_one_arg_comparison_type: JSONPATHEXISTS | JSONPATHNOTEXISTS ;
+jsonpath_one_arg_type : ( json_match_source? jsonpath_one_arg_comparison_type ) | 
+                     ( text_match_source? text_match_type )
+;
 text_match_type : MATCHES | NOTMATCHES | CONTAINS | NOTCONTAINS | EQUALS | NOTEQUALS ;
 
 // default match source is content
@@ -150,6 +156,25 @@ xpath_multi_arg_test : xml_match_source? xpath_multi_arg_type  xpath_arg xpath_a
 
 // There is no "not in" test why not?
 xpath_multi_arg_type : xml_match_source? XPATHIN /* | XPATHNOTIN */ ;
+
+//------------------------------------------------------------------------------
+jsonpath_arg : CST ;
+
+jsonpath_two_arg_comparison_type : JSONPATHEQUALS | JSONPATHNOTEQUALS | 
+                     JSONPATHEQUALSIGNORECASE | JSONPATHNOTEQUALSIGNORECASE | 
+                     JSONPATHMATCHES | JSONPATHNOTMATCHES | 
+                     JSONPATHCOMPARE |
+                     JSONPATHCONTAINS | JSONPATHNOTCONTAINS |
+                     JSONPATHCONTAINSIGNORECASE | JSONPATHNOTCONTAINSIGNORECASE;
+
+jsonpath_two_arg_test : xpath_two_arg_type xpath_arg xpath_arg + ;
+jsonpath_two_arg_type : (  json_match_source? jsonpath_two_arg_comparison_type ) 
+;
+
+jsonpath_multi_arg_test : json_match_source? jsonpath_multi_arg_type  jsonpath_arg jsonpath_arg+;
+
+// There is no "not in" test why not?
+jsonpath_multi_arg_type : json_match_source? JSONPATHIN /* | JSONPATHNOTIN */ ;
 
 //------------------------------------------------------------------------------
 

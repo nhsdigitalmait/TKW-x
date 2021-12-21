@@ -32,6 +32,7 @@ __HL7DATE_TAG__ HL7datetime
 __ISO8601DATE_TAG__ ISO8601datetime
 __PROPERTY_TAG__ Property user.dir
 __XPATH_TAG__ XPath /a/text()
+__JSONPATH_TAG__ JsonPath a
 __CLASS_TAG__ Class uk.nhs.digital.mait.tkwx.tk.internalservices.rules.DelaySubstitution "key 1"
 __RE_CONTENT_TAG__ reg_exp content "^ContentStart(.*)ContentEnd$" "$1"
 __RE_CP_TAG__ reg_exp context_path "^/DocumentReference(.*)$" "$1"

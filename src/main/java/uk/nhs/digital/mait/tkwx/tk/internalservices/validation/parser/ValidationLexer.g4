@@ -94,6 +94,7 @@ NONE : 'NONE' ;
 // qualifiers for the set directive
 LITERAL : 'literal' ;  
 XPATH_ : X P A T H ;  
+JSONPATH_ : J S O N P A T H ;  
 
 fragment HL7 : H L '7_' ; 
 fragment EBXML : E B X M L '_' ; 
@@ -134,7 +135,7 @@ FHIRRESOURCEVALIDATOR : F H I R R E S O U R C E V A L I D A T O R ;
 TERMINOLOGYVALIDATOR : T E R M I N O L O G Y V A L I D A T O R ;
 
 //------------------------------------------------------------------------------
-// one arg
+// xpath one arg
 XPATHEXISTS : XPATH_ E X I S T S -> mode(CST_MODE);  
 XPATHNOTEXISTS : XPATH_ N O T E X I S T S -> mode(CST_MODE);  
 
@@ -158,7 +159,7 @@ NOTCONTAINS : N O T C O N T A I N S -> mode(CST_MODE);
 
 //------------------------------------------------------------------------------
 
-// two arg
+// xpath two arg
 XPATHEQUALS : XPATH_ EQUALS -> mode(CST_MODE);  
 XPATHNOTEQUALS : XPATH_ NOT EQUALS  -> mode(CST_MODE);  
 
@@ -210,6 +211,31 @@ JWT_PAYLOAD : J W T '_' P A Y L O A D ; // xml and text
 // multi arg
 XPATHIN : XPATH_ IN  -> mode(CST_MODE); 
 //XPATHNOTIN : XPATH_ NOT IN   -> mode(CST_MODE) ;  
+//------------------------------------------------------------------------------
+// jsonpath one arg
+JSONPATHEXISTS : JSONPATH_ E X I S T S -> mode(CST_MODE);  
+JSONPATHNOTEXISTS : JSONPATH_ N O T E X I S T S -> mode(CST_MODE);  
+
+//------------------------------------------------------------------------------
+
+// xpath two arg
+JSONPATHEQUALS : JSONPATH_ EQUALS -> mode(CST_MODE);  
+JSONPATHNOTEQUALS : JSONPATH_ NOT EQUALS  -> mode(CST_MODE);  
+
+// this pair added for spine validation
+JSONPATHEQUALSIGNORECASE : J S O N P A T H E Q U A L S IGNORE_CASE  -> mode(CST_MODE);  
+JSONPATHNOTEQUALSIGNORECASE : J S O N P A T H N O T E Q U A L S IGNORE_CASE  -> mode(CST_MODE);  
+
+JSONPATHMATCHES : JSONPATH_ MATCHES  -> mode(CST_MODE); 
+JSONPATHNOTMATCHES : JSONPATH_ NOT MATCHES  -> mode(CST_MODE); 
+
+JSONPATHCOMPARE : JSONPATH_ COMPARE  -> mode(CST_MODE);  
+
+JSONPATHCONTAINS : JSONPATH_ CONTAINS  -> mode(CST_MODE);  
+JSONPATHNOTCONTAINS : JSONPATH_ NOT CONTAINS  -> mode(CST_MODE);  
+
+JSONPATHCONTAINSIGNORECASE : JSONPATH_ CONTAINS  IGNORE_CASE -> mode(CST_MODE);  
+JSONPATHNOTCONTAINSIGNORECASE : JSONPATH_ NOT CONTAINS  IGNORE_CASE  -> mode(CST_MODE);  
 
 //------------------------------------------------------------------------------
 // headers

@@ -368,7 +368,11 @@ public class HttpInterceptWorker {
         if (isFhir) {
             xmlRequestBody = fhirConvertJson2Xml(new String(jsonHttpRequest.getBody())).getBytes();
         } else {
-            xmlRequestBody = JsonXmlConverter.jsonToXmlString(new String(jsonHttpRequest.getBody()).toCharArray()).getBytes();
+            if (jsonHttpRequest.getBody().length > 0) {
+                xmlRequestBody = JsonXmlConverter.jsonToXmlString(new String(jsonHttpRequest.getBody()).toCharArray()).getBytes();
+            } else {
+                xmlRequestBody = "".getBytes();
+            }
         }
 
         xmlRequest.setInputStream(

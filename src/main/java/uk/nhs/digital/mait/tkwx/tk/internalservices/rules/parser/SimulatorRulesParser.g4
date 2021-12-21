@@ -61,7 +61,7 @@ variable_assignment : VARIABLE_NAME EQUALS ? QUOTED_STRING ? ;
 //------------------------------------------------------------------------------
 // substitutions
 substitutions : substitution*  EOF? ; // second clause for Include
-substitution: ( substitution_tag  ( substitution_no_arg | substitution_xpath | substitution_literal | substitution_property | substitution_class | substitution_regexp ) ) | include_statement ; 
+substitution: ( substitution_tag  ( substitution_no_arg | substitution_xpath | substitution_jsonpath | substitution_literal | substitution_property | substitution_class | substitution_regexp ) ) | include_statement ; 
 substitution_tag : IDENTIFIER ;
 
 property_file_name : PATH ;
@@ -69,6 +69,7 @@ property_name : DOT_SEPARATED_IDENTIFIER | IDENTIFIER ;
 substitution_no_arg : UUID_UPPER | UUID_LOWER | HL7_DATETIME | ISO8601_DATETIME | RFC822_DATETIME;
 // NB this switches to CST Mode 1st param is optional xml match source last is xpath
 substitution_xpath : SUBSTITUTION_XPATH  xpath_arg xpath_arg ? ;  
+substitution_jsonpath : SUBSTITUTION_JSONPATH  xpath_arg xpath_arg ? ;  
 substitution_regexp_cardinality : FIRST | ALL ;
 regexp : QUOTED_STRING QUOTED_STRING substitution_regexp_cardinality ? ;
 substitution_regexp : SUBSTITUTION_REGEXP  text_match_source?  regexp + ;

@@ -163,6 +163,12 @@ public interface SimulatorRulesParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSubstitution_xpath(SimulatorRulesParser.Substitution_xpathContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SimulatorRulesParser#substitution_jsonpath}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSubstitution_jsonpath(SimulatorRulesParser.Substitution_jsonpathContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SimulatorRulesParser#substitution_regexp_cardinality}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -15,6 +15,8 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices.rules;
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import java.io.CharArrayReader;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -65,7 +67,8 @@ public class Substitution {
         LITERAL,
         PROPERTY,
         CLASS,
-        REGEXP;
+        REGEXP,
+        JSONPATH;
     }
 
     /**
@@ -80,6 +83,7 @@ public class Substitution {
     private SubstitutionValue subsClass = null;
     private XPathExpression xpath = null;
     private MatchSource matchSource = MatchSource.CONTENT;
+    private String jsonpath = null;
 
     private static final SimpleDateFormat HL7FORMATDATE = new SimpleDateFormat(HL7FORMATDATEMASK);
     private static final SimpleDateFormat ISO8601FORMATDATE = new SimpleDateFormat(ISO8601FORMATDATEMASK);
@@ -126,8 +130,26 @@ public class Substitution {
             } catch (Exception ex) {
                 Logger.getInstance().log(Level.SEVERE, Substitution.class.getName(), ex.getMessage());
             }
-
-        } else if (ctx.substitution_literal() != null) {
+        } 
+        else if (ctx.substitution_jsonpath() != null) {
+            type = SubstitutionType.JSONPATH;
+            try {
+                // xpath returns 1 or 2 args
+                switch (ctx.substitution_jsonpath().xpath_arg().size()) {
+                    case 1:
+                        initialiseJsonpath(ctx.substitution_jsonpath().xpath_arg().get(0).getText());
+                        break;
+                    case 2:
+                        // optional match source
+                        matchSource = MatchSource.valueOf(ctx.substitution_jsonpath().xpath_arg().get(0).getText().toUpperCase());
+                        initialiseJsonpath(ctx.substitution_jsonpath().xpath_arg().get(1).getText());
+                        break;
+                }
+            } catch (Exception ex) {
+                Logger.getInstance().log(Level.SEVERE, Substitution.class.getName(), ex.getMessage());
+            }
+        } 
+        else if (ctx.substitution_literal() != null) {
             type = SubstitutionType.LITERAL;
             literalContent = ctx.substitution_literal().ANNOTATION_TEXT().getText();
         } else if (ctx.substitution_property() != null) {
@@ -443,6 +465,25 @@ public class Substitution {
                         Logger.getInstance().log(WARNING, Substitution.class.getName(),
                                 "getContent detected non xml or json request content:\r\n" + inputRequest);
                     }
+                }
+                break;
+            case JSONPATH:
+                if (inputRequest != null) {
+                    if (inputRequest.trim().isEmpty() || inputRequest.trim().startsWith("{")) {
+                        if (jsonpath == null) {
+                            content = "CONFIGURATION ERROR: JSONpath expression not set for tag " + tag;
+                        } else {
+                            // if we have an empty string this might be a call to doc to insert content
+                            // if so it needs some minimal json to work on
+                            if (inputRequest.trim().isEmpty()) {
+                                inputRequest = "{}";
+                            }
+                            content = resolveJsonpath(inputRequest);
+                        }
+                    } else {
+                        Logger.getInstance().log(WARNING, Substitution.class.getName(),
+                                "getContent detected non json request content:\r\n" + inputRequest);
+                    }
                 } else {
                     inputRequest = "";
                 }
@@ -537,6 +578,12 @@ public class Substitution {
         return s;
     }
 
+    private String resolveJsonpath(String input)
+            throws Exception {
+        DocumentContext jsonContext = JsonPath.parse(input);
+        return  jsonContext.read(jsonpath);
+    }
+
     private void initialiseXpath(String s)
             throws Exception {
         try {
@@ -550,6 +597,11 @@ public class Substitution {
             sb.append(s);
             throw new Exception("Failed to compile XPath expression: " + s + " - " + sb.toString() + "for tagName " + tag);
         }
+    }
+
+    private void initialiseJsonpath(String s)
+            throws Exception {
+            jsonpath = s;
     }
 
     private void initialiseSubstituterClass(String c, String a)

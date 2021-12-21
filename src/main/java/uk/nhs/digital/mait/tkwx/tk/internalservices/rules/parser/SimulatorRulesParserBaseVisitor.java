@@ -194,6 +194,13 @@ public class SimulatorRulesParserBaseVisitor<T> extends AbstractParseTreeVisitor
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitSubstitution_jsonpath(SimulatorRulesParser.Substitution_jsonpathContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitSubstitution_regexp_cardinality(SimulatorRulesParser.Substitution_regexp_cardinalityContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

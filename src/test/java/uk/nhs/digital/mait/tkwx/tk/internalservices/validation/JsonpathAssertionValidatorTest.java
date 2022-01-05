@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAssertionValidatorTest.MyVP;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
 
 /**
  *
@@ -315,6 +316,17 @@ public class JsonpathAssertionValidatorTest {
         reports = result.getReport();
         System.out.println(reports[0].getTestDetails());
         assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
+    }
+
+    /**
+     * Test of validate method, of class JsonpathAssertionValidator.
+     */
+    @Test(expected = Exception.class)
+    public void testValidate_SpineMessage() throws Exception {
+        System.out.println("validate");
+        SpineMessage o = null;
+        ValidationReport[] expResult = null;
+        ValidationReport[] result = instance.validate(o);
     }
 
 }

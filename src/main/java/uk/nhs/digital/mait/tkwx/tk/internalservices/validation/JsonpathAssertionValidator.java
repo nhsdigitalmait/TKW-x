@@ -118,7 +118,7 @@ public class JsonpathAssertionValidator
     @Override
     public ValidationReport[] validate(SpineMessage o)
             throws Exception {
-            throw new Exception("ITK validation of tertiary MIME part of spine message. Incorrect validation class used");
+            throw new Exception("Json validation of spine message. Incorrect validation class used");
     }
 
     /**

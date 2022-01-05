@@ -2575,11 +2575,11 @@ public class ValidationParser extends Parser {
 		public Jsonpath_two_arg_typeContext jsonpath_two_arg_type() {
 			return getRuleContext(Jsonpath_two_arg_typeContext.class,0);
 		}
-		public List<Xpath_argContext> xpath_arg() {
-			return getRuleContexts(Xpath_argContext.class);
+		public List<Jsonpath_argContext> jsonpath_arg() {
+			return getRuleContexts(Jsonpath_argContext.class);
 		}
-		public Xpath_argContext xpath_arg(int i) {
-			return getRuleContext(Xpath_argContext.class,i);
+		public Jsonpath_argContext jsonpath_arg(int i) {
+			return getRuleContext(Jsonpath_argContext.class,i);
 		}
 		public Jsonpath_two_arg_testContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2602,7 +2602,7 @@ public class ValidationParser extends Parser {
 			setState(298);
 			jsonpath_two_arg_type();
 			setState(299);
-			xpath_arg();
+			jsonpath_arg();
 			setState(301); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -2610,7 +2610,7 @@ public class ValidationParser extends Parser {
 				{
 				{
 				setState(300);
-				xpath_arg();
+				jsonpath_arg();
 				}
 				}
 				setState(303); 
@@ -3053,7 +3053,7 @@ public class ValidationParser extends Parser {
 		"\u0122\3\2\2\2\u0122Q\3\2\2\2\u0123\u0125\5\62\32\2\u0124\u0123\3\2\2"+
 		"\2\u0124\u0125\3\2\2\2\u0125\u0126\3\2\2\2\u0126\u0127\7F\2\2\u0127S\3"+
 		"\2\2\2\u0128\u0129\7h\2\2\u0129U\3\2\2\2\u012a\u012b\t\21\2\2\u012bW\3"+
-		"\2\2\2\u012c\u012d\5Z.\2\u012d\u012f\5H%\2\u012e\u0130\5H%\2\u012f\u012e"+
+		"\2\2\2\u012c\u012d\5Z.\2\u012d\u012f\5T+\2\u012e\u0130\5T+\2\u012f\u012e"+
 		"\3\2\2\2\u0130\u0131\3\2\2\2\u0131\u012f\3\2\2\2\u0131\u0132\3\2\2\2\u0132"+
 		"Y\3\2\2\2\u0133\u0135\5:\36\2\u0134\u0133\3\2\2\2\u0134\u0135\3\2\2\2"+
 		"\u0135\u0136\3\2\2\2\u0136\u0137\5V,\2\u0137[\3\2\2\2\u0138\u013a\5:\36"+

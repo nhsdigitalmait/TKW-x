@@ -170,7 +170,7 @@ jsonpath_two_arg_comparison_type : JSONPATHEQUALS | JSONPATHNOTEQUALS |
                      JSONPATHCONTAINS | JSONPATHNOTCONTAINS |
                      JSONPATHCONTAINSIGNORECASE | JSONPATHNOTCONTAINSIGNORECASE;
 
-jsonpath_two_arg_test : jsonpath_two_arg_type xpath_arg xpath_arg + ;
+jsonpath_two_arg_test : jsonpath_two_arg_type jsonpath_arg jsonpath_arg + ;
 jsonpath_two_arg_type : (  json_match_source? jsonpath_two_arg_comparison_type ) 
 ;
 

@@ -204,7 +204,11 @@ UNCHECKED : U N C H E C K E D -> mode(CST_MODE) ;
 CONTEXT_PATH : C O N T E X T '_' P A T H ; // text only
 CONTENT : C O N T E N T ;               // xml and text
 HTTP_HEADER : H T T P '_' H E A D E R ;  // text only
+JWT_HEADER : J W T '_' H E A D E R ; // xml and text
 JWT_PAYLOAD : J W T '_' P A Y L O A D ; // xml and text
+
+JWT_HEADER_JSON : J W T '_' H E A D E R '_' J S O N; // json and text
+JWT_PAYLOAD_JSON : J W T '_' P A Y L O A D '_' J S O N; // json and text
 
 //------------------------------------------------------------------------------
 

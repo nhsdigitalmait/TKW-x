@@ -113,7 +113,7 @@ schema_xpath : PATH | XPATH ;
 hapifhirvalidator_id : IDENTIFIER | DOT_SEPARATED_IDENTIFIER | INTEGER ;
 no_arg_test : SIGNATURE | CDA_RENDERER | CDA_TEMPLATE_LIST | ( HAPIFHIRVALIDATOR hapifhirvalidator_id ? ) | FHIRRESOURCEVALIDATOR | TERMINOLOGYVALIDATOR;
 // default xml source is content
-xml_match_source : CONTENT | JWT_PAYLOAD ;
+xml_match_source : CONTENT| JWT_HEADER | JWT_PAYLOAD ;
 
 xpath_one_arg_test : xpath_one_arg_type CST ;
 xpath_one_arg_comparison_type: XPATHEXISTS | XPATHNOTEXISTS ;
@@ -124,7 +124,7 @@ xpath_one_arg_type : ( xml_match_source? xpath_one_arg_comparison_type ) |
                      ( text_match_source? text_match_type )
 ;
 
-json_match_source : CONTENT | JWT_PAYLOAD ;
+json_match_source : CONTENT | JWT_HEADER_JSON | JWT_PAYLOAD_JSON ;
 jsonpath_one_arg_test : jsonpath_one_arg_type CST ;
 jsonpath_one_arg_comparison_type: JSONPATHEXISTS | JSONPATHNOTEXISTS ;
 jsonpath_one_arg_type : ( json_match_source? jsonpath_one_arg_comparison_type ) | 

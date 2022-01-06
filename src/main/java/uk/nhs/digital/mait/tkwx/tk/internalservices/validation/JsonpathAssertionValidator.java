@@ -91,8 +91,10 @@ public class JsonpathAssertionValidator
     private String postVariable = null;
     private String checkPart = null;
     private int attachmentNo = -1;
-    private boolean existsTest = false;
     private JWTParser jwtParser = null;
+    
+    private static final String JWT_HEADER_JSON = "jwt_header_json"; // json version of json header of Json Web Token
+    private static final String JWT_PAYLOAD_JSON = "jwt_payload_json"; // json version of json payload of Json Web Token
 
     @Override
     public void writeExternalOutput(String reportDirectory) throws Exception {
@@ -178,7 +180,6 @@ public class JsonpathAssertionValidator
 
         comparisonType = JsonpathValidationType.valueOf(type.toUpperCase());
 
-        existsTest = false;
         switch (comparisonType) {
             case JSONPATHNOTDEFINED:
                 throw new Exception("Unrecognised Jsonpath check type " + type);
@@ -191,9 +192,6 @@ public class JsonpathAssertionValidator
                    comparisonExpression = value;
                 }
                 break;
-            case JSONPATHEXISTS:
-            case JSONPATHNOTEXISTS:
-                existsTest = true;
         }
 
         containsVariable = false;
@@ -274,18 +272,18 @@ public class JsonpathAssertionValidator
                 if (jwtb64 != null) {
                     jwtParser = new JWTParser(jwtb64);
                     switch (jsonSource) {
-                        case JWT_HEADER:
-                            // the json to be analysed is from the JWT
+                        case JWT_HEADER_JSON:
+                            // the json JWT header to be analysed is from the JWT
                             o = jwtParser.getJsonHeader();
                             break;
-                        case JWT_PAYLOAD:
-                            // the json to be analysed is from the JWT
+                        case JWT_PAYLOAD_JSON:
+                            // the json JWT payload to be analysed is from the JWT
                             o = jwtParser.getJsonPayload();
                             break;
                         case CONTENT:
                             break;
                         default:
-                            Logger.getInstance().log(SEVERE, JsonpathAssertionValidator.class.getName(), "Unrecognised xmlSource " + jsonSource);
+                            Logger.getInstance().log(SEVERE, JsonpathAssertionValidator.class.getName(), "Unrecognised jsonSource " + jsonSource);
                     }
                 }
             } // no be

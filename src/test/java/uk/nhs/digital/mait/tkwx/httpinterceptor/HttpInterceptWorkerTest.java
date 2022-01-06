@@ -72,7 +72,7 @@ public class HttpInterceptWorkerTest {
     private static final String TESTSAVED_MESSAGES_FOLDER = "src/test/resources/saved_messages_folder";
     private static final String ENDPOINT_FOLDER = TESTSAVED_MESSAGES_FOLDER + "/127.0.0.1/";
     private HttpRequest xmlRequestSimulateRules;
-    private HttpRequest xmlRequestForewarding;
+    private HttpRequest xmlRequestForwarding;
     private HttpRequest jsonRequestSimulateRules;
 
     private static String simulatorListenPortNo;
@@ -152,8 +152,8 @@ public class HttpInterceptWorkerTest {
         String xmlMessage1 = xmlMessage.replaceAll("__NNN__", "9690937286"); // patient 2 1.5 meds is only in the forwarded config
         //String xmlMessage1 = xmlMessage.replaceAll("__NNN__", "9658218873"); // patient 2 1.2 meds is only in the forwarded config
         
-        xmlRequestForewarding = setupRequest(xmlMessage1);
-        xmlInstanceForwarding = new HttpInterceptWorker(xmlRequestForewarding, handler);
+        xmlRequestForwarding = setupRequest(xmlMessage1);
+        xmlInstanceForwarding = new HttpInterceptWorker(xmlRequestForwarding, handler);
         xmlInstanceForwarding.logfile = new LoggingFileOutputStream(new File(INTERCEPTOR_LOG));
 
         String jsonMessage = FHIRJsonXmlAdapter.fhirConvertXml2Json(xmlMessage0);
@@ -249,7 +249,7 @@ public class HttpInterceptWorkerTest {
     public void testForward() throws Exception {
         assertTrue(!folderExists(ENDPOINT_FOLDER));
         HttpResponse resp = new HttpResponse(ostream);
-        xmlInstanceForwarding.process(xmlRequestForewarding, resp);
+        xmlInstanceForwarding.process(xmlRequestForwarding, resp);
         String log = waitForFile();
         // need to test the response log
         // resp.getHttpHeader() is null for responses from forwarded end points

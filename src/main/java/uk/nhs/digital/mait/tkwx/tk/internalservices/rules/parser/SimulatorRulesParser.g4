@@ -88,7 +88,7 @@ substitution_class : CLASS  DOT_SEPARATED_IDENTIFIER  text_match_source ? ( IDEN
 //------------------------------------------------------------------------------
 // expressions
 expressions : expression* EOF? ;
-expression:  ( expression_name  ( expression_no_arg  | expression_one_arg | expression_two_arg | expression_xpath_compare | expression_class ) ) | include_statement ; 
+expression:  ( expression_name  ( expression_no_arg  | expression_one_arg | expression_two_arg | expression_xpath_compare | expression_jsonpath_compare | expression_class ) ) | include_statement ; 
 
 expression_name : IDENTIFIER ;
 
@@ -96,6 +96,7 @@ expression_no_arg : ALWAYS | NEVER ;
 
 expression_one_arg : ( 
         ( xml_match_source ? xml_match_type ) |
+        ( json_match_source ? json_match_type ) |
         ( text_match_source? match_type ) // match source defaults to content
     ) xpath_arg
 ;
@@ -112,24 +113,34 @@ class_args : QUOTED_STRING * ;
 expression_class : CLASS DOT_SEPARATED_IDENTIFIER class_extracted_value + class_args ;
 
 xml_match_type : XPATHEXISTS | XPATHNOTEXISTS ;
+json_match_type : JSONPATHEXISTS | JSONPATHNOTEXISTS ;
 match_type : MATCHES | NOTMATCHES | CONTAINS | NOTCONTAINS ;
 
 // default match source is content NB which is a change for restful rules which used to default to context path
 text_match_source : ( CONTEXT_PATH | CONTENT | JWT_PAYLOAD | JWT_HEADER | MESH_CTL | MESH_DAT | VARIABLE_NAME ) | ( HTTP_HEADER http_header_name )  ;
 xml_match_source : CONTENT | JWT_PAYLOAD | JWT_HEADER | MESH_CTL | MESH_DAT ;
+json_match_source : CONTENT | JWT_PAYLOAD_JSON | JWT_HEADER_JSON ;
 http_header_name : IDENTIFIER ;
 xslt_file : PATH ;
 
-expression_two_arg : xml_match_source? (
+expression_two_arg : (xml_match_source? (
     ( ( XPATHMATCHES | XPATHNOTMATCHES | XPATHEQUALS | XPATHNOTEQUALS )  xpath_arg xpath_arg ) |
     ( ( XPATHIN | XPATHNOTIN )  xpath_arg xpath_arg+ ) |
     ( SCHEMA PATH xpath_arg ? ) |
-    ( XSLT xslt_file xpath_arg )
+    ( XSLT xslt_file xpath_arg ) )
+) |
+                    (json_match_source? (
+    ( ( JSONPATHMATCHES | JSONPATHNOTMATCHES | JSONPATHEQUALS | JSONPATHNOTEQUALS )  xpath_arg xpath_arg ) |
+    ( ( JSONPATHIN | JSONPATHNOTIN )  xpath_arg xpath_arg+ ) )
 )
 ;
 
 expression_xpath_compare : (xml_match_source xml_match_source? )? 
     ( XPATHCOMPARE | XPATHNOTCOMPARE )  xpath_arg xpath_arg 
+;
+
+expression_jsonpath_compare : (json_match_source json_match_source? )? 
+    ( JSONPATHCOMPARE | JSONPATHNOTCOMPARE )  xpath_arg xpath_arg 
 ;
 
 //------------------------------------------------------------------------------

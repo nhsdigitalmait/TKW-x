@@ -54,6 +54,7 @@ import javax.xml.xpath.XPathFactoryConfigurationException;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.Interval;
+import org.apache.commons.text.StringSubstitutor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
@@ -488,6 +489,33 @@ public class Utils {
         s = s.replaceAll("'", "&apos;");
 
         return s;
+    }
+
+    /**
+     * replace any instances of the text "TKW_ROOT" with the value of the
+     * TKWROOT environment variable, or the string "${TKWROOT}" if the
+     * TKWROOT environment variable is not set
+     * 
+     * @param s
+     * @return the new string
+     */
+    public static String replaceTkwroot(String s) {
+        if (!isNullOrEmpty(System.getenv("TKWROOT"))) {
+            return s.replaceAll("TKW_ROOT", System.getenv("TKWROOT"));
+        }
+        return s.replaceAll("TKW_ROOT", "${TKWROOT}");
+    }
+
+    /**
+     * replace any environment variables ${...} with their interpreted values
+     * if those environment variables exist
+     * 
+     * @param s
+     * @return the new string
+     */
+    public static String replaceEnvVars(String s) {
+        StringSubstitutor sub = new StringSubstitutor(System.getenv());
+        return sub.replace(s);
     }
 
     public static boolean fileExists(String path) {

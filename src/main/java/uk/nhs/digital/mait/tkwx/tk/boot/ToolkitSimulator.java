@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map.Entry;
 import static java.util.logging.Level.SEVERE;
-import org.apache.commons.text.StringSubstitutor;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.ConfigurationStringTokeniser;
 import uk.nhs.digital.mait.commonutils.util.Logger;
@@ -145,13 +144,7 @@ public class ToolkitSimulator {
             }
         }
 
-        properties = new Properties();
-        for (Entry entry: prop.entrySet()) {
-            String key = (String) entry.getKey();
-            String oldValue = (String) entry.getValue();
-            String newValue = replaceTkwroot(replaceEnvVars(oldValue));
-            properties.setProperty(key, newValue);
-        }
+        properties = interpretEnvVars(prop);
 
         if (properties.getProperty(DONTSIGNLOGS_PROPERTY) != null) {
             System.setProperty(DONTSIGNLOGS_PROPERTY, properties.getProperty(DONTSIGNLOGS_PROPERTY));
@@ -166,16 +159,25 @@ public class ToolkitSimulator {
         c.setProperties(properties);
     }
 
-    private static String replaceEnvVars(String s) {
-        StringSubstitutor sub = new StringSubstitutor(System.getenv());
-        return sub.replace(s);
-    }
-
-    private static String replaceTkwroot(String s) {
-        if (!Utils.isNullOrEmpty(System.getenv("TKWROOT"))) {
-            return s.replaceAll("TKW_ROOT", System.getenv("TKWROOT"));
-        }
-        return s;
+    /**
+     * interpret any environment variables within the properties and then
+     * replace any instances of the string "TKW_ROOT" with the value of the
+     * TKWROOT environment variable
+     * 
+     * @param oldProp the original properties file
+     * @return the new properties file with environment variables interpreted
+     */
+    private static Properties interpretEnvVars(Properties oldProp) {
+        Properties newProp = new Properties();
+        oldProp.entrySet()
+                .stream()
+                .forEach(e ->
+                        newProp.setProperty((String) e.getKey(),
+                        Utils.replaceTkwroot(
+                                Utils.replaceEnvVars(
+                                        (String) e.getValue())))
+                );
+        return newProp;
     }
 
     public String getConfigurationName() {

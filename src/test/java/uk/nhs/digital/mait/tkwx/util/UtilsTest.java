@@ -524,4 +524,30 @@ public class UtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     * Test of replaceTkwroot method, of class Utils.
+     */
+    @Test
+    public void testReplaceTkwroot() {
+        System.out.println("replaceTkwroot");
+        String tkwroot = System.getenv("TKWROOT");
+        String s = "hello TKW_ROOT";
+        String expResult = "hello " + tkwroot;
+        String result = Utils.replaceTkwroot(s);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of replaceEnvVars method, of class Utils.
+     */
+    @Test
+    public void testReplaceEnvVars() {
+        System.out.println("replaceEnvVars");
+        String home = System.getenv("HOME");
+        String s = "hello ${HOME}";
+        String expResult = "hello " + home;
+        String result = Utils.replaceEnvVars(s);
+        assertEquals(expResult, result);
+    }
+
 }

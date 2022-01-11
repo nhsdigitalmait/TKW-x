@@ -329,7 +329,7 @@ public class JsonpathAssertionValidator
                     sb.append(" returned no match, it was expected to return a value \"");
                     sb.append(v);
                     sb.append("\"");
-                } else if (r.contentEquals(v)) {
+                } else if (r.equals(v)) {
                     ve = new ValidationReport("Pass");
                     ve.setPassed();
                     sb.append(" and ");
@@ -355,7 +355,7 @@ public class JsonpathAssertionValidator
                     sb.append(" returned no match, it was expected to return a value \"");
                     sb.append(v);
                     sb.append("\"");
-                } else if (!r.contentEquals(v)) {
+                } else if (!r.equals(v)) {
                     ve = new ValidationReport("Pass");
                     ve.setPassed();
                     sb.append(" returned \"");

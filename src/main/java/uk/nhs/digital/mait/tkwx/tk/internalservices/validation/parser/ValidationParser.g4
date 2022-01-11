@@ -141,7 +141,7 @@ xpath_arg : CST ;
 xpath_two_arg_comparison_type : XPATHEQUALS | XPATHNOTEQUALS | 
                      XPATHEQUALSIGNORECASE | XPATHNOTEQUALSIGNORECASE | 
                      XPATHMATCHES | XPATHNOTMATCHES | 
-                     XPATHCOMPARE |
+                     XPATHCOMPARE | XPATHNOTCOMPARE |
                      XPATHCONTAINS | XPATHNOTCONTAINS |
                      XPATHCONTAINSIGNORECASE | XPATHNOTCONTAINSIGNORECASE |
                      XSLT ;
@@ -166,7 +166,7 @@ jsonpath_arg : CST ;
 jsonpath_two_arg_comparison_type : JSONPATHEQUALS | JSONPATHNOTEQUALS | 
                      JSONPATHEQUALSIGNORECASE | JSONPATHNOTEQUALSIGNORECASE | 
                      JSONPATHMATCHES | JSONPATHNOTMATCHES | 
-                     JSONPATHCOMPARE |
+                     JSONPATHCOMPARE | JSONPATHNOTCOMPARE |
                      JSONPATHCONTAINS | JSONPATHNOTCONTAINS |
                      JSONPATHCONTAINSIGNORECASE | JSONPATHNOTCONTAINSIGNORECASE;
 

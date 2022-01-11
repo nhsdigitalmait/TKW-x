@@ -30,20 +30,20 @@ public class ValidationParser extends Parser {
 		HL7_XPATHNOTEQUALS=43, EBXML_XPATHEQUALS=44, EBXML_XPATHNOTEQUALS=45, 
 		SOAP_XPATHEQUALS=46, SOAP_XPATHNOTEQUALS=47, XPATHEQUALSIGNORECASE=48, 
 		XPATHNOTEQUALSIGNORECASE=49, XPATHMATCHES=50, XPATHNOTMATCHES=51, HL7_XPATHMATCHES=52, 
-		HL7_XPATHNOTMATCHES=53, XPATHCOMPARE=54, XPATHCONTAINS=55, XPATHNOTCONTAINS=56, 
-		XPATHCONTAINSIGNORECASE=57, XPATHNOTCONTAINSIGNORECASE=58, XSLT=59, HL7_XSLT=60, 
-		EBXML_XSLT=61, CDA_CONFORMANCE_XSLT=62, UNCHECKED=63, CONTEXT_PATH=64, 
-		CONTENT=65, HTTP_HEADER=66, JWT_HEADER=67, JWT_PAYLOAD=68, JWT_HEADER_JSON=69, 
-		JWT_PAYLOAD_JSON=70, XPATHIN=71, JSONPATHEXISTS=72, JSONPATHNOTEXISTS=73, 
-		JSONPATHEQUALS=74, JSONPATHNOTEQUALS=75, JSONPATHEQUALSIGNORECASE=76, 
-		JSONPATHNOTEQUALSIGNORECASE=77, JSONPATHMATCHES=78, JSONPATHNOTMATCHES=79, 
-		JSONPATHCOMPARE=80, JSONPATHCONTAINS=81, JSONPATHNOTCONTAINS=82, JSONPATHCONTAINSIGNORECASE=83, 
-		JSONPATHNOTCONTAINSIGNORECASE=84, VALIDATION_RULESET_NAME=85, VALIDATION_RULESET_VERSION=86, 
-		VALIDATION_RULESET_TIMESTAMP=87, VALIDATION_RULESET_AUTHOR=88, VALIDATE=89, 
-		SET=90, CHECK=91, ANNOTATION=92, SUBSET=93, DOLLAR=94, IDENTIFIER=95, 
-		VARIABLE=96, DOT_SEPARATED_IDENTIFIER=97, URL=98, PATH=99, XPATH=100, 
-		SPACES=101, DEFAULT=102, ANNOTATION_TEXT=103, SP=104, CST=105, LF=106, 
-		JSONPATHIN=107;
+		HL7_XPATHNOTMATCHES=53, XPATHCOMPARE=54, XPATHNOTCOMPARE=55, XPATHCONTAINS=56, 
+		XPATHNOTCONTAINS=57, XPATHCONTAINSIGNORECASE=58, XPATHNOTCONTAINSIGNORECASE=59, 
+		XSLT=60, HL7_XSLT=61, EBXML_XSLT=62, CDA_CONFORMANCE_XSLT=63, UNCHECKED=64, 
+		CONTEXT_PATH=65, CONTENT=66, HTTP_HEADER=67, JWT_HEADER=68, JWT_PAYLOAD=69, 
+		JWT_HEADER_JSON=70, JWT_PAYLOAD_JSON=71, XPATHIN=72, JSONPATHEXISTS=73, 
+		JSONPATHNOTEXISTS=74, JSONPATHEQUALS=75, JSONPATHNOTEQUALS=76, JSONPATHEQUALSIGNORECASE=77, 
+		JSONPATHNOTEQUALSIGNORECASE=78, JSONPATHMATCHES=79, JSONPATHNOTMATCHES=80, 
+		JSONPATHCOMPARE=81, JSONPATHNOTCOMPARE=82, JSONPATHCONTAINS=83, JSONPATHNOTCONTAINS=84, 
+		JSONPATHCONTAINSIGNORECASE=85, JSONPATHNOTCONTAINSIGNORECASE=86, VALIDATION_RULESET_NAME=87, 
+		VALIDATION_RULESET_VERSION=88, VALIDATION_RULESET_TIMESTAMP=89, VALIDATION_RULESET_AUTHOR=90, 
+		VALIDATE=91, SET=92, CHECK=93, ANNOTATION=94, SUBSET=95, DOLLAR=96, IDENTIFIER=97, 
+		VARIABLE=98, DOT_SEPARATED_IDENTIFIER=99, URL=100, PATH=101, XPATH=102, 
+		SPACES=103, DEFAULT=104, ANNOTATION_TEXT=105, SP=106, CST=107, LF=108, 
+		JSONPATHIN=109;
 	public static final int
 		RULE_input = 0, RULE_validation_header = 1, RULE_validation_header_type = 2, 
 		RULE_validate_statement = 3, RULE_service_name = 4, RULE_validate_directives = 5, 
@@ -86,7 +86,7 @@ public class ValidationParser extends Parser {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, "'VALIDATION-RULESET-NAME'", "'VALIDATION-RULESET-VERSION'", 
+		null, null, null, null, null, "'VALIDATION-RULESET-NAME'", "'VALIDATION-RULESET-VERSION'", 
 		"'VALIDATION-RULESET-TIMESTAMP'", "'VALIDATION-RULESET-AUTHOR'", "'VALIDATE'", 
 		"'SET'", "'CHECK'", "'ANNOTATION'", "'SUBSET'", "'$'"
 	};
@@ -102,12 +102,13 @@ public class ValidationParser extends Parser {
 		"HL7_XPATHNOTEQUALS", "EBXML_XPATHEQUALS", "EBXML_XPATHNOTEQUALS", "SOAP_XPATHEQUALS", 
 		"SOAP_XPATHNOTEQUALS", "XPATHEQUALSIGNORECASE", "XPATHNOTEQUALSIGNORECASE", 
 		"XPATHMATCHES", "XPATHNOTMATCHES", "HL7_XPATHMATCHES", "HL7_XPATHNOTMATCHES", 
-		"XPATHCOMPARE", "XPATHCONTAINS", "XPATHNOTCONTAINS", "XPATHCONTAINSIGNORECASE", 
-		"XPATHNOTCONTAINSIGNORECASE", "XSLT", "HL7_XSLT", "EBXML_XSLT", "CDA_CONFORMANCE_XSLT", 
-		"UNCHECKED", "CONTEXT_PATH", "CONTENT", "HTTP_HEADER", "JWT_HEADER", "JWT_PAYLOAD", 
-		"JWT_HEADER_JSON", "JWT_PAYLOAD_JSON", "XPATHIN", "JSONPATHEXISTS", "JSONPATHNOTEXISTS", 
-		"JSONPATHEQUALS", "JSONPATHNOTEQUALS", "JSONPATHEQUALSIGNORECASE", "JSONPATHNOTEQUALSIGNORECASE", 
-		"JSONPATHMATCHES", "JSONPATHNOTMATCHES", "JSONPATHCOMPARE", "JSONPATHCONTAINS", 
+		"XPATHCOMPARE", "XPATHNOTCOMPARE", "XPATHCONTAINS", "XPATHNOTCONTAINS", 
+		"XPATHCONTAINSIGNORECASE", "XPATHNOTCONTAINSIGNORECASE", "XSLT", "HL7_XSLT", 
+		"EBXML_XSLT", "CDA_CONFORMANCE_XSLT", "UNCHECKED", "CONTEXT_PATH", "CONTENT", 
+		"HTTP_HEADER", "JWT_HEADER", "JWT_PAYLOAD", "JWT_HEADER_JSON", "JWT_PAYLOAD_JSON", 
+		"XPATHIN", "JSONPATHEXISTS", "JSONPATHNOTEXISTS", "JSONPATHEQUALS", "JSONPATHNOTEQUALS", 
+		"JSONPATHEQUALSIGNORECASE", "JSONPATHNOTEQUALSIGNORECASE", "JSONPATHMATCHES", 
+		"JSONPATHNOTMATCHES", "JSONPATHCOMPARE", "JSONPATHNOTCOMPARE", "JSONPATHCONTAINS", 
 		"JSONPATHNOTCONTAINS", "JSONPATHCONTAINSIGNORECASE", "JSONPATHNOTCONTAINSIGNORECASE", 
 		"VALIDATION_RULESET_NAME", "VALIDATION_RULESET_VERSION", "VALIDATION_RULESET_TIMESTAMP", 
 		"VALIDATION_RULESET_AUTHOR", "VALIDATE", "SET", "CHECK", "ANNOTATION", 
@@ -256,7 +257,7 @@ public class ValidationParser extends Parser {
 				setState(108); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( _la==IF || _la==INCLUDE || ((((_la - 85)) & ~0x3f) == 0 && ((1L << (_la - 85)) & ((1L << (VALIDATION_RULESET_NAME - 85)) | (1L << (VALIDATION_RULESET_VERSION - 85)) | (1L << (VALIDATION_RULESET_TIMESTAMP - 85)) | (1L << (VALIDATION_RULESET_AUTHOR - 85)) | (1L << (VALIDATE - 85)) | (1L << (SET - 85)) | (1L << (CHECK - 85)) | (1L << (ANNOTATION - 85)) | (1L << (SUBSET - 85)))) != 0) );
+			} while ( _la==IF || _la==INCLUDE || ((((_la - 87)) & ~0x3f) == 0 && ((1L << (_la - 87)) & ((1L << (VALIDATION_RULESET_NAME - 87)) | (1L << (VALIDATION_RULESET_VERSION - 87)) | (1L << (VALIDATION_RULESET_TIMESTAMP - 87)) | (1L << (VALIDATION_RULESET_AUTHOR - 87)) | (1L << (VALIDATE - 87)) | (1L << (SET - 87)) | (1L << (CHECK - 87)) | (1L << (ANNOTATION - 87)) | (1L << (SUBSET - 87)))) != 0) );
 			setState(110);
 			match(EOF);
 			}
@@ -336,7 +337,7 @@ public class ValidationParser extends Parser {
 			{
 			setState(115);
 			_la = _input.LA(1);
-			if ( !(((((_la - 85)) & ~0x3f) == 0 && ((1L << (_la - 85)) & ((1L << (VALIDATION_RULESET_NAME - 85)) | (1L << (VALIDATION_RULESET_VERSION - 85)) | (1L << (VALIDATION_RULESET_TIMESTAMP - 85)) | (1L << (VALIDATION_RULESET_AUTHOR - 85)))) != 0)) ) {
+			if ( !(((((_la - 87)) & ~0x3f) == 0 && ((1L << (_la - 87)) & ((1L << (VALIDATION_RULESET_NAME - 87)) | (1L << (VALIDATION_RULESET_VERSION - 87)) | (1L << (VALIDATION_RULESET_TIMESTAMP - 87)) | (1L << (VALIDATION_RULESET_AUTHOR - 87)))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -423,7 +424,7 @@ public class ValidationParser extends Parser {
 			{
 			setState(121);
 			_la = _input.LA(1);
-			if ( !(_la==INTEGER || ((((_la - 95)) & ~0x3f) == 0 && ((1L << (_la - 95)) & ((1L << (IDENTIFIER - 95)) | (1L << (DOT_SEPARATED_IDENTIFIER - 95)) | (1L << (URL - 95)))) != 0)) ) {
+			if ( !(_la==INTEGER || ((((_la - 97)) & ~0x3f) == 0 && ((1L << (_la - 97)) & ((1L << (IDENTIFIER - 97)) | (1L << (DOT_SEPARATED_IDENTIFIER - 97)) | (1L << (URL - 97)))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -655,6 +656,7 @@ public class ValidationParser extends Parser {
 			case HL7_XPATHMATCHES:
 			case HL7_XPATHNOTMATCHES:
 			case XPATHCOMPARE:
+			case XPATHNOTCOMPARE:
 			case XPATHCONTAINS:
 			case XPATHNOTCONTAINS:
 			case XPATHCONTAINSIGNORECASE:
@@ -681,6 +683,7 @@ public class ValidationParser extends Parser {
 			case JSONPATHMATCHES:
 			case JSONPATHNOTMATCHES:
 			case JSONPATHCOMPARE:
+			case JSONPATHNOTCOMPARE:
 			case JSONPATHCONTAINS:
 			case JSONPATHNOTCONTAINS:
 			case JSONPATHCONTAINSIGNORECASE:
@@ -746,7 +749,7 @@ public class ValidationParser extends Parser {
 				{
 				setState(142);
 				_la = _input.LA(1);
-				if ( !(((((_la - 95)) & ~0x3f) == 0 && ((1L << (_la - 95)) & ((1L << (IDENTIFIER - 95)) | (1L << (PATH - 95)) | (1L << (XPATH - 95)))) != 0)) ) {
+				if ( !(((((_la - 97)) & ~0x3f) == 0 && ((1L << (_la - 97)) & ((1L << (IDENTIFIER - 97)) | (1L << (PATH - 97)) | (1L << (XPATH - 97)))) != 0)) ) {
 				_errHandler.recoverInline(this);
 				} else {
 					consume();
@@ -756,7 +759,7 @@ public class ValidationParser extends Parser {
 				setState(145); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( ((((_la - 95)) & ~0x3f) == 0 && ((1L << (_la - 95)) & ((1L << (IDENTIFIER - 95)) | (1L << (PATH - 95)) | (1L << (XPATH - 95)))) != 0) );
+			} while ( ((((_la - 97)) & ~0x3f) == 0 && ((1L << (_la - 97)) & ((1L << (IDENTIFIER - 97)) | (1L << (PATH - 97)) | (1L << (XPATH - 97)))) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -1583,7 +1586,7 @@ public class ValidationParser extends Parser {
 			{
 			setState(217);
 			_la = _input.LA(1);
-			if ( !(((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTENT - 65)) | (1L << (JWT_HEADER - 65)) | (1L << (JWT_PAYLOAD - 65)))) != 0)) ) {
+			if ( !(((((_la - 66)) & ~0x3f) == 0 && ((1L << (_la - 66)) & ((1L << (CONTENT - 66)) | (1L << (JWT_HEADER - 66)) | (1L << (JWT_PAYLOAD - 66)))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -1725,7 +1728,7 @@ public class ValidationParser extends Parser {
 				{
 				setState(225);
 				_la = _input.LA(1);
-				if (((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTENT - 65)) | (1L << (JWT_HEADER - 65)) | (1L << (JWT_PAYLOAD - 65)))) != 0)) {
+				if (((((_la - 66)) & ~0x3f) == 0 && ((1L << (_la - 66)) & ((1L << (CONTENT - 66)) | (1L << (JWT_HEADER - 66)) | (1L << (JWT_PAYLOAD - 66)))) != 0)) {
 					{
 					setState(224);
 					xml_match_source();
@@ -1755,7 +1758,7 @@ public class ValidationParser extends Parser {
 				{
 				setState(230);
 				_la = _input.LA(1);
-				if (((((_la - 64)) & ~0x3f) == 0 && ((1L << (_la - 64)) & ((1L << (CONTEXT_PATH - 64)) | (1L << (CONTENT - 64)) | (1L << (HTTP_HEADER - 64)) | (1L << (JWT_PAYLOAD - 64)))) != 0)) {
+				if (((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTEXT_PATH - 65)) | (1L << (CONTENT - 65)) | (1L << (HTTP_HEADER - 65)) | (1L << (JWT_PAYLOAD - 65)))) != 0)) {
 					{
 					setState(229);
 					text_match_source();
@@ -1804,7 +1807,7 @@ public class ValidationParser extends Parser {
 			{
 			setState(235);
 			_la = _input.LA(1);
-			if ( !(((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTENT - 65)) | (1L << (JWT_HEADER_JSON - 65)) | (1L << (JWT_PAYLOAD_JSON - 65)))) != 0)) ) {
+			if ( !(((((_la - 66)) & ~0x3f) == 0 && ((1L << (_la - 66)) & ((1L << (CONTENT - 66)) | (1L << (JWT_HEADER_JSON - 66)) | (1L << (JWT_PAYLOAD_JSON - 66)))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -1940,7 +1943,7 @@ public class ValidationParser extends Parser {
 				{
 				setState(243);
 				_la = _input.LA(1);
-				if (((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTENT - 65)) | (1L << (JWT_HEADER_JSON - 65)) | (1L << (JWT_PAYLOAD_JSON - 65)))) != 0)) {
+				if (((((_la - 66)) & ~0x3f) == 0 && ((1L << (_la - 66)) & ((1L << (CONTENT - 66)) | (1L << (JWT_HEADER_JSON - 66)) | (1L << (JWT_PAYLOAD_JSON - 66)))) != 0)) {
 					{
 					setState(242);
 					json_match_source();
@@ -1958,7 +1961,7 @@ public class ValidationParser extends Parser {
 				{
 				setState(247);
 				_la = _input.LA(1);
-				if (((((_la - 64)) & ~0x3f) == 0 && ((1L << (_la - 64)) & ((1L << (CONTEXT_PATH - 64)) | (1L << (CONTENT - 64)) | (1L << (HTTP_HEADER - 64)) | (1L << (JWT_PAYLOAD - 64)))) != 0)) {
+				if (((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTEXT_PATH - 65)) | (1L << (CONTENT - 65)) | (1L << (HTTP_HEADER - 65)) | (1L << (JWT_PAYLOAD - 65)))) != 0)) {
 					{
 					setState(246);
 					text_match_source();
@@ -2061,7 +2064,7 @@ public class ValidationParser extends Parser {
 				{
 				setState(254);
 				_la = _input.LA(1);
-				if ( !(((((_la - 64)) & ~0x3f) == 0 && ((1L << (_la - 64)) & ((1L << (CONTEXT_PATH - 64)) | (1L << (CONTENT - 64)) | (1L << (JWT_PAYLOAD - 64)))) != 0)) ) {
+				if ( !(((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTEXT_PATH - 65)) | (1L << (CONTENT - 65)) | (1L << (JWT_PAYLOAD - 65)))) != 0)) ) {
 				_errHandler.recoverInline(this);
 				} else {
 					consume();
@@ -2170,6 +2173,7 @@ public class ValidationParser extends Parser {
 		public TerminalNode XPATHMATCHES() { return getToken(ValidationParser.XPATHMATCHES, 0); }
 		public TerminalNode XPATHNOTMATCHES() { return getToken(ValidationParser.XPATHNOTMATCHES, 0); }
 		public TerminalNode XPATHCOMPARE() { return getToken(ValidationParser.XPATHCOMPARE, 0); }
+		public TerminalNode XPATHNOTCOMPARE() { return getToken(ValidationParser.XPATHNOTCOMPARE, 0); }
 		public TerminalNode XPATHCONTAINS() { return getToken(ValidationParser.XPATHCONTAINS, 0); }
 		public TerminalNode XPATHNOTCONTAINS() { return getToken(ValidationParser.XPATHNOTCONTAINS, 0); }
 		public TerminalNode XPATHCONTAINSIGNORECASE() { return getToken(ValidationParser.XPATHCONTAINSIGNORECASE, 0); }
@@ -2195,7 +2199,7 @@ public class ValidationParser extends Parser {
 			{
 			setState(263);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << XPATHEQUALS) | (1L << XPATHNOTEQUALS) | (1L << XPATHEQUALSIGNORECASE) | (1L << XPATHNOTEQUALSIGNORECASE) | (1L << XPATHMATCHES) | (1L << XPATHNOTMATCHES) | (1L << XPATHCOMPARE) | (1L << XPATHCONTAINS) | (1L << XPATHNOTCONTAINS) | (1L << XPATHCONTAINSIGNORECASE) | (1L << XPATHNOTCONTAINSIGNORECASE) | (1L << XSLT))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << XPATHEQUALS) | (1L << XPATHNOTEQUALS) | (1L << XPATHEQUALSIGNORECASE) | (1L << XPATHNOTEQUALSIGNORECASE) | (1L << XPATHMATCHES) | (1L << XPATHNOTMATCHES) | (1L << XPATHCOMPARE) | (1L << XPATHNOTCOMPARE) | (1L << XPATHCONTAINS) | (1L << XPATHNOTCONTAINS) | (1L << XPATHCONTAINSIGNORECASE) | (1L << XPATHNOTCONTAINSIGNORECASE) | (1L << XSLT))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -2315,6 +2319,7 @@ public class ValidationParser extends Parser {
 			case XPATHMATCHES:
 			case XPATHNOTMATCHES:
 			case XPATHCOMPARE:
+			case XPATHNOTCOMPARE:
 			case XPATHCONTAINS:
 			case XPATHNOTCONTAINS:
 			case XPATHCONTAINSIGNORECASE:
@@ -2328,7 +2333,7 @@ public class ValidationParser extends Parser {
 				{
 				setState(273);
 				_la = _input.LA(1);
-				if (((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTENT - 65)) | (1L << (JWT_HEADER - 65)) | (1L << (JWT_PAYLOAD - 65)))) != 0)) {
+				if (((((_la - 66)) & ~0x3f) == 0 && ((1L << (_la - 66)) & ((1L << (CONTENT - 66)) | (1L << (JWT_HEADER - 66)) | (1L << (JWT_PAYLOAD - 66)))) != 0)) {
 					{
 					setState(272);
 					xml_match_source();
@@ -2474,7 +2479,7 @@ public class ValidationParser extends Parser {
 			{
 			setState(290);
 			_la = _input.LA(1);
-			if (((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTENT - 65)) | (1L << (JWT_HEADER - 65)) | (1L << (JWT_PAYLOAD - 65)))) != 0)) {
+			if (((((_la - 66)) & ~0x3f) == 0 && ((1L << (_la - 66)) & ((1L << (CONTENT - 66)) | (1L << (JWT_HEADER - 66)) | (1L << (JWT_PAYLOAD - 66)))) != 0)) {
 				{
 				setState(289);
 				xml_match_source();
@@ -2538,6 +2543,7 @@ public class ValidationParser extends Parser {
 		public TerminalNode JSONPATHMATCHES() { return getToken(ValidationParser.JSONPATHMATCHES, 0); }
 		public TerminalNode JSONPATHNOTMATCHES() { return getToken(ValidationParser.JSONPATHNOTMATCHES, 0); }
 		public TerminalNode JSONPATHCOMPARE() { return getToken(ValidationParser.JSONPATHCOMPARE, 0); }
+		public TerminalNode JSONPATHNOTCOMPARE() { return getToken(ValidationParser.JSONPATHNOTCOMPARE, 0); }
 		public TerminalNode JSONPATHCONTAINS() { return getToken(ValidationParser.JSONPATHCONTAINS, 0); }
 		public TerminalNode JSONPATHNOTCONTAINS() { return getToken(ValidationParser.JSONPATHNOTCONTAINS, 0); }
 		public TerminalNode JSONPATHCONTAINSIGNORECASE() { return getToken(ValidationParser.JSONPATHCONTAINSIGNORECASE, 0); }
@@ -2562,7 +2568,7 @@ public class ValidationParser extends Parser {
 			{
 			setState(296);
 			_la = _input.LA(1);
-			if ( !(((((_la - 74)) & ~0x3f) == 0 && ((1L << (_la - 74)) & ((1L << (JSONPATHEQUALS - 74)) | (1L << (JSONPATHNOTEQUALS - 74)) | (1L << (JSONPATHEQUALSIGNORECASE - 74)) | (1L << (JSONPATHNOTEQUALSIGNORECASE - 74)) | (1L << (JSONPATHMATCHES - 74)) | (1L << (JSONPATHNOTMATCHES - 74)) | (1L << (JSONPATHCOMPARE - 74)) | (1L << (JSONPATHCONTAINS - 74)) | (1L << (JSONPATHNOTCONTAINS - 74)) | (1L << (JSONPATHCONTAINSIGNORECASE - 74)) | (1L << (JSONPATHNOTCONTAINSIGNORECASE - 74)))) != 0)) ) {
+			if ( !(((((_la - 75)) & ~0x3f) == 0 && ((1L << (_la - 75)) & ((1L << (JSONPATHEQUALS - 75)) | (1L << (JSONPATHNOTEQUALS - 75)) | (1L << (JSONPATHEQUALSIGNORECASE - 75)) | (1L << (JSONPATHNOTEQUALSIGNORECASE - 75)) | (1L << (JSONPATHMATCHES - 75)) | (1L << (JSONPATHNOTMATCHES - 75)) | (1L << (JSONPATHCOMPARE - 75)) | (1L << (JSONPATHNOTCOMPARE - 75)) | (1L << (JSONPATHCONTAINS - 75)) | (1L << (JSONPATHNOTCONTAINS - 75)) | (1L << (JSONPATHCONTAINSIGNORECASE - 75)) | (1L << (JSONPATHNOTCONTAINSIGNORECASE - 75)))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -2667,7 +2673,7 @@ public class ValidationParser extends Parser {
 			{
 			setState(306);
 			_la = _input.LA(1);
-			if (((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTENT - 65)) | (1L << (JWT_HEADER_JSON - 65)) | (1L << (JWT_PAYLOAD_JSON - 65)))) != 0)) {
+			if (((((_la - 66)) & ~0x3f) == 0 && ((1L << (_la - 66)) & ((1L << (CONTENT - 66)) | (1L << (JWT_HEADER_JSON - 66)) | (1L << (JWT_PAYLOAD_JSON - 66)))) != 0)) {
 				{
 				setState(305);
 				json_match_source();
@@ -2787,7 +2793,7 @@ public class ValidationParser extends Parser {
 			{
 			setState(321);
 			_la = _input.LA(1);
-			if (((((_la - 65)) & ~0x3f) == 0 && ((1L << (_la - 65)) & ((1L << (CONTENT - 65)) | (1L << (JWT_HEADER_JSON - 65)) | (1L << (JWT_PAYLOAD_JSON - 65)))) != 0)) {
+			if (((((_la - 66)) & ~0x3f) == 0 && ((1L << (_la - 66)) & ((1L << (CONTENT - 66)) | (1L << (JWT_HEADER_JSON - 66)) | (1L << (JWT_PAYLOAD_JSON - 66)))) != 0)) {
 				{
 				setState(320);
 				json_match_source();
@@ -2962,7 +2968,7 @@ public class ValidationParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3m\u0154\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3o\u0154\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -2987,10 +2993,10 @@ public class ValidationParser extends Parser {
 		".\3/\5/\u013a\n/\3/\3/\3/\6/\u013f\n/\r/\16/\u0140\3\60\5\60\u0144\n\60"+
 		"\3\60\3\60\3\61\3\61\3\61\3\62\3\62\3\62\3\62\3\63\3\63\3\64\3\64\3\64"+
 		"\3\64\2\2\65\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64"+
-		"\668:<>@BDFHJLNPRTVXZ\\^`bdf\2\23\3\2WZ\5\2\5\5aacd\4\2aaef\3\2\r\16\4"+
-		"\2\23\23\25\25\3\2ef\5\2\5\5aacc\4\2CCEF\3\2\34\35\3\2\36#\4\2CCGH\3\2"+
-		"JK\3\2$)\4\2BCFF\5\2*+\62\658=\5\2,\61\66\67>@\3\2LV\u014f\2l\3\2\2\2"+
-		"\4r\3\2\2\2\6u\3\2\2\2\bw\3\2\2\2\n{\3\2\2\2\f\u0080\3\2\2\2\16\u0088"+
+		"\668:<>@BDFHJLNPRTVXZ\\^`bdf\2\23\3\2Y\\\5\2\5\5ccef\4\2ccgh\3\2\r\16"+
+		"\4\2\23\23\25\25\3\2gh\5\2\5\5ccee\4\2DDFG\3\2\34\35\3\2\36#\4\2DDHI\3"+
+		"\2KL\3\2$)\4\2CDGG\5\2*+\62\658>\5\2,\61\66\67?A\3\2MX\u014f\2l\3\2\2"+
+		"\2\4r\3\2\2\2\6u\3\2\2\2\bw\3\2\2\2\n{\3\2\2\2\f\u0080\3\2\2\2\16\u0088"+
 		"\3\2\2\2\20\u008a\3\2\2\2\22\u0091\3\2\2\2\24\u0095\3\2\2\2\26\u009b\3"+
 		"\2\2\2\30\u009d\3\2\2\2\32\u00a7\3\2\2\2\34\u00a9\3\2\2\2\36\u00ab\3\2"+
 		"\2\2 \u00b6\3\2\2\2\"\u00b8\3\2\2\2$\u00c1\3\2\2\2&\u00c3\3\2\2\2(\u00c8"+
@@ -3003,17 +3009,17 @@ public class ValidationParser extends Parser {
 		"`\u0147\3\2\2\2b\u014a\3\2\2\2d\u014e\3\2\2\2f\u0150\3\2\2\2hm\5\4\3\2"+
 		"im\5\b\5\2jm\5b\62\2km\5\16\b\2lh\3\2\2\2li\3\2\2\2lj\3\2\2\2lk\3\2\2"+
 		"\2mn\3\2\2\2nl\3\2\2\2no\3\2\2\2op\3\2\2\2pq\7\2\2\3q\3\3\2\2\2rs\5\6"+
-		"\4\2st\7i\2\2t\5\3\2\2\2uv\t\2\2\2v\7\3\2\2\2wx\7[\2\2xy\5\n\6\2yz\5\f"+
+		"\4\2st\7k\2\2t\5\3\2\2\2uv\t\2\2\2v\7\3\2\2\2wx\7]\2\2xy\5\n\6\2yz\5\f"+
 		"\7\2z\t\3\2\2\2{|\t\3\2\2|\13\3\2\2\2}\177\5\16\b\2~}\3\2\2\2\177\u0082"+
 		"\3\2\2\2\u0080~\3\2\2\2\u0080\u0081\3\2\2\2\u0081\r\3\2\2\2\u0082\u0080"+
 		"\3\2\2\2\u0083\u0089\5\20\t\2\u0084\u0089\5\24\13\2\u0085\u0089\5\30\r"+
 		"\2\u0086\u0089\5`\61\2\u0087\u0089\5f\64\2\u0088\u0083\3\2\2\2\u0088\u0084"+
 		"\3\2\2\2\u0088\u0085\3\2\2\2\u0088\u0086\3\2\2\2\u0088\u0087\3\2\2\2\u0089"+
-		"\17\3\2\2\2\u008a\u008e\7]\2\2\u008b\u008c\7\20\2\2\u008c\u008f\5\22\n"+
+		"\17\3\2\2\2\u008a\u008e\7_\2\2\u008b\u008c\7\20\2\2\u008c\u008f\5\22\n"+
 		"\2\u008d\u008f\5 \21\2\u008e\u008b\3\2\2\2\u008e\u008d\3\2\2\2\u008f\21"+
 		"\3\2\2\2\u0090\u0092\t\4\2\2\u0091\u0090\3\2\2\2\u0092\u0093\3\2\2\2\u0093"+
-		"\u0091\3\2\2\2\u0093\u0094\3\2\2\2\u0094\23\3\2\2\2\u0095\u0096\7\\\2"+
-		"\2\u0096\u0097\5\26\f\2\u0097\u0098\7b\2\2\u0098\u0099\7i\2\2\u0099\u009a"+
+		"\u0091\3\2\2\2\u0093\u0094\3\2\2\2\u0094\23\3\2\2\2\u0095\u0096\7^\2\2"+
+		"\u0096\u0097\5\26\f\2\u0097\u0098\7d\2\2\u0098\u0099\7k\2\2\u0099\u009a"+
 		"\b\13\1\2\u009a\25\3\2\2\2\u009b\u009c\t\5\2\2\u009c\27\3\2\2\2\u009d"+
 		"\u009e\7\7\2\2\u009e\u009f\5 \21\2\u009f\u00a0\7\b\2\2\u00a0\u00a3\5\32"+
 		"\16\2\u00a1\u00a2\7\t\2\2\u00a2\u00a4\5\34\17\2\u00a3\u00a1\3\2\2\2\u00a3"+
@@ -3025,32 +3031,32 @@ public class ValidationParser extends Parser {
 		"\5\"\22\2\u00b6\u00ad\3\2\2\2\u00b6\u00ae\3\2\2\2\u00b6\u00af\3\2\2\2"+
 		"\u00b6\u00b0\3\2\2\2\u00b6\u00b1\3\2\2\2\u00b6\u00b2\3\2\2\2\u00b6\u00b3"+
 		"\3\2\2\2\u00b6\u00b4\3\2\2\2\u00b6\u00b5\3\2\2\2\u00b7!\3\2\2\2\u00b8"+
-		"\u00b9\7A\2\2\u00b9\u00ba\5$\23\2\u00ba\u00be\5H%\2\u00bb\u00bd\5H%\2"+
+		"\u00b9\7B\2\2\u00b9\u00ba\5$\23\2\u00ba\u00be\5H%\2\u00bb\u00bd\5H%\2"+
 		"\u00bc\u00bb\3\2\2\2\u00bd\u00c0\3\2\2\2\u00be\u00bc\3\2\2\2\u00be\u00bf"+
-		"\3\2\2\2\u00bf#\3\2\2\2\u00c0\u00be\3\2\2\2\u00c1\u00c2\7k\2\2\u00c2%"+
+		"\3\2\2\2\u00bf#\3\2\2\2\u00c0\u00be\3\2\2\2\u00c1\u00c2\7m\2\2\u00c2%"+
 		"\3\2\2\2\u00c3\u00c4\5(\25\2\u00c4\u00c6\5*\26\2\u00c5\u00c7\5,\27\2\u00c6"+
 		"\u00c5\3\2\2\2\u00c6\u00c7\3\2\2\2\u00c7\'\3\2\2\2\u00c8\u00c9\t\6\2\2"+
-		"\u00c9)\3\2\2\2\u00ca\u00cb\7e\2\2\u00cb+\3\2\2\2\u00cc\u00cd\t\7\2\2"+
+		"\u00c9)\3\2\2\2\u00ca\u00cb\7g\2\2\u00cb+\3\2\2\2\u00cc\u00cd\t\7\2\2"+
 		"\u00cd-\3\2\2\2\u00ce\u00cf\t\b\2\2\u00cf/\3\2\2\2\u00d0\u00da\7\26\2"+
 		"\2\u00d1\u00da\7\27\2\2\u00d2\u00da\7\30\2\2\u00d3\u00d5\7\31\2\2\u00d4"+
 		"\u00d6\5.\30\2\u00d5\u00d4\3\2\2\2\u00d5\u00d6\3\2\2\2\u00d6\u00da\3\2"+
 		"\2\2\u00d7\u00da\7\32\2\2\u00d8\u00da\7\33\2\2\u00d9\u00d0\3\2\2\2\u00d9"+
 		"\u00d1\3\2\2\2\u00d9\u00d2\3\2\2\2\u00d9\u00d3\3\2\2\2\u00d9\u00d7\3\2"+
 		"\2\2\u00d9\u00d8\3\2\2\2\u00da\61\3\2\2\2\u00db\u00dc\t\t\2\2\u00dc\63"+
-		"\3\2\2\2\u00dd\u00de\58\35\2\u00de\u00df\7k\2\2\u00df\65\3\2\2\2\u00e0"+
+		"\3\2\2\2\u00dd\u00de\58\35\2\u00de\u00df\7m\2\2\u00df\65\3\2\2\2\u00e0"+
 		"\u00e1\t\n\2\2\u00e1\67\3\2\2\2\u00e2\u00e4\5\62\32\2\u00e3\u00e2\3\2"+
 		"\2\2\u00e3\u00e4\3\2\2\2\u00e4\u00e5\3\2\2\2\u00e5\u00ec\5\66\34\2\u00e6"+
 		"\u00ec\t\13\2\2\u00e7\u00e9\5D#\2\u00e8\u00e7\3\2\2\2\u00e8\u00e9\3\2"+
 		"\2\2\u00e9\u00ea\3\2\2\2\u00ea\u00ec\5B\"\2\u00eb\u00e3\3\2\2\2\u00eb"+
 		"\u00e6\3\2\2\2\u00eb\u00e8\3\2\2\2\u00ec9\3\2\2\2\u00ed\u00ee\t\f\2\2"+
-		"\u00ee;\3\2\2\2\u00ef\u00f0\5@!\2\u00f0\u00f1\7k\2\2\u00f1=\3\2\2\2\u00f2"+
+		"\u00ee;\3\2\2\2\u00ef\u00f0\5@!\2\u00f0\u00f1\7m\2\2\u00f1=\3\2\2\2\u00f2"+
 		"\u00f3\t\r\2\2\u00f3?\3\2\2\2\u00f4\u00f6\5:\36\2\u00f5\u00f4\3\2\2\2"+
 		"\u00f5\u00f6\3\2\2\2\u00f6\u00f7\3\2\2\2\u00f7\u00fd\5> \2\u00f8\u00fa"+
 		"\5D#\2\u00f9\u00f8\3\2\2\2\u00f9\u00fa\3\2\2\2\u00fa\u00fb\3\2\2\2\u00fb"+
 		"\u00fd\5B\"\2\u00fc\u00f5\3\2\2\2\u00fc\u00f9\3\2\2\2\u00fdA\3\2\2\2\u00fe"+
-		"\u00ff\t\16\2\2\u00ffC\3\2\2\2\u0100\u0104\t\17\2\2\u0101\u0102\7D\2\2"+
+		"\u00ff\t\16\2\2\u00ffC\3\2\2\2\u0100\u0104\t\17\2\2\u0101\u0102\7E\2\2"+
 		"\u0102\u0104\5F$\2\u0103\u0100\3\2\2\2\u0103\u0101\3\2\2\2\u0104E\3\2"+
-		"\2\2\u0105\u0106\7a\2\2\u0106G\3\2\2\2\u0107\u0108\7k\2\2\u0108I\3\2\2"+
+		"\2\2\u0105\u0106\7c\2\2\u0106G\3\2\2\2\u0107\u0108\7m\2\2\u0108I\3\2\2"+
 		"\2\u0109\u010a\t\20\2\2\u010aK\3\2\2\2\u010b\u010c\5N(\2\u010c\u010e\5"+
 		"H%\2\u010d\u010f\5H%\2\u010e\u010d\3\2\2\2\u010f\u0110\3\2\2\2\u0110\u010e"+
 		"\3\2\2\2\u0110\u0111\3\2\2\2\u0111M\3\2\2\2\u0112\u0114\5\62\32\2\u0113"+
@@ -3060,8 +3066,8 @@ public class ValidationParser extends Parser {
 		"\2\u011b\u011c\3\2\2\2\u011c\u011d\5R*\2\u011d\u011f\5H%\2\u011e\u0120"+
 		"\5H%\2\u011f\u011e\3\2\2\2\u0120\u0121\3\2\2\2\u0121\u011f\3\2\2\2\u0121"+
 		"\u0122\3\2\2\2\u0122Q\3\2\2\2\u0123\u0125\5\62\32\2\u0124\u0123\3\2\2"+
-		"\2\u0124\u0125\3\2\2\2\u0125\u0126\3\2\2\2\u0126\u0127\7I\2\2\u0127S\3"+
-		"\2\2\2\u0128\u0129\7k\2\2\u0129U\3\2\2\2\u012a\u012b\t\22\2\2\u012bW\3"+
+		"\2\u0124\u0125\3\2\2\2\u0125\u0126\3\2\2\2\u0126\u0127\7J\2\2\u0127S\3"+
+		"\2\2\2\u0128\u0129\7m\2\2\u0129U\3\2\2\2\u012a\u012b\t\22\2\2\u012bW\3"+
 		"\2\2\2\u012c\u012d\5Z.\2\u012d\u012f\5T+\2\u012e\u0130\5T+\2\u012f\u012e"+
 		"\3\2\2\2\u0130\u0131\3\2\2\2\u0131\u012f\3\2\2\2\u0131\u0132\3\2\2\2\u0132"+
 		"Y\3\2\2\2\u0133\u0135\5:\36\2\u0134\u0133\3\2\2\2\u0134\u0135\3\2\2\2"+
@@ -3070,10 +3076,10 @@ public class ValidationParser extends Parser {
 		"\5^\60\2\u013c\u013e\5T+\2\u013d\u013f\5T+\2\u013e\u013d\3\2\2\2\u013f"+
 		"\u0140\3\2\2\2\u0140\u013e\3\2\2\2\u0140\u0141\3\2\2\2\u0141]\3\2\2\2"+
 		"\u0142\u0144\5:\36\2\u0143\u0142\3\2\2\2\u0143\u0144\3\2\2\2\u0144\u0145"+
-		"\3\2\2\2\u0145\u0146\7m\2\2\u0146_\3\2\2\2\u0147\u0148\7^\2\2\u0148\u0149"+
-		"\7i\2\2\u0149a\3\2\2\2\u014a\u014b\7_\2\2\u014b\u014c\5d\63\2\u014c\u014d"+
-		"\5\f\7\2\u014dc\3\2\2\2\u014e\u014f\7a\2\2\u014fe\3\2\2\2\u0150\u0151"+
-		"\7\13\2\2\u0151\u0152\7e\2\2\u0152g\3\2\2\2 ln\u0080\u0088\u008e\u0093"+
+		"\3\2\2\2\u0145\u0146\7o\2\2\u0146_\3\2\2\2\u0147\u0148\7`\2\2\u0148\u0149"+
+		"\7k\2\2\u0149a\3\2\2\2\u014a\u014b\7a\2\2\u014b\u014c\5d\63\2\u014c\u014d"+
+		"\5\f\7\2\u014dc\3\2\2\2\u014e\u014f\7c\2\2\u014fe\3\2\2\2\u0150\u0151"+
+		"\7\13\2\2\u0151\u0152\7g\2\2\u0152g\3\2\2\2 ln\u0080\u0088\u008e\u0093"+
 		"\u00a3\u00b6\u00be\u00c6\u00d5\u00d9\u00e3\u00e8\u00eb\u00f5\u00f9\u00fc"+
 		"\u0103\u0110\u0113\u0117\u011a\u0121\u0124\u0131\u0134\u0139\u0140\u0143";
 	public static final ATN _ATN =

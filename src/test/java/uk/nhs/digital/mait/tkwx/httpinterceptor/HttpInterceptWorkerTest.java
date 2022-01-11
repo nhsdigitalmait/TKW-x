@@ -390,6 +390,10 @@ public class HttpInterceptWorkerTest {
         while (Thread.activeCount() > 4 && ++timeoutCount < 12) {
             Thread.sleep(1000);
         }
+        
+        if (timeoutCount >= 12) {
+            fail("Timed out");
+        }
 
         File endPointFolder = new File(ENDPOINT_FOLDER);
         assertTrue(endPointFolder.exists());

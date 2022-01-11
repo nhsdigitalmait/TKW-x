@@ -697,8 +697,6 @@ public class HttpSender
                         message = jsonMessage;
                     }
                 }
-            } else {
-                Logger.getInstance().log(WARNING, HttpSender.class.getName(), "Content is json but not fhir");
             }
             if (chunkSize == 0) {
                 headerManager.addHttpHeader(CONTENT_LENGTH_HEADER, "" + message.length());

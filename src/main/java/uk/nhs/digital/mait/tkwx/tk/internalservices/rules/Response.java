@@ -27,6 +27,7 @@ import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.tk.boot.Request;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.routingactor.SettableErrorCode;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isBinarySourceFile;
 import static uk.nhs.digital.mait.tkwx.util.Utils.wrapBinaryPayload;
@@ -130,10 +131,10 @@ public class Response {
             }
         } else {
             if (isBinarySourceFile(url)) {
-                byte[] bytes = Files.readAllBytes(Paths.get(url));
+                byte[] bytes = Files.readAllBytes(Paths.get(substTKWRootPath(url)));
                 template = wrapBinaryPayload(bytes).toString();
             } else {
-                template = Utils.readFile2String(url);
+                template = Utils.readFile2String(substTKWRootPath(url));
             }
         }
     }

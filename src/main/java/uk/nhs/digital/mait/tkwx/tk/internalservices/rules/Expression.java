@@ -52,6 +52,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesP
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Expression_classContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Expression_jsonpath_compareContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Text_match_sourceContext;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import uk.nhs.digital.mait.tkwx.validator.DomValidator;
@@ -242,7 +243,7 @@ public class Expression {
                         break;
 
                     case SCHEMA:
-                        expression = twoArgCtx.PATH().getText();
+                        expression = substTKWRootPath(twoArgCtx.PATH().getText());
                         if (twoArgCtx.xpath_arg().size() > 0) {
                             matchValue = twoArgCtx.xpath_arg(0).getText();
                             initialiseXpath(matchValue, false);
@@ -250,7 +251,7 @@ public class Expression {
                         break;
 
                     case XSLT:
-                        expression = twoArgCtx.xslt_file().getText();
+                        expression = substTKWRootPath(twoArgCtx.xslt_file().getText());
                         matchValue = twoArgCtx.xpath_arg(0).getText();
                         initialiseXslt();
                         break;

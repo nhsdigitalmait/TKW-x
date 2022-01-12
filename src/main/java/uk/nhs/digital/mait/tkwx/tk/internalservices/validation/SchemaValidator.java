@@ -37,6 +37,7 @@ import org.w3c.dom.Document;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
 
 /**
  * Parameterised with the schema file name and optionally an Xpath expression to
@@ -103,7 +104,7 @@ public class SchemaValidator
 
     @Override
     public void setResource(String s) {
-        schemaFile = s;
+        schemaFile = substTKWRootPath(s);
     }
 
     @Override

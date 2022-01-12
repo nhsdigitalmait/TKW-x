@@ -22,6 +22,7 @@ import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Substitution;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
 
@@ -60,7 +61,7 @@ public abstract class RoutingActor
             throw new Exception("RoutingActor.init() template filename " + pname + " not set");
         }
         // import doesn't work because there is ambiguity due to overrides
-        return Utils.readFile2String(fname);
+        return Utils.readFile2String(substTKWRootPath(fname));
     }
 
 

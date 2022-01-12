@@ -40,6 +40,7 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Jsonpath_multi_arg_testContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Jsonpath_one_arg_testContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Jsonpath_two_arg_testContext;
+import static uk.nhs.digital.mait.tkwx.util.Utils.folderExists;
 
 /**
  * Main scanner for validation config files
@@ -359,10 +360,25 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
         }
     }
 
+    /**
+     * substitution of TKW_ROOT
+     * @param path
+     * @return 
+     */
+    public static String substTKWRootPath(String path) {
+        if (path.matches("^TKW_ROOT"+"(/|\\\\)"+".*$")) {
+            String tkwRoot = System.getenv("TKWROOT");
+            if (tkwRoot != null && folderExists(tkwRoot)) {
+                path = path.replaceFirst("^TKW_ROOT",tkwRoot);
+            }
+        } 
+        return path;
+    }
 // --------------------------- Visitor overrides -------------------------------
     @Override
     public Object visitInclude_statement(ValidationParser.Include_statementContext ctx) {
-        //System.err.println("Including " + ctx.PATH());
+        String path = substTKWRootPath(ctx.PATH().getText());
+        //System.err.println("Including " + path);
         // This inserts rather than appends to get the same order as before
         if (metadataAdded) {
             rulesetMetadatas.add(0, rulesetMetadata);
@@ -371,13 +387,13 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
         }
 
         try {
-            parse(ctx.PATH().getText());
+           parse(path);
         } catch (FileNotFoundException ex) {
             Logger.getInstance().log(SEVERE, ValidationGrammarCompilerVisiter.class.getName(), "Parser failure "
-                    + getLocus(ctx) + " FileNotFoundException " + ex.getMessage() + " including file " + ctx.PATH().getText());
+                    + getLocus(ctx) + " FileNotFoundException " + ex.getMessage() + " including file " + path);
         } catch (IOException ex) {
             Logger.getInstance().log(SEVERE, ValidationGrammarCompilerVisiter.class.getName(), "Parser failure"
-                    + getLocus(ctx) + "IOException " + ex.getMessage() + " including file " + ctx.PATH().getText());
+                    + getLocus(ctx) + "IOException " + ex.getMessage() + " including file " + path);
         }
         return super.visitInclude_statement(ctx);
     }

@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 import javax.xml.transform.stream.StreamSource;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -47,6 +48,9 @@ public class ExpressionTest {
     private static final String SESSION_ID = "s1";
     private static final String VARIABLE_NAME = "$v1";
     private static final String VARIABLE_VALUE = "l1";
+    
+    private static final String TEST_JSON = "{ \"resourceType\" : \"Bundle\" }";
+    private static String TEST_JWT;
 
     public ExpressionTest() {
     }
@@ -54,6 +58,10 @@ public class ExpressionTest {
     @BeforeClass
     public static void setUpClass() throws IOException {
         visitor = new TestVisitor();
+        
+        // populate JWT
+        TEST_JWT = Base64.getUrlEncoder().encodeToString("{\"a\" : \"b\" }".getBytes())+"."+ 
+                Base64.getUrlEncoder().encodeToString("{\"c\" : \"d\" }".getBytes())+".";
     }
 
     @AfterClass
@@ -353,4 +361,92 @@ public class ExpressionTest {
         result = instance.evaluate(req);
         assertEquals(expResult, result);
     }
+    
+    @Test
+    public void testJsonpathExists() throws Exception {
+        System.out.println("jsonpathexists");
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathexists"));
+        
+        // populated element
+        popReq(TEST_JSON);
+        boolean expResult = true;
+        boolean result = instance.evaluate(req);
+        assertEquals(expResult, result);
+
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathnotexists"));
+
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+        
+        // now for JWT header and payload
+        req.setHeader("Authorization", "Bearer " + TEST_JWT);
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpath_jwt_header_exists"));
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpath_jwt_payload_exists"));
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+        
+        // two tests for not exists
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpath_jwt_header_not_exists"));
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpath_jwt_payload_not_exists"));
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testJsonpathIn() throws Exception {
+        System.out.println("jsonpathin");
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathin"));
+
+        popReq(TEST_JSON);
+        boolean expResult = true;
+        boolean result = instance.evaluate(req);
+        assertEquals(expResult, result);
+
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathnotin"));
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+
+        SimulatorRulesParser.ExpressionContext ctx = visitor.getExpressionCtx().get("exp_jsonpathin_embedded_quote");
+        String strResult = ctx.expression_two_arg().xpath_arg(1).getText();
+        String expStrResult = "\"w x\"";
+        assertEquals(expStrResult, strResult);
+
+    }
+
+    @Test
+    public void testJsonpathMatches() throws Exception {
+        System.out.println("jsonpathmatches");
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathmatches"));
+
+        popReq(TEST_JSON);
+        boolean expResult = true;
+        boolean result = instance.evaluate(req);
+        assertEquals(expResult, result);
+
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathnotmatches"));
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testJsonpathCompare() throws Exception {
+        System.out.println("jsonpathcompare");
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathcompare"));
+
+        popReq(TEST_JSON);
+        boolean expResult = true;
+        boolean result = instance.evaluate(req);
+        assertEquals(expResult, result);
+
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathnotcompare"));
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+    }
+
 }

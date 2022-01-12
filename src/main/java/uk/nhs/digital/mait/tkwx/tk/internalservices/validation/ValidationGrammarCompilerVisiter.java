@@ -37,6 +37,10 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.Validation
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Xpath_one_arg_testContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Xpath_two_arg_testContext;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Jsonpath_multi_arg_testContext;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Jsonpath_one_arg_testContext;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Jsonpath_two_arg_testContext;
+import static uk.nhs.digital.mait.tkwx.util.Utils.folderExists;
 
 /**
  * Main scanner for validation config files
@@ -205,6 +209,8 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
      */
     private void handleTestStatement(ValidationParser.Test_statementContext testCtx, Validation v) {
         String xmlSource = " content";
+        String jsonSource = " content";
+        
         // test statement
         if (testCtx.no_arg_test() != null) {
             ValidationParser.No_arg_testContext no_arg = testCtx.no_arg_test();
@@ -274,7 +280,62 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
                 sb.append(" ").append(multiArgCtx.xpath_arg().get(i).getText());
             }
             v.setData(sb.toString());
-        } else if (testCtx.unchecked_test() != null) {
+            
+        } else if (testCtx.jsonpath_one_arg_test() != null) {
+            Jsonpath_one_arg_testContext oneArgCtx = testCtx.jsonpath_one_arg_test();
+            if (oneArgCtx.jsonpath_one_arg_type().text_match_type() != null) {
+                String matchSource = "content";
+                if (oneArgCtx.jsonpath_one_arg_type().text_match_source() != null) {
+                    if (oneArgCtx.jsonpath_one_arg_type().text_match_source().HTTP_HEADER() != null) {
+                        String httpHeaderName = oneArgCtx.jsonpath_one_arg_type().text_match_source().http_header_name().getText();
+                        matchSource = oneArgCtx.jsonpath_one_arg_type().text_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
+                    } else {
+                        matchSource = oneArgCtx.jsonpath_one_arg_type().text_match_source().getText();
+                    }
+                }
+                v.setType(oneArgCtx.jsonpath_one_arg_type().text_match_type().getText() + " " + matchSource);
+            } else if (oneArgCtx.jsonpath_one_arg_type().json_match_source() != null) {
+                jsonSource = " " + oneArgCtx.jsonpath_one_arg_type().json_match_source().getText();
+                v.setType(oneArgCtx.jsonpath_one_arg_type().jsonpath_one_arg_comparison_type().getText() + jsonSource);
+            } else {
+                v.setType(oneArgCtx.jsonpath_one_arg_type().getText());
+            }
+            v.setResource(oneArgCtx.CST().getText());
+            
+        } else if (testCtx.jsonpath_two_arg_test() != null) {
+            Jsonpath_two_arg_testContext twoArgCtx = testCtx.jsonpath_two_arg_test();
+            if (twoArgCtx.jsonpath_two_arg_type().jsonpath_two_arg_comparison_type() != null) {
+                if (twoArgCtx.jsonpath_two_arg_type().json_match_source() != null) {
+                    jsonSource = " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().getText();
+                }
+                v.setType(twoArgCtx.jsonpath_two_arg_type().jsonpath_two_arg_comparison_type().getText() + jsonSource);
+            } else {
+                v.setType(twoArgCtx.jsonpath_two_arg_type().getText());
+            }
+            v.setResource(twoArgCtx.jsonpath_arg().get(0).getText());
+            StringBuilder sb = new StringBuilder(twoArgCtx.jsonpath_arg().get(1).getText());
+            int size = twoArgCtx.jsonpath_arg().size();
+            for (int i = 2; i < size; i++) {
+                sb.append(" ").append(twoArgCtx.jsonpath_arg().get(i).getText());
+            }
+            v.setData(sb.toString());
+            
+        } else if (testCtx.jsonpath_multi_arg_test() != null) {
+            Jsonpath_multi_arg_testContext multiArgCtx = testCtx.jsonpath_multi_arg_test();
+            if (multiArgCtx.json_match_source() != null) {
+                xmlSource = " " + multiArgCtx.json_match_source().getText();
+            }
+            v.setType(multiArgCtx.jsonpath_multi_arg_type().getText() + xmlSource);
+            v.setResource(multiArgCtx.jsonpath_arg(0).getText());
+            // the rest goes into data
+            StringBuilder sb = new StringBuilder(multiArgCtx.jsonpath_arg().get(1).getText());
+            int size = multiArgCtx.jsonpath_arg().size();
+            for (int i = 2; i < size; i++) {
+                sb.append(" ").append(multiArgCtx.jsonpath_arg().get(i).getText());
+            }
+            v.setData(sb.toString());
+        }
+        else if (testCtx.unchecked_test() != null) {
             // handles additonal validations added at a later date - no syntax checking on arguments
             Unchecked_testContext uncheckedCtx = testCtx.unchecked_test();
             v.setType(uncheckedCtx.unchecked_test_name().getText());
@@ -293,13 +354,31 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
                 case 0:
                     break;
             }
+        } else {
+            Logger.getInstance().log(SEVERE, ValidationGrammarCompilerVisiter.class.getName(), "Parser failure "
+                    + getLocus(testCtx) + " Unhandled validation statement " + testCtx.getText());
         }
     }
 
+    /**
+     * substitution of TKW_ROOT
+     * @param path
+     * @return 
+     */
+    public static String substTKWRootPath(String path) {
+        if (path.matches("^TKW_ROOT"+"(/|\\\\)"+".*$")) {
+            String tkwRoot = System.getenv("TKWROOT");
+            if (tkwRoot != null && folderExists(tkwRoot)) {
+                path = path.replaceFirst("^TKW_ROOT",tkwRoot);
+            }
+        } 
+        return path;
+    }
 // --------------------------- Visitor overrides -------------------------------
     @Override
     public Object visitInclude_statement(ValidationParser.Include_statementContext ctx) {
-        //System.err.println("Including " + ctx.PATH());
+        String path = substTKWRootPath(ctx.PATH().getText());
+        //System.err.println("Including " + path);
         // This inserts rather than appends to get the same order as before
         if (metadataAdded) {
             rulesetMetadatas.add(0, rulesetMetadata);
@@ -308,13 +387,13 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
         }
 
         try {
-            parse(ctx.PATH().getText());
+           parse(path);
         } catch (FileNotFoundException ex) {
             Logger.getInstance().log(SEVERE, ValidationGrammarCompilerVisiter.class.getName(), "Parser failure "
-                    + getLocus(ctx) + " FileNotFoundException " + ex.getMessage() + " including file " + ctx.PATH().getText());
+                    + getLocus(ctx) + " FileNotFoundException " + ex.getMessage() + " including file " + path);
         } catch (IOException ex) {
             Logger.getInstance().log(SEVERE, ValidationGrammarCompilerVisiter.class.getName(), "Parser failure"
-                    + getLocus(ctx) + "IOException " + ex.getMessage() + " including file " + ctx.PATH().getText());
+                    + getLocus(ctx) + "IOException " + ex.getMessage() + " including file " + path);
         }
         return super.visitInclude_statement(ctx);
     }

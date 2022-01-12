@@ -103,6 +103,7 @@ HL7_DATETIME : 'HL7datetime' ;
 ISO8601_DATETIME : 'ISO8601datetime' ;  
 RFC822_DATETIME : 'RFC822datetime' ;  
 SUBSTITUTION_XPATH : X P A T H -> mode(CST_MODE) ;  
+SUBSTITUTION_JSONPATH : J S O N P A T H -> mode(CST_MODE) ;  
 SUBSTITUTION_REGEXP : R E G '_' E X P ;  
 LITERAL : 'Literal'  -> mode(ANNOTATION_MODE) ;  
 PROPERTY : 'Property' ;  
@@ -111,6 +112,9 @@ CLASS : 'Class' ;
 // Expression types (case insensitive)
 XPATHEQUALS : X P A T H E Q U A L S -> mode(CST_MODE);  
 XPATHNOTEQUALS : X P A T H N O T E Q U A L S -> mode(CST_MODE);  
+
+JSONPATHEQUALS : J S O N P A T H E Q U A L S -> mode(CST_MODE);  
+JSONPATHNOTEQUALS : J S O N  P A T H N O T E Q U A L S -> mode(CST_MODE);  
 
 XSLT : X S L T ;  
 
@@ -136,12 +140,27 @@ SCHEMA : S C H E M A ;
 MATCHES : M A T C H E S ; 
 NOTMATCHES : N O T M A T C H E S ; 
 
+JSONPATHEXISTS : J S O N P A T H E X I S T S  -> mode(CST_MODE);  
+JSONPATHNOTEXISTS :  J S O N P A T H N O T E X I S T S   -> mode(CST_MODE) ;  
+
+JSONPATHCOMPARE :  J S O N P A T H C O M P A R E -> mode(CST_MODE);  
+JSONPATHNOTCOMPARE :  J S O N  P A T H N O T C O M P A R E -> mode(CST_MODE);  
+
+JSONPATHIN :  J S O N  P A T H I N -> mode(CST_MODE); 
+JSONPATHNOTIN :  J S O N  P A T H N O T I N -> mode(CST_MODE); 
+
+JSONPATHMATCHES :  J S O N P A T H M A T C H E S -> mode(CST_MODE); 
+JSONPATHNOTMATCHES :  J S O N  P A T H N O T M A T C H E S -> mode(CST_MODE); 
+
+
 // match sources
 CONTEXT_PATH : C O N T E X T '_' P A T H ; // text only
 CONTENT : C O N T E N T ; // xml and text
 HTTP_HEADER : H T T P '_' H E A D E R ; // text only
 JWT_HEADER : J W T '_' H E A D E R ; // xml and text
 JWT_PAYLOAD : J W T '_' P A Y L O A D ; // xml and text
+JWT_HEADER_JSON : J W T '_' H E A D E R '_' J S O N ; // json header
+JWT_PAYLOAD_JSON : J W T '_' P A Y L O A D  '_' J S O N ; // json payload
 MESH_CTL : M E S H '_' C T L; // xml and text
 MESH_DAT : M E S H '_' D A T; // xml and text
 

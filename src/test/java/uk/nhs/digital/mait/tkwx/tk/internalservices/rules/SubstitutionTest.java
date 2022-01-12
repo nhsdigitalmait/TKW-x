@@ -168,6 +168,12 @@ public class SubstitutionTest {
         instance.substitute(sbTemplate, req);
         assertEquals("", sbTemplate.toString());
 
+        // Jsonpath substitution
+        requestContent = "{ \"a\" : \"b\"}";
+        instance = new Substitution(visitor.getSubstitutionCtx().get("__JSONPATH_TAG__"));
+        sbTemplate = new StringBuffer("__JSONPATH_TAG__");
+        instance.substitute(sbTemplate, requestContent);
+        assertEquals("b", sbTemplate.toString());
     }
 
     /**

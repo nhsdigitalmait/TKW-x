@@ -81,7 +81,7 @@
                     -->
 
                     <!-- set this to true for a development cycle that is shorter than war and peace -->
-					<skipTests>${skiptests}</skipTests>
+                    <skipTests>${skiptests}</skipTests>
 
                     <excludedGroups>uk.nhs.digital.mait.tkwx.IntegrationTest</excludedGroups>
 
@@ -120,7 +120,7 @@
                     <groups>uk.nhs.digital.mait.tkwx.IntegrationTest</groups>
                     
                     <!-- set this to true for a development cycle that is shorter than war and peace -->
-					<skipTests>${skiptests}</skipTests>
+                    <skipTests>${skiptests}</skipTests>
                 </configuration>
             </plugin>
             
@@ -446,7 +446,7 @@
         <dependency>
             <groupId>uk.nhs.digital.mait</groupId>
             <artifactId>jwttools</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>uk.nhs.digital.mait</groupId>
@@ -541,6 +541,11 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.4.0</version>
         </dependency>
     </dependencies>
     <name>tkw-x</name>

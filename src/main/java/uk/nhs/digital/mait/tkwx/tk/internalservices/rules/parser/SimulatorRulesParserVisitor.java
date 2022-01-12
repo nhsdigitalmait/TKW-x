@@ -163,6 +163,12 @@ public interface SimulatorRulesParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSubstitution_xpath(SimulatorRulesParser.Substitution_xpathContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SimulatorRulesParser#substitution_jsonpath}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSubstitution_jsonpath(SimulatorRulesParser.Substitution_jsonpathContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SimulatorRulesParser#substitution_regexp_cardinality}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -271,6 +277,12 @@ public interface SimulatorRulesParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitXml_match_type(SimulatorRulesParser.Xml_match_typeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SimulatorRulesParser#json_match_type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJson_match_type(SimulatorRulesParser.Json_match_typeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SimulatorRulesParser#match_type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -288,6 +300,12 @@ public interface SimulatorRulesParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitXml_match_source(SimulatorRulesParser.Xml_match_sourceContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimulatorRulesParser#json_match_source}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJson_match_source(SimulatorRulesParser.Json_match_sourceContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimulatorRulesParser#http_header_name}.
 	 * @param ctx the parse tree
@@ -312,6 +330,12 @@ public interface SimulatorRulesParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExpression_xpath_compare(SimulatorRulesParser.Expression_xpath_compareContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SimulatorRulesParser#expression_jsonpath_compare}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpression_jsonpath_compare(SimulatorRulesParser.Expression_jsonpath_compareContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimulatorRulesParser#simrule_block}.
 	 * @param ctx the parse tree

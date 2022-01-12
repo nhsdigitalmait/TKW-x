@@ -41,7 +41,7 @@ import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
  */
 public class HttpInterceptorValidator extends Thread {
 
-    private final HttpRequest clonedXmlHttpRequest;
+    private HttpRequest clonedXmlHttpRequest;
     private final Configurator config;
     private final String service;
 
@@ -131,7 +131,8 @@ public class HttpInterceptorValidator extends Thread {
                     } else if (HttpInterceptWorker.isJsonFhir(contentType)) {
                         extractedXmlRequestContent = fhirConvertJson2Xml(requestContent);
                     } else if (contentType.equals(HttpInterceptWorker.JSON_MIMETYPE)) {
-                        extractedXmlRequestContent = JsonXmlConverter.jsonToXmlString(new String(buffer).toCharArray());
+                        // flag that the validation should use the original json request
+                        clonedXmlHttpRequest = null;
                         if (soapAction == null) {
                             // try looking up the combination of method and context path re in the interaction map
                             soapAction = deriveInteractionID(httpRequest.getRequestType(), httpRequest.getContext());
@@ -203,6 +204,7 @@ public class HttpInterceptorValidator extends Thread {
      * the simulator log esp if the request was json This log contains the xml
      * converted equivalent since validation does not work on json write the
      * request to the required log file name
+     * NB The above comment is no longer true due to the introduction of native support for json
      *
      * @param httpRequest
      * @param requestContent

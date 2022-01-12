@@ -21,6 +21,7 @@ import static java.util.logging.Level.SEVERE;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.xpathExtractor;
 import uk.nhs.digital.mait.tkwx.jsonconverter.JsonXmlConverter;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
 import static uk.nhs.digital.mait.tkwx.util.Utils.fileExists;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readPropertiesFile;
@@ -80,7 +81,7 @@ public class CheckConfiguredSspTo implements ExpressionValue {
                             firstPropsFile.getParent() + "/" + routingFilePath;
                     System.out.println("Looking for json file at " + jsonFile);
                     if (fileExists(jsonFile)) {
-                        String json = readFile2String(jsonFile);
+                        String json = readFile2String(substTKWRootPath(jsonFile));
                         String xml = JsonXmlConverter.jsonToXmlString(json.toCharArray());
                         localAsid = xpathExtractor("json:json/@ASID", xml);
                         System.out.println("Setting system asid = " + localAsid);

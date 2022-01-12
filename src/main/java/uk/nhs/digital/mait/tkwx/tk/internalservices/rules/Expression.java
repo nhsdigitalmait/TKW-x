@@ -15,6 +15,8 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices.rules;
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.InputSource;
@@ -48,7 +50,9 @@ import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Class_extracted_valueContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Expression_classContext;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Expression_jsonpath_compareContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Text_match_sourceContext;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import uk.nhs.digital.mait.tkwx.validator.DomValidator;
@@ -81,7 +85,19 @@ public class Expression {
         SCHEMA,
         MATCHES,
         NOTMATCHES,
-        CLASS
+        CLASS,
+        // added json path expressions
+        JSONPATHEQUALS,
+        JSONPATHNOTEQUALS,
+        JSONPATHEXISTS,
+        JSONPATHNOTEXISTS,
+        JSONPATHCOMPARE,
+        JSONPATHNOTCOMPARE,
+        JSONPATHIN,
+        JSONPATHNOTIN,
+        JSONPATHMATCHES,
+        JSONPATHNOTMATCHES,
+
     }
 
     /**
@@ -96,7 +112,9 @@ public class Expression {
         JWT_PAYLOAD, // xml conversion of json JWT Payoad
         MESH_CTL, //Mesh control file content
         MESH_DAT, //Mesh data file content
-        VARIABLE // session state variable set by a response
+        VARIABLE, // session state variable set by a response
+        JWT_HEADER_JSON, // native json JWT Header
+        JWT_PAYLOAD_JSON // native json JWT Payoad
     }
 
     private static final String SIMULATORSCHEMACHECK = "tks.rules.simulatorschemacheck";
@@ -153,7 +171,9 @@ public class Expression {
                 }
             } else if (oneArgCtx.xml_match_source() != null) {
                 matchSource = MatchSource.valueOf(oneArgCtx.xml_match_source().getText().toUpperCase());
-            } else {
+            } else if (oneArgCtx.json_match_source() != null) {
+                matchSource = MatchSource.valueOf(oneArgCtx.json_match_source().getText().toUpperCase());
+            }else {
                 // default to the xml payload, not strictly necessary since this is the constructor set value
                 matchSource = MatchSource.CONTENT;
             }
@@ -162,6 +182,8 @@ public class Expression {
                 type = ExpressionType.valueOf(oneArgCtx.match_type().getText().toUpperCase());
             } else if (oneArgCtx.xml_match_type() != null) {
                 type = ExpressionType.valueOf(oneArgCtx.xml_match_type().getText().toUpperCase());
+            }else if (oneArgCtx.json_match_type() != null) {
+                type = ExpressionType.valueOf(oneArgCtx.json_match_type().getText().toUpperCase());
             }
 
             if (oneArgCtx.xpath_arg() != null) {
@@ -183,6 +205,9 @@ public class Expression {
             Expression_two_argContext twoArgCtx = ctx.expression_two_arg();
             if (twoArgCtx.xml_match_source() != null) {
                 matchSource = MatchSource.valueOf(twoArgCtx.xml_match_source().getText().toUpperCase());
+                type = ExpressionType.valueOf(twoArgCtx.getChild(1).getText().toUpperCase());
+            } else if (twoArgCtx.json_match_source() != null) {
+                matchSource = MatchSource.valueOf(twoArgCtx.json_match_source().getText().toUpperCase());
                 type = ExpressionType.valueOf(twoArgCtx.getChild(1).getText().toUpperCase());
             } else {
                 // default to the xml payload, not strictly necessary since this is the constructor set value
@@ -218,7 +243,7 @@ public class Expression {
                         break;
 
                     case SCHEMA:
-                        expression = twoArgCtx.PATH().getText();
+                        expression = substTKWRootPath(twoArgCtx.PATH().getText());
                         if (twoArgCtx.xpath_arg().size() > 0) {
                             matchValue = twoArgCtx.xpath_arg(0).getText();
                             initialiseXpath(matchValue, false);
@@ -226,9 +251,32 @@ public class Expression {
                         break;
 
                     case XSLT:
-                        expression = twoArgCtx.xslt_file().getText();
+                        expression = substTKWRootPath(twoArgCtx.xslt_file().getText());
                         matchValue = twoArgCtx.xpath_arg(0).getText();
                         initialiseXslt();
+                        break;
+
+                    case JSONPATHMATCHES:
+                    case JSONPATHNOTMATCHES:
+                        expression = twoArgCtx.xpath_arg(0).getText();
+                        matchValue = twoArgCtx.xpath_arg(1).getText();
+                        regexPattern = Pattern.compile(matchValue);
+                        break;
+
+                    case JSONPATHEQUALS:
+                    case JSONPATHNOTEQUALS:
+                        expression = twoArgCtx.xpath_arg(0).getText();
+                        matchValue = twoArgCtx.xpath_arg(1).getText();
+                        break;
+
+                    case JSONPATHIN:
+                    case JSONPATHNOTIN:
+                        expression = twoArgCtx.xpath_arg(0).getText();
+                        xpaths = twoArgCtx.xpath_arg();
+                        inList = new String[xpaths.size() - 1];
+                        for (int i = 1; i < xpaths.size(); i++) {
+                            inList[i - 1] = xpaths.get(i).getText().replaceFirst("\"(.*)\"$", "$1");
+                        }
                         break;
 
                     default:
@@ -271,6 +319,39 @@ public class Expression {
                 }
             } else {
                 Logger.getInstance().log(SEVERE, Expression.class.getName(), "xml match source array context is null");
+            }
+        } else if (ctx.expression_jsonpath_compare() != null) {
+            Expression_jsonpath_compareContext jsonpathCompareCtx = ctx.expression_jsonpath_compare();
+            // default to the xml payload, not strictly necessary since this is the constructor set value
+            matchSource = MatchSource.CONTENT;
+            matchSource2 = null;
+            if (jsonpathCompareCtx.json_match_source() != null) {
+                switch (jsonpathCompareCtx.json_match_source().size()) {
+                    case 0:
+                        type = ExpressionType.valueOf(jsonpathCompareCtx.getChild(0).getText().toUpperCase());
+                        break;
+                    case 1:
+                        matchSource = MatchSource.valueOf(jsonpathCompareCtx.json_match_source(0).getText().toUpperCase());
+                        type = ExpressionType.valueOf(jsonpathCompareCtx.getChild(1).getText().toUpperCase());
+                        break;
+                    case 2:
+                        matchSource = MatchSource.valueOf(jsonpathCompareCtx.json_match_source(0).getText().toUpperCase());
+                        matchSource2 = MatchSource.valueOf(jsonpathCompareCtx.json_match_source(1).getText().toUpperCase());
+                        type = ExpressionType.valueOf(jsonpathCompareCtx.getChild(2).getText().toUpperCase());
+                        break;
+                    default:
+                        Logger.getInstance().log(SEVERE, Expression.class.getName(), "Invalid match source count " + jsonpathCompareCtx.json_match_source().size());
+                }
+
+                try {
+                    expression = jsonpathCompareCtx.xpath_arg(0).getText();
+                    matchValue = jsonpathCompareCtx.xpath_arg(1).getText();
+                } catch (Exception ex) {
+                    Logger.getInstance().log(SEVERE, Expression.class.getName(), ex.getMessage());
+
+                }
+            } else {
+                Logger.getInstance().log(SEVERE, Expression.class.getName(), "json match source array context is null");
             }
         } else if (ctx.expression_class() != null) {
             Expression_classContext classCtx = ctx.expression_class();
@@ -491,6 +572,101 @@ public class Expression {
 
                 return initialiseExpressionClass(className, values, classArgs);
 
+            case JSONPATHEQUALS:
+                if (!Utils.isNullOrEmpty(o)) {
+                    x = evaluateJsonpath(expression, o);
+                    return x != null && x.contentEquals(matchValue);
+                } else {
+                    return false;
+                }
+
+            case JSONPATHNOTEQUALS:
+                if (!Utils.isNullOrEmpty(o)) {
+                    x = evaluateJsonpath(expression, o);
+                    return x != null && !x.contentEquals(matchValue);
+                } else {
+                    return true;
+                }
+            case JSONPATHEXISTS:
+            case JSONPATHNOTEXISTS:
+                if (!Utils.isNullOrEmpty(o)) {
+                    x = evaluateJsonpath(expression, o);
+                    return type == ExpressionType.JSONPATHEXISTS ? x != null : x == null;
+                } else {
+                    return type != ExpressionType.JSONPATHEXISTS;
+                }
+
+            case JSONPATHCOMPARE:
+                if (!Utils.isNullOrEmpty(o)) {
+                    x = evaluateJsonpath(expression, o);
+                    y = evaluateJsonpath(matchValue, o2 == null ? o : o2);
+                    if (x == null || y == null ) {
+                        return false;
+                    } else return x.equals(y);
+                } else {
+                    return false;
+                }
+
+            case JSONPATHNOTCOMPARE:
+                if (!Utils.isNullOrEmpty(o)) {
+                    x = evaluateJsonpath(expression, o);
+                    y = evaluateJsonpath(matchValue, o2 == null ? o : o2);
+                    if (x == null || y == null ) {
+                        return true;
+                    } else return !x.equals(y);
+                } else {
+                    return true;
+                }
+
+            case JSONPATHIN:
+                if (!Utils.isNullOrEmpty(o)) {
+                    x = evaluateJsonpath(expression, o);
+                    if (x != null) {
+                        for (String s : inList) {
+                            if (x.equals(s)) {
+                                return true;
+                            }
+                        }
+                    }
+                } 
+                return false;
+
+            case JSONPATHNOTIN:
+                if (!Utils.isNullOrEmpty(o)) {
+                    x = evaluateJsonpath(expression, o);
+                    if (x != null) {
+                        for (String s : inList) {
+                            if (x.equals(s)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    return false;
+                } else {
+                    return true;
+                }
+
+            case JSONPATHMATCHES:
+                if (!Utils.isNullOrEmpty(o)) {
+                    x = evaluateJsonpath(expression, o);
+                    if (x != null) {
+                        m = regexPattern.matcher(x);
+                        return m.find();
+                    }
+                } 
+                return false;
+
+            case JSONPATHNOTMATCHES:
+                if (!Utils.isNullOrEmpty(o)) {
+                    x = evaluateJsonpath(expression, o);
+                    if (x != null) {
+                        m = regexPattern.matcher(x);
+                        return !m.find();
+                    }
+                }
+                return true;
+
             default:
                 Logger.getInstance().log(SEVERE, Expression.class.getName(), "Unrecognised expression type " + type);
                 return false;
@@ -550,6 +726,17 @@ public class Expression {
                 break;
             case VARIABLE:
                 o = SessionStateManager.getInstance().getValue(name);
+                break;
+                
+                // added native json support
+            case JWT_HEADER_JSON:
+                jwtParser = new JWTParser(httpReq.getField(AUTHORIZATION_HEADER));
+                o = jwtParser.getJsonHeader();
+                break;
+            case JWT_PAYLOAD_JSON:
+                jwtParser = new JWTParser(httpReq.getField(AUTHORIZATION_HEADER));
+                o = jwtParser.getJsonPayload();
+                //System.out.println("JWT Payload = \r\n"+xmlReformat(o));
                 break;
             default:
                 Logger.getInstance().log(SEVERE, Rule.class.getName(), "unhandled match source " + matchSource);
@@ -612,6 +799,17 @@ public class Expression {
         } catch (Exception e) {
             throw new Exception("Exception evaluating Xpath rule: " + e.getMessage());
         }
+    }
+
+    private String evaluateJsonpath(String jsonpath, String input)
+            throws Exception {
+        String result = null;
+        try {
+            DocumentContext jsonContext = JsonPath.parse(input);
+            result =  jsonContext.read(jsonpath);    
+        } catch (com.jayway.jsonpath.InvalidPathException ex) {
+        } 
+        return result;
     }
 
     private void initialiseXpath(String s, boolean isMatchValue)

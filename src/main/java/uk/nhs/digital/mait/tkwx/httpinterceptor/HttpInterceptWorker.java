@@ -243,9 +243,10 @@ public class HttpInterceptWorker {
                         simulatorServiceResponse = rulesService.execute(clonedXmlHttpRequest);
                     } else if (!Utils.isNullOrEmpty(contentTypeHeader) && contentTypeHeader.toLowerCase().contains("json")) {
                         // this is json but not fhir
-                        clonedXmlHttpRequest = cloneXmlRequest(httpRequest, false);
+                        //clonedXmlHttpRequest = cloneXmlRequest(httpRequest, false);
                         // if we get here it's json but not as fhir knows it
-                        simulatorServiceResponse = rulesService.execute(cloneXmlRequest(httpRequest, false));
+                        //simulatorServiceResponse = rulesService.execute(cloneXmlRequest(httpRequest, false));
+                        simulatorServiceResponse = rulesService.execute(httpRequest);
                     } else {
                         // defaulting to xml
                         if (httpRequest.getContentLength() > 0) {
@@ -368,7 +369,11 @@ public class HttpInterceptWorker {
         if (isFhir) {
             xmlRequestBody = fhirConvertJson2Xml(new String(jsonHttpRequest.getBody())).getBytes();
         } else {
-            xmlRequestBody = JsonXmlConverter.jsonToXmlString(new String(jsonHttpRequest.getBody()).toCharArray()).getBytes();
+            if (jsonHttpRequest.getBody().length > 0) {
+                xmlRequestBody = JsonXmlConverter.jsonToXmlString(new String(jsonHttpRequest.getBody()).toCharArray()).getBytes();
+            } else {
+                xmlRequestBody = "".getBytes();
+            }
         }
 
         xmlRequest.setInputStream(

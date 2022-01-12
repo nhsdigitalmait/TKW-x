@@ -40,6 +40,7 @@ SESSION_ID  Literal s1
 __MULTIPLE_RE_CONTENT_TAG__ reg_exp content "^ContentStart(.*)ContentEnd$" "$1" "^(.*)$" "$1$1"
 __CLASS_TAG_CP__ Class uk.nhs.digital.mait.tkwx.tk.internalservices.rules.DelaySubstitution context_path "key 1"
 __CLASS_TAG_HEADER__ Class uk.nhs.digital.mait.tkwx.tk.internalservices.rules.DelaySubstitution http_header h1 "key 1"
+__JSONPATH_TAG__ JsonPath a
 END SUBSTITUTIONS
 #
 #=================================================================================================================================================================================================================================================
@@ -73,6 +74,21 @@ exp_always always
 exp_never never
 contains_variable context_path contains $v1
 variable_contains $v1 contains l1
+exp_jsonpathexists jsonpathexists resourceType
+exp_jsonpathnotexists jsonpathnotexists resourceTypex
+exp_jsonpathin jsonpathin resourceType "a b" "c d" Bundle
+exp_jsonpathin_embedded_quote jsonpathin resourceType "w x" "y z"
+exp_jsonpathnotin jsonpathnotin resourceType "x y"
+exp_jsonpathmatches jsonpathmatches resourceType ^Bundle$
+exp_jsonpathnotmatches jsonpathnotmatches resourceType ^bundle$
+exp_jsonpathcompare jsonpathcompare resourceType resourceType
+exp_jsonpathnotcompare jsonpathnotcompare resourceType resourceType.Element
+
+exp_jsonpath_jwt_header_exists  jwt_header_json jsonpathexists a
+exp_jsonpath_jwt_payload_exists jwt_payload_json  jsonpathexists c
+
+exp_jsonpath_jwt_header_not_exists  jwt_header_json jsonpathnotexists xxx
+exp_jsonpath_jwt_payload_not_exists jwt_payload_json  jsonpathnotexists yyy
 END EXPRESSIONS
 #
 #=================================================================================================================================================================================================================================================

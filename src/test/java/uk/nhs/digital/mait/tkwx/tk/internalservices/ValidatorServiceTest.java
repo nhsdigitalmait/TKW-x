@@ -36,6 +36,7 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import static uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse.NOTALLPASSED;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.copyFile;
 import static uk.nhs.digital.mait.tkwx.util.Utils.fileExists;
 
@@ -205,6 +206,10 @@ public class ValidatorServiceTest {
         // dont forget to load the internal props
         properties.load(new FileReader("src/main/resources/uk/nhs/digital/mait/tkwx/tk/boot/tkw.internal.properties"));
         properties.load(new FileReader(propertiesFile));
+        
+        // substitute TKW_ROOT this will have already been done in the executable
+        properties = Utils.interpretEnvVars(properties);
+
         String s = "";
         instance.boot(t, properties, s);
     }

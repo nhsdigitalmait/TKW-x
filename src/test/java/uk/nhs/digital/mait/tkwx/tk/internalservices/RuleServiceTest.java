@@ -41,6 +41,7 @@ import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import org.xml.sax.InputSource;
 import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Response;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  * This test is now against a restful rules engine in TKW-x
@@ -227,6 +228,10 @@ public class RuleServiceTest {
         // dont forget to load the internal props
         p.load(new FileReader("src/main/resources/uk/nhs/digital/mait/tkwx/tk/boot/tkw.internal.properties"));
         p.load(new FileReader(propertiesFile));
+        
+        // substitute TKW_ROOT this will have already been done in the executable
+        p = Utils.interpretEnvVars(p);
+
         String s = "";
         instance.boot(t, p, s);
     }

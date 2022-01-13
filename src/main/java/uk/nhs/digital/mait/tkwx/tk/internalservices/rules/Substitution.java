@@ -46,6 +46,7 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.Matc
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.JWT_HEADER;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.JWT_PAYLOAD;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readPropertiesFile;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
  * Defines a substitution that may be performed on a response template, to make
@@ -158,7 +159,7 @@ public class Substitution {
             int propertyFileNameCount = ctx.substitution_property().property_file_name().size();
             data = new String[propertyFileNameCount + 1];
             for (int i = 0; i < propertyFileNameCount; i++) {
-                data[i] = ctx.substitution_property().property_file_name(i).getText();
+                data[i] = replaceTkwroot(ctx.substitution_property().property_file_name(i).getText());
             }
             data[propertyFileNameCount] = ctx.substitution_property().property_name().getText();
         } else if (ctx.substitution_class() != null) {
@@ -587,6 +588,8 @@ public class Substitution {
     private void initialiseXpath(String s)
             throws Exception {
         try {
+            // handle any embedded TKW_ROOT expressions
+            s = s.replaceAll("TKW_ROOT", System.getenv("TKWROOT") != null ? System.getenv("TKWROOT"):"TKW_ROOT");
             xpath = getXpathExtractor(s);
         } catch (XPathExpressionException e) {
             StringBuilder sb = new StringBuilder("XPath expression error: ");
@@ -601,6 +604,8 @@ public class Substitution {
 
     private void initialiseJsonpath(String s)
             throws Exception {
+            // handle any embedded TKW_ROOT expressions
+            s = s.replaceAll("TKW_ROOT", System.getenv("TKWROOT") != null ? System.getenv("TKWROOT"):"TKW_ROOT");
             jsonpath = s;
     }
 

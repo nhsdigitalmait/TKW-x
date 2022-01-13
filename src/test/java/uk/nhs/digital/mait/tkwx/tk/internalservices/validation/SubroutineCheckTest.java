@@ -27,6 +27,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  *
@@ -135,6 +136,9 @@ public class SubroutineCheckTest {
         Properties p = new Properties();
         p.load(new FileReader("src/main/resources/uk/nhs/digital/mait/tkwx/tk/boot/tkw.internal.properties"));
         p.load(new FileReader(System.getenv("TKWROOT") + "/config/GP_CONNECT/tkw-x.properties"));
+        // substitute TKW_ROOT this will have already been done in the executable
+        p = Utils.interpretEnvVars(p);
+
         ValidatorFactory.getInstance().init(p);
 
         instance.setResource("check_bundle");

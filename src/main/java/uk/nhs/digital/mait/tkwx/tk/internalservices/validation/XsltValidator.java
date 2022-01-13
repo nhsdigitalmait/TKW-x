@@ -33,7 +33,7 @@ import uk.nhs.digital.mait.commonutils.util.xsltransform.TransformManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import org.xml.sax.InputSource;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
  * Apply an XSL transform to the file for validation. This uses a
@@ -82,7 +82,7 @@ public class XsltValidator
 
     @Override
     public void setResource(String t) {
-       transformFile = substTKWRootPath(t);
+       transformFile = replaceTkwroot(t);
     }
 
     @Override

@@ -40,7 +40,7 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Jsonpath_multi_arg_testContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Jsonpath_one_arg_testContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.parser.ValidationParser.Jsonpath_two_arg_testContext;
-import static uk.nhs.digital.mait.tkwx.util.Utils.folderExists;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
  * Main scanner for validation config files
@@ -360,24 +360,10 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
         }
     }
 
-    /**
-     * substitution of TKW_ROOT
-     * @param path
-     * @return 
-     */
-    public static String substTKWRootPath(String path) {
-        if (path.matches("^TKW_ROOT"+"(/|\\\\)"+".*$")) {
-            String tkwRoot = System.getenv("TKWROOT");
-            if (tkwRoot != null && folderExists(tkwRoot)) {
-                path = path.replaceFirst("^TKW_ROOT",tkwRoot);
-            }
-        } 
-        return path;
-    }
 // --------------------------- Visitor overrides -------------------------------
     @Override
     public Object visitInclude_statement(ValidationParser.Include_statementContext ctx) {
-        String path = substTKWRootPath(ctx.PATH().getText());
+        String path = replaceTkwroot(ctx.PATH().getText());
         //System.err.println("Including " + path);
         // This inserts rather than appends to get the same order as before
         if (metadataAdded) {

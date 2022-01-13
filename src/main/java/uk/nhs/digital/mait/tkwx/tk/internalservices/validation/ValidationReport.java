@@ -15,7 +15,7 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices.validation;
 
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
  * Container class for reports from validation checks.
@@ -81,7 +81,7 @@ public class ValidationReport
     }
 
     public void setFilename(String f) {
-        fileName =  substTKWRootPath(f);
+        fileName =  replaceTkwroot(f);
     }
 
     public void setAnnotation(String a) {

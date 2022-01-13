@@ -70,6 +70,7 @@ import uk.nhs.digital.mait.commonutils.util.FileLocker;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import uk.nhs.digital.mait.commonutils.util.xsltransform.TransformManager;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
  * Class representing a single test - either construct a message from a template
@@ -503,7 +504,7 @@ public class Test
 
                 preTransforms = new HashMap<>();
                 for (int i = 0; i < pathsCtx.size(); i++) {
-                    String transformPath = pathsCtx.get(i).getText();
+                    String transformPath = replaceTkwroot(pathsCtx.get(i).getText());
                     try ( FileInputStream fis = new FileInputStream(transformPath)) {
                         TransformManager.getInstance().addTransform(transformPath, fis);
                     }
@@ -1180,6 +1181,8 @@ public class Test
         FilenameFilter filterMessageSuffix = (File directory, String fileName) -> {
             return fileName.endsWith(".message");
         };
+        
+        messagesFolder = replaceTkwroot(messagesFolder);
 
         File dir = new File(messagesFolder);
         String[] foundFiles = dir.list(filterMessageSuffix);

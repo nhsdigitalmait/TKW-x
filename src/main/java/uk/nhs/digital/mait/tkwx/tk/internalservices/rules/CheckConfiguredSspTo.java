@@ -21,10 +21,10 @@ import static java.util.logging.Level.SEVERE;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.xpathExtractor;
 import uk.nhs.digital.mait.tkwx.jsonconverter.JsonXmlConverter;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
 import static uk.nhs.digital.mait.tkwx.util.Utils.fileExists;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readPropertiesFile;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
  * Java extension class for use as a Class expression in a simulator rules file
@@ -66,7 +66,7 @@ public class CheckConfiguredSspTo implements ExpressionValue {
         File firstPropsFile = new File(args[0]);
         String localAsid = null;
         for (int i = 0; i < args.length - 1; i++) {
-            String propertyFileName = args[i];
+            String propertyFileName = replaceTkwroot(args[i]);
             System.out.println("Looking for property file named " + propertyFileName);
             if (fileExists(propertyFileName)) {
                 Properties properties = new Properties();
@@ -79,9 +79,9 @@ public class CheckConfiguredSspTo implements ExpressionValue {
                     // chop off the trailing path to the config folder only when the relative path is external
                     String jsonFile = routingFilePath.startsWith("external") ? firstPropsFile.getParent().replaceFirst("/[^/]+$", "/") + routingFilePath : 
                             firstPropsFile.getParent() + "/" + routingFilePath;
-                    System.out.println("Looking for json file at " + jsonFile);
+                    System.out.println("Looking for json file at " + replaceTkwroot(jsonFile));
                     if (fileExists(jsonFile)) {
-                        String json = readFile2String(substTKWRootPath(jsonFile));
+                        String json = readFile2String(replaceTkwroot(jsonFile));
                         String xml = JsonXmlConverter.jsonToXmlString(json.toCharArray());
                         localAsid = xpathExtractor("json:json/@ASID", xml);
                         System.out.println("Setting system asid = " + localAsid);

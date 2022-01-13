@@ -35,7 +35,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesP
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Simrule_blockContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.SubstitutionContext;
 import uk.nhs.digital.mait.commonutils.util.Logger;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
  * Main scanner for simulator rules files Populates and exposes collections of
@@ -109,7 +109,7 @@ public class SimulatorRulesGrammarCompilerVisiter extends SimulatorRulesParserBa
     @Override
     public Object visitInclude_statement(SimulatorRulesParser.Include_statementContext ctx) {
         try {
-            SimulatorRulesParser parser = getParser(substTKWRootPath(ctx.PATH().getText()));
+            SimulatorRulesParser parser = getParser(replaceTkwroot(ctx.PATH().getText()));
 
             ParseTree pt = null;
             switch (ruleCategory) {

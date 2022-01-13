@@ -33,6 +33,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.ValidatorService;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor.BODY_EXTRACTOR_LABEL;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.RequestBodyExtractor;
 
@@ -62,6 +63,10 @@ public class ValidatorFactoryTest {
         properties = new Properties();
         properties.load(new FileReader("src/main/resources/uk/nhs/digital/mait/tkwx/tk/boot/tkw.internal.properties"));
         properties.load(new FileReader(System.getenv("TKWROOT") + "/config/GP_CONNECT/tkw-x.properties"));
+
+        // substitute TKW_ROOT this will have already been done in the executable
+        properties = Utils.interpretEnvVars(properties);
+
         instance.init(properties);
     }
 

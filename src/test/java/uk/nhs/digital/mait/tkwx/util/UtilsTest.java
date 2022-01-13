@@ -550,4 +550,92 @@ public class UtilsTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     * Test of interpretEnvVars method, of class Utils.
+     */
+    @Test
+    public void testInterpretEnvVars() {
+        System.out.println("interpretEnvVars");
+        Properties oldProp = new Properties();
+        oldProp.put("home","${HOME}");
+        oldProp.put("TKWROOT","TKW_ROOT");
+        Properties expResult = new Properties();
+        expResult.put("home",System.getenv("HOME"));
+        expResult.put("TKWROOT",System.getenv("TKWROOT"));
+        Properties result = Utils.interpretEnvVars(oldProp);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of isBinarySourceFile method, of class Utils.
+     */
+    @Test
+    public void testIsBinarySourceFile() {
+        System.out.println("isBinarySourceFile");
+        String filename = "x.bin";
+        boolean expResult = true;
+        boolean result = Utils.isBinarySourceFile(filename);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of isBinaryPayloadString method, of class Utils.
+     */
+    @Test
+    public void testIsBinaryPayloadString() {
+        System.out.println("isBinaryPayloadString");
+        String str = "<bytes>xxx</bytes>";
+        boolean expResult = true;
+        boolean result = Utils.isBinaryPayloadString(str);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of isBinaryPayload method, of class Utils.
+     */
+    @Test
+    public void testIsBinaryPayload() {
+        System.out.println("isBinaryPayload");
+        byte[] bytes = "stuff".getBytes();
+        boolean expResult = true;
+        boolean result = Utils.isBinaryPayload(bytes);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of wrapBinaryPayload method, of class Utils.
+     */
+    @Test
+    public void testWrapBinaryPayload() {
+        System.out.println("wrapBinaryPayload");
+        byte[] bytes = "stuff".getBytes();
+        String expResult = "<bytes unencoded_length=\"5\">\r\nc3R1ZmY=\r\n</bytes>";
+        StringBuilder result = Utils.wrapBinaryPayload(bytes);
+        assertEquals(expResult, result.toString());
+    }
+
+    /**
+     * Test of unwrapBinaryPayload method, of class Utils.
+     */
+    @Test
+    public void testUnwrapBinaryPayload() {
+        System.out.println("unwrapBinaryPayload");
+        String str = "<bytes>c3R1ZmY=</bytes>";
+        byte[] expResult = "stuff".getBytes();
+        byte[] result = Utils.unwrapBinaryPayload(str);
+        assertArrayEquals(expResult, result);
+    }
+
+    /**
+     * Test of getUnencodedLength method, of class Utils.
+     */
+    @Test
+    public void testGetUnencodedLength() {
+        System.out.println("getUnencodedLength");
+        String str = "<bytes unencoded_length=\"5\">c3R1ZmY=</bytes>";
+        int expResult = 5;
+        int result = Utils.getUnencodedLength(str);
+        assertEquals(expResult, result);
+    }
+
 }

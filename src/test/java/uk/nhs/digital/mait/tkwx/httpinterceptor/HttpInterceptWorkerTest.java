@@ -251,9 +251,8 @@ public class HttpInterceptWorkerTest {
         HttpResponse resp = new HttpResponse(ostream);
         xmlInstanceForwarding.process(xmlRequestForwarding, resp);
         String log = waitForFile();
-        // need to test the response log
-        // resp.getHttpHeader() is null for responses from forwarded end points
-        assertEquals(null, resp.getHttpHeader());
+        assertTrue(log.length() > 0);
+        assertNotNull(resp);
     }
 
     /**
@@ -269,7 +268,6 @@ public class HttpInterceptWorkerTest {
         HttpResponse resp = new HttpResponse(ostream);
         xmlInstanceSimulateRules.process(xmlRequestSimulateRules, resp);
         String log = waitForFile();
-
         checkReturnContentType(resp, FHIR_XML_MIMETYPE_STU3);
     }
 
@@ -385,14 +383,15 @@ public class HttpInterceptWorkerTest {
      * @throws InterruptedException
      */
     private String waitForFile() throws InterruptedException, Exception {
+        final int TIMEOUT = 15;
         int timeoutCount = 0;
         // wait for worker thread to complete. This takes quite a long time
-        while (Thread.activeCount() > 4 && ++timeoutCount < 12) {
+        while (Thread.activeCount() > 4 && ++timeoutCount < TIMEOUT) {
             Thread.sleep(1000);
         }
         
-        if (timeoutCount >= 12) {
-            fail("Timed out");
+        if (timeoutCount >= TIMEOUT) {
+            fail("Timed out after "+ TIMEOUT + "s");
         }
 
         File endPointFolder = new File(ENDPOINT_FOLDER);

@@ -26,7 +26,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.getRequestParametersFromCP;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationGrammarCompilerVisiter.substTKWRootPath;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
  * Returns a fhirformatted SDS adapter query response
@@ -146,7 +146,7 @@ public class SDSAdapterSubstitution implements SubstitutionValue {
             throw new IllegalArgumentException("Incorrect parameter count "+parameters.length);
         }
         endpoint = parameters[0];
-        sdsfile = substTKWRootPath(parameters[1]);
+        sdsfile = replaceTkwroot(parameters[1]);
         hmTransforms.put("Device", parameters[2]);
         hmTransforms.put("Endpoint", parameters[3]);
     }

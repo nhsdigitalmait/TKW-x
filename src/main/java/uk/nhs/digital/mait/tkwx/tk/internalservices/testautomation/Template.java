@@ -22,6 +22,7 @@ import static java.util.UUID.randomUUID;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.TemplateContext;
 import uk.nhs.digital.mait.tkwx.util.Utils;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 import static uk.nhs.digital.mait.tkwx.util.Utils.substitute;
 
 /**
@@ -50,7 +51,7 @@ public class Template {
         ISO8601FORMATDATE.setTimeZone(TimeZone.getTimeZone("GMT"));
         name = templateCtx.templateName().getText();
         filename = templateCtx.getChild(1).getText();
-        template = Utils.readFile2String(filename);
+        template = Utils.readFile2String(replaceTkwroot(filename));
     }
 
     public String getName() {

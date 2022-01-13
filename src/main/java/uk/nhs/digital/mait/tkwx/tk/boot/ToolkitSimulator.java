@@ -21,7 +21,6 @@ import java.util.StringTokenizer;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map.Entry;
 import static java.util.logging.Level.SEVERE;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.commonutils.util.ConfigurationStringTokeniser;
@@ -144,7 +143,7 @@ public class ToolkitSimulator {
             }
         }
 
-        properties = interpretEnvVars(prop);
+        properties = Utils.interpretEnvVars(prop);
 
         if (properties.getProperty(DONTSIGNLOGS_PROPERTY) != null) {
             System.setProperty(DONTSIGNLOGS_PROPERTY, properties.getProperty(DONTSIGNLOGS_PROPERTY));
@@ -159,26 +158,6 @@ public class ToolkitSimulator {
         c.setProperties(properties);
     }
 
-    /**
-     * interpret any environment variables within the properties and then
-     * replace any instances of the string "TKW_ROOT" with the value of the
-     * TKWROOT environment variable
-     * 
-     * @param oldProp the original properties file
-     * @return the new properties file with environment variables interpreted
-     */
-    private static Properties interpretEnvVars(Properties oldProp) {
-        Properties newProp = new Properties();
-        oldProp.entrySet()
-                .stream()
-                .forEach(e ->
-                        newProp.setProperty((String) e.getKey(),
-                        Utils.replaceTkwroot(
-                                Utils.replaceEnvVars(
-                                        (String) e.getValue())))
-                );
-        return newProp;
-    }
 
     public String getConfigurationName() {
         return configurationName;

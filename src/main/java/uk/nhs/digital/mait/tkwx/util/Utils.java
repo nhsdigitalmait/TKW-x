@@ -130,6 +130,20 @@ public class Utils {
         return (String) function.invoke(null, oa);
     }
 
+    /**
+     * interpret any environment variables within the properties and then
+     * replace any instances of the string "TKW_ROOT" with the value of the
+     * TKWROOT environment variable
+     *
+     * @param oldProp the original properties file
+     * @return the new properties file with environment variables interpreted
+     */
+    public static Properties interpretEnvVars(Properties oldProp) {
+        Properties newProp = new Properties();
+        oldProp.entrySet().stream().forEach(e -> newProp.setProperty((String) e.getKey(), Utils.replaceTkwroot(Utils.replaceEnvVars((String) e.getValue()))));
+        return newProp;
+    }
+
     private Utils() {
     }
 

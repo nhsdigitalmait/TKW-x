@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.AbstractAutotestParser.getAutotestParser;
@@ -35,6 +34,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailcheck
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser;
 import static uk.nhs.digital.mait.tkwx.util.Utils.FUNCTION_PREFIX;
+import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
  * Populates various collections from parsing a script used by Script.parse to
@@ -81,13 +81,13 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
 
     @Override
     public Object visitValidator(ValidatorContext ctx) {
-        script.setValidatorConfig(ctx.PATH().getText());
+        script.setValidatorConfig(replaceTkwroot(ctx.PATH().getText()));
         return super.visitValidator(ctx);
     }
 
     @Override
     public Object visitSimulator(SimulatorContext ctx) {
-        script.setSimulatorRules(ctx.PATH().getText());
+        script.setSimulatorRules(replaceTkwroot(ctx.PATH().getText()));
         return super.visitSimulator(ctx);
     }
 
@@ -255,7 +255,7 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
         String fileName = ctx.PATH().getText();
         try {
             // Pass the tokens to the parser
-            AutotestParser parser = getAutotestParser(fileName);
+            AutotestParser parser = getAutotestParser(replaceTkwroot(fileName));
 
             ParseTree pt = parser.input();
             Object x = visit(pt);

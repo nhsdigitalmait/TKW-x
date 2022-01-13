@@ -29,6 +29,7 @@ import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.send.SenderRequest;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  *
@@ -149,6 +150,9 @@ public class SpineSenderServiceTest {
         // dont forget to load the internal props
         p.load(new FileReader("src/main/resources/uk/nhs/digital/mait/tkwx/tk/boot/tkw.internal.properties"));
         p.load(new FileReader(propertiesFile));
+        // substitute TKW_ROOT this will have already been done in the executable
+        p = Utils.interpretEnvVars(p);
+
         String s = "";
         instance.boot(t, p, s);
     }

@@ -37,6 +37,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.AbstractValidatorService.Val
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.RulesetMetadata;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationReport;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidatorFactory;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  *
@@ -66,6 +67,10 @@ public class AbstractValidatorServiceTest {
         String propertiesFile = System.getenv("TKWROOT") + "/config/GP_CONNECT/tkw-x.properties";
         instance.bootProperties.load(new FileInputStream(propertiesFile));
         instance.bootProperties.put("tks.validator.check.cdaconformancexslt", "uk.nhs.digital.mait.tkwx.tk.internalservices.validation.CDAConformanceXsltValidator");
+        
+        // substitute TKW_ROOT this will have already been done in the executable
+        instance.bootProperties = Utils.interpretEnvVars(instance.bootProperties);
+
         ToolkitSimulator tks = new ToolkitSimulator(propertiesFile);
         instance.toolkitSimulator = tks;
     }

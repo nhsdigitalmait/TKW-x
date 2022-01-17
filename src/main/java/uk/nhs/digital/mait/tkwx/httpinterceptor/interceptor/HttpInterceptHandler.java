@@ -24,6 +24,7 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.HttpTransport;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  * Class to "intercept + forward" an HTTP stream. Uses the handler paths
@@ -61,6 +62,7 @@ public class HttpInterceptHandler
         super.setToolkit(t);
         Configurator config = Configurator.getConfigurator();
         savedMessagesDirectory = config.getConfiguration(SAVEDMESSAGES_PROPERTY);
+        Utils.createFolderIfMissing(savedMessagesDirectory);
         if (config.getConfiguration(SYNCHRONOUSRESPONSEDELAY_PROPERTY) != null) {
             System.setProperty(SYNCHRONOUSRESPONSEDELAY_PROPERTY, config.getConfiguration(SYNCHRONOUSRESPONSEDELAY_PROPERTY));
         }

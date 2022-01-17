@@ -35,6 +35,7 @@ import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
+import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
  * Class to "intercept" a Mesh transaction.
@@ -88,6 +89,7 @@ public class MeshInterceptHandler
         super.setToolkit(t);
         config = Configurator.getConfigurator();
         savedMessagesDirectory = config.getConfiguration(SAVEDMESSAGES_PROPERTY);
+        Utils.createFolderIfMissing(savedMessagesDirectory);
     }
 
     /**

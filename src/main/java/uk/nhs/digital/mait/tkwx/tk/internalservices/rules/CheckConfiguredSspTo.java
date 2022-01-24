@@ -79,7 +79,8 @@ public class CheckConfiguredSspTo implements ExpressionValue {
                     // chop off the trailing path to the config folder only when the relative path is external
                     String jsonFile = routingFilePath.startsWith("external") ? firstPropsFile.getParent().replaceFirst("/[^/]+$", "/") + routingFilePath : 
                             firstPropsFile.getParent() + "/" + routingFilePath;
-                    System.out.println("Looking for json file at " + replaceTkwroot(jsonFile));
+                    jsonFile = replaceTkwroot(jsonFile);
+                    System.out.println("Looking for json file at " + jsonFile);
                     if (fileExists(jsonFile)) {
                         String json = readFile2String(replaceTkwroot(jsonFile));
                         String xml = JsonXmlConverter.jsonToXmlString(json.toCharArray());

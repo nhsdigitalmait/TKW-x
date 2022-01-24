@@ -55,7 +55,7 @@ reason_phrase : QUOTED_STRING ;
 response_action : IDENTIFIER | PATH | URL | INTEGER ; // asynchronous action
 httpheaderresponse : WITH_HTTP_HEADERS LPAREN httpheader+ RPAREN ;
 httpheader: http_header_name COLON http_header_value;
-http_header_value : QUOTED_STRING ;
+http_header_value : QUOTED_STRING ; // The contents of which can include substition tags
 variable_assignment : VARIABLE_NAME EQUALS ? QUOTED_STRING ? ;
 
 //------------------------------------------------------------------------------

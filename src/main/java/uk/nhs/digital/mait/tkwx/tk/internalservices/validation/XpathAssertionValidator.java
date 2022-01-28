@@ -306,13 +306,14 @@ public class XpathAssertionValidator
                 HttpHeaderManager headerManager = be.getRelevantHttpHeaders();
                 String jwtb64 = headerManager != null ? headerManager.getHttpHeaderValue(AUTHORIZATION_HEADER) : null;
                 if (jwtb64 != null) {
-                    jwtParser = new JWTParser(jwtb64);
                     switch (xmlSource) {
                         case JWT_HEADER:
+                            jwtParser = new JWTParser(jwtb64);
                             // the xml to be analysed is from the JWT
                             o = jwtParser.getXmlHeader();
                             break;
                         case JWT_PAYLOAD:
+                            jwtParser = new JWTParser(jwtb64);
                             // the xml to be analysed is from the JWT
                             o = jwtParser.getXmlPayload();
                             break;

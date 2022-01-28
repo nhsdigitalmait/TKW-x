@@ -270,13 +270,14 @@ public class JsonpathAssertionValidator
                 HttpHeaderManager headerManager = be.getRelevantHttpHeaders();
                 String jwtb64 = headerManager != null ? headerManager.getHttpHeaderValue(AUTHORIZATION_HEADER) : null;
                 if (jwtb64 != null) {
-                    jwtParser = new JWTParser(jwtb64);
                     switch (jsonSource) {
                         case JWT_HEADER_JSON:
+                            jwtParser = new JWTParser(jwtb64);
                             // the json JWT header to be analysed is from the JWT
                             o = jwtParser.getJsonHeader();
                             break;
                         case JWT_PAYLOAD_JSON:
+                            jwtParser = new JWTParser(jwtb64);
                             // the json JWT payload to be analysed is from the JWT
                             o = jwtParser.getJsonPayload();
                             break;

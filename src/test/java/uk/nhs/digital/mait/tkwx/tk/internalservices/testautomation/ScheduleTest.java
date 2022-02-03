@@ -63,6 +63,9 @@ public class ScheduleTest {
 
     @BeforeClass
     public static void setUpClass() throws IOException {
+        // ensure the correct Configurator is set
+        System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);
+
         copyFile(TKWROOT + "/contrib/TKWAutotestManager/tstp/patients.tdv", TDV_FILE);
         TestVisitor visitor = new TestVisitor();
         scheduleCtx = visitor.getScheduleContext();
@@ -251,7 +254,7 @@ public class ScheduleTest {
 
 
     /**
-     * Test of deriveInteractionID method, of class Schedule.
+     * Test of derivePseudoInteractionID method, of class Schedule.
      * @throws java.lang.Exception
      */
     @Test
@@ -263,12 +266,12 @@ public class ScheduleTest {
         String method = "POST";
         String cp = "/DocumentReference";
         String expResult = "urn:nhs:names:services:nrls:fhir:rest:create:documentreference";
-        String result = Schedule.deriveInteractionID(method, cp);
+        String result = Schedule.derivePseudoInteractionID(method, cp);
         assertEquals(expResult, result);
 
         cp = "/xxx";
         expResult = null;
-        result = Schedule.deriveInteractionID(method, cp);
+        result = Schedule.derivePseudoInteractionID(method, cp);
         assertEquals(expResult, result);
     }
 

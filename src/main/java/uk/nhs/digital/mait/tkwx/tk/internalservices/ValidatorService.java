@@ -36,6 +36,7 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import javax.xml.xpath.XPathExpressionException;
 import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
@@ -43,17 +44,20 @@ import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.itklogverifier.LogVerifier;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Schedule.deriveInteractionID;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.RequestBodyExtractor;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.SynchronousResponseBodyExtractor;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.RulesetMetadata;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import uk.nhs.digital.mait.commonutils.util.xpath.XPathManager;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor;
 import static uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor.BODY_EXTRACTOR_LABEL;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.HttpRequestBodyExtractorAdapter;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Schedule.derivePseudoInteractionID;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 
 /**
  * Service to implement the TKW "validate" mode. Driven by configurations in the
@@ -72,6 +76,24 @@ public class ValidatorService extends AbstractValidatorService{
     private boolean singleMessageValidationMode = false;
     private String summaryReportNameElement = null;
     private static final String ITKSERVICEXPATH = "//itk:DistributionEnvelope/itk:header/@service";
+    
+    private static String fhirServiceLocation;
+
+    static {
+        try {
+            Configurator config = Configurator.getConfigurator();
+            // default value from constant
+            fhirServiceLocation = FHIR_SERVICE_LOCATION;
+            // get any override from the configurator;
+            String fsl = config.getConfiguration(FHIR_SERVICE_LOCATION_PROPERTY);
+            if (!isNullOrEmpty(fsl)) {
+                fhirServiceLocation = fsl;
+            } 
+        }
+         catch (Exception e) {
+            Logger.getInstance().log(SEVERE, ValidatorService.class.getName(), "Failure to retrieve config info " + e.toString());
+        }   
+     }
 
     // string constants not Validation types
     private static final String VALIDATE_AS = "VALIDATE-AS:";
@@ -297,11 +319,14 @@ public class ValidatorService extends AbstractValidatorService{
                                         if (service == null) {
                                             service = requestHeaders.getHttpHeaderValue(SSP_INTERACTION_ID_HEADER);
                                         }
+                                        if (!isNullOrEmpty(fhirServiceLocation) && body.length() > 0) {
+                                            service = XPathManager.xpathExtractor(fhirServiceLocation, new String(body));
+                                        }
                                         // try deriving from interaction map in the properties file using http method and context path
                                         if (service == null) {
                                             String method = be.getHttpRequestMethod();
                                             String cp = be.getHttpRequestContextPath();
-                                            service = deriveInteractionID(method, cp);
+                                            service = derivePseudoInteractionID(method, cp);
                                         }
                                     }
                                     if (!Utils.isNullOrEmpty(service)) {

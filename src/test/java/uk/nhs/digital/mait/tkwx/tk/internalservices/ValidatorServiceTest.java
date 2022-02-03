@@ -46,7 +46,7 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.fileExists;
  */
 @Category(RestartJVMTest.class)
 public class ValidatorServiceTest {
-
+    
     private ValidatorService instance;
     private Properties properties;
     private static final String LOG_FILE_NAME = "simulator_log_request.txt";
@@ -57,6 +57,8 @@ public class ValidatorServiceTest {
 
     @BeforeClass
     public static void setUpClass() {
+        // ensure the correct Configurator is set
+        System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);
     }
 
     @AfterClass

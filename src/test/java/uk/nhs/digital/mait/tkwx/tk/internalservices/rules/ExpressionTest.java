@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 import org.w3c.dom.Node;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource;
@@ -51,6 +52,11 @@ public class ExpressionTest {
     
     private static final String TEST_JSON = "{ \"resourceType\" : \"Bundle\" }";
     private static String TEST_JWT;
+    
+    @org.junit.Rule
+    public final RestoreSystemProperties restoreSystemProperties
+            = new RestoreSystemProperties();
+
 
     public ExpressionTest() {
     }

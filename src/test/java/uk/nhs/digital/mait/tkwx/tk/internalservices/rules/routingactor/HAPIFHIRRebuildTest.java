@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.boot.SimulatorMode;
@@ -27,6 +29,11 @@ import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
  */
 @Category(RestartJVMTest.class)
 public class HAPIFHIRRebuildTest {
+    
+    @Rule
+    public final RestoreSystemProperties restoreSystemProperties
+            = new RestoreSystemProperties();
+
 
     
     public HAPIFHIRRebuildTest() {

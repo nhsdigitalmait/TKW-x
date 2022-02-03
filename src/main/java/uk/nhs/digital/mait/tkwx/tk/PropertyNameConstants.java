@@ -154,5 +154,7 @@ public class PropertyNameConstants {
     // Currently this only applies to the autotest extractor SingleRecordXpathResponseExtractor class
     // where a supplier was returning a urlencoded Location header
     public static final String URL_DECODE_HTTP_HEADERS_PROPERTY = "tks.url_decode.httpheaders";
+    
+    public static final String FHIR_SERVICE_LOCATION_PROPERTY = "tks.fhir.service.location";
 
 }

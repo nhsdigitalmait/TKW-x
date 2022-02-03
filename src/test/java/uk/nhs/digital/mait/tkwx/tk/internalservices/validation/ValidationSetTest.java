@@ -29,6 +29,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.RestartJVMTest;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.ORG_CONFIGURATOR;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.ORG_RESETTABLE_PROPERTIES_CONFIGURATOR;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.SpineValidatorService;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.ValidatorService;
@@ -48,6 +50,8 @@ public class ValidationSetTest {
 
     @BeforeClass
     public static void setUpClass() {
+       // ensure the correct Configurator is set
+        System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);
     }
 
     @AfterClass

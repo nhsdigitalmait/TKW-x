@@ -38,6 +38,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 
 /**
@@ -45,6 +47,10 @@ import uk.nhs.digital.mait.tkwx.util.Utils;
  * @author simonfarrow
  */
 public class HapiAssetCacheStu3Test {
+    
+    @Rule
+    public final RestoreSystemProperties restoreSystemProperties
+            = new RestoreSystemProperties();
 
     private HapiAssetCacheStu3 instance;
     private final static String ROOT = System.getenv("TKWROOT")+"/config/GP_CONNECT/validator_config/fhir_assets/STU3-FHIR-Assets/";

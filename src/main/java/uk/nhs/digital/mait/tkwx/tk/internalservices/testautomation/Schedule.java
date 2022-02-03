@@ -39,6 +39,9 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import uk.nhs.digital.mait.commonutils.util.xpath.XPathManager;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.RESTfulRulesEngine;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 
 /**
  * A Schedule is a collection of Tests (strictly, it is a set of ScheduleElement
@@ -50,6 +53,24 @@ import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
  */
 public class Schedule
         implements Linkable {
+    
+         private static String fhirServiceLocation;
+
+     static {
+        try {
+            Configurator config = Configurator.getConfigurator();
+            // default value from constant
+            fhirServiceLocation = FHIR_SERVICE_LOCATION;
+            // get any override from the configurator;
+            String fsl = config.getConfiguration(FHIR_SERVICE_LOCATION_PROPERTY);
+            if (!isNullOrEmpty(fsl)) {
+                fhirServiceLocation = fsl;
+            } }
+         catch (Exception e) {
+            Logger.getInstance().log(SEVERE, RESTfulRulesEngine.class.getName(), "Failure to retrieve config info " + e.toString());
+        }   
+     }
+
 
     private String name = null;
     private File logRoot = null;
@@ -438,8 +459,8 @@ public class Schedule
                     HttpHeaderManager httpRequestHeaders = synchronousResponseBodyExtractor.getHttpRequestHeaders();
                     HttpHeaderManager httpResponseHeaders = synchronousResponseBodyExtractor.getHttpResponseHeaders();
                     if (httpRequestHeaders != null) {
-                        String sspInteractionID = httpRequestHeaders.getHttpHeaderValue(SSP_INTERACTION_ID_HEADER);
-                        if (!Utils.isNullOrEmpty(sspInteractionID)) {
+                        String interactionID = httpRequestHeaders.getHttpHeaderValue(SSP_INTERACTION_ID_HEADER);
+                        if (!Utils.isNullOrEmpty(interactionID)) {
                             // write the whole log file since its a restful interaction if ssp is populated
                             // also theres no hint required because of the int id in the header 
                             String logStr = new String(Files.readAllBytes(Paths.get(f.getAbsolutePath())));
@@ -447,13 +468,21 @@ public class Schedule
                         } else {
                             String responseContentType = httpResponseHeaders != null ? httpResponseHeaders.getHttpHeaderValue(CONTENT_TYPE_HEADER) : "";
                             if (!Utils.isNullOrEmpty(responseContentType) && responseContentType.toLowerCase().contains("fhir")) {
-                                // non ssp fhir ie NRLS at the time of writing we need to workout what the int id is
-                                // then add it as a hint in the validate-as 
-                                String logStr = new String(Files.readAllBytes(Paths.get(f.getAbsolutePath())));
-                                String method = synchronousResponseBodyExtractor.getHttpRequestMethod();
-                                String cp = synchronousResponseBodyExtractor.getHttpRequestContextPath();
-                                String interactionID = deriveInteractionID(method, cp);
+                                // see if we can get an interaction id from aMessageHeader
+                                if (!isNullOrEmpty(fhirServiceLocation) && !isNullOrEmpty(body) && body.trim().startsWith("<")) {
+                                    interactionID = XPathManager.xpathExtractor(fhirServiceLocation, body);
+                                }
+                                
+                                if (isNullOrEmpty(interactionID)) {
+                                    // non ssp fhir ie NRLS at the time of writing we need to workout what the int id is
+                                    // then add it as a hint in the validate-as 
+                                    String method = synchronousResponseBodyExtractor.getHttpRequestMethod();
+                                    String cp = synchronousResponseBodyExtractor.getHttpRequestContextPath();
+                                    interactionID = derivePseudoInteractionID(method, cp);
+                                }
+
                                 if (!Utils.isNullOrEmpty(interactionID)) {
+                                    String logStr = new String(Files.readAllBytes(Paths.get(f.getAbsolutePath())));
                                     ofw.write(("VALIDATE-AS: TRANSMITTER_LOG_RESPONSE/" + interactionID + "\r\n" + logStr));
                                 }
                             } else {
@@ -572,7 +601,7 @@ public class Schedule
      * @param cp context path
      * @return derived interaction id or null for no lookup
      */
-    public static String deriveInteractionID(String method, String cp) {
+    public static String derivePseudoInteractionID(String method, String cp) {
         if (interactionMap == null) {
             populateInteractionMap();
         }

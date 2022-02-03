@@ -28,6 +28,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.RestartJVMTest;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.ORG_CONFIGURATOR;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.ORG_RESETTABLE_PROPERTIES_CONFIGURATOR;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.tk.boot.TransmitterMode;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.TestTest.deleteFolders;
@@ -55,6 +57,8 @@ public class DelayFunctionTest {
      */
     @BeforeClass
     public static void setUpClass() throws IOException {
+        // ensure the correct Configurator is set
+        System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);
         copyFile(System.getenv("TKWROOT") + "/contrib/TKWAutotestManager/tstp/patients.tdv", "src/test/resources/test.tdv");
         TestVisitor visitor = new TestVisitor();
         functionTestCtx = visitor.getFunctionTestContext();

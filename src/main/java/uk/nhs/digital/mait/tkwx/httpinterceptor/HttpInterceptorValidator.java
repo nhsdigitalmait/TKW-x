@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import static java.util.logging.Level.WARNING;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
-import uk.nhs.digital.mait.tkwx.jsonconverter.JsonXmlConverter;
 import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.*;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceManager;
@@ -28,11 +27,11 @@ import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitService;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.fhirConvertJson2Xml;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.Reconfigurable;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.send.LogMarkers.END_INBOUND_MARKER;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Schedule.deriveInteractionID;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Schedule.derivePseudoInteractionID;
 
 /**
  * Class to execute inline validation of simulator requests in their own thread
@@ -135,7 +134,7 @@ public class HttpInterceptorValidator extends Thread {
                         clonedXmlHttpRequest = null;
                         if (soapAction == null) {
                             // try looking up the combination of method and context path re in the interaction map
-                            soapAction = deriveInteractionID(httpRequest.getRequestType(), httpRequest.getContext());
+                            soapAction = derivePseudoInteractionID(httpRequest.getRequestType(), httpRequest.getContext());
                         }
                     } else if (clonedXmlHttpRequest != null && clonedXmlHttpRequest.getField(CONTENT_TYPE_HEADER).toLowerCase().contains("xml")) {
                         // In this case the payload has had to be converted from something else but it can be validated as it xml and the clonedXmlHttpRequest will be used

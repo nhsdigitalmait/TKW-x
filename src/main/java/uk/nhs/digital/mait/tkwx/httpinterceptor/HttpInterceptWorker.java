@@ -49,7 +49,6 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.RuleService;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.ConditionalCompilationControls;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.FHIRCONVERSIONFAILURE;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter.fhirConvertJson2Xml;
-import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Schedule.deriveInteractionID;
 import static uk.nhs.digital.mait.tkwx.util.HttpChunker.chunk;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.util.Utils;
@@ -61,6 +60,8 @@ import uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth.SpineAsynchronousSoapRe
 import uk.nhs.digital.mait.tkwx.httpinterceptor.spinemth.SpineSynchronousSoapRequestHandler;
 import uk.nhs.digital.mait.tkwx.tk.handlers.EvidenceMetaDataHandler;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.LoggingFileOutputStream;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Schedule.derivePseudoInteractionID;
 
 /**
  * This class represents a http request. This may be incorporated into the
@@ -85,6 +86,7 @@ public class HttpInterceptWorker {
     private boolean responseContentTypeSet; // used to log reports if the response content type has been set
     protected LoggingFileOutputStream logfile = null;
     private HttpRequest clonedXmlHttpRequest = null; //used for simulator and validator when request is json
+    private static String fhirServiceLocation;
 
     private static String forwardingAddress = null;
     private static boolean inhibitValidation = false;
@@ -104,6 +106,7 @@ public class HttpInterceptWorker {
     // Mime types
     public static final String JSON_MIMETYPE = "application/json";
 
+
     private static FhirVersionEnum fhirVersion;
     protected EvidenceMetaDataHandler evidenceMetaDataHandler;
     private SpineAsynchronousSoapRequestHandler asynchronousSoapRequestHandler = null;
@@ -116,14 +119,14 @@ public class HttpInterceptWorker {
             String sp = null;
             String sspForwardingAddress = System.getProperty("uk.nhs.digital.mait.tkwx.httpinterceptor.forwardingaddress");
             String sspForwardingPort = System.getProperty("uk.nhs.digital.mait.tkwx.httpinterceptor.forwardingport");
-            if (sspForwardingAddress != null && sspForwardingAddress.trim().length() > 0 && sspForwardingPort != null && sspForwardingPort.trim().length() > 0) {
+            if (!isNullOrEmpty(sspForwardingAddress) && !isNullOrEmpty(sspForwardingPort)) {
                 forwardingAddress = sspForwardingAddress;
                 sp = sspForwardingPort;
             } else {
                 forwardingAddress = config.getConfiguration(FORWARDINGADDRESSPROPERTY);
                 sp = config.getConfiguration(FORWARDINGPORTPROPERTY);
             }
-            if ((sp != null) && (sp.trim().length() > 0)) {
+            if (!isNullOrEmpty(sp)) {
                 try {
                     forwardingPort = Integer.parseInt(sp);
                     System.out.println("Interceptor Forwarding Address: " + forwardingAddress + ":" + forwardingPort);
@@ -136,12 +139,20 @@ public class HttpInterceptWorker {
                     ? FhirVersionEnum.valueOf(config.getConfiguration(FHIR_VERSION_PROPERTY).toUpperCase()) : DSTU3;
 
             String sssr = config.getConfiguration(SPINESOAPSYNCREQUEST);
-            if ((sssr != null) && (sssr.trim().length() > 0)) {
+            if (!isNullOrEmpty(sssr)) {
                 syncSoapList = Arrays.asList(sssr.split("\\s+"));
             }
             String ssar = config.getConfiguration(SPINESOAPASYNCREQUEST);
-            if ((ssar != null) && (ssar.trim().length() > 0)) {
+            if (!isNullOrEmpty(ssar)) {
                 asyncSoapList = Arrays.asList(ssar.split("\\s+"));
+            }
+            
+            // default value from constant
+            fhirServiceLocation = FHIR_SERVICE_LOCATION;
+            // get any override from the configurator;
+            String fsl = config.getConfiguration(FHIR_SERVICE_LOCATION_PROPERTY);
+            if (!isNullOrEmpty(fsl)) {
+                fhirServiceLocation = fsl;
             }
         } catch (Exception e) {
             Logger.getInstance().log(SEVERE, HttpInterceptWorker.class.getName(), "Failure to retrieve forwarding endpoint properties - " + e.toString());
@@ -227,21 +238,11 @@ public class HttpInterceptWorker {
                     } else if (isJsonFhir(contentTypeHeader)) {
                         // this is json fhir
                         clonedXmlHttpRequest = cloneXmlRequest(httpRequest, true);
-                        if (clonedXmlHttpRequest.getContentLength() > 0) {
-                            service = XPathManager.xpathExtractor(FHIR_SERVICE_LOCATION, new String(clonedXmlHttpRequest.getBody()));
-                        }
-                        // can we get the interaction from the ssp header ?
-                        if (Utils.isNullOrEmpty(service)) {
-                            service = clonedXmlHttpRequest.getField(SSP_INTERACTION_ID_HEADER);
-                        }
-                        // can we derive the interaction from the http method and context path ?
-                        if (Utils.isNullOrEmpty(service)) {
-                            String method = httpRequest.getRequestType();
-                            String cp = httpRequest.getContext();
-                            service = deriveInteractionID(method, cp);
-                        }
+                        
+                        deriveInteractionIDFromHttpRequest(clonedXmlHttpRequest);
+                        
                         simulatorServiceResponse = rulesService.execute(clonedXmlHttpRequest);
-                    } else if (!Utils.isNullOrEmpty(contentTypeHeader) && contentTypeHeader.toLowerCase().contains("json")) {
+                    } else if (!isNullOrEmpty(contentTypeHeader) && contentTypeHeader.toLowerCase().contains("json")) {
                         // this is json but not fhir
                         //clonedXmlHttpRequest = cloneXmlRequest(httpRequest, false);
                         // if we get here it's json but not as fhir knows it
@@ -249,20 +250,7 @@ public class HttpInterceptWorker {
                         simulatorServiceResponse = rulesService.execute(httpRequest);
                     } else {
                         // defaulting to xml
-                        if (httpRequest.getContentLength() > 0) {
-                            service = XPathManager.xpathExtractor(FHIR_SERVICE_LOCATION, new String(httpRequest.getBody()));
-                        }
-                        // can we get the interaction from the ssp header ?
-                        if (Utils.isNullOrEmpty(service)) {
-                            service = httpRequest.getField(SSP_INTERACTION_ID_HEADER);
-                        }
-                        // can we derive the interaction from the http method and context path ?
-                        if (Utils.isNullOrEmpty(service)) {
-                            String method = httpRequest.getRequestType();
-                            String cp = httpRequest.getContext();
-                            service = deriveInteractionID(method, cp);
-                        }
-
+                        deriveInteractionIDFromHttpRequest(httpRequest);
                         validateXmlAsFhir(contentTypeHeader, httpRequest); // do an initial conversion to see if its valid fhir
 
                         // assumes now valid xml
@@ -270,10 +258,10 @@ public class HttpInterceptWorker {
                     }
                 } else { // not restful could be FHIR messaging
                     // NB If the FHIR message includes a SOAPaction (what??) we won't get here
-                    // try to find the interaction id
+                    // try to find the interaction id from the message header
                     String requestBodyStr = new String(httpRequest.getBody());
                     if (requestBodyStr.trim().startsWith("<")) {
-                        service = XPathManager.xpathExtractor(FHIR_SERVICE_LOCATION, requestBodyStr);
+                        service = XPathManager.xpathExtractor(fhirServiceLocation, requestBodyStr);
                     }
 
                     byte[] requestBody = httpRequest.getBody();
@@ -281,12 +269,18 @@ public class HttpInterceptWorker {
                         requestBody = fhirConvertJson2Xml(new String(requestBody)).getBytes();
                         requestBodyStr = new String(requestBody);
                         if (!requestBodyStr.contains(FHIRCONVERSIONFAILURE)) {
-                            if (Utils.isNullOrEmpty(service) && requestBodyStr.trim().length() > 0) {
-                                service = XPathManager.xpathExtractor(FHIR_SERVICE_LOCATION, requestBodyStr);
+                            if (isNullOrEmpty(service) && !isNullOrEmpty(fhirServiceLocation) && !isNullOrEmpty(requestBodyStr)) {
+                                service = XPathManager.xpathExtractor(fhirServiceLocation, requestBodyStr);
                             }
                             // can we get the interaction from the ssp header ?
-                            if (Utils.isNullOrEmpty(service)) {
+                            if (isNullOrEmpty(service)) {
                                 service = httpRequest.getField(SSP_INTERACTION_ID_HEADER);
+                            }
+                                    // can we derive the interaction from the http method and context path ?
+                            if (isNullOrEmpty(service)) {
+                                String method = httpRequest.getRequestType();
+                                String cp = httpRequest.getContext();
+                                service = derivePseudoInteractionID(method, cp);
                             }
 
                         } else {
@@ -298,7 +292,7 @@ public class HttpInterceptWorker {
                     }
 
                     // NB changed from inverted logic
-                    if (!Utils.isNullOrEmpty(service)) {
+                    if (!isNullOrEmpty(service)) {
                         simulatorServiceResponse = rulesService.execute(new String[]{service, requestBodyStr});
                     }
                 }
@@ -327,6 +321,27 @@ public class HttpInterceptWorker {
             }
         }
     }  // invokeSimulator
+
+    /**
+     * 
+     * @param httpRequest
+     * @throws Exception 
+     */
+    private void deriveInteractionIDFromHttpRequest(HttpRequest httpRequest) throws Exception {
+        if (isNullOrEmpty(service) && !isNullOrEmpty(fhirServiceLocation) && httpRequest.getContentLength() > 0) {
+            service = XPathManager.xpathExtractor(fhirServiceLocation, new String(httpRequest.getBody()));
+        }
+        // can we get the interaction from the ssp header ?
+        if (isNullOrEmpty(service)) {
+            service = httpRequest.getField(SSP_INTERACTION_ID_HEADER);
+        }
+        // can we derive the interaction from the http method and context path ?
+        if (isNullOrEmpty(service)) {
+            String method = httpRequest.getRequestType();
+            String cp = httpRequest.getContext();
+            service = derivePseudoInteractionID(method, cp);
+        }
+    }
 
     /**
      * Parse the xml as fhir and flag up an format conversion error if it fails

@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.ValidationReport;
@@ -42,6 +44,11 @@ import static uk.nhs.digital.mait.tkwx.util.dsig.CryptoProviderFactory.GOOD_USER
  */
 @Category(RestartJVMTest.class)
 public class PrescriptionSignatureValidatorTest {
+    
+    @Rule
+    public final RestoreSystemProperties restoreSystemProperties
+            = new RestoreSystemProperties();
+
 
     private PrescriptionSignatureValidator instance;
     private static SpineMessage spineMessage;

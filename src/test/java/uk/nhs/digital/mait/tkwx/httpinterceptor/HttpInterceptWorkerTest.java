@@ -35,6 +35,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 import org.junit.experimental.categories.Category;
 import static uk.nhs.digital.mait.jwttools.AuthorisationGenerator.getJWT;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
@@ -62,6 +64,10 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.readPropertiesFile;
 @Category(RestartJVMTest.class)
 public class HttpInterceptWorkerTest {
 
+    @Rule
+    public final RestoreSystemProperties restoreSystemProperties
+            = new RestoreSystemProperties();
+
     private static Process process;
 
     private HttpInterceptWorker xmlInstanceSimulateRules;
@@ -86,9 +92,34 @@ public class HttpInterceptWorkerTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        // start an GP_CONNECT host responder this is used for testing forwarded interactions that don't match the ruleset in the httpinterceptor
+    /*
+                0 (5001)   -------> 0 (4854)
+                |         |         |
+                |         |         |
+            ----------    |     ----------
+            |        |    |     |        |
+            |        |-----     |        |
+            |        |          |        |
+            ----------          ---------- 
+        domain  GP_CONNECT          SKELETON
+        props   tkw-x-forwarding    tkw-x
+        role    forwarder           closed rules
+        
+        */
+    
+        startForwardTarget("SKELETON");
+        
+        // start the forwarder under test make this listen on an unused port (5001) to avoid loops
+        startInterceptor("GP_CONNECT", 5001);
+    }
+
+    private static void startForwardTarget(String domain) throws IOException {
+        // start a domain host responder this is used for testing forwarded interactions that don't match the ruleset in the httpinterceptor
         // we don't care if the endpoint returns an error since we are not interested in the response content
-        String simulatorPropsPath = System.getenv("TKWROOT") + "/config/GP_CONNECT/tkw-x.properties";
+        // This ruleset should be closed ie all conditions are handled by a rule so there is no forwarding
+        
+        // start the closed endpoint listener (no unwanted forwarding)
+        String simulatorPropsPath = System.getenv("TKWROOT") + "/config/"+domain+"/tkw-x.properties";
         Properties simulatorProperties = new Properties();
         readPropertiesFile(simulatorPropsPath, simulatorProperties);
         simulatorListenPortNo = simulatorProperties.getProperty("tks.HttpTransport.listenport");
@@ -97,9 +128,6 @@ public class HttpInterceptWorkerTest {
         pb.command("java", "-jar", System.getenv("TKWROOT") + "/TKW-x.jar", "-httpinterceptor", simulatorPropsPath);
         process = pb.start();
         ProcessStreamDumper.dumpProcessStreams(process);
-
-        // This ruleset is closed ie all conditions are handled by a rule so there is no forwarding
-        startInterceptor("GP_CONNECT", 5001);
     }
 
     /**
@@ -151,7 +179,7 @@ public class HttpInterceptWorkerTest {
 
         String xmlMessage1 = xmlMessage.replaceAll("__NNN__", "9690937286"); // patient 2 1.5 meds is only in the forwarded config
         //String xmlMessage1 = xmlMessage.replaceAll("__NNN__", "9658218873"); // patient 2 1.2 meds is only in the forwarded config
-        
+
         xmlRequestForwarding = setupRequest(xmlMessage1);
         xmlInstanceForwarding = new HttpInterceptWorker(xmlRequestForwarding, handler);
         xmlInstanceForwarding.logfile = new LoggingFileOutputStream(new File(INTERCEPTOR_LOG));
@@ -250,9 +278,10 @@ public class HttpInterceptWorkerTest {
         assertTrue(!folderExists(ENDPOINT_FOLDER));
         HttpResponse resp = new HttpResponse(ostream);
         xmlInstanceForwarding.process(xmlRequestForwarding, resp);
-        String log = waitForFile();
-        assertTrue(log.length() > 0);
-        assertNotNull(resp);
+        //String log = waitForFile();
+        // need to test the response log
+        // resp.getHttpHeader() is null for responses from forwarded end points
+        assertEquals(null, resp.getHttpHeader());
     }
 
     /**
@@ -389,9 +418,9 @@ public class HttpInterceptWorkerTest {
         while (Thread.activeCount() > 4 && ++timeoutCount < TIMEOUT) {
             Thread.sleep(1000);
         }
-        
+
         if (timeoutCount >= TIMEOUT) {
-            fail("Timed out after "+ TIMEOUT + "s");
+            fail("Timed out after " + TIMEOUT + "s");
         }
 
         File endPointFolder = new File(ENDPOINT_FOLDER);

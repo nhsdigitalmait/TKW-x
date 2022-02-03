@@ -16,11 +16,18 @@
 package uk.nhs.digital.mait.tkwx.tk.internalservices.rules;
 
 import java.util.List;
+import static java.util.logging.Level.SEVERE;
 import org.w3c.dom.Node;
+import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
+import uk.nhs.digital.mait.commonutils.util.xpath.XPathManager;
 import uk.nhs.digital.mait.tkwx.http.HttpRequest;
 import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.*;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.FHIR_SERVICE_LOCATION_PROPERTY;
 import uk.nhs.digital.mait.tkwx.tk.boot.Request;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Schedule.derivePseudoInteractionID;
 
 /**
  * The TKW simulator rules engine is "pluggable" and can be provided by any
@@ -35,6 +42,22 @@ import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
  */
 public class RESTfulRulesEngine
         extends DefaultRulesEngine {
+     private static String fhirServiceLocation;
+
+     static {
+        try {
+            Configurator config = Configurator.getConfigurator();
+            // default value from constant
+            fhirServiceLocation = FHIR_SERVICE_LOCATION;
+            // get any override from the configurator;
+            String fsl = config.getConfiguration(FHIR_SERVICE_LOCATION_PROPERTY);
+            if (!isNullOrEmpty(fsl)) {
+                fhirServiceLocation = fsl;
+            } }
+         catch (Exception e) {
+            Logger.getInstance().log(SEVERE, RESTfulRulesEngine.class.getName(), "Failure to retrieve config info " + e.toString());
+        }   
+     }
 
     /**
      * Call to instantiate on a passed ServiceResponse that is supposed to
@@ -106,14 +129,30 @@ public class RESTfulRulesEngine
             action = httpRequest.getField(SOAP_ACTION_HEADER);
             httpMethod = httpRequest.getRequestType();
             contextPath = httpRequest.getContext();
+
+            // if its a fhir message then try to derive an interaction id
+            String requestBodyStr = new String(httpRequest.getBody());
+            if (!isNullOrEmpty(fhirServiceLocation) && isNullOrEmpty(action) && !isNullOrEmpty(requestBodyStr) && requestBodyStr.trim().startsWith("<")) {
+                action = XPathManager.xpathExtractor(fhirServiceLocation, requestBodyStr);
+            }
         }
 
         // for a restful model we can check whether there is an action available from the Ssp-InteractionID http header
         // this would typically be for a FHIR rest interaction
-        if (action == null && req != null) {
+        if (isNullOrEmpty(action) && req != null) {
             action = req.getField(SSP_INTERACTION_ID_HEADER);
-            if (action != null && action.isEmpty()) {
+            if (isNullOrEmpty(action)) {
                 action = null;
+            }
+        }
+
+        if (req instanceof HttpRequest) {
+            HttpRequest httpRequest = (HttpRequest) req;
+            // can we derive the interaction from the http method and context path ?
+            if (isNullOrEmpty(action)) {
+                String method = httpRequest.getRequestType();
+                String cp = httpRequest.getContext();
+                action = derivePseudoInteractionID(method, cp);
             }
         }
         

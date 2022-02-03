@@ -23,6 +23,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.RestartJVMTest;
 import uk.nhs.digital.mait.tkwx.mesh.MeshDataTest;
@@ -55,6 +57,11 @@ public class MeshInterceptWorkerTest {
     private MeshInterceptWorker instance;
     private MeshRequest request;
     private static final OpenMeshMessageRegister ommr = OpenMeshMessageRegister.getInstance();
+    
+    @Rule
+    public final RestoreSystemProperties restoreSystemProperties
+            = new RestoreSystemProperties();
+
 
     public MeshInterceptWorkerTest() {
     }

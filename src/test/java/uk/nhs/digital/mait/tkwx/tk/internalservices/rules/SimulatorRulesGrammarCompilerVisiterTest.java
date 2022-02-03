@@ -34,6 +34,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 
 import uk.nhs.digital.mait.tkwx.tk.internalservices.antlrerrorlisteners.ErrorCountingErrorListener;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.antlrerrorlisteners.VerboseErrorListener;
@@ -43,6 +44,11 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.antlrerrorlisteners.VerboseE
  * @author simonfarrow
  */
 public class SimulatorRulesGrammarCompilerVisiterTest {
+    
+    @org.junit.Rule
+    public final RestoreSystemProperties restoreSystemProperties
+            = new RestoreSystemProperties();
+
 
     private SimulatorRulesGrammarCompilerVisiter instance;
     private ErrorCountingErrorListener countingErrorListener;

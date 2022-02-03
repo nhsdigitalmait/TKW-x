@@ -13,6 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.ClassRule;
 import org.junit.Rule;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 import org.junit.rules.TemporaryFolder;
 import uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants;
 
@@ -23,6 +24,11 @@ import uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants;
 public class EvidenceMetaDataHandlerTest {
 
     EvidenceMetaDataHandler instance;
+    
+    @Rule
+    public final RestoreSystemProperties restoreSystemProperties
+            = new RestoreSystemProperties();
+
 
     public EvidenceMetaDataHandlerTest() {
     }

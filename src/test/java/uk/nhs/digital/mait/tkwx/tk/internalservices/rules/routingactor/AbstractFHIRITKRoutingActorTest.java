@@ -22,8 +22,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.contrib.java.lang.system.RestoreSystemProperties;
 import org.junit.experimental.categories.Category;
 import uk.nhs.digital.mait.tkwx.RestartJVMTest;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.ORG_CONFIGURATOR;
+import static uk.nhs.digital.mait.tkwx.tk.PropertyNameConstants.ORG_DEFAULT_SYSTEM_PROPERTIES_CONFIGURATOR;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Substitution;
 
 /**

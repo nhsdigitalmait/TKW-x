@@ -107,7 +107,7 @@ public class HttpInterceptWorkerTest {
         
         */
     
-        startForwardTarget("SKELETON");
+        startForwardTarget("GP_CONNECT");
         
         // start the forwarder under test make this listen on an unused port (5001) to avoid loops
         startInterceptor("GP_CONNECT", 5001);

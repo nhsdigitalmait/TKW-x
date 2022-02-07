@@ -14,3 +14,4 @@ src/test/resources/test.metadata
 TKW-x_TestLog.txt
 tkw-x-fixroot-postpush.sh
 tkw-x-fixroot-prepull.sh
+Makefile

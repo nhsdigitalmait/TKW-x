@@ -111,8 +111,26 @@ public class ToolkitSimulator {
         InputStream is = getClass().getResourceAsStream(INTERNALPROPERTIES);
         prop.load(is);
 
+        readProperties(propertiesfile, prop);
+
+        properties = Utils.interpretEnvVars(prop);
+
+        if (properties.getProperty(DONTSIGNLOGS_PROPERTY) != null) {
+            System.setProperty(DONTSIGNLOGS_PROPERTY, properties.getProperty(DONTSIGNLOGS_PROPERTY));
+        }
+        String logFolder = properties.getProperty("tks.logdir");
+        Utils.createFolderIfMissing(logFolder);
+        Logger.getInstance().setAppName("TKS", logFolder);
+        configurationName = properties.getProperty(TKSNAME, "Not given");
+        organisationName = properties.getProperty(TKSORG, "Not given");
+        System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);
+        Configurator c = Configurator.getConfigurator();
+        c.setProperties(properties);
+    }
+
+    private void readProperties(String propertiesfile, Properties prop) throws Exception {
         try ( // load the External TKW properties - Port names for the request handlers MUST be appended
-                 BufferedReader br = new BufferedReader(new FileReader(propertiesfile))) {
+                BufferedReader br = new BufferedReader(new FileReader(propertiesfile))) {
             String line = null;
             while ((line = br.readLine()) != null) {
                 if (line.trim().startsWith("#")) {
@@ -131,31 +149,39 @@ public class ToolkitSimulator {
                     value.append(" ");
                     value.append(element);
                 }
-                // Add extra context names to the namelist
+                // Add extra context names to the HttpTransport namelist
                 if (key.equals("tks.HttpTransport.namelist")) {
-                    value.insert(0, prop.getProperty("tks.HttpTransport.namelist") + " ");
+                    String p = prop.getProperty("tks.HttpTransport.namelist");
+                    if(p!=null && !p.trim().equals("")){
+                        value.insert(0, p + " ");
+                    }
                 }
+                // Add extra context names to the MeshTransport namelist
+                if (key.equals("tks.MeshTransport.namelist")) {
+                    String p = prop.getProperty("tks.MeshTransport.namelist");
+                    if(p!=null && !p.trim().equals("")){
+                        value.insert(0, p + " ");
+                    }
+                }             
                 // Copy any properties to system properties needed for the any of the server's SSL listeners.
                 if (key.endsWith(".usesslcontext") || key.endsWith(".sslcontextpass") || key.endsWith(".sslalgorithm")) {
                     System.setProperty(key, value.toString());
                 }
+                // if there are any external properties files referenced, 
+                // recursively add each of the properties file contents 
+                // Multiple external properties files can be addressed or stacked within referenced properties files
+                // This will overwrite specific properties and will create a last in wins
+                if (key.equals("tks.external.properties")) {
+                    if(!Utils.isNullOrEmpty(value.toString())){
+                        String interpretedDirName = Utils.replaceTkwroot(Utils.replaceEnvVars(value.toString()));
+                        
+                        System.out.println("Reading external properties files (tks.external.properties): "+interpretedDirName);
+                        readProperties(interpretedDirName, prop);
+                    }
+                }
                 prop.setProperty(key, value.toString());
             }
         }
-
-        properties = Utils.interpretEnvVars(prop);
-
-        if (properties.getProperty(DONTSIGNLOGS_PROPERTY) != null) {
-            System.setProperty(DONTSIGNLOGS_PROPERTY, properties.getProperty(DONTSIGNLOGS_PROPERTY));
-        }
-        String logFolder = properties.getProperty("tks.logdir");
-        Utils.createFolderIfMissing(logFolder);
-        Logger.getInstance().setAppName("TKS", logFolder);
-        configurationName = properties.getProperty(TKSNAME, "Not given");
-        organisationName = properties.getProperty(TKSORG, "Not given");
-        System.setProperty(ORG_CONFIGURATOR, ORG_RESETTABLE_PROPERTIES_CONFIGURATOR);
-        Configurator c = Configurator.getConfigurator();
-        c.setProperties(properties);
     }
 
 

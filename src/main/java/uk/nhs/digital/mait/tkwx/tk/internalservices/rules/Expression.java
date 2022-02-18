@@ -25,6 +25,7 @@ import java.io.CharArrayReader;
 import java.io.File;
 import java.io.StringReader;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import java.util.regex.Matcher;
@@ -66,18 +67,40 @@ import uk.nhs.digital.mait.tkwx.validator.SaxValidator;
  */
 public class Expression {
     
+    /**
+     * Currently only one value but who knows?
+     */
     public enum Encoding {
-        B64("Base 64");
+
+        B64("Base 64",   o -> { return new String(parseBase64Binary(o)); });
         
-        Encoding(String humanName) {
+        /**
+         * 
+         * @param humanName
+         * @param function  lambda for decode
+         */
+        Encoding(String humanName, UnaryOperator<String> function) {
             this.humanName = humanName;
+            this.function = function;
+        }
+        
+        /**
+         * do the decode using the lambda
+         * @param input
+         * @return 
+         */
+        public String decode(String input){
+            return function.apply(input);
         }
         
         @Override
         public String toString(){
             return humanName;
         }
+        
         private final String humanName;
+        // lambda for decode
+        private final UnaryOperator<String> function;
     }
 
     private enum ExpressionType {
@@ -765,13 +788,7 @@ public class Expression {
         }
 
         if (encoding != null) {
-            switch ( encoding ) {
-                case B64:
-                    o = new String(parseBase64Binary(o));
-                    break;
-                default:
-                    throw new IllegalArgumentException("Expression.getMatchContent unsupported encoding type "+encoding);
-            }
+            o = encoding.decode(o);
         }
         
         return o;

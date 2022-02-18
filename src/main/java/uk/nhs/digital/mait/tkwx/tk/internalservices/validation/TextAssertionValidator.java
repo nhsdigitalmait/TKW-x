@@ -19,7 +19,6 @@ import java.util.HashMap;
 import static java.util.logging.Level.SEVERE;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
 import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.TextAssertionValidator.TextComparisonType.NOTDEFINED;
@@ -73,6 +72,7 @@ public class TextAssertionValidator
     private int attachmentNo = -1;
     private String matchSource = null;
     private JWTParser jwtParser;
+    private String headerName = null;
     private Encoding encoding = null;
 
     private static final String CONTEXT_PATH = "context_path";
@@ -159,12 +159,14 @@ public class TextAssertionValidator
         switch (params.length) {
             case 4: // http_header + encoding
                 type = params[0];
-                matchSource = params[1] + " " + params[3];
+                matchSource = params[1];
+                headerName = params[3];
                 encoding = Encoding.valueOf(params[2].toUpperCase());
                 break;
             case 3: // http_header
                 type = params[0];
-                matchSource = params[1] + " " + params[2];
+                matchSource = params[1];
+                headerName = params[2];
                 break;
             case 2: // context_path or content or jwt_payload  or jwt_header
                 type = params[0];
@@ -294,25 +296,16 @@ public class TextAssertionValidator
                     }
                 }
                 break;
-            default:
-                // http_header
-                if (matchSource.startsWith(HTTP_HEADER)) {
-                    String headerName = matchSource.replaceFirst("^" + HTTP_HEADER + " +", "").trim();
-                    if (headerManager != null) {
-                        r = headerManager.getHttpHeaderValue(headerName);
-                        if (encoding != null) {
-                            switch ( encoding) {
-                                case B64:
-                                    r = new String(parseBase64Binary(r));
-                                    break;
-                                default:
-                                    throw new IllegalArgumentException("TextAssertionValidator Unsupported encoding type "+encoding);
-                            }
-                        }
+            case HTTP_HEADER:
+                if (headerManager != null) {
+                    r = headerManager.getHttpHeaderValue(headerName);
+                    if (encoding != null) {
+                        r = encoding.decode(r);
                     }
-                } else {
-                    Logger.getInstance().log(SEVERE, TextAssertionValidator.class.getName(), "Unrecognised match source " + matchSource);
                 }
+                break;
+            default:
+                Logger.getInstance().log(SEVERE, TextAssertionValidator.class.getName(), "Unrecognised match source " + matchSource);
         }
         String v = value;
         switch (comparisonType) {
@@ -484,7 +477,10 @@ public class TextAssertionValidator
     }
 
     private void appendSourceDetails(StringBuilder sb) {
-        sb.append(matchSource);
+        sb.append(matchSource.replaceAll("_"," "));
+        if (headerName != null ) {
+            sb.append(" "+headerName);
+        }
         if (encoding != null) {
             sb.append(" (after ").append(encoding).append(" decoding)");
         }

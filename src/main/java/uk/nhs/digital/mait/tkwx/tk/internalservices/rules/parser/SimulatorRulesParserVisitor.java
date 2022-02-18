@@ -289,6 +289,12 @@ public interface SimulatorRulesParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMatch_type(SimulatorRulesParser.Match_typeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SimulatorRulesParser#header_encoding}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHeader_encoding(SimulatorRulesParser.Header_encodingContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SimulatorRulesParser#text_match_source}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

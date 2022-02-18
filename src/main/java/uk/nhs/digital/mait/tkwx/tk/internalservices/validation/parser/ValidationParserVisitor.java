@@ -211,6 +211,12 @@ public interface ValidationParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitText_match_type(ValidationParser.Text_match_typeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ValidationParser#header_encoding}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHeader_encoding(ValidationParser.Header_encodingContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ValidationParser#text_match_source}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

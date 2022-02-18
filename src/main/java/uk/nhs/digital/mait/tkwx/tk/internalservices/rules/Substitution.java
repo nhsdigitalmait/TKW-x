@@ -40,6 +40,7 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import org.xml.sax.InputSource;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.Encoding;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.*;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.CONTEXT_PATH;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.HTTP_HEADER;
@@ -90,6 +91,7 @@ public class Substitution {
     private static final SimpleDateFormat ISO8601FORMATDATE = new SimpleDateFormat(ISO8601FORMATDATEMASK);
     private static final SimpleDateFormat RFC822FORMATDATE = new SimpleDateFormat(RFC822FORMATDATEMASK);
     private String httpHeaderName;
+    private Encoding encoding = null;
 
     /**
      * Package private ANTLR parser based constructor
@@ -170,6 +172,9 @@ public class Substitution {
                 matchSource = MatchSource.valueOf(ctx.substitution_class().text_match_source().getChild(0).getText().toUpperCase());
                 if (matchSource == MatchSource.HTTP_HEADER) {
                     httpHeaderName = ctx.substitution_class().text_match_source().http_header_name().getText();
+                    if ( ctx.substitution_class().text_match_source().header_encoding() != null ) {
+                        encoding = Encoding.valueOf(ctx.substitution_class().text_match_source().header_encoding().getText().toUpperCase());
+                    }
                 }
             } else {
                 matchSource = MatchSource.CONTENT;
@@ -192,6 +197,9 @@ public class Substitution {
                 matchSource = MatchSource.valueOf(ctx.substitution_regexp().text_match_source().getChild(0).getText().toUpperCase());
                 if (matchSource == MatchSource.HTTP_HEADER) {
                     httpHeaderName = ctx.substitution_regexp().text_match_source().http_header_name().getText();
+                    if ( ctx.substitution_regexp().text_match_source().header_encoding() != null ) {
+                        encoding = Encoding.valueOf(ctx.substitution_class().text_match_source().header_encoding().getText().toUpperCase()); 
+                    }
                 }
             } else {
                 matchSource = MatchSource.CONTENT;
@@ -385,7 +393,7 @@ public class Substitution {
      */
     public void substitute(StringBuffer sb, Request req)
             throws Exception {
-        substitute(sb, getMatchContent(req, matchSource, httpHeaderName));
+        substitute(sb, getMatchContent(req, matchSource, httpHeaderName, encoding));
     }
 
     /**
@@ -398,7 +406,7 @@ public class Substitution {
      * @throws Exception
      */
     public void substitute(ServiceResponse sr, Request req) throws Exception {
-        substitute(sr, getMatchContent(req, matchSource, httpHeaderName));
+        substitute(sr, getMatchContent(req, matchSource, httpHeaderName, encoding));
     }
 
     /**

@@ -132,8 +132,10 @@ jsonpath_one_arg_type : ( json_match_source? jsonpath_one_arg_comparison_type ) 
 ;
 text_match_type : MATCHES | NOTMATCHES | CONTAINS | NOTCONTAINS | EQUALS | NOTEQUALS ;
 
+header_encoding : B64 ;
+
 // default match source is content
-text_match_source : ( CONTEXT_PATH | CONTENT | JWT_PAYLOAD ) | ( HTTP_HEADER http_header_name ) ;
+text_match_source : ( CONTEXT_PATH | CONTENT | JWT_PAYLOAD ) | ( HTTP_HEADER header_encoding ? http_header_name ) ;
 http_header_name : IDENTIFIER ;
 
 xpath_arg : CST ;

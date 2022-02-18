@@ -29,6 +29,7 @@ import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.*;
@@ -64,6 +65,20 @@ import uk.nhs.digital.mait.tkwx.validator.SaxValidator;
  * @author Damian Murphy murff@warlock.org
  */
 public class Expression {
+    
+    public enum Encoding {
+        B64("Base 64");
+        
+        Encoding(String humanName) {
+            this.humanName = humanName;
+        }
+        
+        @Override
+        public String toString(){
+            return humanName;
+        }
+        private final String humanName;
+    }
 
     private enum ExpressionType {
         NONE,
@@ -131,6 +146,7 @@ public class Expression {
     private MatchSource matchSource = MatchSource.CONTENT;
     private MatchSource matchSource2 = null;
     private String httpHeaderName;
+    private Encoding encoding = null;
     private String variableName; // session state variable name
 
     //  Simulator Expression Class
@@ -168,6 +184,9 @@ public class Expression {
                 }
                 if (oneArgCtx.text_match_source().http_header_name() != null) {
                     httpHeaderName = oneArgCtx.text_match_source().http_header_name().getText();
+                    if ( oneArgCtx.text_match_source().header_encoding() != null ) {
+                        encoding  = Encoding.valueOf(oneArgCtx.text_match_source().header_encoding().getText().toUpperCase());
+                    }
                 }
             } else if (oneArgCtx.xml_match_source() != null) {
                 matchSource = MatchSource.valueOf(oneArgCtx.xml_match_source().getText().toUpperCase());
@@ -383,11 +402,11 @@ public class Expression {
     boolean evaluate(Request req)
             throws Exception {
 
-        String o = getMatchContent(req, getMatchSource(), matchSource == MatchSource.VARIABLE ? variableName : httpHeaderName);
+        String o = getMatchContent(req, getMatchSource(), matchSource == MatchSource.VARIABLE ? variableName : httpHeaderName, encoding);
         String o2 = null;
         if (getMatchSource2() != null && getMatchSource2() != getMatchSource()) {
             // onyl second match source is for xpath compare which can't use httpHeader as a match source 
-            o2 = getMatchContent(req, getMatchSource2(), null);
+            o2 = getMatchContent(req, getMatchSource2(), null, null);
         }
 
         String x = null;
@@ -559,10 +578,13 @@ public class Expression {
                     if (classSource.data_source().text_match_source() != null) {
                         Text_match_sourceContext textMatchCtx = classSource.data_source().text_match_source();
                         String type = textMatchCtx.HTTP_HEADER() != null ? textMatchCtx.HTTP_HEADER().getText() : textMatchCtx.getText();
+                        if (textMatchCtx.header_encoding() != null) {
+                            encoding = Encoding.valueOf(textMatchCtx.header_encoding().getText().toUpperCase());
+                        }
                         source = getMatchContent(req, MatchSource.valueOf(type.toUpperCase()),
-                                textMatchCtx.HTTP_HEADER() != null ? textMatchCtx.http_header_name().IDENTIFIER().getText() : null);
+                                textMatchCtx.HTTP_HEADER() != null ? textMatchCtx.http_header_name().IDENTIFIER().getText() : null, encoding);
                     } else if (classSource.data_source().xml_match_source() != null) {
-                        source = getMatchContent(req, MatchSource.valueOf(classSource.data_source().xml_match_source().getText().toUpperCase()), null);
+                        source = getMatchContent(req, MatchSource.valueOf(classSource.data_source().xml_match_source().getText().toUpperCase()), null, null);
                     }
 
                     if (source != null) {
@@ -683,7 +705,7 @@ public class Expression {
      * @return a string containing the text to be checked against
      * @throws Exception
      */
-    public static String getMatchContent(Request req, MatchSource matchSource, String name) throws Exception {
+    public static String getMatchContent(Request req, MatchSource matchSource, String name, Encoding encoding) throws Exception {
         String o = null;
         JWTParser jwtParser;
         HttpRequest httpReq = null;
@@ -741,6 +763,17 @@ public class Expression {
             default:
                 Logger.getInstance().log(SEVERE, Rule.class.getName(), "unhandled match source " + matchSource);
         }
+
+        if (encoding != null) {
+            switch ( encoding ) {
+                case B64:
+                    o = new String(parseBase64Binary(o));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Expression.getMatchContent unsupported encoding type "+encoding);
+            }
+        }
+        
         return o;
     }
 

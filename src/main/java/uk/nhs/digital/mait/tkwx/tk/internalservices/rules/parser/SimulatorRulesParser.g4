@@ -116,8 +116,10 @@ xml_match_type : XPATHEXISTS | XPATHNOTEXISTS ;
 json_match_type : JSONPATHEXISTS | JSONPATHNOTEXISTS ;
 match_type : MATCHES | NOTMATCHES | CONTAINS | NOTCONTAINS ;
 
+header_encoding : B64 ;
+
 // default match source is content NB which is a change for restful rules which used to default to context path
-text_match_source : ( CONTEXT_PATH | CONTENT | JWT_PAYLOAD | JWT_HEADER | MESH_CTL | MESH_DAT | VARIABLE_NAME ) | ( HTTP_HEADER http_header_name )  ;
+text_match_source : ( CONTEXT_PATH | CONTENT | JWT_PAYLOAD | JWT_HEADER | MESH_CTL | MESH_DAT | VARIABLE_NAME ) | ( HTTP_HEADER header_encoding ? http_header_name )  ;
 xml_match_source : CONTENT | JWT_PAYLOAD | JWT_HEADER | MESH_CTL | MESH_DAT ;
 json_match_source : CONTENT | JWT_PAYLOAD_JSON | JWT_HEADER_JSON ;
 http_header_name : IDENTIFIER ;

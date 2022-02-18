@@ -328,7 +328,7 @@ public class ExpressionTest {
         ssm.setCurrentSessionID(SESSION_ID);
         ssm.setValue(SESSION_ID, name, expResult);
         MatchSource matchSource = MatchSource.VARIABLE;
-        String result = Expression.getMatchContent(req, matchSource, name);
+        String result = Expression.getMatchContent(req, matchSource, name, null);
         assertEquals(expResult, result);
     }
 
@@ -455,4 +455,27 @@ public class ExpressionTest {
         assertEquals(expResult, result);
     }
 
+    @Test
+    public void testHttpHeaderContains() throws Exception {
+        System.out.println("httpHeaderContains");
+        instance = new Expression(visitor.getExpressionCtx().get("exp_header_contains"));
+        
+        req.getHeaderManager().addHttpHeader("Accept", "xxx");
+
+        boolean expResult = true;
+        boolean result = instance.evaluate(req);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testHttpHeaderB64Contains() throws Exception {
+        System.out.println("httpHeaderB64Contains");
+        instance = new Expression(visitor.getExpressionCtx().get("exp_header_b64_contains"));
+        
+        req.getHeaderManager().addHttpHeader("NHSD-Target-Identifier", "ewogICJ2YWx1ZSI6ICJUS1cwMDA0IiwKICAic3lzdGVtIjogImh0dHA6Ly9kaXJlY3RvcnlvZnNlcnZpY2VzLm5ocy51ayIKfQo=");
+
+        boolean expResult = true;
+        boolean result = instance.evaluate(req);
+        assertEquals(expResult, result);
+    }
 }

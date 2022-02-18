@@ -229,14 +229,19 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
 
         } else if (testCtx.xpath_one_arg_test() != null) {
             Xpath_one_arg_testContext oneArgCtx = testCtx.xpath_one_arg_test();
-            if (oneArgCtx.xpath_one_arg_type().text_match_type() != null) {
+            ValidationParser.Xpath_one_arg_typeContext ctx = oneArgCtx.xpath_one_arg_type();
+            if (ctx.text_match_type() != null) {
                 String matchSource = "content";
-                if (oneArgCtx.xpath_one_arg_type().text_match_source() != null) {
-                    if (oneArgCtx.xpath_one_arg_type().text_match_source().HTTP_HEADER() != null) {
-                        String httpHeaderName = oneArgCtx.xpath_one_arg_type().text_match_source().http_header_name().getText();
-                        matchSource = oneArgCtx.xpath_one_arg_type().text_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
+                if (ctx.text_match_source() != null) {
+                    if (ctx.text_match_source().HTTP_HEADER() != null) {
+                        String httpHeaderName = ctx.text_match_source().http_header_name().getText();
+                        if ( ctx.text_match_source().header_encoding() != null ) {
+                            matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + ctx.text_match_source().header_encoding().getText() + " " + httpHeaderName;
+                        } else {
+                            matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
+                        }
                     } else {
-                        matchSource = oneArgCtx.xpath_one_arg_type().text_match_source().getText();
+                        matchSource = ctx.text_match_source().getText();
                     }
                 }
                 v.setType(oneArgCtx.xpath_one_arg_type().text_match_type().getText() + " " + matchSource);
@@ -286,11 +291,16 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
             if (oneArgCtx.jsonpath_one_arg_type().text_match_type() != null) {
                 String matchSource = "content";
                 if (oneArgCtx.jsonpath_one_arg_type().text_match_source() != null) {
-                    if (oneArgCtx.jsonpath_one_arg_type().text_match_source().HTTP_HEADER() != null) {
-                        String httpHeaderName = oneArgCtx.jsonpath_one_arg_type().text_match_source().http_header_name().getText();
-                        matchSource = oneArgCtx.jsonpath_one_arg_type().text_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
+                    ValidationParser.Jsonpath_one_arg_typeContext ctx = oneArgCtx.jsonpath_one_arg_type();
+                    if (ctx.text_match_source().HTTP_HEADER() != null) {
+                        String httpHeaderName = ctx.text_match_source().http_header_name().getText();
+                        if ( ctx.text_match_source().header_encoding() != null ) {
+                            matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + ctx.text_match_source().header_encoding().getText() + " " + httpHeaderName;
+                        } else {
+                            matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
+                        }
                     } else {
-                        matchSource = oneArgCtx.jsonpath_one_arg_type().text_match_source().getText();
+                        matchSource = ctx.text_match_source().getText();
                     }
                 }
                 v.setType(oneArgCtx.jsonpath_one_arg_type().text_match_type().getText() + " " + matchSource);

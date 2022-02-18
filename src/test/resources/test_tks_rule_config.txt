@@ -53,6 +53,7 @@ exp_header_matches               HTTP_HEADER Accept matches ^.*application/xml\+
 exp_contextpath_matches              context_path matches ^.*application/xml\+fhir.*$
 exp_content_matches              content matches ^.*application/xml\+fhir.*$
 exp_header_contains              HTTP_HEADER Accept contains xxx
+exp_header_b64_contains              HTTP_HEADER B64 NHSD-Target-Identifier contains TKW0004
 exp_contextpath_contains              context_path contains xx/x
 exp_content_contains              content contains xx+/x
 exp_xpathequals xpathequals /soap:Envelope/soap:Body/itk:DistributionEnvelope/itk:header/@service urn:nhs-itk:services:201005:SendCDADocument-v2-0

@@ -196,220 +196,271 @@ public class Expression {
         if (ctx.expression_no_arg() != null) {
             type = ExpressionType.valueOf(ctx.expression_no_arg().getChild(0).getText().toUpperCase());
         } else if (ctx.expression_one_arg() != null) {
+            handleOneArg(ctx);
+        } else if (ctx.expression_two_arg() != null) {
+            handleTwoArg(ctx);
+        } else if (ctx.expression_xpath_compare() != null) {
+            handleXpathCompare(ctx);
+        } else if (ctx.expression_jsonpath_compare() != null) {
+            handleJsonPathCompare(ctx);
+        } else if (ctx.expression_class() != null) {
+            handleClass(ctx);
+        }
+    }
 
-            Expression_one_argContext oneArgCtx = ctx.expression_one_arg();
-            if (oneArgCtx.text_match_source() != null) {
-                if (oneArgCtx.text_match_source().VARIABLE_NAME() != null) {
-                    matchSource = MatchSource.VARIABLE;
-                    variableName = oneArgCtx.text_match_source().VARIABLE_NAME().getText();
-                } else {
-                    matchSource = MatchSource.valueOf(oneArgCtx.text_match_source().getChild(0).getText().toUpperCase());
+    private void handleOneArg(ExpressionContext ctx) {
+        Expression_one_argContext oneArgCtx = ctx.expression_one_arg();
+        if (oneArgCtx.text_match_source() != null) {
+            if (oneArgCtx.text_match_source().VARIABLE_NAME() != null) {
+                matchSource = MatchSource.VARIABLE;
+                variableName = oneArgCtx.text_match_source().VARIABLE_NAME().getText();
+            } else {
+                matchSource = MatchSource.valueOf(oneArgCtx.text_match_source().getChild(0).getText().toUpperCase());
+            }
+            if (oneArgCtx.text_match_source().http_header_name() != null) {
+                httpHeaderName = oneArgCtx.text_match_source().http_header_name().getText();
+                if ( oneArgCtx.text_match_source().header_encoding() != null ) {
+                    encoding  = Encoding.valueOf(oneArgCtx.text_match_source().header_encoding().getText().toUpperCase());
                 }
-                if (oneArgCtx.text_match_source().http_header_name() != null) {
-                    httpHeaderName = oneArgCtx.text_match_source().http_header_name().getText();
-                    if ( oneArgCtx.text_match_source().header_encoding() != null ) {
-                        encoding  = Encoding.valueOf(oneArgCtx.text_match_source().header_encoding().getText().toUpperCase());
-                    }
+            }
+        } else if (oneArgCtx.xml_match_source() != null) {
+            matchSource = MatchSource.valueOf(oneArgCtx.xml_match_source().getText().toUpperCase());
+        } else if (oneArgCtx.json_match_source() != null) {
+            // the input to this could be a decoded b64 header
+            matchSource = MatchSource.valueOf(oneArgCtx.json_match_source().getChild(0).getText().toUpperCase());
+            if (oneArgCtx.json_match_source().http_header_name() != null ) {
+                httpHeaderName = oneArgCtx.json_match_source().http_header_name().getText();
+                if ( oneArgCtx.json_match_source().header_encoding() != null ) {
+                    encoding  = Encoding.valueOf(oneArgCtx.json_match_source().header_encoding().getText().toUpperCase());
                 }
-            } else if (oneArgCtx.xml_match_source() != null) {
-                matchSource = MatchSource.valueOf(oneArgCtx.xml_match_source().getText().toUpperCase());
-            } else if (oneArgCtx.json_match_source() != null) {
-                matchSource = MatchSource.valueOf(oneArgCtx.json_match_source().getText().toUpperCase());
-            }else {
-                // default to the xml payload, not strictly necessary since this is the constructor set value
-                matchSource = MatchSource.CONTENT;
             }
+        } else {
+            // default to the xml payload, not strictly necessary since this is the constructor set value
+            matchSource = MatchSource.CONTENT;
+        }
+        
+        if (oneArgCtx.match_type() != null) {
+            type = ExpressionType.valueOf(oneArgCtx.match_type().getText().toUpperCase());
+        } else if (oneArgCtx.xml_match_type() != null) {
+            type = ExpressionType.valueOf(oneArgCtx.xml_match_type().getText().toUpperCase());
+        }else if (oneArgCtx.json_match_type() != null) {
+            type = ExpressionType.valueOf(oneArgCtx.json_match_type().getText().toUpperCase());
+        }
+        
+        if (oneArgCtx.xpath_arg() != null) {
+            expression = ctx.expression_one_arg().xpath_arg().getText();
+        }
+        
+        switch (type) {
+            case XPATHEXISTS:
+            case XPATHNOTEXISTS:
+                try {
+                    initialiseXpath("count (" + expression + ")", false);
+                } catch (Exception ex) {
+                    Logger.getInstance().log(SEVERE, Expression.class.getName(), ex.getMessage());
+                }
+                break;
+        }
+    }
 
-            if (oneArgCtx.match_type() != null) {
-                type = ExpressionType.valueOf(oneArgCtx.match_type().getText().toUpperCase());
-            } else if (oneArgCtx.xml_match_type() != null) {
-                type = ExpressionType.valueOf(oneArgCtx.xml_match_type().getText().toUpperCase());
-            }else if (oneArgCtx.json_match_type() != null) {
-                type = ExpressionType.valueOf(oneArgCtx.json_match_type().getText().toUpperCase());
+    private void handleTwoArg(ExpressionContext ctx) {
+        Expression_two_argContext twoArgCtx = ctx.expression_two_arg();
+        if (twoArgCtx.xml_match_source() != null) {
+            matchSource = MatchSource.valueOf(twoArgCtx.xml_match_source().getText().toUpperCase());
+            type = ExpressionType.valueOf(twoArgCtx.getChild(1).getText().toUpperCase());
+        } else if (twoArgCtx.json_match_source() != null) {
+            matchSource = MatchSource.valueOf(twoArgCtx.json_match_source().getChild(0).getText().toUpperCase());
+            if (twoArgCtx.json_match_source().http_header_name() != null ) {
+                httpHeaderName = twoArgCtx.json_match_source().http_header_name().getText();
+                if ( twoArgCtx.json_match_source().header_encoding() != null ) {
+                    encoding  = Encoding.valueOf(twoArgCtx.json_match_source().header_encoding().getText().toUpperCase());
+                }
             }
-
-            if (oneArgCtx.xpath_arg() != null) {
-                expression = ctx.expression_one_arg().xpath_arg().getText();
-            }
-
+            type = ExpressionType.valueOf(twoArgCtx.getChild(1).getText().toUpperCase());
+        } else {
+            // default to the xml payload, not strictly necessary since this is the constructor set value
+            matchSource = MatchSource.CONTENT;
+            type = ExpressionType.valueOf(twoArgCtx.getChild(0).getText().toUpperCase());
+        }
+        try {
             switch (type) {
-                case XPATHEXISTS:
-                case XPATHNOTEXISTS:
-                    try {
-                        initialiseXpath("count (" + expression + ")", false);
-                    } catch (Exception ex) {
-                        Logger.getInstance().log(SEVERE, Expression.class.getName(), ex.getMessage());
+                case XPATHMATCHES:
+                case XPATHNOTMATCHES:
+                    expression = twoArgCtx.xpath_arg(0).getText();
+                    matchValue = twoArgCtx.xpath_arg(1).getText();
+                    initialiseXpath(expression, false);
+                    regexPattern = Pattern.compile(matchValue);
+                    break;
+                    
+                case XPATHEQUALS:
+                case XPATHNOTEQUALS:
+                    expression = twoArgCtx.xpath_arg(0).getText();
+                    matchValue = twoArgCtx.xpath_arg(1).getText();
+                    initialiseXpath(expression, false);
+                    break;
+                    
+                case XPATHIN:
+                case XPATHNOTIN:
+                    expression = twoArgCtx.xpath_arg(0).getText();
+                    List<SimulatorRulesParser.Xpath_argContext> xpaths = twoArgCtx.xpath_arg();
+                    inList = new String[xpaths.size() - 1];
+                    initialiseXpath(expression, false);
+                    for (int i = 1; i < xpaths.size(); i++) {
+                        inList[i - 1] = xpaths.get(i).getText().replaceFirst("\"(.*)\"$", "$1");
                     }
                     break;
-            }
-
-        } else if (ctx.expression_two_arg() != null) {
-            Expression_two_argContext twoArgCtx = ctx.expression_two_arg();
-            if (twoArgCtx.xml_match_source() != null) {
-                matchSource = MatchSource.valueOf(twoArgCtx.xml_match_source().getText().toUpperCase());
-                type = ExpressionType.valueOf(twoArgCtx.getChild(1).getText().toUpperCase());
-            } else if (twoArgCtx.json_match_source() != null) {
-                matchSource = MatchSource.valueOf(twoArgCtx.json_match_source().getText().toUpperCase());
-                type = ExpressionType.valueOf(twoArgCtx.getChild(1).getText().toUpperCase());
-            } else {
-                // default to the xml payload, not strictly necessary since this is the constructor set value
-                matchSource = MatchSource.CONTENT;
-                type = ExpressionType.valueOf(twoArgCtx.getChild(0).getText().toUpperCase());
-            }
-            try {
-                switch (type) {
-                    case XPATHMATCHES:
-                    case XPATHNOTMATCHES:
-                        expression = twoArgCtx.xpath_arg(0).getText();
-                        matchValue = twoArgCtx.xpath_arg(1).getText();
-                        initialiseXpath(expression, false);
-                        regexPattern = Pattern.compile(matchValue);
-                        break;
-
-                    case XPATHEQUALS:
-                    case XPATHNOTEQUALS:
-                        expression = twoArgCtx.xpath_arg(0).getText();
-                        matchValue = twoArgCtx.xpath_arg(1).getText();
-                        initialiseXpath(expression, false);
-                        break;
-
-                    case XPATHIN:
-                    case XPATHNOTIN:
-                        expression = twoArgCtx.xpath_arg(0).getText();
-                        List<SimulatorRulesParser.Xpath_argContext> xpaths = twoArgCtx.xpath_arg();
-                        inList = new String[xpaths.size() - 1];
-                        initialiseXpath(expression, false);
-                        for (int i = 1; i < xpaths.size(); i++) {
-                            inList[i - 1] = xpaths.get(i).getText().replaceFirst("\"(.*)\"$", "$1");
-                        }
-                        break;
-
-                    case SCHEMA:
-                        expression = replaceTkwroot(twoArgCtx.PATH().getText());
-                        if (twoArgCtx.xpath_arg().size() > 0) {
-                            matchValue = twoArgCtx.xpath_arg(0).getText();
-                            initialiseXpath(matchValue, false);
-                        }
-                        break;
-
-                    case XSLT:
-                        expression = replaceTkwroot(twoArgCtx.xslt_file().getText());
+                    
+                case SCHEMA:
+                    expression = replaceTkwroot(twoArgCtx.PATH().getText());
+                    if (twoArgCtx.xpath_arg().size() > 0) {
                         matchValue = twoArgCtx.xpath_arg(0).getText();
-                        initialiseXslt();
-                        break;
+                        initialiseXpath(matchValue, false);
+                    }
+                    break;
+                    
+                case XSLT:
+                    expression = replaceTkwroot(twoArgCtx.xslt_file().getText());
+                    matchValue = twoArgCtx.xpath_arg(0).getText();
+                    initialiseXslt();
+                    break;
+                    
+                case JSONPATHMATCHES:
+                case JSONPATHNOTMATCHES:
+                    expression = twoArgCtx.xpath_arg(0).getText();
+                    matchValue = twoArgCtx.xpath_arg(1).getText();
+                    regexPattern = Pattern.compile(matchValue);
+                    break;
+                    
+                case JSONPATHEQUALS:
+                case JSONPATHNOTEQUALS:
+                    expression = twoArgCtx.xpath_arg(0).getText();
+                    matchValue = twoArgCtx.xpath_arg(1).getText();
+                    break;
+                    
+                case JSONPATHIN:
+                case JSONPATHNOTIN:
+                    expression = twoArgCtx.xpath_arg(0).getText();
+                    xpaths = twoArgCtx.xpath_arg();
+                    inList = new String[xpaths.size() - 1];
+                    for (int i = 1; i < xpaths.size(); i++) {
+                        inList[i - 1] = xpaths.get(i).getText().replaceFirst("\"(.*)\"$", "$1");
+                    }
+                    break;
+                    
+                default:
+                    throw new Exception("Syntax error: unrecognised expression type: " + type);
+            }
+        } catch (Exception ex) {
+            Logger.getInstance().log(SEVERE, Expression.class.getName(), ex.getMessage());
+        }
+    }
 
-                    case JSONPATHMATCHES:
-                    case JSONPATHNOTMATCHES:
-                        expression = twoArgCtx.xpath_arg(0).getText();
-                        matchValue = twoArgCtx.xpath_arg(1).getText();
-                        regexPattern = Pattern.compile(matchValue);
-                        break;
-
-                    case JSONPATHEQUALS:
-                    case JSONPATHNOTEQUALS:
-                        expression = twoArgCtx.xpath_arg(0).getText();
-                        matchValue = twoArgCtx.xpath_arg(1).getText();
-                        break;
-
-                    case JSONPATHIN:
-                    case JSONPATHNOTIN:
-                        expression = twoArgCtx.xpath_arg(0).getText();
-                        xpaths = twoArgCtx.xpath_arg();
-                        inList = new String[xpaths.size() - 1];
-                        for (int i = 1; i < xpaths.size(); i++) {
-                            inList[i - 1] = xpaths.get(i).getText().replaceFirst("\"(.*)\"$", "$1");
-                        }
-                        break;
-
-                    default:
-                        throw new Exception("Syntax error: unrecognised expression type: " + type);
-                }
+    private void handleXpathCompare(ExpressionContext ctx) {
+        Expression_xpath_compareContext xpathCompareCtx = ctx.expression_xpath_compare();
+        // default to the xml payload, not strictly necessary since this is the constructor set value
+        matchSource = MatchSource.CONTENT;
+        matchSource2 = null;
+        if (xpathCompareCtx.xml_match_source() != null) {
+            switch (xpathCompareCtx.xml_match_source().size()) {
+                case 0:
+                    type = ExpressionType.valueOf(xpathCompareCtx.getChild(0).getText().toUpperCase());
+                    break;
+                case 1:
+                    matchSource = MatchSource.valueOf(xpathCompareCtx.xml_match_source(0).getText().toUpperCase());
+                    type = ExpressionType.valueOf(xpathCompareCtx.getChild(1).getText().toUpperCase());
+                    break;
+                case 2:
+                    matchSource = MatchSource.valueOf(xpathCompareCtx.xml_match_source(0).getText().toUpperCase());
+                    matchSource2 = MatchSource.valueOf(xpathCompareCtx.xml_match_source(1).getText().toUpperCase());
+                    type = ExpressionType.valueOf(xpathCompareCtx.getChild(2).getText().toUpperCase());
+                    break;
+                default:
+                    Logger.getInstance().log(SEVERE, Expression.class.getName(), "Invalid match source count " + xpathCompareCtx.xml_match_source().size());
+            }
+            
+            try {
+                expression = xpathCompareCtx.xpath_arg(0).getText();
+                matchValue = xpathCompareCtx.xpath_arg(1).getText();
+                initialiseXpath(expression, false);
+                initialiseXpath(matchValue, true);
             } catch (Exception ex) {
                 Logger.getInstance().log(SEVERE, Expression.class.getName(), ex.getMessage());
+                
             }
-        } else if (ctx.expression_xpath_compare() != null) {
-            Expression_xpath_compareContext xpathCompareCtx = ctx.expression_xpath_compare();
-            // default to the xml payload, not strictly necessary since this is the constructor set value
-            matchSource = MatchSource.CONTENT;
-            matchSource2 = null;
-            if (xpathCompareCtx.xml_match_source() != null) {
-                switch (xpathCompareCtx.xml_match_source().size()) {
-                    case 0:
-                        type = ExpressionType.valueOf(xpathCompareCtx.getChild(0).getText().toUpperCase());
-                        break;
-                    case 1:
-                        matchSource = MatchSource.valueOf(xpathCompareCtx.xml_match_source(0).getText().toUpperCase());
-                        type = ExpressionType.valueOf(xpathCompareCtx.getChild(1).getText().toUpperCase());
-                        break;
-                    case 2:
-                        matchSource = MatchSource.valueOf(xpathCompareCtx.xml_match_source(0).getText().toUpperCase());
-                        matchSource2 = MatchSource.valueOf(xpathCompareCtx.xml_match_source(1).getText().toUpperCase());
-                        type = ExpressionType.valueOf(xpathCompareCtx.getChild(2).getText().toUpperCase());
-                        break;
-                    default:
-                        Logger.getInstance().log(SEVERE, Expression.class.getName(), "Invalid match source count " + xpathCompareCtx.xml_match_source().size());
-                }
+        } else {
+            Logger.getInstance().log(SEVERE, Expression.class.getName(), "xml match source array context is null");
+        }
+    }
 
-                try {
-                    expression = xpathCompareCtx.xpath_arg(0).getText();
-                    matchValue = xpathCompareCtx.xpath_arg(1).getText();
-                    initialiseXpath(expression, false);
-                    initialiseXpath(matchValue, true);
-                } catch (Exception ex) {
-                    Logger.getInstance().log(SEVERE, Expression.class.getName(), ex.getMessage());
 
-                }
-            } else {
-                Logger.getInstance().log(SEVERE, Expression.class.getName(), "xml match source array context is null");
+    private void handleJsonPathCompare(ExpressionContext ctx) {
+        Expression_jsonpath_compareContext jsonpathCompareCtx = ctx.expression_jsonpath_compare();
+        // default to the xml payload, not strictly necessary since this is the constructor set value
+        matchSource = MatchSource.CONTENT;
+        matchSource2 = null;
+        if (jsonpathCompareCtx.json_match_source() != null) {
+            switch (jsonpathCompareCtx.json_match_source().size()) {
+                case 0:
+                    type = ExpressionType.valueOf(jsonpathCompareCtx.getChild(0).getText().toUpperCase());
+                    break;
+                case 1:
+                    matchSource = MatchSource.valueOf(jsonpathCompareCtx.json_match_source(0).getText().toUpperCase());
+                   if (jsonpathCompareCtx.json_match_source(0).http_header_name() != null ) {
+                        httpHeaderName = jsonpathCompareCtx.json_match_source(0).http_header_name().getText();
+                        if ( jsonpathCompareCtx.json_match_source(0).header_encoding() != null ) {
+                            encoding  = Encoding.valueOf(jsonpathCompareCtx.json_match_source(0).header_encoding().getText().toUpperCase());
+                        }
+                    }
+                    type = ExpressionType.valueOf(jsonpathCompareCtx.getChild(1).getText().toUpperCase());
+                    break;
+                case 2:
+                    matchSource = MatchSource.valueOf(jsonpathCompareCtx.json_match_source(0).getText().toUpperCase());
+                    if (jsonpathCompareCtx.json_match_source(0).http_header_name() != null ) {
+                        httpHeaderName = jsonpathCompareCtx.json_match_source(0).http_header_name().getText();
+                        if ( jsonpathCompareCtx.json_match_source(0).header_encoding() != null ) {
+                            encoding  = Encoding.valueOf(jsonpathCompareCtx.json_match_source(0).header_encoding().getText().toUpperCase());
+                        }
+                    }
+                    
+                    matchSource2 = MatchSource.valueOf(jsonpathCompareCtx.json_match_source(1).getText().toUpperCase());
+                    if (jsonpathCompareCtx.json_match_source(1).http_header_name() != null ) {
+                        httpHeaderName = jsonpathCompareCtx.json_match_source(1).http_header_name().getText();
+                        if ( jsonpathCompareCtx.json_match_source(1).header_encoding() != null ) {
+                            encoding  = Encoding.valueOf(jsonpathCompareCtx.json_match_source(1).header_encoding().getText().toUpperCase());
+                        }
+                    }
+                    type = ExpressionType.valueOf(jsonpathCompareCtx.getChild(2).getText().toUpperCase());
+                    break;
+                default:
+                    Logger.getInstance().log(SEVERE, Expression.class.getName(), "Invalid match source count " + jsonpathCompareCtx.json_match_source().size());
             }
-        } else if (ctx.expression_jsonpath_compare() != null) {
-            Expression_jsonpath_compareContext jsonpathCompareCtx = ctx.expression_jsonpath_compare();
-            // default to the xml payload, not strictly necessary since this is the constructor set value
-            matchSource = MatchSource.CONTENT;
-            matchSource2 = null;
-            if (jsonpathCompareCtx.json_match_source() != null) {
-                switch (jsonpathCompareCtx.json_match_source().size()) {
-                    case 0:
-                        type = ExpressionType.valueOf(jsonpathCompareCtx.getChild(0).getText().toUpperCase());
-                        break;
-                    case 1:
-                        matchSource = MatchSource.valueOf(jsonpathCompareCtx.json_match_source(0).getText().toUpperCase());
-                        type = ExpressionType.valueOf(jsonpathCompareCtx.getChild(1).getText().toUpperCase());
-                        break;
-                    case 2:
-                        matchSource = MatchSource.valueOf(jsonpathCompareCtx.json_match_source(0).getText().toUpperCase());
-                        matchSource2 = MatchSource.valueOf(jsonpathCompareCtx.json_match_source(1).getText().toUpperCase());
-                        type = ExpressionType.valueOf(jsonpathCompareCtx.getChild(2).getText().toUpperCase());
-                        break;
-                    default:
-                        Logger.getInstance().log(SEVERE, Expression.class.getName(), "Invalid match source count " + jsonpathCompareCtx.json_match_source().size());
-                }
-
-                try {
-                    expression = jsonpathCompareCtx.xpath_arg(0).getText();
-                    matchValue = jsonpathCompareCtx.xpath_arg(1).getText();
-                } catch (Exception ex) {
-                    Logger.getInstance().log(SEVERE, Expression.class.getName(), ex.getMessage());
-
-                }
-            } else {
-                Logger.getInstance().log(SEVERE, Expression.class.getName(), "json match source array context is null");
+            
+            try {
+                expression = jsonpathCompareCtx.xpath_arg(0).getText();
+                matchValue = jsonpathCompareCtx.xpath_arg(1).getText();
+            } catch (Exception ex) {
+                Logger.getInstance().log(SEVERE, Expression.class.getName(), ex.getMessage());
+                
             }
-        } else if (ctx.expression_class() != null) {
-            Expression_classContext classCtx = ctx.expression_class();
-            type = ExpressionType.CLASS;
+        } else {
+            Logger.getInstance().log(SEVERE, Expression.class.getName(), "json match source array context is null");
+        }
+    }
 
-            className = classCtx.DOT_SEPARATED_IDENTIFIER().getText();
-
-            classSourceCtx = new Class_extracted_valueContext[classCtx.class_extracted_value().size()];
-            for (int i = 0; i < classSourceCtx.length; i++) {
-                classSourceCtx[i] = classCtx.class_extracted_value(i);
-            }
-
-            classArgs = new String[classCtx.class_args().QUOTED_STRING().size()];
-            for (int i = 0; i < classArgs.length; i++) {
-                classArgs[i] = classCtx.class_args().QUOTED_STRING(i).getText();
-            }
+    private void handleClass(ExpressionContext ctx) {
+        Expression_classContext classCtx = ctx.expression_class();
+        type = ExpressionType.CLASS;
+        
+        className = classCtx.DOT_SEPARATED_IDENTIFIER().getText();
+        
+        classSourceCtx = new Class_extracted_valueContext[classCtx.class_extracted_value().size()];
+        for (int i = 0; i < classSourceCtx.length; i++) {
+            classSourceCtx[i] = classCtx.class_extracted_value(i);
+        }
+        
+        classArgs = new String[classCtx.class_args().QUOTED_STRING().size()];
+        for (int i = 0; i < classArgs.length; i++) {
+            classArgs[i] = classCtx.class_args().QUOTED_STRING(i).getText();
         }
     }
 

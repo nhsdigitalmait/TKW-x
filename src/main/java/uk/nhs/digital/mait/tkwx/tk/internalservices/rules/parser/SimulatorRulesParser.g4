@@ -69,7 +69,7 @@ property_name : DOT_SEPARATED_IDENTIFIER | IDENTIFIER ;
 substitution_no_arg : UUID_UPPER | UUID_LOWER | HL7_DATETIME | ISO8601_DATETIME | RFC822_DATETIME;
 // NB this switches to CST Mode 1st param is optional xml match source last is xpath
 substitution_xpath : SUBSTITUTION_XPATH  xpath_arg xpath_arg ? ;  
-substitution_jsonpath : SUBSTITUTION_JSONPATH  xpath_arg xpath_arg ? ;  
+substitution_jsonpath : SUBSTITUTION_JSONPATH  xpath_arg ( xpath_arg xpath_arg xpath_arg ) ? ; // accomodated encoding and headername  
 substitution_regexp_cardinality : FIRST | ALL ;
 regexp : QUOTED_STRING QUOTED_STRING substitution_regexp_cardinality ? ;
 substitution_regexp : SUBSTITUTION_REGEXP  text_match_source?  regexp + ;
@@ -121,7 +121,7 @@ header_encoding : B64 ;
 // default match source is content NB which is a change for restful rules which used to default to context path
 text_match_source : ( CONTEXT_PATH | CONTENT | JWT_PAYLOAD | JWT_HEADER | MESH_CTL | MESH_DAT | VARIABLE_NAME ) | ( HTTP_HEADER header_encoding ? http_header_name )  ;
 xml_match_source : CONTENT | JWT_PAYLOAD | JWT_HEADER | MESH_CTL | MESH_DAT ;
-json_match_source : CONTENT | JWT_PAYLOAD_JSON | JWT_HEADER_JSON ;
+json_match_source : CONTENT | JWT_PAYLOAD_JSON | JWT_HEADER_JSON | ( HTTP_HEADER header_encoding http_header_name );
 http_header_name : IDENTIFIER ;
 xslt_file : PATH ;
 

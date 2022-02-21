@@ -479,7 +479,7 @@ public class TextAssertionValidator
     private void appendSourceDetails(StringBuilder sb) {
         sb.append(matchSource.replaceAll("_"," "));
         if (headerName != null ) {
-            sb.append(" "+headerName);
+            sb.append(" ").append(headerName);
         }
         if (encoding != null) {
             sb.append(" (after ").append(encoding).append(" decoding)");

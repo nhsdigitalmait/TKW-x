@@ -478,4 +478,16 @@ public class ExpressionTest {
         boolean result = instance.evaluate(req);
         assertEquals(expResult, result);
     }
+
+    @Test
+    public void testHttpHeaderB64JsonPath() throws Exception {
+        System.out.println("httpHeaderB64JsonPath");
+        instance = new Expression(visitor.getExpressionCtx().get("exp_header_b64_jsonpath_matches"));
+        
+        req.getHeaderManager().addHttpHeader("NHSD-Target-Identifier", "ewogICJ2YWx1ZSI6ICJUS1cwMDA0IiwKICAic3lzdGVtIjogImh0dHA6Ly9kaXJlY3RvcnlvZnNlcnZpY2VzLm5ocy51ayIKfQo=");
+
+        boolean expResult = true;
+        boolean result = instance.evaluate(req);
+        assertEquals(expResult, result);
+    }
 }

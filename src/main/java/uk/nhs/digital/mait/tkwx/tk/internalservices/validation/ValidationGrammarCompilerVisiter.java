@@ -336,7 +336,17 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
             }
             v.setType(oneArgCtx.jsonpath_one_arg_type().text_match_type().getText() + " " + matchSource);
         } else if (oneArgCtx.jsonpath_one_arg_type().json_match_source() != null) {
-            jsonSource = " " + oneArgCtx.jsonpath_one_arg_type().json_match_source().getText();
+            ValidationParser.Json_match_sourceContext ctx = oneArgCtx.jsonpath_one_arg_type().json_match_source();
+            if ( ctx.HTTP_HEADER() != null ) {
+                    String httpHeaderName = ctx.http_header_name().getText();
+                    if ( ctx.header_encoding() != null ) {
+                        jsonSource = " " + ctx.HTTP_HEADER().getText() + " " + ctx.header_encoding().getText() + " " + httpHeaderName;
+                    } else {
+                        jsonSource = " " + ctx.HTTP_HEADER().getText() + " " + httpHeaderName;
+                    }
+            } else {
+                jsonSource = " " + ctx.getText();
+            }
             v.setType(oneArgCtx.jsonpath_one_arg_type().jsonpath_one_arg_comparison_type().getText() + jsonSource);
         } else {
             v.setType(oneArgCtx.jsonpath_one_arg_type().getText());
@@ -348,15 +358,16 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
         Jsonpath_two_arg_testContext twoArgCtx = testCtx.jsonpath_two_arg_test();
         if (twoArgCtx.jsonpath_two_arg_type().jsonpath_two_arg_comparison_type() != null) {
             if (twoArgCtx.jsonpath_two_arg_type().json_match_source() != null) {
-                if (twoArgCtx.jsonpath_two_arg_type().json_match_source().HTTP_HEADER() != null) {
-                    String httpHeaderName = twoArgCtx.jsonpath_two_arg_type().json_match_source().http_header_name().getText();
-                    if ( twoArgCtx.jsonpath_two_arg_type().json_match_source().header_encoding() != null ) {
-                        jsonSource = " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().HTTP_HEADER().getText() + " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().header_encoding().getText() + " " + httpHeaderName;
+                ValidationParser.Json_match_sourceContext ctx = twoArgCtx.jsonpath_two_arg_type().json_match_source();
+                if (ctx.HTTP_HEADER() != null) {
+                    String httpHeaderName = ctx.http_header_name().getText();
+                    if ( ctx.header_encoding() != null ) {
+                        jsonSource = " " + ctx.HTTP_HEADER().getText() + " " + ctx.header_encoding().getText() + " " + httpHeaderName;
                     } else {
-                        jsonSource = " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
+                        jsonSource = " " + ctx.HTTP_HEADER().getText() + " " + httpHeaderName;
                     }
                 } else {
-                    jsonSource = " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().getText();
+                    jsonSource = " " + ctx.getText();
                 }
             }
             v.setType(twoArgCtx.jsonpath_two_arg_type().jsonpath_two_arg_comparison_type().getText() + jsonSource);
@@ -375,7 +386,17 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
     private void handleJsonPathMultiArg(ValidationParser.Test_statementContext testCtx, String jsonSource, Validation v) {
         Jsonpath_multi_arg_testContext multiArgCtx = testCtx.jsonpath_multi_arg_test();
         if (multiArgCtx.json_match_source() != null) {
-            jsonSource = " " + multiArgCtx.json_match_source().getText();
+            if (multiArgCtx.json_match_source().HTTP_HEADER() != null) {
+                ValidationParser.Json_match_sourceContext ctx = multiArgCtx.json_match_source();
+                    String httpHeaderName = ctx.http_header_name().getText();
+                    if ( ctx.header_encoding() != null ) {
+                        jsonSource = " " + ctx.HTTP_HEADER().getText() + " " + ctx.header_encoding().getText() + " " + httpHeaderName;
+                    } else {
+                        jsonSource = " " + ctx.HTTP_HEADER().getText() + " " + httpHeaderName;
+                    }
+            } else {
+                jsonSource = " " + multiArgCtx.json_match_source().getText();
+            }
         }
         v.setType(multiArgCtx.jsonpath_multi_arg_type().getText() + jsonSource);
         v.setResource(multiArgCtx.jsonpath_arg(0).getText());

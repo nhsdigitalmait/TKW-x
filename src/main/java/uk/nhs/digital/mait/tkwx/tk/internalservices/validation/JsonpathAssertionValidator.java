@@ -326,7 +326,7 @@ public class JsonpathAssertionValidator
             jsonpath = sb.toString();
         }
         StringBuilder sb = new StringBuilder("Jsonpath ");
-        sb.append(Utils.htmlEncode(jsonpath));
+        sb.append(Utils.htmlEncode(jsonpath)).append(" ");
         String r = null;
         if (!Utils.isNullOrEmpty(o)) {
             try {

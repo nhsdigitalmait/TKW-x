@@ -165,25 +165,6 @@ public class XpathAssertionValidatorTest {
      */
     @Test
     public void testValidate_String_boolean() throws Exception {
-        /*
-        xpathequals 
-        xpathnotequals 
-        
-        xpathcontains 
-        xpathnotcontains
-        
-        xpathexists 
-        xpathnotexists 
-        
-        xpathmatches 
-        xpathnotmatches 
-        
-        xpathin 
-        xpathnotin 
-        
-        xpathcompare 
-        xpathnotcompare
-         */
         System.out.println("validate");
         boolean stripHeader = false;
 
@@ -264,7 +245,7 @@ public class XpathAssertionValidatorTest {
         assertNotNull(result);
         assertEquals(result.getReport().length, 1);
         ValidationReport[] reports = result.getReport();
-        assertTrue(reports[0].getPassed());
+        assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
 
         instance.setData("a b");
         instance.initialise();
@@ -272,7 +253,7 @@ public class XpathAssertionValidatorTest {
         assertNotNull(result);
         assertEquals(result.getReport().length, 1);
         reports = result.getReport();
-        assertFalse(positive ? reports[0].getPassed() : !reports[0].getPassed());
+        assertTrue(positive ? !reports[0].getPassed() : reports[0].getPassed());
     }
 
     private void testXpathExists(boolean stripHeader, boolean positive) throws Exception {

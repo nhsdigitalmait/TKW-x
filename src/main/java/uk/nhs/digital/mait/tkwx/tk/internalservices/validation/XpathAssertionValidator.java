@@ -261,6 +261,7 @@ public class XpathAssertionValidator
                 regexPattern = Pattern.compile(value);
                 break;
             case XPATHIN:
+            case XPATHNOTIN:
                 if (value != null) {
                     inList = (new ConfigurationTokenSplitter(value)).split();
                 }

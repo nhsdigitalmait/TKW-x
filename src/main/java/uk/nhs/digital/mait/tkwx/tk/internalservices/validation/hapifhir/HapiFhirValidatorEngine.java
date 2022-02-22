@@ -49,6 +49,7 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.util.VersionUtil;
+import org.hl7.fhir.common.hapi.validation.support.NpmPackageValidationSupport;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
 
 /**
@@ -62,6 +63,7 @@ public class HapiFhirValidatorEngine {
     private FhirValidator fhirValidator = null;
     private final String HAPIFHIR = "tks.validator.hapifhirvalidator";
     private final String ASSETDIR = ".assetdir";
+    private final String NPMFILE = ".npmfile";
     private final String IGNORELIST = ".ignore";
     private final String PROFILEVERSION = ".profileversion";
     private final String PROFILEVERSIONFILELOCATION = ".profileversionfilelocation";
@@ -276,18 +278,49 @@ public class HapiFhirValidatorEngine {
 
                 //set the profile version so that it can be ignored in the loading of the profiles
                 hapiAssetCacheInterface.setProfileVersionFileName(pVersion);
+                
                 //find what sort of config has been used to define the asset directory and load accordingly
-                String sp = config.getConfiguration(HapiFhirInstancePath + ASSETDIR);
-                if (sp != null && sp.trim().length() > 0) {
-                    hapiAssetCacheInterface.addAll(sp);
-                } else {
+
+                String spAssetDir = config.getConfiguration(HapiFhirInstancePath + ASSETDIR);
+                String spNpmFile = config.getConfiguration(HapiFhirInstancePath + NPMFILE + ".0");
+                // if there's an NPM file definition it woill take precedence
+                if(spNpmFile!= null && spNpmFile.trim().length() > 0) {
+                CustomNpmPackageValidationSupport npmPackageSupport = new CustomNpmPackageValidationSupport(context);
+                StringBuilder sb = new StringBuilder();
                     int i = 0;
                     while (true) {
-                        sp = config.getConfiguration(HapiFhirInstancePath + ASSETDIR + "." + i);
+                        String sp = config.getConfiguration(HapiFhirInstancePath + NPMFILE + "." + i);
                         if ((sp == null) || (sp.trim().length() == 0)) {
                             break;
                         } else {
-                            hapiAssetCacheInterface.addAll(sp);
+                            npmPackageSupport.loadPackageFromDisk(sp);
+                            if(sb.length()>0){
+                                sb.append(", ");
+                            }
+                            sb.append(sp.substring(sp.lastIndexOf("/") + 1));
+                        }
+                        i++;
+                    }
+                    profileVersion = sb.toString();
+                    if (i == 0) {
+                        Logger log = Logger.getInstance();
+                        log.log("No HAPI FHIR NPM files read in");
+                        System.out.println("No HAPI FHIR NPM files read in");
+                    } else {
+                        supportChain.addValidationSupport(npmPackageSupport);
+                        System.out.println("npmPackageSupport Validation Support created and added to the support chain - " + fhirVersion);
+
+                    }
+                }else if (spAssetDir != null && spAssetDir.trim().length() > 0) {
+                    hapiAssetCacheInterface.addAll(spAssetDir);
+                } else {
+                    int i = 0;
+                    while (true) {
+                        spAssetDir = config.getConfiguration(HapiFhirInstancePath + ASSETDIR + "." + i);
+                        if ((spAssetDir == null) || (spAssetDir.trim().length() == 0)) {
+                            break;
+                        } else {
+                            hapiAssetCacheInterface.addAll(spAssetDir);
                         }
                         i++;
                     }
@@ -300,7 +333,11 @@ public class HapiFhirValidatorEngine {
                 PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(context, hapiAssetCacheInterface.getStructureDefinitionIBaseResourceCache(), hapiAssetCacheInterface.getValueSetIBaseResourceCache(), hapiAssetCacheInterface.getCodeSystemIBaseResourceCache());
                 supportChain.addValidationSupport(prePopulatedSupport);
                 System.out.println("PrePopulated Validation Support created and added to the support chain - " + fhirVersion);
-            }
+
+
+                    
+
+                }
 
             if (commonCodeSystemTerminologyServiceValidationSupport) {
                 CommonCodeSystemsTerminologyService codeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(context);
@@ -375,6 +412,7 @@ public class HapiFhirValidatorEngine {
                 // prime the hapi fhir validator
                 System.out.println("Priming HAPI FHIR Validator");
                 String primingResource = readFile2String(primingResourceLocation);
+//                System.out.println(validateWithStringOOResult(primingResource));
                 validate(primingResource); // We don't care about the validation outcome
             }
 

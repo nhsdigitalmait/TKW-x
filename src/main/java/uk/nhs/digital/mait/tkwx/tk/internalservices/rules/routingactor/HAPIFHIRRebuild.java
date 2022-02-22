@@ -33,8 +33,6 @@ public class HAPIFHIRRebuild
         extends RoutingActor {
 
     private HapiFhirValidatorEngine hfvEngine = null;
-    private String busyMessage = null;
-    private String successMessage = null;
     private final HapiFhirValidatorEngineOrchestrator orchestrator = HapiFhirValidatorEngineOrchestrator.getInstance();
     String hapiFhirValidatorInstanceName = null;
 
@@ -60,10 +58,7 @@ public class HAPIFHIRRebuild
     private void initialise(String instanceName) {
         this.hapiFhirValidatorInstanceName = instanceName;
         hfvEngine = orchestrator.getEngine(hapiFhirValidatorInstanceName);
-        if (hfvEngine.isPrepopulatedValidationSupport()) {
-            busyMessage = hfvEngine.getRebuildBusyOOMessage();
-            successMessage = hfvEngine.getRebuildSuccessOOMessage();
-        }
+
     }
 
     @Override
@@ -72,12 +67,12 @@ public class HAPIFHIRRebuild
 
         if (hfvEngine.isPrepopulatedValidationSupport()) {
             RuleService rulesService = (RuleService) ServiceManager.getInstance().getService("RulesEngine");
-            rulesService.setBusy(true, busyMessage);
+            rulesService.setBusy(true, hfvEngine.getRebuildBusyOOMessage());
 
             hfvEngine.rebuild(hapiFhirValidatorInstanceName);
 
             rulesService.setBusy(false, "");
-            return successMessage;
+            return hfvEngine.getRebuildSuccessOOMessage();
         }
         return "";
     }

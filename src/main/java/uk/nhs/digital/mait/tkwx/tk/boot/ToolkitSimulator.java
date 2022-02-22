@@ -16,6 +16,7 @@
 package uk.nhs.digital.mait.tkwx.tk.boot;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.io.FileReader;
@@ -176,7 +177,11 @@ public class ToolkitSimulator {
                         String interpretedDirName = Utils.replaceTkwroot(Utils.replaceEnvVars(value.toString()));
                         
                         System.out.println("Reading external properties files (tks.external.properties): "+interpretedDirName);
-                        readProperties(interpretedDirName, prop);
+                        try{
+                            readProperties(interpretedDirName, prop);
+                        }catch(FileNotFoundException fnfe){
+                            System.out.println("External properties files not present - ignoring");
+                        }
                     }
                 }
                 prop.setProperty(key, value.toString());

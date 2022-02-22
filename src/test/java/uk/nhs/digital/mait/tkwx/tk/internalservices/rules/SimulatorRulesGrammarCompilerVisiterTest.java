@@ -250,7 +250,7 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
         System.out.println("getExpressions");
         instance.parse(TEST_SIMULATOR_CONFIG);
 
-        int expResult = 40;
+        int expResult = 41;
         HashMap<String, Expression> result = instance.getExpressions();
         assertEquals(expResult, result.size());
     }
@@ -266,7 +266,7 @@ public class SimulatorRulesGrammarCompilerVisiterTest {
         System.out.println("getSubstitutions");
         instance.parse(TEST_SIMULATOR_CONFIG);
 
-        int expResult = 16;
+        int expResult = 18;
         HashMap<String, Substitution> result = instance.getSubstitutions();
         assertEquals(expResult, result.size());
     }

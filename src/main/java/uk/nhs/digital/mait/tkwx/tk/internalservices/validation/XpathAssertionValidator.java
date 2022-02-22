@@ -70,6 +70,7 @@ public class XpathAssertionValidator
         XPATHMATCHES,
         XPATHNOTMATCHES,
         XPATHIN,
+        XPATHNOTIN,
         XPATHCOMPARE,
         XPATHNOTCOMPARE
     }
@@ -180,6 +181,8 @@ public class XpathAssertionValidator
     @Override
     public void initialise()
             throws Exception {
+        
+        comparisonExpression = null;
 
         xmlSource = CONTENT; // default to content
         // type may be followed by an optional xml source string
@@ -461,6 +464,44 @@ public class XpathAssertionValidator
                         sb.append(r.substring(0, 128));
                         sb.append("...");
                     }
+                    sb.append(" does not match any item in list ");
+                    sb.append(value);
+                }
+                break;
+
+            case XPATHNOTIN:
+                ve = null;
+                if ((inList == null) || (inList.length == 0)) {
+                    sb.append(" no match list given");
+                    ve = new ValidationReport("Pass");
+                    ve.setPassed();
+                    break;
+                }
+                if ((r == null) || (r.trim().length() == 0)) {
+                    ve = new ValidationReport("Pass");
+                    sb.append(" returned no match");
+                    ve.setPassed();
+                    break;
+                }
+                for (String s : inList) {
+                    if (r.contentEquals(CheckVariable(s))) {
+                        sb.append(" matches ");
+                        sb.append(CheckVariable(s));
+                        sb.append(" in ");
+                        sb.append(value);
+                        ve = new ValidationReport("Failed");
+                        break;
+                    }
+                }
+                if (ve == null) {
+                    ve = new ValidationReport("Pass");
+                    if (r.length() < 128) {
+                        sb.append(r);
+                    } else {
+                        sb.append(r.substring(0, 128));
+                        sb.append("...");
+                    }
+                    ve.setPassed();
                     sb.append(" does not match any item in list ");
                     sb.append(value);
                 }

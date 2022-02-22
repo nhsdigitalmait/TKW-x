@@ -28,6 +28,7 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAsser
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAssertionValidator.JWT_PAYLOAD;
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.Encoding;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor;
 import static uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor.BODY_EXTRACTOR_LABEL;
 
@@ -299,7 +300,7 @@ public class TextAssertionValidator
             case HTTP_HEADER:
                 if (headerManager != null) {
                     r = headerManager.getHttpHeaderValue(headerName);
-                    if (encoding != null) {
+                    if (encoding != null && !isNullOrEmpty(r)) {
                         r = encoding.decode(r);
                     }
                 }

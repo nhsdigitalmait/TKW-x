@@ -55,6 +55,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesP
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Expression_jsonpath_compareContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.parser.SimulatorRulesParser.Text_match_sourceContext;
 import uk.nhs.digital.mait.tkwx.util.Utils;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 import uk.nhs.digital.mait.tkwx.validator.DomValidator;
@@ -838,7 +839,7 @@ public class Expression {
                 Logger.getInstance().log(SEVERE, Rule.class.getName(), "unhandled match source " + matchSource);
         }
 
-        if (encoding != null) {
+        if (encoding != null && ! isNullOrEmpty(o)) {
             o = encoding.decode(o);
         }
         

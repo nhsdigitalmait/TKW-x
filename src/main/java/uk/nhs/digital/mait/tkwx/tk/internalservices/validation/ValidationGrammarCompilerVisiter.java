@@ -213,163 +213,202 @@ public class ValidationGrammarCompilerVisiter extends ValidationParserBaseVisito
         
         // test statement
         if (testCtx.no_arg_test() != null) {
-            ValidationParser.No_arg_testContext no_arg = testCtx.no_arg_test();
-            if (no_arg.hapifhirvalidator_id() != null) {
-                v.setType(no_arg.getChild(0).getText() + "." + no_arg.hapifhirvalidator_id().getText());
-            } else {
-                v.setType(testCtx.getChild(0).getText());
-            }
-
+            handleNoArg(testCtx, v);
         } else if (testCtx.schema_test() != null) {
-            v.setType(testCtx.schema_test().schema_type().getText());
-            v.setResource(testCtx.schema_test().schema_path().getText());
-            if (testCtx.schema_test().schema_xpath() != null) {
-                v.setData(testCtx.schema_test().schema_xpath().getText());
-            }
-
+            handleSchema(v, testCtx);
         } else if (testCtx.xpath_one_arg_test() != null) {
-            Xpath_one_arg_testContext oneArgCtx = testCtx.xpath_one_arg_test();
-            ValidationParser.Xpath_one_arg_typeContext ctx = oneArgCtx.xpath_one_arg_type();
-            if (ctx.text_match_type() != null) {
-                String matchSource = "content";
-                if (ctx.text_match_source() != null) {
-                    if (ctx.text_match_source().HTTP_HEADER() != null) {
-                        String httpHeaderName = ctx.text_match_source().http_header_name().getText();
-                        if ( ctx.text_match_source().header_encoding() != null ) {
-                            matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + ctx.text_match_source().header_encoding().getText() + " " + httpHeaderName;
-                        } else {
-                            matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
-                        }
-                    } else {
-                        matchSource = ctx.text_match_source().getText();
-                    }
-                }
-                v.setType(oneArgCtx.xpath_one_arg_type().text_match_type().getText() + " " + matchSource);
-            } else if (oneArgCtx.xpath_one_arg_type().xml_match_source() != null) {
-                xmlSource = " " + oneArgCtx.xpath_one_arg_type().xml_match_source().getText();
-                v.setType(oneArgCtx.xpath_one_arg_type().xpath_one_arg_comparison_type().getText() + xmlSource);
-            } else {
-                v.setType(oneArgCtx.xpath_one_arg_type().getText());
-            }
-            v.setResource(oneArgCtx.CST().getText());
-
+            handleXpathOneArg(testCtx, v);
         } else if (testCtx.xpath_two_arg_test() != null) {
-            Xpath_two_arg_testContext twoArgCtx = testCtx.xpath_two_arg_test();
-            if (twoArgCtx.xpath_two_arg_type().xpath_two_arg_comparison_type() != null) {
-                if (twoArgCtx.xpath_two_arg_type().xml_match_source() != null) {
-                    xmlSource = " " + twoArgCtx.xpath_two_arg_type().xml_match_source().getText();
-                }
-                v.setType(twoArgCtx.xpath_two_arg_type().xpath_two_arg_comparison_type().getText() + xmlSource);
-            } else {
-                v.setType(twoArgCtx.xpath_two_arg_type().getText());
-            }
-            v.setResource(twoArgCtx.xpath_arg().get(0).getText());
-            StringBuilder sb = new StringBuilder(twoArgCtx.xpath_arg().get(1).getText());
-            int size = twoArgCtx.xpath_arg().size();
-            for (int i = 2; i < size; i++) {
-                sb.append(" ").append(twoArgCtx.xpath_arg().get(i).getText());
-            }
-            v.setData(sb.toString());
-
+            handleXpathTwoArg(testCtx, xmlSource, v);
         } else if (testCtx.xpath_multi_arg_test() != null) {
-            Xpath_multi_arg_testContext multiArgCtx = testCtx.xpath_multi_arg_test();
-            if (multiArgCtx.xml_match_source() != null) {
-                xmlSource = " " + multiArgCtx.xml_match_source().getText();
-            }
-            v.setType(multiArgCtx.xpath_multi_arg_type().getText() + xmlSource);
-            v.setResource(multiArgCtx.xpath_arg(0).getText());
-            // the rest goes into data
-            StringBuilder sb = new StringBuilder(multiArgCtx.xpath_arg().get(1).getText());
-            int size = multiArgCtx.xpath_arg().size();
-            for (int i = 2; i < size; i++) {
-                sb.append(" ").append(multiArgCtx.xpath_arg().get(i).getText());
-            }
-            v.setData(sb.toString());
-            
+            handleXpathMultiArg(testCtx, xmlSource, v);
         } else if (testCtx.jsonpath_one_arg_test() != null) {
-            Jsonpath_one_arg_testContext oneArgCtx = testCtx.jsonpath_one_arg_test();
-            if (oneArgCtx.jsonpath_one_arg_type().text_match_type() != null) {
-                String matchSource = "content";
-                if (oneArgCtx.jsonpath_one_arg_type().text_match_source() != null) {
-                    ValidationParser.Jsonpath_one_arg_typeContext ctx = oneArgCtx.jsonpath_one_arg_type();
-                    if (ctx.text_match_source().HTTP_HEADER() != null) {
-                        String httpHeaderName = ctx.text_match_source().http_header_name().getText();
-                        if ( ctx.text_match_source().header_encoding() != null ) {
-                            matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + ctx.text_match_source().header_encoding().getText() + " " + httpHeaderName;
-                        } else {
-                            matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
-                        }
-                    } else {
-                        matchSource = ctx.text_match_source().getText();
-                    }
-                }
-                v.setType(oneArgCtx.jsonpath_one_arg_type().text_match_type().getText() + " " + matchSource);
-            } else if (oneArgCtx.jsonpath_one_arg_type().json_match_source() != null) {
-                jsonSource = " " + oneArgCtx.jsonpath_one_arg_type().json_match_source().getText();
-                v.setType(oneArgCtx.jsonpath_one_arg_type().jsonpath_one_arg_comparison_type().getText() + jsonSource);
-            } else {
-                v.setType(oneArgCtx.jsonpath_one_arg_type().getText());
-            }
-            v.setResource(oneArgCtx.CST().getText());
-            
+            handleJsonPathOneArg(testCtx, v);
         } else if (testCtx.jsonpath_two_arg_test() != null) {
-            Jsonpath_two_arg_testContext twoArgCtx = testCtx.jsonpath_two_arg_test();
-            if (twoArgCtx.jsonpath_two_arg_type().jsonpath_two_arg_comparison_type() != null) {
-                if (twoArgCtx.jsonpath_two_arg_type().json_match_source() != null) {
-                    jsonSource = " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().getText();
-                }
-                v.setType(twoArgCtx.jsonpath_two_arg_type().jsonpath_two_arg_comparison_type().getText() + jsonSource);
-            } else {
-                v.setType(twoArgCtx.jsonpath_two_arg_type().getText());
-            }
-            v.setResource(twoArgCtx.jsonpath_arg().get(0).getText());
-            StringBuilder sb = new StringBuilder(twoArgCtx.jsonpath_arg().get(1).getText());
-            int size = twoArgCtx.jsonpath_arg().size();
-            for (int i = 2; i < size; i++) {
-                sb.append(" ").append(twoArgCtx.jsonpath_arg().get(i).getText());
-            }
-            v.setData(sb.toString());
-            
+            handleJsonpathTwoArg(testCtx, jsonSource, v);
         } else if (testCtx.jsonpath_multi_arg_test() != null) {
-            Jsonpath_multi_arg_testContext multiArgCtx = testCtx.jsonpath_multi_arg_test();
-            if (multiArgCtx.json_match_source() != null) {
-                xmlSource = " " + multiArgCtx.json_match_source().getText();
-            }
-            v.setType(multiArgCtx.jsonpath_multi_arg_type().getText() + xmlSource);
-            v.setResource(multiArgCtx.jsonpath_arg(0).getText());
-            // the rest goes into data
-            StringBuilder sb = new StringBuilder(multiArgCtx.jsonpath_arg().get(1).getText());
-            int size = multiArgCtx.jsonpath_arg().size();
-            for (int i = 2; i < size; i++) {
-                sb.append(" ").append(multiArgCtx.jsonpath_arg().get(i).getText());
-            }
-            v.setData(sb.toString());
-        }
-        else if (testCtx.unchecked_test() != null) {
-            // handles additonal validations added at a later date - no syntax checking on arguments
-            Unchecked_testContext uncheckedCtx = testCtx.unchecked_test();
-            v.setType(uncheckedCtx.unchecked_test_name().getText());
-            switch (uncheckedCtx.xpath_arg().size()) {
-                default:
-                    StringBuilder sb = new StringBuilder(uncheckedCtx.xpath_arg(1).getText());
-                    int size = uncheckedCtx.xpath_arg().size();
-                    for (int i = 2; i < size; i++) {
-                        sb.append(" ").append(uncheckedCtx.xpath_arg(i).getText());
-                    }
-                    v.setData(sb.toString());
-                // drop through
-                case 1:
-                    v.setResource(uncheckedCtx.xpath_arg(0).getText());
-                    break;
-                case 0:
-                    break;
-            }
+            handleJsonPathMultiArg(testCtx, jsonSource, v);
+        } else if (testCtx.unchecked_test() != null) {
+            handleUnchecked(testCtx, v);
         } else {
             Logger.getInstance().log(SEVERE, ValidationGrammarCompilerVisiter.class.getName(), "Parser failure "
                     + getLocus(testCtx) + " Unhandled validation statement " + testCtx.getText());
         }
     }
 
+    private void handleNoArg(ValidationParser.Test_statementContext testCtx, Validation v) {
+        ValidationParser.No_arg_testContext no_arg = testCtx.no_arg_test();
+        if (no_arg.hapifhirvalidator_id() != null) {
+            v.setType(no_arg.getChild(0).getText() + "." + no_arg.hapifhirvalidator_id().getText());
+        } else {
+            v.setType(testCtx.getChild(0).getText());
+        }
+    }
+
+    private void handleSchema(Validation v, ValidationParser.Test_statementContext testCtx) {
+        v.setType(testCtx.schema_test().schema_type().getText());
+        v.setResource(testCtx.schema_test().schema_path().getText());
+        if (testCtx.schema_test().schema_xpath() != null) {
+            v.setData(testCtx.schema_test().schema_xpath().getText());
+        }
+    }
+    
+    private void handleXpathOneArg(ValidationParser.Test_statementContext testCtx, Validation v) {
+        String xmlSource;
+        Xpath_one_arg_testContext oneArgCtx = testCtx.xpath_one_arg_test();
+        ValidationParser.Xpath_one_arg_typeContext ctx = oneArgCtx.xpath_one_arg_type();
+        if (ctx.text_match_type() != null) {
+            String matchSource = "content";
+            if (ctx.text_match_source() != null) {
+                if (ctx.text_match_source().HTTP_HEADER() != null) {
+                    String httpHeaderName = ctx.text_match_source().http_header_name().getText();
+                    if ( ctx.text_match_source().header_encoding() != null ) {
+                        matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + ctx.text_match_source().header_encoding().getText() + " " + httpHeaderName;
+                    } else {
+                        matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
+                    }
+                } else {
+                    matchSource = ctx.text_match_source().getText();
+                }
+            }
+            v.setType(oneArgCtx.xpath_one_arg_type().text_match_type().getText() + " " + matchSource);
+        } else if (oneArgCtx.xpath_one_arg_type().xml_match_source() != null) {
+            xmlSource = " " + oneArgCtx.xpath_one_arg_type().xml_match_source().getText();
+            v.setType(oneArgCtx.xpath_one_arg_type().xpath_one_arg_comparison_type().getText() + xmlSource);
+        } else {
+            v.setType(oneArgCtx.xpath_one_arg_type().getText());
+        }
+        v.setResource(oneArgCtx.CST().getText());
+    }
+
+    private void handleXpathTwoArg(ValidationParser.Test_statementContext testCtx, String xmlSource, Validation v) {
+        Xpath_two_arg_testContext twoArgCtx = testCtx.xpath_two_arg_test();
+        if (twoArgCtx.xpath_two_arg_type().xpath_two_arg_comparison_type() != null) {
+            if (twoArgCtx.xpath_two_arg_type().xml_match_source() != null) {
+                xmlSource = " " + twoArgCtx.xpath_two_arg_type().xml_match_source().getText();
+            }
+            v.setType(twoArgCtx.xpath_two_arg_type().xpath_two_arg_comparison_type().getText() + xmlSource);
+        } else {
+            v.setType(twoArgCtx.xpath_two_arg_type().getText());
+        }
+        v.setResource(twoArgCtx.xpath_arg().get(0).getText());
+        StringBuilder sb = new StringBuilder(twoArgCtx.xpath_arg().get(1).getText());
+        int size = twoArgCtx.xpath_arg().size();
+        for (int i = 2; i < size; i++) {
+            sb.append(" ").append(twoArgCtx.xpath_arg().get(i).getText());
+        }
+        v.setData(sb.toString());
+    }
+
+    private void handleXpathMultiArg(ValidationParser.Test_statementContext testCtx, String xmlSource, Validation v) {
+        Xpath_multi_arg_testContext multiArgCtx = testCtx.xpath_multi_arg_test();
+        if (multiArgCtx.xml_match_source() != null) {
+            xmlSource = " " + multiArgCtx.xml_match_source().getText();
+        }
+        v.setType(multiArgCtx.xpath_multi_arg_type().getText() + xmlSource);
+        v.setResource(multiArgCtx.xpath_arg(0).getText());
+        // the rest goes into data
+        StringBuilder sb = new StringBuilder(multiArgCtx.xpath_arg().get(1).getText());
+        int size = multiArgCtx.xpath_arg().size();
+        for (int i = 2; i < size; i++) {
+            sb.append(" ").append(multiArgCtx.xpath_arg().get(i).getText());
+        }
+        v.setData(sb.toString());
+    }
+
+    private void handleJsonPathOneArg(ValidationParser.Test_statementContext testCtx, Validation v) {
+        String jsonSource;
+        Jsonpath_one_arg_testContext oneArgCtx = testCtx.jsonpath_one_arg_test();
+        if (oneArgCtx.jsonpath_one_arg_type().text_match_type() != null) {
+            String matchSource = "content";
+            if (oneArgCtx.jsonpath_one_arg_type().text_match_source() != null) {
+                ValidationParser.Jsonpath_one_arg_typeContext ctx = oneArgCtx.jsonpath_one_arg_type();
+                if (ctx.text_match_source().HTTP_HEADER() != null) {
+                    String httpHeaderName = ctx.text_match_source().http_header_name().getText();
+                    if ( ctx.text_match_source().header_encoding() != null ) {
+                        matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + ctx.text_match_source().header_encoding().getText() + " " + httpHeaderName;
+                    } else {
+                        matchSource = ctx.text_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
+                    }
+                } else {
+                    matchSource = ctx.text_match_source().getText();
+                }
+            }
+            v.setType(oneArgCtx.jsonpath_one_arg_type().text_match_type().getText() + " " + matchSource);
+        } else if (oneArgCtx.jsonpath_one_arg_type().json_match_source() != null) {
+            jsonSource = " " + oneArgCtx.jsonpath_one_arg_type().json_match_source().getText();
+            v.setType(oneArgCtx.jsonpath_one_arg_type().jsonpath_one_arg_comparison_type().getText() + jsonSource);
+        } else {
+            v.setType(oneArgCtx.jsonpath_one_arg_type().getText());
+        }
+        v.setResource(oneArgCtx.CST().getText());
+    }
+
+    private void handleJsonpathTwoArg(ValidationParser.Test_statementContext testCtx, String jsonSource, Validation v) {
+        Jsonpath_two_arg_testContext twoArgCtx = testCtx.jsonpath_two_arg_test();
+        if (twoArgCtx.jsonpath_two_arg_type().jsonpath_two_arg_comparison_type() != null) {
+            if (twoArgCtx.jsonpath_two_arg_type().json_match_source() != null) {
+                if (twoArgCtx.jsonpath_two_arg_type().json_match_source().HTTP_HEADER() != null) {
+                    String httpHeaderName = twoArgCtx.jsonpath_two_arg_type().json_match_source().http_header_name().getText();
+                    if ( twoArgCtx.jsonpath_two_arg_type().json_match_source().header_encoding() != null ) {
+                        jsonSource = " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().HTTP_HEADER().getText() + " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().header_encoding().getText() + " " + httpHeaderName;
+                    } else {
+                        jsonSource = " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().HTTP_HEADER().getText() + " " + httpHeaderName;
+                    }
+                } else {
+                    jsonSource = " " + twoArgCtx.jsonpath_two_arg_type().json_match_source().getText();
+                }
+            }
+            v.setType(twoArgCtx.jsonpath_two_arg_type().jsonpath_two_arg_comparison_type().getText() + jsonSource);
+        } else {
+            v.setType(twoArgCtx.jsonpath_two_arg_type().getText());
+        }
+        v.setResource(twoArgCtx.jsonpath_arg().get(0).getText());
+        StringBuilder sb = new StringBuilder(twoArgCtx.jsonpath_arg().get(1).getText());
+        int size = twoArgCtx.jsonpath_arg().size();
+        for (int i = 2; i < size; i++) {
+            sb.append(" ").append(twoArgCtx.jsonpath_arg().get(i).getText());
+        }
+        v.setData(sb.toString());
+    }
+    
+    private void handleJsonPathMultiArg(ValidationParser.Test_statementContext testCtx, String jsonSource, Validation v) {
+        Jsonpath_multi_arg_testContext multiArgCtx = testCtx.jsonpath_multi_arg_test();
+        if (multiArgCtx.json_match_source() != null) {
+            jsonSource = " " + multiArgCtx.json_match_source().getText();
+        }
+        v.setType(multiArgCtx.jsonpath_multi_arg_type().getText() + jsonSource);
+        v.setResource(multiArgCtx.jsonpath_arg(0).getText());
+        // the rest goes into data
+        StringBuilder sb = new StringBuilder(multiArgCtx.jsonpath_arg().get(1).getText());
+        int size = multiArgCtx.jsonpath_arg().size();
+        for (int i = 2; i < size; i++) {
+            sb.append(" ").append(multiArgCtx.jsonpath_arg().get(i).getText());
+        }
+        v.setData(sb.toString());
+    }
+
+    private void handleUnchecked(ValidationParser.Test_statementContext testCtx, Validation v) {
+        // handles additonal validations added at a later date - no syntax checking on arguments
+        Unchecked_testContext uncheckedCtx = testCtx.unchecked_test();
+        v.setType(uncheckedCtx.unchecked_test_name().getText());
+        switch (uncheckedCtx.xpath_arg().size()) {
+            default:
+                StringBuilder sb = new StringBuilder(uncheckedCtx.xpath_arg(1).getText());
+                int size = uncheckedCtx.xpath_arg().size();
+                for (int i = 2; i < size; i++) {
+                    sb.append(" ").append(uncheckedCtx.xpath_arg(i).getText());
+                }
+                v.setData(sb.toString());
+                // drop through
+            case 1:
+                v.setResource(uncheckedCtx.xpath_arg(0).getText());
+                break;
+            case 0:
+                break;
+        }
+    }
+    
 // --------------------------- Visitor overrides -------------------------------
     @Override
     public Object visitInclude_statement(ValidationParser.Include_statementContext ctx) {

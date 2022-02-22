@@ -89,7 +89,7 @@ public class SenderServiceTest {
         System.out.println("reconfigure");
         String what = ReconfigureTags.DESTINATION_DIRECTORY;
         String value = "newfolder";
-        String expResult = System.getenv("TKWROOT") + "/config/GP_CONNECT/transmitter_sent_messages";
+        String expResult = "TKW_ROOT/config/GP_CONNECT/transmitter_sent_messages";
         String result = instance.reconfigure(what, value);
         assertTrue(expResult.equalsIgnoreCase(result));
     }

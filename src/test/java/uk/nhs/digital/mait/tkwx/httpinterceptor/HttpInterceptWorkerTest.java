@@ -414,16 +414,17 @@ public class HttpInterceptWorkerTest {
     private String waitForFile() throws InterruptedException, Exception {
         final int TIMEOUT = 15;
         int timeoutCount = 0;
+        File endPointFolder = new File(ENDPOINT_FOLDER);
+        
         // wait for worker thread to complete. This takes quite a long time
-        while (Thread.activeCount() > 4 && ++timeoutCount < TIMEOUT) {
-            Thread.sleep(1000);
+        while (++timeoutCount < TIMEOUT && ! endPointFolder.exists()) {
+              Thread.sleep(TIMEOUT*1000);
         }
 
         if (timeoutCount >= TIMEOUT) {
             fail("Timed out after " + TIMEOUT + "s");
         }
 
-        File endPointFolder = new File(ENDPOINT_FOLDER);
         assertTrue(endPointFolder.exists());
         int expResult = 1;
         assertEquals(expResult, endPointFolder.listFiles().length);

@@ -41,6 +41,8 @@ __MULTIPLE_RE_CONTENT_TAG__ reg_exp content "^ContentStart(.*)ContentEnd$" "$1" 
 __CLASS_TAG_CP__ Class uk.nhs.digital.mait.tkwx.tk.internalservices.rules.DelaySubstitution context_path "key 1"
 __CLASS_TAG_HEADER__ Class uk.nhs.digital.mait.tkwx.tk.internalservices.rules.DelaySubstitution http_header h1 "key 1"
 __JSONPATH_TAG__ JsonPath a
+__HEADER_B64__ reg_exp http_header B64 NHSD-Target-Identifier "(?s)^.*(TKW0004).*$" "$1"
+__HEADER_B64_JSONPATH__ JsonPath http_header B64 NHSD-Target-Identifier system
 END SUBSTITUTIONS
 #
 #=================================================================================================================================================================================================================================================
@@ -53,6 +55,8 @@ exp_header_matches               HTTP_HEADER Accept matches ^.*application/xml\+
 exp_contextpath_matches              context_path matches ^.*application/xml\+fhir.*$
 exp_content_matches              content matches ^.*application/xml\+fhir.*$
 exp_header_contains              HTTP_HEADER Accept contains xxx
+exp_header_b64_contains              HTTP_HEADER B64 NHSD-Target-Identifier contains TKW0004
+exp_header_b64_jsonpath_matches              HTTP_HEADER B64 NHSD-Target-Identifier jsonpathmatches system ^http://directoryofservices.nhs.uk$
 exp_contextpath_contains              context_path contains xx/x
 exp_content_contains              content contains xx+/x
 exp_xpathequals xpathequals /soap:Envelope/soap:Body/itk:DistributionEnvelope/itk:header/@service urn:nhs-itk:services:201005:SendCDADocument-v2-0

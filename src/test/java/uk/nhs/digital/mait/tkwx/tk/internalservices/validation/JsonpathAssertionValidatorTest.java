@@ -22,8 +22,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAssertionValidatorTest.MyVP;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
+import static uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor.BODY_EXTRACTOR_LABEL;
+import uk.nhs.digital.mait.tkwx.util.bodyextractors.RequestBodyExtractor;
 
 /**
  *
@@ -32,7 +37,8 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessag
 public class JsonpathAssertionValidatorTest {
 
     private JsonpathAssertionValidator instance;
-
+    private HashMap<String,Object> extraMessageInfo;
+    
     private static String json = "{\n"
             + "  \"resourceType\": \"Bundle\",\n"
             + "  \"meta\": {\n"
@@ -64,6 +70,14 @@ public class JsonpathAssertionValidatorTest {
     @Before
     public void setUp() {
         instance = new JsonpathAssertionValidator();
+
+        // mock a header manager with base 64 encoded header containing json
+        extraMessageInfo = new HashMap<>();
+        RequestBodyExtractor rbe = mock(RequestBodyExtractor.class);
+        HttpHeaderManager headerManager = new HttpHeaderManager();
+        headerManager.addHttpHeader("NHSD-Target-Identifier", "ewogICJ2YWx1ZSI6ICJUS1cwMDA0IiwKICAic3lzdGVtIjogImh0dHA6Ly9kaXJlY3RvcnlvZnNlcnZpY2VzLm5ocy51ayIKfQo=");
+        when(rbe.getRelevantHttpHeaders()).thenReturn(headerManager);
+        extraMessageInfo.put(BODY_EXTRACTOR_LABEL, rbe);
     }
 
     @After
@@ -163,24 +177,6 @@ public class JsonpathAssertionValidatorTest {
 
     @Test
     public void testValidate_String_boolean() throws Exception {
-        /*
-        jsonpathequals 
-        jsonpathnotequals 
-        
-        jsonpathcontains 
-        jsonpathnotcontains
-        
-        jsonpathexists 
-        jsonpathnotexists 
-        
-        jsonpathmatches 
-        jsonpathnotmatches 
-        
-        jsonpathin 
-        
-        jsonpathcompare 
-        jsonpathnotcompare
-         */
         System.out.println("validate");
         boolean stripHeader = false;
 
@@ -190,8 +186,8 @@ public class JsonpathAssertionValidatorTest {
             testJsonpathExists(stripHeader, b);
             testJsonpathMatches(stripHeader, b);
             testJsonpathCompare(stripHeader, b);
+            testJsonpathIn(stripHeader, b);
         }
-        testJsonpathIn(stripHeader);
     }
 
     private void testJsonpathEquals(boolean stripHeader, boolean positive) throws Exception {
@@ -205,6 +201,17 @@ public class JsonpathAssertionValidatorTest {
         assertNotNull(result);
         assertEquals(result.getReport().length, 1);
         ValidationReport[] reports = result.getReport();
+        assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
+        
+        instance.setType(positive ? "jsonpathequals http_header B64 NHSD-Target-Identifier" : "jsonpathnotequals  http_header B64 NHSD-Target-Identifier");
+        instance.setResource("system");
+        instance.setData("http://directoryofservices.nhs.uk");
+        instance.initialise();
+        
+        result = instance.validate(json, extraMessageInfo, stripHeader);
+        assertNotNull(result);
+        assertEquals(result.getReport().length, 1);
+        reports = result.getReport();
         assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
     }
 
@@ -220,6 +227,17 @@ public class JsonpathAssertionValidatorTest {
         assertEquals(result.getReport().length, 1);
         ValidationReport[] reports = result.getReport();
         assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
+
+        instance.setType(positive ? "jsonpathcontains http_header B64 NHSD-Target-Identifier" : "jsonpathnotcontains  http_header B64 NHSD-Target-Identifier");
+        instance.setResource("system");
+        instance.setData("directoryofservices");
+        instance.initialise();
+        
+        result = instance.validate(json, extraMessageInfo, stripHeader);
+        assertNotNull(result);
+        assertEquals(result.getReport().length, 1);
+        reports = result.getReport();
+        assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
     }
 
     private void testJsonpathMatches(boolean stripHeader, boolean positive) throws Exception {
@@ -233,6 +251,17 @@ public class JsonpathAssertionValidatorTest {
         assertNotNull(result);
         assertEquals(result.getReport().length, 1);
         ValidationReport[] reports = result.getReport();
+        assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
+
+        instance.setType(positive ? "jsonpathmatches http_header B64 NHSD-Target-Identifier" : "jsonpathnotmatches  http_header B64 NHSD-Target-Identifier");
+        instance.setResource("system");
+        instance.setData("^.*directoryofservices.*$");
+        instance.initialise();
+        
+        result = instance.validate(json, extraMessageInfo, stripHeader);
+        assertNotNull(result);
+        assertEquals(result.getReport().length, 1);
+        reports = result.getReport();
         assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
     }
 
@@ -248,11 +277,22 @@ public class JsonpathAssertionValidatorTest {
         assertEquals(result.getReport().length, 1);
         ValidationReport[] reports = result.getReport();
         assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
+
+        instance.setType(positive ? "jsonpathcompare http_header B64 NHSD-Target-Identifier" : "jsonpathnotcompare http_header B64 NHSD-Target-Identifier");
+        instance.setResource("system");
+        instance.setData("system");
+        instance.initialise();
+        
+        result = instance.validate(json, extraMessageInfo, stripHeader);
+        assertNotNull(result);
+        assertEquals(result.getReport().length, 1);
+        reports = result.getReport();
+        assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
     }
 
-    private void testJsonpathIn(boolean stripHeader) throws Exception {
-        System.out.println("jsonpathin");
-        instance.setType("jsonpathin");
+    private void testJsonpathIn(boolean stripHeader, boolean positive) throws Exception {
+        System.out.println(positive ? "jsonpathin" : "jsonpathnotin");
+        instance.setType(positive ? "jsonpathin" : "jsonpathnotin");
 
         instance.setResource(PROFILE_PATH);
         instance.setData("a http://fhir.nhs.net/StructureDefinition/spine-request-messageheader-1-0");
@@ -261,7 +301,7 @@ public class JsonpathAssertionValidatorTest {
         assertNotNull(result);
         assertEquals(result.getReport().length, 1);
         ValidationReport[] reports = result.getReport();
-        assertTrue(reports[0].getPassed());
+        assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
 
         instance.setData("a b");
         instance.initialise();
@@ -269,7 +309,18 @@ public class JsonpathAssertionValidatorTest {
         assertNotNull(result);
         assertEquals(result.getReport().length, 1);
         reports = result.getReport();
-        assertFalse(reports[0].getPassed());
+        assertTrue(positive ? ! reports[0].getPassed() : reports[0].getPassed());
+
+        instance.setType(positive ? "jsonpathin http_header B64 NHSD-Target-Identifier" : "jsonpathnotin  http_header B64 NHSD-Target-Identifier");
+        instance.setResource("system");
+        instance.setData("a b");
+        instance.initialise();
+        
+        result = instance.validate(json, extraMessageInfo, stripHeader);
+        assertNotNull(result);
+        assertEquals(result.getReport().length, 1);
+        reports = result.getReport();
+        assertTrue(positive ? ! reports[0].getPassed() : reports[0].getPassed());
     }
 
     private void testJsonpathExists(boolean stripHeader, boolean positive) throws Exception {
@@ -315,6 +366,16 @@ public class JsonpathAssertionValidatorTest {
         assertEquals(result.getReport().length, 1);
         reports = result.getReport();
         System.out.println(reports[0].getTestDetails());
+        assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
+
+        instance.setType(positive ? "jsonpathexists http_header B64 NHSD-Target-Identifier" : "jsonpathnotexists  http_header B64 NHSD-Target-Identifier");
+        instance.setResource("system");
+        instance.initialise();
+        
+        result = instance.validate(json, extraMessageInfo, stripHeader);
+        assertNotNull(result);
+        assertEquals(result.getReport().length, 1);
+        reports = result.getReport();
         assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
     }
 

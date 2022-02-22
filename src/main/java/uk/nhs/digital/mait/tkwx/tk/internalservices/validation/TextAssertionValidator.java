@@ -27,6 +27,8 @@ import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAsser
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAssertionValidator.JWT_HEADER;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAssertionValidator.JWT_PAYLOAD;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.Encoding;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor;
 import static uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor.BODY_EXTRACTOR_LABEL;
 
@@ -71,6 +73,8 @@ public class TextAssertionValidator
     private int attachmentNo = -1;
     private String matchSource = null;
     private JWTParser jwtParser;
+    private String headerName = null;
+    private Encoding encoding = null;
 
     private static final String CONTEXT_PATH = "context_path";
     private static final String HTTP_HEADER = "http_header";
@@ -154,9 +158,16 @@ public class TextAssertionValidator
         // split type and optional match source
         String[] params = type.split("\\s+");
         switch (params.length) {
+            case 4: // http_header + encoding
+                type = params[0];
+                matchSource = params[1];
+                headerName = params[3];
+                encoding = Encoding.valueOf(params[2].toUpperCase());
+                break;
             case 3: // http_header
                 type = params[0];
-                matchSource = params[1] + " " + params[2];
+                matchSource = params[1];
+                headerName = params[2];
                 break;
             case 2: // context_path or content or jwt_payload  or jwt_header
                 type = params[0];
@@ -286,16 +297,16 @@ public class TextAssertionValidator
                     }
                 }
                 break;
-            default:
-                // http_header
-                if (matchSource.startsWith(HTTP_HEADER)) {
-                    String headerName = matchSource.replaceFirst("^" + HTTP_HEADER + " +", "").trim();
-                    if (headerManager != null) {
-                        r = headerManager.getHttpHeaderValue(headerName);
+            case HTTP_HEADER:
+                if (headerManager != null) {
+                    r = headerManager.getHttpHeaderValue(headerName);
+                    if (encoding != null && !isNullOrEmpty(r)) {
+                        r = encoding.decode(r);
                     }
-                } else {
-                    Logger.getInstance().log(SEVERE, TextAssertionValidator.class.getName(), "Unrecognised match source " + matchSource);
                 }
+                break;
+            default:
+                Logger.getInstance().log(SEVERE, TextAssertionValidator.class.getName(), "Unrecognised match source " + matchSource);
         }
         String v = value;
         switch (comparisonType) {
@@ -304,20 +315,20 @@ public class TextAssertionValidator
                 v = CheckVariable(value);
                 if (r == null) {
                     ve = new ValidationReport("Failed");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" returned no match, it was expected to return a value \"");
                     sb.append(v);
                     sb.append("\"");
                 } else if (r.contentEquals(v)) {
                     ve = new ValidationReport("Pass");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     ve.setPassed();
                     sb.append(" returned \"");
                     sb.append(v);
                     sb.append("\"");
                 } else {
                     ve = new ValidationReport("Failed");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" returned \"");
                     if (r.length() < v.length()) {
                         sb.append(r);
@@ -335,20 +346,20 @@ public class TextAssertionValidator
                 v = CheckVariable(value);
                 if (r == null) {
                     ve = new ValidationReport("Warning");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" returned no match, it was expected to return a value other than \"");
                     sb.append(v);
                     sb.append("\"");
                 } else if (!r.contentEquals(v)) {
                     ve = new ValidationReport("Pass");
                     ve.setPassed();
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" does not return \"");
                     sb.append(v);
                     sb.append("\"");
                 } else {
                     ve = new ValidationReport("Failed");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" returned \"");
                     sb.append(v);
                     sb.append("\", it was expected to return something other than that.");
@@ -359,20 +370,20 @@ public class TextAssertionValidator
                 v = CheckVariable(value);
                 if (r == null) {
                     ve = new ValidationReport("Failed");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" returned no match, it was expected to return a value containing \"");
                     sb.append(v);
                     sb.append("\"");
                 } else if (r.contains(v)) {
                     ve = new ValidationReport("Pass");
                     ve.setPassed();
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" result contains \"");
                     sb.append(v);
                     sb.append("\"");
                 } else {
                     ve = new ValidationReport("Failed");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" result does not contain \"");
                     sb.append(v);
                     sb.append("\"");
@@ -383,20 +394,20 @@ public class TextAssertionValidator
                 v = CheckVariable(value);
                 if (r == null) {
                     ve = new ValidationReport("Warning");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" expected to return a value not containing \"");
                     sb.append(v);
                     sb.append("\" but returned no match");
                 } else if (r.contains(v)) {
                     ve = new ValidationReport("Failed");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" contains \"");
                     sb.append(v);
                     sb.append("\" but was expected not to");
                 } else {
                     ve = new ValidationReport("Pass");
                     ve.setPassed();
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" does not contain \"");
                     sb.append(v);
                     sb.append("\"");
@@ -406,7 +417,7 @@ public class TextAssertionValidator
             case MATCHES:
                 if (r == null) {
                     ve = new ValidationReport("Failed");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" expected to return a value matching \"");
                     sb.append(v);
                     sb.append("\" but does not exist");
@@ -416,13 +427,13 @@ public class TextAssertionValidator
                 if (m.find()) {
                     ve = new ValidationReport("Pass");
                     ve.setPassed();
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" matches \"");
                     sb.append(value);
                     sb.append("\"");
                 } else {
                     ve = new ValidationReport("Failed");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" does not match \"");
                     sb.append(value);
                     sb.append("\" when expected");
@@ -433,7 +444,7 @@ public class TextAssertionValidator
                 if (r == null) {
                     ve = new ValidationReport("Pass");
                     ve.setPassed();
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" expected to return a value not matching \"");
                     sb.append(v);
                     sb.append("\" and does not exist");
@@ -442,14 +453,14 @@ public class TextAssertionValidator
                 m = regexPattern.matcher(r);
                 if (m.find()) {
                     ve = new ValidationReport("Failed");
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" matches \"");
                     sb.append(value);
                     sb.append("\" when not expected");
                 } else {
                     ve = new ValidationReport("Pass");
                     ve.setPassed();
-                    sb.append(matchSource);
+                    appendSourceDetails(sb);
                     sb.append(" does not match \"");
                     sb.append(value);
                     sb.append("\"");
@@ -464,6 +475,16 @@ public class TextAssertionValidator
         ValidationReport[] vreport = new ValidationReport[1];
         vreport[0] = ve;
         return new ValidatorOutput(r, vreport);
+    }
+
+    private void appendSourceDetails(StringBuilder sb) {
+        sb.append(matchSource.replaceAll("_"," "));
+        if (headerName != null ) {
+            sb.append(" ").append(headerName);
+        }
+        if (encoding != null) {
+            sb.append(" (after ").append(encoding).append(" decoding)");
+        }
     }
 
     private String CheckVariable(String s) {

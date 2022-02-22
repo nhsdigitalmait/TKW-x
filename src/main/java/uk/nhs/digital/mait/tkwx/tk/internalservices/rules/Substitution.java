@@ -40,6 +40,7 @@ import uk.nhs.digital.mait.commonutils.util.Logger;
 import static uk.nhs.digital.mait.commonutils.util.xpath.XPathManager.getXpathExtractor;
 import org.xml.sax.InputSource;
 import uk.nhs.digital.mait.tkwx.tk.boot.ServiceResponse;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.Encoding;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.*;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.CONTEXT_PATH;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.MatchSource.HTTP_HEADER;
@@ -90,6 +91,7 @@ public class Substitution {
     private static final SimpleDateFormat ISO8601FORMATDATE = new SimpleDateFormat(ISO8601FORMATDATEMASK);
     private static final SimpleDateFormat RFC822FORMATDATE = new SimpleDateFormat(RFC822FORMATDATEMASK);
     private String httpHeaderName;
+    private Encoding encoding = null;
 
     /**
      * Package private ANTLR parser based constructor
@@ -102,117 +104,159 @@ public class Substitution {
         tagLength = tag.length();
 
         if (ctx.substitution_no_arg() != null) {
-            if (ctx.substitution_no_arg().UUID_LOWER() != null) {
-                type = SubstitutionType.UUID_LOWER;
-            } else if (ctx.substitution_no_arg().UUID_UPPER() != null) {
-                type = SubstitutionType.UUID_UPPER;
-            } else if (ctx.substitution_no_arg().HL7_DATETIME() != null) {
-                type = SubstitutionType.HL7DATE;
-            } else if (ctx.substitution_no_arg().ISO8601_DATETIME() != null) {
-                type = SubstitutionType.ISO8601DATE;
-            } else if (ctx.substitution_no_arg().RFC822_DATETIME() != null) {
-                type = SubstitutionType.RFC822DATE;
-            }
+            handleNoArg(ctx);
         } else if (ctx.substitution_xpath() != null) {
-            // XPath or Xpath
-            type = SubstitutionType.XPATH;
-            try {
-                // xpath returns 1 or 2 args
-                switch (ctx.substitution_xpath().xpath_arg().size()) {
-                    case 1:
-                        initialiseXpath(ctx.substitution_xpath().xpath_arg().get(0).getText());
-                        break;
-                    case 2:
-                        // optional match source
-                        matchSource = MatchSource.valueOf(ctx.substitution_xpath().xpath_arg().get(0).getText().toUpperCase());
-                        initialiseXpath(ctx.substitution_xpath().xpath_arg().get(1).getText());
-                        break;
-                }
-            } catch (Exception ex) {
-                Logger.getInstance().log(Level.SEVERE, Substitution.class.getName(), ex.getMessage());
-            }
-        } 
-        else if (ctx.substitution_jsonpath() != null) {
-            type = SubstitutionType.JSONPATH;
-            try {
-                // xpath returns 1 or 2 args
-                switch (ctx.substitution_jsonpath().xpath_arg().size()) {
-                    case 1:
-                        initialiseJsonpath(ctx.substitution_jsonpath().xpath_arg().get(0).getText());
-                        break;
-                    case 2:
-                        // optional match source
-                        matchSource = MatchSource.valueOf(ctx.substitution_jsonpath().xpath_arg().get(0).getText().toUpperCase());
-                        initialiseJsonpath(ctx.substitution_jsonpath().xpath_arg().get(1).getText());
-                        break;
-                }
-            } catch (Exception ex) {
-                Logger.getInstance().log(Level.SEVERE, Substitution.class.getName(), ex.getMessage());
-            }
-        } 
-        else if (ctx.substitution_literal() != null) {
-            type = SubstitutionType.LITERAL;
-            literalContent = ctx.substitution_literal().ANNOTATION_TEXT().getText();
+            handleXpath(ctx);
+        }  else if (ctx.substitution_jsonpath() != null) {
+            handleJsonpath(ctx);
+        } else if (ctx.substitution_literal() != null) {
+            handleLiteral(ctx);
         } else if (ctx.substitution_property() != null) {
-            type = SubstitutionType.PROPERTY;
-            // 0..n of property file name plus a property name
-            int propertyFileNameCount = ctx.substitution_property().property_file_name().size();
-            data = new String[propertyFileNameCount + 1];
-            for (int i = 0; i < propertyFileNameCount; i++) {
-                data[i] = replaceTkwroot(ctx.substitution_property().property_file_name(i).getText());
-            }
-            data[propertyFileNameCount] = ctx.substitution_property().property_name().getText();
+            handleProperty(ctx);
         } else if (ctx.substitution_class() != null) {
-            type = SubstitutionType.CLASS;
-            String className = ctx.substitution_class().DOT_SEPARATED_IDENTIFIER().getText();
-  
-            if (ctx.substitution_class().text_match_source() != null) {
-                matchSource = MatchSource.valueOf(ctx.substitution_class().text_match_source().getChild(0).getText().toUpperCase());
-                if (matchSource == MatchSource.HTTP_HEADER) {
-                    httpHeaderName = ctx.substitution_class().text_match_source().http_header_name().getText();
-                }
-            } else {
-                matchSource = MatchSource.CONTENT;
-            }
-
-            try {
-                if (ctx.substitution_class().IDENTIFIER() != null) {
-                    initialiseSubstituterClass(className, ctx.substitution_class().IDENTIFIER().getText());
-                } else if (ctx.substitution_class().QUOTED_STRING() != null) {
-                    initialiseSubstituterClass(className, ctx.substitution_class().QUOTED_STRING().getText());
-                } else {
-                    initialiseSubstituterClass(className, null);
-                }
-            } catch (Exception ex) {
-                Logger.getInstance().log(Level.SEVERE, Substitution.class.getName(), ex.getMessage());
-            }
+            handleClass(ctx);
         } else if (ctx.substitution_regexp() != null) {
-            type = SubstitutionType.REGEXP;
-            if (ctx.substitution_regexp().text_match_source() != null) {
-                matchSource = MatchSource.valueOf(ctx.substitution_regexp().text_match_source().getChild(0).getText().toUpperCase());
-                if (matchSource == MatchSource.HTTP_HEADER) {
-                    httpHeaderName = ctx.substitution_regexp().text_match_source().http_header_name().getText();
+            handleRegExp(ctx);
+        }
+    }
+    
+    private void handleNoArg(SimulatorRulesParser.SubstitutionContext ctx) {
+        if (ctx.substitution_no_arg().UUID_LOWER() != null) {
+            type = SubstitutionType.UUID_LOWER;
+        } else if (ctx.substitution_no_arg().UUID_UPPER() != null) {
+            type = SubstitutionType.UUID_UPPER;
+        } else if (ctx.substitution_no_arg().HL7_DATETIME() != null) {
+            type = SubstitutionType.HL7DATE;
+        } else if (ctx.substitution_no_arg().ISO8601_DATETIME() != null) {
+            type = SubstitutionType.ISO8601DATE;
+        } else if (ctx.substitution_no_arg().RFC822_DATETIME() != null) {
+            type = SubstitutionType.RFC822DATE;
+        }
+    }
+
+    private void handleXpath(SimulatorRulesParser.SubstitutionContext ctx) {
+        // XPath or Xpath
+        type = SubstitutionType.XPATH;
+        try {
+            // xpath returns 1 or 2 args
+            switch (ctx.substitution_xpath().xpath_arg().size()) {
+                case 1:
+                    initialiseXpath(ctx.substitution_xpath().xpath_arg().get(0).getText());
+                    break;
+                case 2:
+                    // optional match source
+                    matchSource = MatchSource.valueOf(ctx.substitution_xpath().xpath_arg().get(0).getText().toUpperCase());
+                    initialiseXpath(ctx.substitution_xpath().xpath_arg().get(1).getText());
+                    break;
+            }
+        } catch (Exception ex) {
+            Logger.getInstance().log(Level.SEVERE, Substitution.class.getName(), ex.getMessage());
+        }
+    }
+
+    private void handleJsonpath(SimulatorRulesParser.SubstitutionContext ctx) {
+        type = SubstitutionType.JSONPATH;
+        try {
+            // jsonpath returns 1..3 args
+            switch (ctx.substitution_jsonpath().xpath_arg().size()) {
+                case 1:
+                    initialiseJsonpath(ctx.substitution_jsonpath().xpath_arg().get(0).getText());
+                    break;
+                case 2:
+                    // optional match source + jsonpath
+                    matchSource = MatchSource.valueOf(ctx.substitution_jsonpath().xpath_arg().get(0).getText().toUpperCase());
+                    initialiseJsonpath(ctx.substitution_jsonpath().xpath_arg().get(1).getText());
+                    break;
+                case 4:
+                    // match source + header name + encoding + jsonpath
+                    matchSource = MatchSource.valueOf(ctx.substitution_jsonpath().xpath_arg().get(0).getText().toUpperCase());
+                    if ( matchSource == HTTP_HEADER ) {
+                        encoding = Encoding.valueOf(ctx.substitution_jsonpath().xpath_arg().get(1).getText().toUpperCase());
+                        httpHeaderName = ctx.substitution_jsonpath().xpath_arg().get(2).getText();
+                        initialiseJsonpath(ctx.substitution_jsonpath().xpath_arg().get(3).getText());
+                    }
+                    break; 
+            }
+        } catch (Exception ex) {
+            Logger.getInstance().log(Level.SEVERE, Substitution.class.getName(), ex.getMessage());
+        }
+    }
+    
+    private void handleLiteral(SimulatorRulesParser.SubstitutionContext ctx) {
+        type = SubstitutionType.LITERAL;
+        literalContent = ctx.substitution_literal().ANNOTATION_TEXT().getText();
+    }
+
+    private void handleProperty(SimulatorRulesParser.SubstitutionContext ctx) {
+        type = SubstitutionType.PROPERTY;
+        // 0..n of property file name plus a property name
+        int propertyFileNameCount = ctx.substitution_property().property_file_name().size();
+        data = new String[propertyFileNameCount + 1];
+        for (int i = 0; i < propertyFileNameCount; i++) {
+            data[i] = replaceTkwroot(ctx.substitution_property().property_file_name(i).getText());
+        }
+        data[propertyFileNameCount] = ctx.substitution_property().property_name().getText();
+    }
+
+    
+    private void handleClass(SimulatorRulesParser.SubstitutionContext ctx) {
+        type = SubstitutionType.CLASS;
+        String className = ctx.substitution_class().DOT_SEPARATED_IDENTIFIER().getText();
+        
+        if (ctx.substitution_class().text_match_source() != null) {
+            matchSource = MatchSource.valueOf(ctx.substitution_class().text_match_source().getChild(0).getText().toUpperCase());
+            if (matchSource == MatchSource.HTTP_HEADER) {
+                httpHeaderName = ctx.substitution_class().text_match_source().http_header_name().getText();
+                if ( ctx.substitution_class().text_match_source().header_encoding() != null ) {
+                    encoding = Encoding.valueOf(ctx.substitution_class().text_match_source().header_encoding().getText().toUpperCase());
                 }
+            }
+        } else {
+            matchSource = MatchSource.CONTENT;
+        }
+        
+        try {
+            if (ctx.substitution_class().IDENTIFIER() != null) {
+                initialiseSubstituterClass(className, ctx.substitution_class().IDENTIFIER().getText());
+            } else if (ctx.substitution_class().QUOTED_STRING() != null) {
+                initialiseSubstituterClass(className, ctx.substitution_class().QUOTED_STRING().getText());
             } else {
-                matchSource = MatchSource.CONTENT;
+                initialiseSubstituterClass(className, null);
             }
+        } catch (Exception ex) {
+            Logger.getInstance().log(Level.SEVERE, Substitution.class.getName(), ex.getMessage());
+        }
+    }
 
-            // handle multiple sequences of reg exp
-            data = new String[3 * ctx.substitution_regexp().regexp().size()];
-            Iterator<SimulatorRulesParser.RegexpContext> iter = ctx.substitution_regexp().regexp().iterator();
-            int index = 0;
-            while (iter.hasNext()) {
-                SimulatorRulesParser.RegexpContext regExCtx = iter.next();
-
-                data[index++] = regExCtx.QUOTED_STRING(0).getText(); // search reg exp
-                data[index++] = regExCtx.QUOTED_STRING(1).getText(); // replace regexp
-                if (regExCtx.substitution_regexp_cardinality() != null) {
-                    data[index] = regExCtx.substitution_regexp_cardinality().getText().toLowerCase();
-                } else {
-                    data[index] = "first";
+    private void handleRegExp(SimulatorRulesParser.SubstitutionContext ctx) {
+        type = SubstitutionType.REGEXP;
+        if (ctx.substitution_regexp().text_match_source() != null) {
+            matchSource = MatchSource.valueOf(ctx.substitution_regexp().text_match_source().getChild(0).getText().toUpperCase());
+            if (matchSource == MatchSource.HTTP_HEADER) {
+                httpHeaderName = ctx.substitution_regexp().text_match_source().http_header_name().getText();
+                if ( ctx.substitution_regexp().text_match_source().header_encoding() != null ) {
+                    encoding = Encoding.valueOf(ctx.substitution_regexp().text_match_source().header_encoding().getText().toUpperCase());
                 }
-                index++;
             }
+        } else {
+            matchSource = MatchSource.CONTENT;
+        }
+        
+        // handle multiple sequences of reg exp
+        data = new String[3 * ctx.substitution_regexp().regexp().size()];
+        Iterator<SimulatorRulesParser.RegexpContext> iter = ctx.substitution_regexp().regexp().iterator();
+        int index = 0;
+        while (iter.hasNext()) {
+            SimulatorRulesParser.RegexpContext regExCtx = iter.next();
+            
+            data[index++] = regExCtx.QUOTED_STRING(0).getText(); // search reg exp
+            data[index++] = regExCtx.QUOTED_STRING(1).getText(); // replace regexp
+            if (regExCtx.substitution_regexp_cardinality() != null) {
+                data[index] = regExCtx.substitution_regexp_cardinality().getText().toLowerCase();
+            } else {
+                data[index] = "first";
+            }
+            index++;
         }
     }
 
@@ -385,7 +429,7 @@ public class Substitution {
      */
     public void substitute(StringBuffer sb, Request req)
             throws Exception {
-        substitute(sb, getMatchContent(req, matchSource, httpHeaderName));
+        substitute(sb, getMatchContent(req, matchSource, httpHeaderName, encoding));
     }
 
     /**
@@ -398,7 +442,7 @@ public class Substitution {
      * @throws Exception
      */
     public void substitute(ServiceResponse sr, Request req) throws Exception {
-        substitute(sr, getMatchContent(req, matchSource, httpHeaderName));
+        substitute(sr, getMatchContent(req, matchSource, httpHeaderName, encoding));
     }
 
     /**

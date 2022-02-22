@@ -165,24 +165,6 @@ public class XpathAssertionValidatorTest {
      */
     @Test
     public void testValidate_String_boolean() throws Exception {
-        /*
-        xpathequals 
-        xpathnotequals 
-        
-        xpathcontains 
-        xpathnotcontains
-        
-        xpathexists 
-        xpathnotexists 
-        
-        xpathmatches 
-        xpathnotmatches 
-        
-        xpathin 
-        
-        xpathcompare 
-        xpathnotcompare
-         */
         System.out.println("validate");
         boolean stripHeader = false;
 
@@ -192,8 +174,8 @@ public class XpathAssertionValidatorTest {
             testXpathExists(stripHeader, b);
             testXpathMatches(stripHeader, b);
             testXpathCompare(stripHeader, b);
+            testXpathIn(stripHeader, b);
         }
-        testXpathIn(stripHeader);
     }
 
     private void testXpathEquals(boolean stripHeader, boolean positive) throws Exception {
@@ -252,9 +234,9 @@ public class XpathAssertionValidatorTest {
         assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
     }
 
-    private void testXpathIn(boolean stripHeader) throws Exception {
-        System.out.println("xpathin");
-        instance.setType("xpathin");
+    private void testXpathIn(boolean stripHeader, boolean positive) throws Exception {
+        System.out.println(positive ? "xpathin" : "xpathnotin");
+        instance.setType(positive ? "xpathin" : "xpathnotin");
 
         instance.setResource(PROFILE_PATH);
         instance.setData("a http://fhir.nhs.net/StructureDefinition/spine-request-messageheader-1-0");
@@ -263,7 +245,7 @@ public class XpathAssertionValidatorTest {
         assertNotNull(result);
         assertEquals(result.getReport().length, 1);
         ValidationReport[] reports = result.getReport();
-        assertTrue(reports[0].getPassed());
+        assertTrue(positive ? reports[0].getPassed() : !reports[0].getPassed());
 
         instance.setData("a b");
         instance.initialise();
@@ -271,7 +253,7 @@ public class XpathAssertionValidatorTest {
         assertNotNull(result);
         assertEquals(result.getReport().length, 1);
         reports = result.getReport();
-        assertFalse(reports[0].getPassed());
+        assertTrue(positive ? !reports[0].getPassed() : reports[0].getPassed());
     }
 
     private void testXpathExists(boolean stripHeader, boolean positive) throws Exception {

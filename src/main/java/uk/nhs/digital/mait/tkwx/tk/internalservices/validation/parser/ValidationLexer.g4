@@ -120,6 +120,8 @@ SUB : S U B ;
 ALWAYS : A L W A Y S ;  
 NEVER : N E V E R ;  
 
+B64 : B '64';
+
 //------------------------------------------------------------------------------
 // schema
 SCHEMA : S C H E M A ; 
@@ -216,7 +218,7 @@ JWT_PAYLOAD_JSON : J W T '_' P A Y L O A D '_' J S O N; // json and text
 
 // multi arg
 XPATHIN : XPATH_ IN  -> mode(CST_MODE); 
-//XPATHNOTIN : XPATH_ NOT IN   -> mode(CST_MODE) ;  
+XPATHNOTIN : XPATH_ NOT IN   -> mode(CST_MODE) ;  
 //------------------------------------------------------------------------------
 // jsonpath one arg
 JSONPATHEXISTS : JSONPATH_ E X I S T S -> mode(CST_MODE);  
@@ -244,6 +246,9 @@ JSONPATHNOTCONTAINS : JSONPATH_ NOT CONTAINS  -> mode(CST_MODE);
 JSONPATHCONTAINSIGNORECASE : JSONPATH_ CONTAINS  IGNORE_CASE -> mode(CST_MODE);  
 JSONPATHNOTCONTAINSIGNORECASE : JSONPATH_ NOT CONTAINS  IGNORE_CASE  -> mode(CST_MODE);  
 
+// multi arg
+JSONPATHIN : JSONPATH_ IN  -> mode(CST_MODE); 
+JSONPATHNOTIN : JSONPATH_ NOT IN   -> mode(CST_MODE) ;  
 //------------------------------------------------------------------------------
 // headers
 

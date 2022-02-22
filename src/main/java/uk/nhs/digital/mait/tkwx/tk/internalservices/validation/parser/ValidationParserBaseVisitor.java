@@ -250,6 +250,13 @@ public class ValidationParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitHeader_encoding(ValidationParser.Header_encodingContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitText_match_source(ValidationParser.Text_match_sourceContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

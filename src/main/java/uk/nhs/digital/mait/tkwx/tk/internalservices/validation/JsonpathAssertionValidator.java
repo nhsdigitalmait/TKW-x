@@ -26,11 +26,13 @@ import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.spine.SpineMessage;
 import uk.nhs.digital.mait.commonutils.util.ConfigurationTokenSplitter;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.Expression.Encoding;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAssertionValidator.AUTHORIZATION_HEADER;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAssertionValidator.CONTENT;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAssertionValidator.JWT_HEADER;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.validation.XpathAssertionValidator.JWT_PAYLOAD;
 import uk.nhs.digital.mait.tkwx.util.Utils;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor;
 import static uk.nhs.digital.mait.tkwx.util.bodyextractors.AbstractBodyExtractor.BODY_EXTRACTOR_LABEL;
 
@@ -70,6 +72,7 @@ public class JsonpathAssertionValidator
         JSONPATHMATCHES,
         JSONPATHNOTMATCHES,
         JSONPATHIN,
+        JSONPATHNOTIN,
         JSONPATHCOMPARE,
         JSONPATHNOTCOMPARE
     }
@@ -83,18 +86,18 @@ public class JsonpathAssertionValidator
 
     private VariableProvider vProvider = null;
     private Pattern regexPattern = null;
-    private String checkExpression = null;
     private String comparisonExpression = null;
     private boolean containsVariable = false;
     private String variable = null;
     private String preVariable = null;
     private String postVariable = null;
-    private String checkPart = null;
-    private int attachmentNo = -1;
     private JWTParser jwtParser = null;
+    private String httpHeaderName = null;
+    private Encoding encoding = null;
     
     private static final String JWT_HEADER_JSON = "jwt_header_json"; // json version of json header of Json Web Token
     private static final String JWT_PAYLOAD_JSON = "jwt_payload_json"; // json version of json payload of Json Web Token
+    private static final String HTTP_HEADER = "http_header"; 
 
     @Override
     public void writeExternalOutput(String reportDirectory) throws Exception {
@@ -163,11 +166,17 @@ public class JsonpathAssertionValidator
     @Override
     public void initialise()
             throws Exception {
-
+        comparisonExpression = null;
         jsonSource = CONTENT; // default to content
-        // type may be followed by an optional xml source string
+        // type may be followed by an optional json source string
         String[] params = type.split("\\s+");
         switch (params.length) {
+            case 4:
+                type = params[0];
+                jsonSource = params[1];
+                encoding = Encoding.valueOf(params[2].toUpperCase());
+                httpHeaderName = params[3];
+                break;
             case 2:
                 jsonSource = params[1];
             // drop through
@@ -230,6 +239,7 @@ public class JsonpathAssertionValidator
                 regexPattern = Pattern.compile(value);
                 break;
             case JSONPATHIN:
+            case JSONPATHNOTIN:
                 if (value != null) {
                     inList = (new ConfigurationTokenSplitter(value)).split();
                 }
@@ -268,24 +278,36 @@ public class JsonpathAssertionValidator
 
             if (be != null) {
                 HttpHeaderManager headerManager = be.getRelevantHttpHeaders();
-                String jwtb64 = headerManager != null ? headerManager.getHttpHeaderValue(AUTHORIZATION_HEADER) : null;
-                if (jwtb64 != null) {
+                if (headerManager != null) {
+                    String jwtb64 =  headerManager.getHttpHeaderValue(AUTHORIZATION_HEADER);
                     switch (jsonSource) {
                         case JWT_HEADER_JSON:
-                            jwtParser = new JWTParser(jwtb64);
-                            // the json JWT header to be analysed is from the JWT
-                            o = jwtParser.getJsonHeader();
+                            if (jwtb64 != null) {
+                                jwtParser = new JWTParser(jwtb64);
+                                // the json JWT header to be analysed is from the JWT
+                                o = jwtParser.getJsonHeader();
+                            } 
                             break;
                         case JWT_PAYLOAD_JSON:
-                            jwtParser = new JWTParser(jwtb64);
-                            // the json JWT payload to be analysed is from the JWT
-                            o = jwtParser.getJsonPayload();
+                            if (jwtb64 != null) {
+                                jwtParser = new JWTParser(jwtb64);
+                                // the json JWT payload to be analysed is from the JWT
+                                o = jwtParser.getJsonPayload();
+                            }
                             break;
                         case CONTENT:
                             break;
+                        case HTTP_HEADER:
+                            String headerValue = headerManager.getHttpHeaderValue(httpHeaderName);
+                            if ( ! isNullOrEmpty(headerValue) ) {
+                                o = encoding.decode(headerValue);
+                            }
+                            break;
                         default:
-                            Logger.getInstance().log(SEVERE, JsonpathAssertionValidator.class.getName(), "Unrecognised jsonSource " + jsonSource);
+                           Logger.getInstance().log(SEVERE, JsonpathAssertionValidator.class.getName(), "Unrecognised jsonSource " + jsonSource);
                     }
+                } else {
+                     Logger.getInstance().log(SEVERE, JsonpathAssertionValidator.class.getName(), "No header manager available");
                 }
             } // no be
         } // no extra message info
@@ -304,7 +326,7 @@ public class JsonpathAssertionValidator
             jsonpath = sb.toString();
         }
         StringBuilder sb = new StringBuilder("Jsonpath ");
-        sb.append(Utils.htmlEncode(jsonpath));
+        sb.append(Utils.htmlEncode(jsonpath)).append(" ");
         String r = null;
         if (!Utils.isNullOrEmpty(o)) {
             try {
@@ -408,6 +430,44 @@ public class JsonpathAssertionValidator
                         sb.append(r.substring(0, 128));
                         sb.append("...");
                     }
+                    sb.append(" does not match any item in list ");
+                    sb.append(value);
+                }
+                break;
+
+            case JSONPATHNOTIN:
+                ve = null;
+                if ((inList == null) || (inList.length == 0)) {
+                    sb.append(" no match list given");
+                    ve = new ValidationReport("Pass");
+                    ve.setPassed();
+                    break;
+                }
+                if ((r == null) || (r.trim().length() == 0)) {
+                    ve = new ValidationReport("Pass");
+                    sb.append(" returned no match");
+                    ve.setPassed();
+                    break;
+                }
+                for (String s : inList) {
+                    if (r.contentEquals(CheckVariable(s))) {
+                        sb.append(" matches ");
+                        sb.append(CheckVariable(s));
+                        sb.append(" in ");
+                        sb.append(value);
+                        ve = new ValidationReport("Failed");
+                        break;
+                    }
+                }
+                if (ve == null) {
+                    ve = new ValidationReport("Pass");
+                    if (r.length() < 128) {
+                        sb.append(r);
+                    } else {
+                        sb.append(r.substring(0, 128));
+                        sb.append("...");
+                    }
+                    ve.setPassed();
                     sb.append(" does not match any item in list ");
                     sb.append(value);
                 }

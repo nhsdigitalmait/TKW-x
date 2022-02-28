@@ -805,6 +805,9 @@ public class Expression {
                 break;
             case HTTP_HEADER:
                 o = httpReq.getField(name);
+                if (o == null) {
+                    o = "";
+                }
                 break;
             case JWT_HEADER:
                 jwtParser = new JWTParser(httpReq.getField(AUTHORIZATION_HEADER));

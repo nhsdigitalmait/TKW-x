@@ -309,23 +309,25 @@ public class XpathAssertionValidator
             if (be != null) {
                 HttpHeaderManager headerManager = be.getRelevantHttpHeaders();
                 String jwtb64 = headerManager != null ? headerManager.getHttpHeaderValue(AUTHORIZATION_HEADER) : null;
-                if (jwtb64 != null) {
-                    switch (xmlSource) {
-                        case JWT_HEADER:
+                switch (xmlSource) {
+                    case JWT_HEADER:
+                        if (jwtb64 != null) {
                             jwtParser = new JWTParser(jwtb64);
                             // the xml to be analysed is from the JWT
                             o = jwtParser.getXmlHeader();
-                            break;
-                        case JWT_PAYLOAD:
+                        }
+                        break;
+                    case JWT_PAYLOAD:
+                        if (jwtb64 != null) {
                             jwtParser = new JWTParser(jwtb64);
                             // the xml to be analysed is from the JWT
                             o = jwtParser.getXmlPayload();
-                            break;
-                        case CONTENT:
-                            break;
-                        default:
-                            Logger.getInstance().log(SEVERE, XpathAssertionValidator.class.getName(), "Unrecognised xmlSource " + xmlSource);
-                    }
+                        }
+                        break;
+                    case CONTENT:
+                        break;
+                    default:
+                        Logger.getInstance().log(SEVERE, XpathAssertionValidator.class.getName(), "Unrecognised xmlSource " + xmlSource);
                 }
             } // no be
         } // no extra message info

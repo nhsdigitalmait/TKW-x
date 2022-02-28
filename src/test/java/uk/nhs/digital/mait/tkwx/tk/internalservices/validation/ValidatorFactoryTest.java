@@ -152,7 +152,8 @@ public class ValidatorFactoryTest {
 
     /**
      * Test of getMetadata method, of class ValidatorFactory.
-     *
+     * runs all the validations in testvalidation.conf
+     * To extend just add validations to that file and amend the expected pass/fail count
      * @throws java.lang.Exception
      */
     @Test
@@ -177,22 +178,29 @@ public class ValidatorFactoryTest {
 
         RequestBodyExtractor be = new RequestBodyExtractor();
         String o = be.getBody(new ByteArrayInputStream(fhirRestRequestMessage));
-
+        
         HashMap<String, Object> extraMessageInfo = new HashMap<>();
         extraMessageInfo.put(BODY_EXTRACTOR_LABEL, be);
         ArrayList<ValidationReport> reports = result.doValidations(o, extraMessageInfo, true, vs);
         int failCount = 0;
+        int passCount = 0;
         for (ValidationReport report : reports) {
             if (!report.getPassed()) {
                 failCount++;
+            } else {
+                passCount++;
             }
             System.out.println("Passed = " + report.getPassed() + " Details = " + report.getTestDetails());
             if (report.getAnnotation() != null) {
                 System.out.println("Annotation = " + report.getAnnotation());
             }
         }
+        
+        int expResult = 32; // pass count
+        assertEquals(expResult, passCount);
+       
 
-        int expResult = 1; // failure count
+        expResult = 4; // failure count
         assertEquals(expResult, failCount);
     }
 

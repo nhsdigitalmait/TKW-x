@@ -175,16 +175,30 @@ public class SubstitutionTest {
         instance.substitute(sbTemplate, requestContent);
         assertEquals("b", sbTemplate.toString());
         
+        // absent header
+        instance = new Substitution(visitor.getSubstitutionCtx().get("__HEADER_B64__"));
+        sbTemplate = new StringBuffer("__HEADER_B64__");
+        instance.substitute(sbTemplate, req);
+        assertEquals("", sbTemplate.toString());
+        
+        // present header
         req.setHeader("NHSD-Target-Identifier","ewogICJ2YWx1ZSI6ICJUS1cwMDA0IiwKICAic3lzdGVtIjogImh0dHA6Ly9kaXJlY3RvcnlvZnNlcnZpY2VzLm5ocy51ayIKfQo=");
         instance = new Substitution(visitor.getSubstitutionCtx().get("__HEADER_B64__"));
         sbTemplate = new StringBuffer("__HEADER_B64__");
         instance.substitute(sbTemplate, req);
         assertEquals("TKW0004", sbTemplate.toString());
 
+        // matching jsonpath
         instance = new Substitution(visitor.getSubstitutionCtx().get("__HEADER_B64_JSONPATH__"));
         sbTemplate = new StringBuffer("__HEADER_B64_JSONPATH__");
         instance.substitute(sbTemplate, req);
         assertEquals("http://directoryofservices.nhs.uk", sbTemplate.toString());
+
+        // non matching jsonpath
+        instance = new Substitution(visitor.getSubstitutionCtx().get("__HEADER_B64_JSONPATH__"));
+        sbTemplate = new StringBuffer("__HEADER_B64_NON_MATCHING_JSONPATH__");
+        instance.substitute(sbTemplate, req);
+        assertEquals("__HEADER_B64_NON_MATCHING_JSONPATH__", sbTemplate.toString());
     }
 
     /**

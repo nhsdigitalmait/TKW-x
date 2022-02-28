@@ -157,4 +157,124 @@ public class HapiFhirValidatorEngineTest {
         instance.rebuild("test");
     }
 
+    /**
+     * Test of getRebuildBusyOOMessage method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testGetRebuildBusyOOMessage() {
+        System.out.println("getRebuildBusyOOMessage");
+        boolean expResult = true;
+        String result = instance.getRebuildBusyOOMessage();
+        assertEquals(expResult, result.startsWith("<OperationOutcome"));
+    }
+
+    /**
+     * Test of getRebuildSuccessOOMessage method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testGetRebuildSuccessOOMessage() {
+        System.out.println("getRebuildSuccessOOMessage");
+        boolean expResult = true;
+        String result = instance.getRebuildSuccessOOMessage();
+        assertEquals(expResult, result.startsWith("<OperationOutcome"));
+    }
+
+    /**
+     * Test of validateWithStringOOResult method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testValidateWithStringOOResult() throws Exception {
+        System.out.println("validateWithStringOOResult");
+        String o = "<Bundle xmlns=\"http://hl7.org/fhir\"/>";
+        boolean expResult = true;
+        String result = instance.validateWithStringOOResult(o);
+        assertEquals(expResult, result.startsWith("<OperationOutcome"));
+    }
+
+    /**
+     * Test of isPrepopulatedValidationSupport method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testIsPrepopulatedValidationSupport() {
+        System.out.println("isPrepopulatedValidationSupport");
+        boolean expResult = true;
+        boolean result = instance.isPrepopulatedValidationSupport();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of isInMemoryTerminologyServerValidationSupport method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testIsInMemoryTerminologyServerValidationSupport() {
+        System.out.println("isInMemoryTerminologyServerValidationSupport");
+        boolean expResult = true;
+        boolean result = instance.isInMemoryTerminologyServerValidationSupport();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of isCommonCodeSystemTerminologyServiceValidationSupport method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testIsCommonCodeSystemTerminologyServiceValidationSupport() {
+        System.out.println("isCommonCodeSystemTerminologyServiceValidationSupport");
+        boolean expResult = true;
+        boolean result = instance.isCommonCodeSystemTerminologyServiceValidationSupport();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of isSnapshotGeneratingValidationSupport method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testIsSnapshotGeneratingValidationSupport() {
+        System.out.println("isSnapshotGeneratingValidationSupport");
+        boolean expResult = true;
+        boolean result = instance.isSnapshotGeneratingValidationSupport();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of isCachingValidationSupport method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testIsCachingValidationSupport() {
+        System.out.println("isCachingValidationSupport");
+        boolean expResult = true;
+        boolean result = instance.isCachingValidationSupport();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of getRemoteTerminologyServiceUrl method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testGetRemoteTerminologyServiceUrl() {
+        System.out.println("getRemoteTerminologyServiceUrl");
+        String expResult = null;
+        String result = instance.getRemoteTerminologyServiceUrl();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of getFhirVersion method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testGetFhirVersion() {
+        System.out.println("getFhirVersion");
+        String expResult = "DSTU3";
+        String result = instance.getFhirVersion();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of updateFhirTerminologyServerAccessToken method, of class HapiFhirValidatorEngine.
+     */
+    @Test
+    public void testUpdateFhirTerminologyServerAccessToken() {
+        System.out.println("updateFhirTerminologyServerAccessToken");
+        instance.updateFhirTerminologyServerAccessToken();
+    }
+
 }

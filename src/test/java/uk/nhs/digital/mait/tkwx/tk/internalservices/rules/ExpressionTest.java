@@ -482,12 +482,24 @@ public class ExpressionTest {
     @Test
     public void testHttpHeaderB64JsonPath() throws Exception {
         System.out.println("httpHeaderB64JsonPath");
-        instance = new Expression(visitor.getExpressionCtx().get("exp_header_b64_jsonpath_matches"));
+        instance = new Expression(visitor.getExpressionCtx().get("exp_header_b64_jsonpathmatches"));
         
-        req.getHeaderManager().addHttpHeader("NHSD-Target-Identifier", "ewogICJ2YWx1ZSI6ICJUS1cwMDA0IiwKICAic3lzdGVtIjogImh0dHA6Ly9kaXJlY3RvcnlvZnNlcnZpY2VzLm5ocy51ayIKfQo=");
-
-        boolean expResult = true;
+        // missing header
+        boolean expResult = false;
         boolean result = instance.evaluate(req);
+        assertEquals(expResult, result);
+        
+        // present matching header
+        req.getHeaderManager().addHttpHeader("NHSD-Target-Identifier", "ewogICJ2YWx1ZSI6ICJUS1cwMDA0IiwKICAic3lzdGVtIjogImh0dHA6Ly9kaXJlY3RvcnlvZnNlcnZpY2VzLm5ocy51ayIKfQo=");
+        expResult = true;
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+        
+        // present non matching header
+        instance = new Expression(visitor.getExpressionCtx().get("exp_header_b64_non_matching_jsonpathmatches"));
+        req.getHeaderManager().addHttpHeader("NHSD-Target-Identifier", "ewogICJ2YWx1ZSI6ICJUS1cwMDA0IiwKICAic3lzdGVtIjogImh0dHA6Ly9kaXJlY3RvcnlvZnNlcnZpY2VzLm5ocy51ayIKfQo=");
+        expResult = false;
+        result = instance.evaluate(req);
         assertEquals(expResult, result);
     }
 }

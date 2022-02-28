@@ -15,6 +15,8 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices.validation.hapifhir;
 
+import ca.uhn.fhir.context.FhirContext;
+import java.io.FileNotFoundException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,15 +26,20 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author riro
+ * @author simonfarrow
  */
-public class HapiFhirValidatorEngineOrchestratorTest {
+public class CustomNpmPackageValidationSupportTest {
     
-    public HapiFhirValidatorEngineOrchestratorTest() {
+    private static CustomNpmPackageValidationSupport instance;
+    
+    public CustomNpmPackageValidationSupportTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        FhirContext fhirContext = FhirContext.forR4();
+        instance = new CustomNpmPackageValidationSupport(fhirContext);
+        assertNotNull(instance);
     }
     
     @AfterClass
@@ -48,25 +55,13 @@ public class HapiFhirValidatorEngineOrchestratorTest {
     }
 
     /**
-     * Test of getInstance method, of class HapiFhirValidatorEngineOrchestrator.
+     * Test of loadPackageFromDisk method, of class CustomNpmPackageValidationSupport.
      */
-    @Test
-    public void testGetInstance() {
-        System.out.println("getInstance");
-        HapiFhirValidatorEngineOrchestrator result = HapiFhirValidatorEngineOrchestrator.getInstance();
-        assertNotNull(result);
-    }
-
-    /**
-     * Test of getEngine method, of class HapiFhirValidatorEngineOrchestrator.
-     */
-    @Test
-    public void testGetEngine() {
-        System.out.println("getEngine");
-        String hapiFhirValidatorInstanceName = null;
-        HapiFhirValidatorEngineOrchestrator instance = HapiFhirValidatorEngineOrchestrator.getInstance();
-        HapiFhirValidatorEngine result = instance.getEngine(hapiFhirValidatorInstanceName);
-        assertNotNull(result);
+    @Test(expected = FileNotFoundException.class)
+    public void testLoadPackageFromDisk() throws Exception {
+        System.out.println("loadPackageFromDisk");
+        String fileName = "";
+        instance.loadPackageFromDisk(fileName);
     }
     
 }

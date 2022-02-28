@@ -7,13 +7,14 @@
     <packaging>jar</packaging>
     
     <properties>
-        <hapi.version>5.6.2</hapi.version>
+        <!-- 5.6.n causes autotest validation to hang -->
+        <hapi.version>5.7.0</hapi.version>
         <internal_services_root>src/main/java/uk/nhs/digital/mait/tkwx/tk/internalservices</internal_services_root>
         
         <tkwx-rules-path>${internal_services_root}/rules/parser</tkwx-rules-path>
         <tkwx-automation-path>${internal_services_root}/testautomation/parser</tkwx-automation-path>
         <tkwx-validation-path>${internal_services_root}/validation/parser</tkwx-validation-path>
-        <skiptests>false</skiptests>
+        <skiptests>true</skiptests>
     </properties>    
     
     <build>

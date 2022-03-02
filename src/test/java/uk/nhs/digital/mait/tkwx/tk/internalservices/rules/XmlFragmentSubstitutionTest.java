@@ -63,6 +63,12 @@ public class XmlFragmentSubstitutionTest {
         String expResult = "<b>xxx<c>yyyy</c>\n</b>\n";
         String result = instance.getValue(o);
         assertEquals(expResult, result);
+        
+        xpath = "//fhir:Bundle/*[1] src/test/resources/insert_uuid_id.xsl port 8001";
+        instance.setData(xpath);
+        o = "<Bundle xmlns=\"http://hl7.org/fhir\"><a><b>xxx<c>yyyy</c></b><b>xxx</b></a></Bundle>";
+        result = instance.getValue(o);
+        assertEquals(true, result.contains("<fhir:id value"));
     }
 
     /**

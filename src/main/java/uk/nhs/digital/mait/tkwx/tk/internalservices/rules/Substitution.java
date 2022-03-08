@@ -657,6 +657,8 @@ public class Substitution {
             throws Exception {
         subsClass = (SubstitutionValue) Class.forName(c).newInstance();
         if (a != null) {
+            // handle any embedded TKW_ROOT expressions
+            a = a.replaceAll("TKW_ROOT", System.getenv("TKWROOT") != null ? System.getenv("TKWROOT"):"TKW_ROOT");
             subsClass.setData(a);
         }
     }

@@ -81,6 +81,9 @@ public class XmlFragmentSubstitution implements SubstitutionValue {
             tx.setOutputProperty("omit-xml-declaration", "yes");
             
             Node node = NodeOverNodeInfo.wrap((NodeInfo) extractor.evaluate(new InputSource(new StringReader(o)), XPathConstants.NODE));
+            if(node==null){
+                return "";
+            }
             tx.transform(new DOMSource(node), sr);
             
             // if there's a trasform file supplied then post processs by applying it to the fragment with any optional parameters
@@ -88,8 +91,10 @@ public class XmlFragmentSubstitution implements SubstitutionValue {
                 Transformer postTransformer = txFactory.newTransformer(new StreamSource(transformFile));
                 
                 // these come in pairs of name value
-                for (int i  = 0; i < transformParams.length; i += 2){
-                    postTransformer.setParameter(transformParams[i], transformParams[i+1]);
+                if(transformParams!=null){
+                    for (int i  = 0; i < transformParams.length; i += 2){
+                        postTransformer.setParameter(transformParams[i], transformParams[i+1]);
+                    }
                 }
   
                 // do the post extract transform

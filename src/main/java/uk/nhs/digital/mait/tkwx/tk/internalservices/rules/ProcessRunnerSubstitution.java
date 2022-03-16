@@ -15,7 +15,6 @@
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices.rules;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -48,13 +47,18 @@ public class ProcessRunnerSubstitution implements SubstitutionValue {
      */
     @Override
     public String getValue(String o) throws Exception {
-        if ( params != null) {
-            if ( o.matches(matchRegexp) ) {
-                ProcessBuilder pb = new ProcessBuilder(params);
-                Process p = pb.start();
+        try {
+            if ( params != null) {
+                if ( o.matches(matchRegexp) ) {
+                    ProcessBuilder pb = new ProcessBuilder(params);
+                    Process p = pb.start();
+                }
+            } else {
+                System.err.println("ProcessRunnerSubstitution params not set prior to call getValue");
             }
-        } else {
-            System.err.println("ProcessRunnerSubstitution params not set prior to call getValue");
+        } catch ( Exception ex ) {
+            System.err.println("ProcessRunnerSubstitution exception "+ex.getMessage());
+            throw ex;
         }
         return "";
     }

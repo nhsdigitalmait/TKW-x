@@ -26,9 +26,9 @@ import static org.junit.Assert.*;
  *
  * @author simonfarrow
  */
-public class ResponseImporterTest {
+public class BARSResponseImporterTest {
     
-    public ResponseImporterTest() {
+    public BARSResponseImporterTest() {
     }
     
     @BeforeClass
@@ -48,13 +48,13 @@ public class ResponseImporterTest {
     }
 
     /**
-     * Test of main method, of class ResponseImporter.
+     * Test of main method, of class BARSResponseImporter.
      */
     @Test
     public void testMain() throws Exception {
         System.out.println("main");
         String[] args = new String[] {};
-        ResponseImporter.main(args);
+        BARSResponseImporter.main(args);
     }
     
 }

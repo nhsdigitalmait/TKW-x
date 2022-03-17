@@ -16,6 +16,7 @@
 package uk.nhs.digital.mait.tkwx.tk.boot;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import com.jayway.jsonpath.JsonPath;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +31,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -62,6 +64,8 @@ import uk.nhs.digital.mait.tkwx.util.bodyextractors.SynchronousResponseBodyExtra
  * @author simonfarrow
  */
 public class BARSResponseImporter {
+    
+    private String lastProcessed;
 
     private static final int TIMEOUT = 60;
     private static final int ONE_SECOND = 1000;
@@ -93,6 +97,7 @@ public class BARSResponseImporter {
     public BARSResponseImporter(String[] args) throws IOException, ParserConfigurationException, SAXException, Exception {
         String targetDomain = null;
         String counterParty = null;
+        lastProcessed = null;
 
         switch ( args.length ) {
             case 2:
@@ -148,8 +153,11 @@ public class BARSResponseImporter {
                 Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"Event kind:" + event.kind()
                         + ". File affected: " + event.context() + ".");
                 if (event.context() != null && event.context().toString().endsWith(METADATA_SUFFIX)) {
-                    Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"Found  metadata file");
-                    break;
+                    if (!event.context().toString().equals(lastProcessed)) {
+                        Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"Found  metadata file "+event.context().toString());
+                        lastProcessed = event.context().toString();
+                        break;
+                    }
                 }
             }
             key.reset();
@@ -172,70 +180,79 @@ public class BARSResponseImporter {
         if (!metaDataRecords.keySet().isEmpty()) {
             SynchronousResponseBodyExtractor extractor = new SynchronousResponseBodyExtractor();
             // pick the most recent from the treemap
-            String body = extractor.getBody(new FileInputStream(metaDataRecords.get(metaDataRecords.descendingKeySet().first()).getLogfile()), true);
-            if (body != null) {
-                String endpointId = xpathExtractor("replace(fhir:Bundle/fhir:entry/fhir:resource/fhir:MessageHeader/fhir:source/fhir:endpoint/@value,'^.*:','')",body);
+            String responseBody = extractor.getBody(new FileInputStream(metaDataRecords.get(metaDataRecords.descendingKeySet().first()).getLogfile()), true);
+            if (responseBody != null && responseBody.trim().length() > 0) {
+                String sourceEndpointId = xpathExtractor("replace(fhir:Bundle/fhir:entry/fhir:resource/fhir:MessageHeader/fhir:source/fhir:endpoint/@value,'^.*:','')",responseBody);
+
+                // get the target identifier
+                HttpHeaderManager requestHeaderManager = extractor.getHttpRequestHeaders();
+                String b64 = requestHeaderManager.getHttpHeaderValue("NHSD-Target-Identifier");
+                String json = new String(Base64.getDecoder().decode(b64));
+                String destEndpointId = JsonPath.read(json,"$.value");
+
                 HttpHeaderManager responseHeaderManager = extractor.getHttpResponseHeaders();
                 String contentType = responseHeaderManager.getHttpHeaderValue("Content-type");
                 
                 // autotest requires xml so provide it!
                 if (contentType != null && contentType.toLowerCase().contains("json")) {
                     FHIRJsonXmlAdapter.setFhirVersion(FhirVersionEnum.R4);
-                    body = FHIRJsonXmlAdapter.fhirConvertJson2Xml(body);
+                    responseBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(responseBody);
                 }
                 
-                if (folderExists(requestsFolder)) {
-                    Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),String.format("Creating response file %s/extracted_response.xml", requestsFolder));
-                    //Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),body);
-                    // put the extracted response into the autotest requests folder
-                    try ( FileWriter fw = new FileWriter(requestsFolder + "/extracted_response.xml")) {
-                        fw.write(body);
-                    }
-                    
-                    // now wait until initial autotest has completed
-                    // we dont want two autotest processes running at the same time. The script is not reentrant and breaks if this happens
-                    // This piece may not be required if TKW is running in a docker container.
-                    Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"Waiting on autotest");
-                    // TODO this needs parameterising
-                    // TODO in a real scenario autotest would not be running anyway.
-                    waitOnProcessCompletion("run_autotest.sh -s "+endpointId+" ValidationRequest_xml_accept");
-                    Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"Finished waiting on autotest");
-                    
-                    
-                    // now run autotest  -s <SenderEndpoint> ExtractedValidationResponse_xml_accept
-                    List<String> params = Arrays.asList(System.getenv("TKWROOT") + "/config/" + targetDomain +
-                            "/autotest_config/run_autotest.sh",
-                            "-s", endpointId, "ExtractedValidationResponse_xml_accept");
-                    ProcessBuilder pb = new ProcessBuilder(params);
-                    Map<String, String> env = pb.environment();
-                    env.put("TKWROOT", System.getenv("TKWROOT"));
-                    env.put("TKW_BROWSER", "");
-                    Process p = pb.start();
-                    InputStream is = p.getInputStream();
-                    int i = 0;
-                    while (p.isAlive() && i < TIMEOUT) {
-                        Thread.sleep(ONE_SECOND);
-                        if ( DEBUG ) {
-                            Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"Sleeping on autotest sending response " + i);
-                        }
-                        System.out.print("Sleeping on autotest sending response " + i + "\r");
-                        System.out.flush();
-                        i++;
-                    }
-                    System.out.println();
-                    
-                    if (i < TIMEOUT) {
-                        if (p.exitValue() == 0) {
-                            byte[] response = is.readAllBytes();
-                            Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"ResponseImporter succeeded " + new String(response));
-                        } else {
-                            Logger.getInstance().log(WARNING,BARSResponseImporter.class.getName(),String.format("ResponseImporter failed with error code %d\n", p.exitValue()));
-                            // let the caller know that this has failed
-                            // System.exit(1);
-                        }
-                    } else {
-                        Logger.getInstance().log(WARNING,BARSResponseImporter.class.getName(),"Timeout waiting for autotest sending response to complete");
-                        // System.exit(1);
+                if (folderExists(requestsFolder)) { 
+                       if (requestHeaderManager.getFirstLine().startsWith("POST") &&
+                            responseBody.contains("code value=\"servicerequest-request\"") ) {
+                         Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),String.format("Creating response file %s/extracted_response.xml", requestsFolder));
+                         //Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),body);
+                         // put the extracted response into the autotest requests folder
+                         try ( FileWriter fw = new FileWriter(requestsFolder + "/extracted_response.xml")) {
+                             fw.write(responseBody);
+                         }
+
+                         // now wait until initial autotest has completed
+                         // we dont want two autotest processes running at the same time. The script is not reentrant and breaks if this happens
+                         // This piece may not be required if TKW is running in a docker container.
+                         Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"Waiting on autotest");
+                         // TODO in a real scenario autotest would not be running anyway.
+                         waitOnProcessCompletion("run_autotest.sh -s "+destEndpointId+" ValidationRequest_xml_accept");
+                         Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"Finished waiting on autotest");
+
+
+                         // now run autotest  -s <SenderEndpoint> ExtractedValidationResponse_xml_accept
+                         List<String> params = Arrays.asList(System.getenv("TKWROOT") + "/config/" + targetDomain +
+                                 "/autotest_config/run_autotest.sh",
+                                 "-s", sourceEndpointId, "ExtractedValidationResponse_xml_accept");
+                         ProcessBuilder pb = new ProcessBuilder(params);
+                         Map<String, String> env = pb.environment();
+                         env.put("TKWROOT", System.getenv("TKWROOT"));
+                         env.put("TKW_BROWSER", "");
+                         Process p = pb.start();
+                         InputStream is = p.getInputStream();
+                         int i = 0;
+                         while (p.isAlive() && i < TIMEOUT) {
+                             Thread.sleep(ONE_SECOND);
+                             if ( DEBUG ) {
+                                 Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"Sleeping on autotest sending response " + i);
+                             }
+                             System.out.print("Sleeping on autotest sending response " + i + "\r");
+                             System.out.flush();
+                             i++;
+                         }
+                         System.out.println();
+
+                         if (i < TIMEOUT) {
+                             if (p.exitValue() == 0) {
+                                 byte[] response = is.readAllBytes();
+                                 Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),"ResponseImporter succeeded " + new String(response));
+                             } else {
+                                 Logger.getInstance().log(WARNING,BARSResponseImporter.class.getName(),String.format("ResponseImporter failed with error code %d\n", p.exitValue()));
+                                 // let the caller know that this has failed
+                                 // System.exit(1);
+                             }
+                         } else {
+                             Logger.getInstance().log(WARNING,BARSResponseImporter.class.getName(),"Timeout waiting for autotest sending response to complete");
+                             // System.exit(1);
+                        } 
                     }
                 } else {
                     Logger.getInstance().log(SEVERE,BARSResponseImporter.class.getName(),String.format("Target folder %s does not exist", requestsFolder));

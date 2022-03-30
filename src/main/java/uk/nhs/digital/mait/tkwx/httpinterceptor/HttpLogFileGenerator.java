@@ -18,8 +18,10 @@ package uk.nhs.digital.mait.tkwx.httpinterceptor;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import static ca.uhn.fhir.context.FhirVersionEnum.DSTU2;
 import static ca.uhn.fhir.context.FhirVersionEnum.DSTU3;
+import com.jayway.jsonpath.JsonPath;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.StringTokenizer;
 import static java.util.logging.Level.SEVERE;
@@ -155,29 +157,64 @@ public class HttpLogFileGenerator {
         String subDir = null;
         String headerDiscriminator = config.getConfiguration(HTTP_HEADER_DISCRIMINATOR);
         if (headerDiscriminator != null && !headerDiscriminator.trim().equals("")) {
+            // syntax (case sensitive) is now 
+            // parameter    encoding  pathtype  path         reg exp extract
+            // default      none      none      none         ^(.*)$
+            // <headername> ['b64'] ['jsonpath' <jsonpath>] [<regexp>]
             StringTokenizer st = new StringTokenizer(headerDiscriminator);
-            if (st.countTokens() < 1 && st.countTokens() > 2) {
-                throw new Exception("Error in discriminator line: " + headerDiscriminator);
+            if (st.countTokens() < 1 || st.countTokens() > 5) {
+                throw new IllegalArgumentException("Error in discriminator line Illegal parameter count: " + headerDiscriminator);
             }
-            String headerKey = null;
-            String headerValue = "^(.*)$";
-            int i = 0;
+            String headerKey = st.nextToken();
+            String headerEncoding = null;
+            String headerPathType = null;
+            String headerPath = null;
+            String headerRegExp = "^(.*)$";
+            
             while (st.hasMoreTokens()) {
-                switch (i) {
-                    case 0:
-                        headerKey = st.nextToken();
+                String token = st.nextToken();
+                switch (token) {
+                    case "b64":
+                        headerEncoding = token;
                         break;
-                    case 1:
-                        headerValue = st.nextToken();
+                    case "jsonpath":
+                        headerPathType = token;
+                        if (st.hasMoreTokens()) {
+                            headerPath = st.nextToken();
+                        } else {
+                            throw new IllegalArgumentException("httpheaderdiscriminator missing "+ token);
+                        }
                         break;
+                    default:
+                        headerRegExp = token;
                 }
-                ++i;
             }
 
             String headerContent = req.getField(headerKey);
             if (headerContent != null && headerContent.trim().length() > 0) {
+                
+                if (headerEncoding != null) {
+                    switch (headerEncoding) {
+                        case "b64":
+                            headerContent = new String( Base64.getDecoder().decode(headerContent));
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Unsupported encoding type "+headerEncoding);
+                    }
+                }
+
+                if (headerPathType != null) {
+                    switch (headerPathType) {
+                        case "jsonpath":
+                            headerContent = JsonPath.read(headerContent,headerPath);
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Unsupported path type "+headerPathType);
+                    }
+                }
+                
                 // Create a Pattern object
-                Pattern r = Pattern.compile(headerValue);
+                Pattern r = Pattern.compile(headerRegExp);
                 // Now create matcher object.
                 Matcher m = r.matcher(headerContent);
                 if (m.find()) {
@@ -189,8 +226,9 @@ public class HttpLogFileGenerator {
                     }
                     return subDir;
                 }
-            }
-        }
+            }  // if headerContent
+        } // if headerDiscriminator
+        
         String discriminatorXpath = null;
         boolean spineMessage = false;
         String soapAction = req.getField(SOAP_ACTION_HEADER);

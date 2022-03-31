@@ -87,6 +87,7 @@ public class BARSResponseImporter {
      * @throws Exception
      */
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, Exception {
+        FHIRJsonXmlAdapter.setFhirVersion(FhirVersionEnum.R4);
         new BARSResponseImporter(args);
     }
 
@@ -241,42 +242,43 @@ public class BARSResponseImporter {
         }
 
         private void produce() {
-            while (true) {
-                try {
-                    Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Producer Waiting on watchEvidenceFolder");
-                    MetaData metaData = watchEvidenceFolder(evidencePath, targetDomain, counterParty);
-                    if (metaData != null) {
-                        Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Producer adding MetaData " + metaData.getId() + " to queue");
-                        dataQueue.put(metaData);
+            try {
+                // wait until a new metadata file appears in the all_evidence folder
+                WatchService watchService = FileSystems.getDefault().newWatchService();
+                Path path = Paths.get(evidencePath);
+                path.register(
+                        watchService,
+                        StandardWatchEventKinds.ENTRY_CREATE,
+                        StandardWatchEventKinds.ENTRY_MODIFY);
+                
+                while (true) {
+                    try {
+                        Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Producer Waiting on watchEvidenceFolder");
+                        MetaData metaData = watchEvidenceFolder(watchService);
+                        if (metaData != null) {
+                            Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Producer adding MetaData " + metaData.getId() + " to queue");
+                            dataQueue.put(metaData);
+                        }
+                    } catch (IOException ex) {
+                        Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Producer IO Exception " + ex.getMessage());
+                    } catch (InterruptedException e) {
+                        Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Producer Interrupted " + e.getMessage());
+                        break;
                     }
-                } catch (IOException e) {
-                    Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Producer IO Exception " + e.getMessage());
-                } catch (InterruptedException e) {
-                    Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Producer Interrupted " + e.getMessage());
-                    break;
                 }
+            } catch (IOException ex) {
+                Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Producer IO Exception " + ex.getMessage());
             }
         }
 
         /**
          *
-         * @param evidencePath
-         * @param targetDomain
-         * @param counterParty
+         * @param watchService
          * @return MetaData object
          * @throws IOException
          * @throws InterruptedException
          */
-        private MetaData watchEvidenceFolder(String evidencePath, String targetDomain, String counterParty) throws IOException, InterruptedException {
-            Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Producer Starting watch service");
-
-            // wait until a new metadata file appears in the all_evidence folder
-            WatchService watchService = FileSystems.getDefault().newWatchService();
-            Path path = Paths.get(evidencePath);
-            path.register(
-                    watchService,
-                    StandardWatchEventKinds.ENTRY_CREATE,
-                    StandardWatchEventKinds.ENTRY_MODIFY);
+        private MetaData watchEvidenceFolder(WatchService watchService) throws IOException, InterruptedException {
             WatchKey key;
             Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Producer Waiting on watch service");
             while ((key = watchService.take()) != null) {
@@ -344,8 +346,8 @@ public class BARSResponseImporter {
                         = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document doc = null;
-                try {
-                    doc = builder.parse(new FileInputStream(metaDataFile));
+                try (FileInputStream fis = new FileInputStream(metaDataFile)) {
+                    doc = builder.parse(fis);
                 } catch (SAXException ex) {
                     Logger.getInstance().log(WARNING, BARSResponseImporter.class.getName(),
                             String.format("Error parsing metadata file %s\n",
@@ -443,18 +445,21 @@ public class BARSResponseImporter {
                 SynchronousResponseBodyExtractor extractor = new SynchronousResponseBodyExtractor();
                 // pick the most recent from the treemap
                 String responseBody = null;
+                FileInputStream fis = null;
                 try {
-                    responseBody = extractor.getBody(new FileInputStream(metaData.getLogfile()), true);
+                    fis = new FileInputStream(metaData.getLogfile());
+                    responseBody = extractor.getBody(fis, true);
                 } catch (Exception ex) {
                     Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer Exception reading body " + ex.getMessage());
+                } finally {
+                    try {
+                        if ( fis != null ) {
+                            fis.close();
+                        }
+                    } catch (IOException ex) {
+                    }
                 }
                 if (responseBody != null && responseBody.trim().length() > 0) {
-                    String sourceEndpointId = null;
-                    try {
-                        sourceEndpointId = xpathExtractor("replace(fhir:Bundle/fhir:entry/fhir:resource/fhir:MessageHeader/fhir:source/fhir:endpoint/@value,'^.*:','')", responseBody);
-                    } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
-                        Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer Parse exception " + ex.getMessage());
-                    }
 
                     // get the target identifier
                     HttpHeaderManager requestHeaderManager = extractor.getHttpRequestHeaders();
@@ -465,10 +470,16 @@ public class BARSResponseImporter {
                     HttpHeaderManager responseHeaderManager = extractor.getHttpResponseHeaders();
                     String contentType = responseHeaderManager.getHttpHeaderValue("Content-type");
 
-                    // autotest requires xml so provide it!
+                    // this shouldn't happen because its been alread converted by this point!
                     if (contentType != null && contentType.toLowerCase().contains("json")) {
-                        FHIRJsonXmlAdapter.setFhirVersion(FhirVersionEnum.R4);
                         responseBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(responseBody);
+                    }
+
+                    String sourceEndpointId = null;
+                    try {
+                        sourceEndpointId = xpathExtractor("replace(fhir:Bundle/fhir:entry/fhir:resource/fhir:MessageHeader/fhir:source/fhir:endpoint/@value,'^.*:','')", responseBody);
+                    } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
+                        Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer Parse exception " + ex.getMessage());
                     }
 
                     if (folderExists(requestsFolder)) {

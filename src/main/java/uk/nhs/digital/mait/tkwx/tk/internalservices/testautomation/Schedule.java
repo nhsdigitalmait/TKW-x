@@ -40,6 +40,7 @@ import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isY;
 import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.commonutils.util.xpath.XPathManager;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.rules.RESTfulRulesEngine;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 
@@ -469,8 +470,13 @@ public class Schedule
                             String responseContentType = httpResponseHeaders != null ? httpResponseHeaders.getHttpHeaderValue(CONTENT_TYPE_HEADER) : "";
                             if (!Utils.isNullOrEmpty(responseContentType) && responseContentType.toLowerCase().contains("fhir")) {
                                 // see if we can get an interaction id from aMessageHeader
-                                if (!isNullOrEmpty(fhirServiceLocation) && !isNullOrEmpty(body) && body.trim().startsWith("<")) {
-                                    interactionID = XPathManager.xpathExtractor(fhirServiceLocation, body);
+                                if (!isNullOrEmpty(fhirServiceLocation) && !isNullOrEmpty(body) ) {
+                                    if (  body.trim().startsWith("<") ) {
+                                        interactionID = XPathManager.xpathExtractor(fhirServiceLocation, body);
+                                    } else if (body.trim().startsWith("{")) {
+                                        String xmlBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(body);
+                                        interactionID = XPathManager.xpathExtractor(fhirServiceLocation, xmlBody);
+                                    }
                                 }
                                 
                                 if (isNullOrEmpty(interactionID)) {

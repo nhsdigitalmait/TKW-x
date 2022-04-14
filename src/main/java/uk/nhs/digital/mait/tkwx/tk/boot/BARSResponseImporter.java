@@ -76,7 +76,7 @@ public class BARSResponseImporter {
     private static final int ONE_SECOND = 1000;
     private static final String METADATA_SUFFIX = ".metadata";
 
-    private final static boolean DEBUG = false;
+    private final static boolean DEBUG = true;
 
     /**
      *
@@ -130,8 +130,9 @@ public class BARSResponseImporter {
         }
 
         if (!folderExists(evidencePath)) {
-            Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), String.format("ResponseImporter Evidence folder %s does not exist", evidencePath));
-            throw new IllegalArgumentException(String.format("ResponseImporter Evidence folder %s does not exist", evidencePath));
+            String msg = String.format("ResponseImporter Evidence folder %s does not exist", evidencePath);
+            Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), msg);
+            throw new IllegalArgumentException(msg);
         }
 
         // setup an unlimited synchronised queue
@@ -459,6 +460,8 @@ public class BARSResponseImporter {
                     } catch (IOException ex) {
                     }
                 }
+
+                String responseFormat = "xml"; // could be json
                 if (responseBody != null && responseBody.trim().length() > 0) {
 
                     // get the target identifier
@@ -468,11 +471,10 @@ public class BARSResponseImporter {
                     String destEndpointId = JsonPath.read(json, "$.value");
 
                     HttpHeaderManager responseHeaderManager = extractor.getHttpResponseHeaders();
-                    String contentType = responseHeaderManager.getHttpHeaderValue("Content-type");
+                    String responseContentType = responseHeaderManager.getHttpHeaderValue("X-was-Content-type");
 
-                    // this shouldn't happen because its been alread converted by this point!
-                    if (contentType != null && contentType.toLowerCase().contains("json")) {
-                        responseBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(responseBody);
+                    if (responseContentType != null && responseContentType.toLowerCase().contains("json")) {
+                        responseFormat = "json";
                     }
 
                     String sourceEndpointId = null;
@@ -507,16 +509,17 @@ public class BARSResponseImporter {
                                 Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Waiting on autotest");
                                 try {
                                     // TODO in a real scenario autotest would not be running anyway.
-                                    waitOnProcessCompletion("run_autotest.sh -s " + destEndpointId + " ValidationRequest_xml_accept");
+                                    waitOnProcessCompletion("(?s)^.*run_autotest\\.sh\\s+-s\\s+" + destEndpointId + "\\s+ValidationRequest_(xml|json)_accept.*$");
                                 } catch (IOException | InterruptedException ex) {
                                     Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer Error waiting on autotest " + ex.getMessage());
                                 }
                                 Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Finished waiting on autotest");
 
-                                // now run autotest  -s <SenderEndpoint> ExtractedValidationResponse_xml_accept
+                                
+                                // now run autotest  -s <SenderEndpoint> ExtractedValidationResponse_(xml!json)_accept
                                 List<String> params = Arrays.asList(System.getenv("TKWROOT") + "/config/" + targetDomain
                                         + "/autotest_config/run_autotest.sh",
-                                        "-s", sourceEndpointId, "ExtractedValidationResponse_xml_accept");
+                                        "-s", sourceEndpointId, "ExtractedValidationResponse_"+responseFormat+"_accept");
                                 ProcessBuilder pb = new ProcessBuilder(params);
                                 Map<String, String> env = pb.environment();
                                 env.put("TKWROOT", System.getenv("TKWROOT"));
@@ -525,6 +528,7 @@ public class BARSResponseImporter {
                                 try {
                                     p = pb.start();
                                 } catch (IOException ex) {
+                                    Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer IOException starting process " + ex.getMessage());
                                 }
                                 InputStream is = p.getInputStream();
                                 int i = 0;
@@ -532,6 +536,7 @@ public class BARSResponseImporter {
                                     try {
                                         Thread.sleep(ONE_SECOND);
                                     } catch (InterruptedException ex) {
+                                        Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer InterruptedException waiting on process " + ex.getMessage());
                                     }
                                     if (DEBUG) {
                                         Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Sleeping on autotest sending response " + i);
@@ -551,9 +556,16 @@ public class BARSResponseImporter {
                                         }
                                         Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer ResponseImporter succeeded " + new String(response));
                                     } else {
-                                        Logger.getInstance().log(WARNING, BARSResponseImporter.class.getName(), String.format("Consumer ResponseImporter failed with error code %d\n", p.exitValue()));
+                                        Logger.getInstance().log(WARNING, BARSResponseImporter.class.getName(), String.format("Consumer ResponseImporter failed with process exit value %d\n", p.exitValue()));
                                         // let the caller know that this has failed
                                         // System.exit(1);
+                                        InputStream es = p.getErrorStream();
+                                        byte[] response = null;
+                                        try {
+                                            response = is.readAllBytes();
+                                        } catch (IOException ex) {
+                                        }
+                                        Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer ResponseImporter error from process " + new String(response));
                                     }
                                 } else {
                                     Logger.getInstance().log(WARNING, BARSResponseImporter.class.getName(), "Consumer Timeout waiting for autotest sending response to complete");
@@ -562,8 +574,9 @@ public class BARSResponseImporter {
                             } // if response event code servicerequest-request
                         }  // Request is a POST
                     } else {
-                        Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), String.format("Target folder %s does not exist", requestsFolder));
-                        throw new IllegalArgumentException(String.format("Target folder %s does not exist", requestsFolder));
+                        String msg = String.format("Target folder %s does not exist", requestsFolder);
+                        Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), msg);
+                        throw new IllegalArgumentException(msg);
                     }
                 }
             } // while           
@@ -572,7 +585,7 @@ public class BARSResponseImporter {
         /**
          * block until a ps -ef does not contain the passed String
          *
-         * @param processName
+         * @param processName reg exp
          * @throws IOException
          * @throws InterruptedException
          */
@@ -587,7 +600,7 @@ public class BARSResponseImporter {
                 p.waitFor();
                 InputStream is1 = p.getInputStream();
                 String pstate = new String(is1.readAllBytes());
-                if (pstate.contains(processName) && i < TIMEOUT) {
+                if (pstate.matches(processName) && i < TIMEOUT) {
                     System.out.print("Sleeping on " + processName + " " + i++ + "\r");
                     System.out.flush();
                     Thread.sleep(ONE_SECOND);

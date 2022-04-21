@@ -435,7 +435,8 @@ public class BARSResponseImporter {
                 try {
                     Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Waiting on MetaData queue");
                     metaData = dataQueue.take();
-                    Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Consuming " + metaData.getId());
+                    Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), 
+                            "Consumer Consuming " + metaData.getId() + " Consumer queue length = "+dataQueue.size());
                 } catch (InterruptedException e) {
                     Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Loop interrupted");
                     break;
@@ -506,14 +507,14 @@ public class BARSResponseImporter {
                                 // now wait until initial autotest has completed
                                 // we dont want two autotest processes running at the same time. The script is not reentrant and breaks if this happens
                                 // This piece may not be required if TKW is running in a docker container.
-                                Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Waiting on autotest");
-                                try {
-                                    // TODO in a real scenario autotest would not be running anyway.
-                                    waitOnProcessCompletion("(?s)^.*run_autotest\\.sh\\s+-s\\s+" + destEndpointId + "\\s+ValidationRequest_(xml|json)_accept.*$");
-                                } catch (IOException | InterruptedException ex) {
-                                    Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer Error waiting on autotest " + ex.getMessage());
-                                }
-                                Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Finished waiting on autotest");
+//                                Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Waiting on autotest");
+//                                try {
+//                                    // TODO in a real scenario autotest would not be running anyway.
+//                                    waitOnProcessCompletion("(?s)^.*run_autotest\\.sh\\s+-s\\s+" + destEndpointId + "\\s+ValidationRequest_(xml|json)_accept.*$");
+//                                } catch (IOException | InterruptedException ex) {
+//                                    Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer Error waiting on autotest " + ex.getMessage());
+//                                }
+//                                Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Finished waiting on autotest");
 
                                 
                                 // now run autotest  -s <SenderEndpoint> ExtractedValidationResponse_(xml!json)_accept

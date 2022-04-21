@@ -14,6 +14,7 @@
    limitations under the License.
  */
 package uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,17 +26,20 @@ import uk.nhs.digital.mait.tkwx.tk.boot.ServiceManager;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitSimulator;
 import uk.nhs.digital.mait.tkwx.tk.boot.ToolkitService;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.Stoppable;
- /**
- * Class representing a complete test automation script. This acts as a container
- * for the automation classes and is responsible for marshalling log files,
- * constructing reports, and running ancillary services such as the Validator.
- * 
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
+
+/**
+ * Class representing a complete test automation script. This acts as a
+ * container for the automation classes and is responsible for marshalling log
+ * files, constructing reports, and running ancillary services such as the
+ * Validator.
+ *
  * @author Damian Murphy murff@warlock.org
  */
 public class Script {
-    
+
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat(FILEDATEMASK);
-    
+
     private final ArrayList<Schedule> schedules = new ArrayList<>();
     private String name = null;
     private Properties bootProperties = null;
@@ -47,68 +51,102 @@ public class Script {
     protected String validatorConfig = null;
     protected ToolkitService validator = null;
     protected ReportWriter reportWriter = null;
-    
+
     /**
      * public constructor
      */
-    public Script() {}
-    
-    public void addSchedule(Schedule s) { schedules.add(s); }
-    public void setStopWhenComplete() { stopWhenComplete = true; }
-    
-    public void setName(String n) { name = n; }
-    public void setSimulatorRules(String r) { simulatorRules = r; }
-    
-    public void setProperties(Properties p) { bootProperties = p; }
-    
-    Properties getBootProperties() { return bootProperties; }
-    String getProperty(String s) { return bootProperties.getProperty(s); }
-    File getRunDirectory() { return runDirectory; }
-    ToolkitSimulator getSimulator() { return toolkitSimulator; }
-    String getName() { return name; }
-    
+    public Script() {
+    }
+
+    public void addSchedule(Schedule s) {
+        schedules.add(s);
+    }
+
+    public void setStopWhenComplete() {
+        stopWhenComplete = true;
+    }
+
+    public void setName(String n) {
+        name = n;
+    }
+
+    public void setSimulatorRules(String r) {
+        simulatorRules = r;
+    }
+
+    public void setProperties(Properties p) {
+        bootProperties = p;
+    }
+
+    Properties getBootProperties() {
+        return bootProperties;
+    }
+
+    String getProperty(String s) {
+        return bootProperties.getProperty(s);
+    }
+
+    File getRunDirectory() {
+        return runDirectory;
+    }
+
+    ToolkitSimulator getSimulator() {
+        return toolkitSimulator;
+    }
+
+    String getName() {
+        return name;
+    }
+
     public void setValidatorConfig(String v) {
-        validatorConfig = v; 
+        validatorConfig = v;
     }
-    
-    private void startValidator() 
-        throws Exception 
-    { 
+
+    private void startValidator()
+            throws Exception {
         // Boot a default Validator ready for reconfiguring in the schedule
-        validator = (ToolkitService)ServiceManager.getInstance().getService("Validator");
-            validator.boot(toolkitSimulator, bootProperties, "TKW AutoTest Response Validator");
+        validator = (ToolkitService) ServiceManager.getInstance().getService("Validator");
+        validator.boot(toolkitSimulator, bootProperties, "TKW AutoTest Response Validator");
     }
-    
-        
+
     void log(ReportItem r) {
         reportWriter.log(r);
     }
-    
+
     public void clear() {
         runDirectory = null;
         reportWriter = null;
     }
-    
+
     /**
-     * 
+     *
      * @param t ToolkitSimulator object
-     * @throws Exception 
+     * @throws Exception
      */
     public void execute(ToolkitSimulator t)
-            throws Exception
-    {
+            throws Exception {
         System.setProperty("tkw.internal.runningautotest", "true");
         toolkitSimulator = t;
         if (reportWriter != null) {
             throw new Exception("Script " + name + " already running");
         }
         String runid = name + "_" + FORMAT.format(new Date());
+
+        // this allows the caller to specify the timestamp via a java system property rather than relying on one being automatically generated
+        // this is essential for autotest reentrancy where the results folder name has to be specified before the
+        // script is run. Must be 14 or more digits long. Typically 17 which goes down to ms
+        String newTimestamp = System.getProperty("tkw.internal.autotest.timestamp");
+        if (!isNullOrEmpty(newTimestamp) && newTimestamp.matches("^[0-9]{14,}$")) {
+            runid = runid.replaceFirst("[0-9]{14,}$", newTimestamp);
+            System.out.println("Using specified timetstamp for runid "+runid);
+        }
+
         makeLogs(runid);
 
         if (validatorConfig != null) {
             startValidator();
         }
-        
+
         for (Schedule schedule : schedules) {
             schedule.setSimulator(simulatorRules);
             schedule.execute(this, runid);
@@ -118,15 +156,16 @@ public class Script {
         }
         System.getProperties().remove("tkw.internal.runningautotest");
         reportWriter.dump();
+        System.out.println("Autotest finished runid = " + runid);
     }
-    
+
     /**
      * after an appropriate delay stop any stoppable running transports
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     public void stopSimulator()
-            throws Exception
-    {
+            throws Exception {
         int simWait = Integer.parseInt(getProperty("tks.autotest.asynchronousacknowledgementsimulator.wait"));
         try {
             System.out.println("Waiting " + simWait + " ms for any Async Acknowledgements");
@@ -135,21 +174,20 @@ public class Script {
             }
         } catch (InterruptedException e) {
         }
-        
+
         // stop any stoppable running transport servcies
-        for ( String serviceName : ServiceManager.getInstance().getServiceNames()) {
-            if ( serviceName.endsWith("Transport")){
+        for (String serviceName : ServiceManager.getInstance().getServiceNames()) {
+            if (serviceName.endsWith("Transport")) {
                 ToolkitService tks = ServiceManager.getInstance().getService(serviceName);
-                if ( tks instanceof Stoppable) {
-                    ((Stoppable)tks).stop();
+                if (tks instanceof Stoppable) {
+                    ((Stoppable) tks).stop();
                 }
             }
         }
     }
-    
-    private void makeLogs(String runid) 
-            throws Exception
-    {
+
+    private void makeLogs(String runid)
+            throws Exception {
         StringBuilder rootDir = new StringBuilder(bootProperties.getProperty(RUNROOT_PROPERTY));
         rootDir.append(System.getProperty("file.separator"));
         rootDir.append(runid);

@@ -132,13 +132,13 @@ public class Script {
         }
         String runid = name + "_" + FORMAT.format(new Date());
 
-        // this allows the caller to specify the timestamp via a java system property rather than relying on one being automatically generated
+        // this allows the caller to specify the timestamp via setting a java system property rather than relying on one being automatically generated
         // this is essential for autotest reentrancy where the results folder name has to be specified before the
         // script is run. Must be 14 or more digits long. Typically 17 which goes down to ms
         String newTimestamp = System.getProperty("tkw.internal.autotest.timestamp");
         if (!isNullOrEmpty(newTimestamp) && newTimestamp.matches("^[0-9]{14,}$")) {
             runid = runid.replaceFirst("[0-9]{14,}$", newTimestamp);
-            System.out.println("Using specified timetstamp for runid "+runid);
+            System.out.println("Using supplied timestamp for runid "+runid);
         }
 
         makeLogs(runid);

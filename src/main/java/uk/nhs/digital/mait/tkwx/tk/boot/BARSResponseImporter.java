@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.logging.Level;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -76,11 +75,11 @@ public class BARSResponseImporter {
     private static final int ONE_SECOND = 1000;
     private static final String METADATA_SUFFIX = ".metadata";
 
-    private final static boolean DEBUG = true;
+    private final static boolean DEBUG = false;
 
     /**
      *
-     * @param args
+     * @param args &lt;target domain&gt; [&lt;counter party>&gt;]
      * @throws IOException
      * @throws ParserConfigurationException
      * @throws SAXException
@@ -94,7 +93,7 @@ public class BARSResponseImporter {
     /**
      * public constructor
      *
-     * @param args
+     * @param args &lt;target domain&gt; [&lt;counter party>&gt;]
      * @throws IOException
      * @throws ParserConfigurationException
      * @throws SAXException
@@ -117,6 +116,7 @@ public class BARSResponseImporter {
         }
 
         // assumes defaults
+        // TODO these should really be picked up from the relevant config so we should be passing in the path to the props file not the name of the domain
         String evidencePath = System.getenv("TKWROOT") + "/config/" + targetDomain + "/all_evidence";
         String logFolder = System.getenv("TKWROOT") + "/config/" + targetDomain + "/logs";
         Utils.createFolderIfMissing(logFolder);
@@ -212,6 +212,9 @@ public class BARSResponseImporter {
         }
     }
 
+    /**
+     * Watches the all_evidence folder and puts relevant metadata objects onto the queue for processing by the co9nsumer thread
+     */
     private static class Producer implements Runnable {
 
         private final BlockingQueue<MetaData> dataQueue;
@@ -222,10 +225,10 @@ public class BARSResponseImporter {
         private final String counterParty;
 
         /**
-         *
+         * public constructor
          * @param dataQueue
-         * @param evidencePath
-         * @param targetDomain
+         * @param evidencePath path to evidence folder typically all_evidence
+         * @param targetDomain eg FHIR_BaRS
          * @param counterParty
          */
         public Producer(BlockingQueue<MetaData> dataQueue, String evidencePath, String targetDomain, String counterParty) {
@@ -381,8 +384,8 @@ public class BARSResponseImporter {
                 return null;
             }
 
-            NodeList counterParty = root.getElementsByTagName(METADATA_COUNTERPARTY);
-            String counterPartyAddress = counterParty != null && counterParty.getLength() > 0 ? counterParty.item(0).getAttributes().getNamedItem(METADATA_ADDRESS).getTextContent() : "";
+            NodeList counterPartyNodeList = root.getElementsByTagName(METADATA_COUNTERPARTY);
+            String counterPartyAddress = counterPartyNodeList != null && counterPartyNodeList.getLength() > 0 ? counterPartyNodeList.item(0).getAttributes().getNamedItem(METADATA_ADDRESS).getTextContent() : "";
 
             String acquiredAt = root.getElementsByTagName(METADATA_ACQUIRED_AT) != null ? root.getElementsByTagName(METADATA_ACQUIRED_AT).item(0).getTextContent() : "";
 
@@ -406,6 +409,9 @@ public class BARSResponseImporter {
         }
     }
 
+    /**
+     * this thread class waits on the queue of metadata objects and processes them in sequence
+     */
     private static class Consumer implements Runnable {
 
         private final BlockingQueue<MetaData> dataQueue;
@@ -414,7 +420,7 @@ public class BARSResponseImporter {
         /**
          * public constructor
          *
-         * @param dataQueue
+         * @param dataQueue of metadata objects
          * @param targetDomain
          */
         public Consumer(BlockingQueue<MetaData> dataQueue, String targetDomain) {
@@ -480,7 +486,7 @@ public class BARSResponseImporter {
 
                     String sourceEndpointId = null;
                     try {
-                        sourceEndpointId = xpathExtractor("replace(fhir:Bundle/fhir:entry/fhir:resource/fhir:MessageHeader/fhir:source/fhir:endpoint/@value,'^.*:','')", responseBody);
+                        sourceEndpointId = xpathExtractor("replace(fhir:Bundle/fhir:entry/fhir:resource/fhir:MessageHeader/fhir:source/fhir:endpoint/@value,'^.*\\|','')", responseBody);
                     } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
                         Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer Parse exception " + ex.getMessage());
                     }
@@ -620,5 +626,5 @@ public class BARSResponseImporter {
                 }
             } // while true
         } // waitOnProcessCompletion
-    } // Consumer class
+    } // Consumer thread class
 }

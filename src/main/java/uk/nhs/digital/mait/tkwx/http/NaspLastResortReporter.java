@@ -34,7 +34,7 @@ public class NaspLastResortReporter extends LastResortReporter {
     private final String HTTP_LINE_SEPARATOR = "\r\n";
     private final String DEFAULTERROR = "System failure to process message";
     private final String INITIAL_HEADERS = String.join(HTTP_LINE_SEPARATOR, List.of(
-            "HTTP/1.1 500 OK",
+            "HTTP/1.1 500 Internal Server Error",
             "Content-Length: "
     ));
     private final String CONTENT_TYPE_HEADER = String.join(HTTP_LINE_SEPARATOR, List.of(
@@ -72,10 +72,11 @@ public class NaspLastResortReporter extends LastResortReporter {
     @Override
     public void report(String errorMessage, OutputStream out) {
         String error = isNullOrEmpty(errorMessage) ? DEFAULTERROR : errorMessage;
-        StringBuilder sb = new StringBuilder(INITIAL_HEADERS);
-        sb.append(Long.toString(error.length() + RESPONSE_START.length() + RESPONSE_END.length()));
-        sb.append(CONTENT_TYPE_HEADER);
-        sb.append(RESPONSE_START);
+//        StringBuilder sb = new StringBuilder(INITIAL_HEADERS);
+//        sb.append(Long.toString(error.length() + RESPONSE_START.length() + RESPONSE_END.length()));
+//        sb.append(CONTENT_TYPE_HEADER);
+//        sb.append(RESPONSE_START);
+        StringBuilder sb = new StringBuilder(RESPONSE_START);
         sb.append(error);
         sb.append(RESPONSE_END);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out))) {

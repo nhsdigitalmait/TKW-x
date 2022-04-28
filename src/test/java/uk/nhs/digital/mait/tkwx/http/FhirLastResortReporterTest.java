@@ -63,8 +63,8 @@ public class FhirLastResortReporterTest {
         FhirLastResortReporter reporter = new FhirLastResortReporter();
         reporter.report("hello", ostream);
         String s = ostream.toString();
-        assertTrue("report must start with a http 500 response",
-                s.startsWith("HTTP/1.1 500 OK"));
+        assertTrue("report must start with an OperationOutcome element",
+                s.startsWith("<OperationOutcome"));
         assertTrue("report must contain a fhir operation outcome",
                 s.contains("<OperationOutcome xmlns=\"http://hl7.org/fhir\">"));
         assertTrue("report must contain the supplied error message",

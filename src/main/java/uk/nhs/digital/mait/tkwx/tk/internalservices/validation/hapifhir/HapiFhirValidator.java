@@ -153,7 +153,7 @@ public class HapiFhirValidator
             }
             for (FilterTotals ft : informationFilter) {
                 vsb.append("<li>"
-                        + "<input type=\"checkbox\" class=\"subOption\" name=\"INFORMATIONmessage" + Integer.toString(ReportNumber) + "\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
+                        + "<input type=\"checkbox\" class=\"subOption\" name=\"INFORMATIONmessage" + Integer.toString(ReportNumber) + "\" value=\"" + ft.getCondition() + " \" checked/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
                         + "</li>");
             }
             if (!informationFilter.isEmpty()) {
@@ -167,7 +167,7 @@ public class HapiFhirValidator
             }
             for (FilterTotals ft : warningFilter) {
                 vsb.append("<li>"
-                        + "<input type=\"checkbox\" class=\"subOption\" name=\"WARNINGmessage" + Integer.toString(ReportNumber) + "\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
+                        + "<input type=\"checkbox\" class=\"subOption\" name=\"WARNINGmessage" + Integer.toString(ReportNumber) + "\" value=\"" + ft.getCondition() + "\" checked/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
                         + "</li>");
             }
             if (!warningFilter.isEmpty()) {
@@ -181,7 +181,7 @@ public class HapiFhirValidator
             }
             for (FilterTotals ft : errorFilter) {
                 vsb.append("<li>"
-                        + "<input type=\"checkbox\" class=\"subOption\" name=\"ERRORmessage" + Integer.toString(ReportNumber) + "\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
+                        + "<input type=\"checkbox\" class=\"subOption\" name=\"ERRORmessage" + Integer.toString(ReportNumber) + "\" value=\"" + ft.getCondition() + "\" checked/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
                         + "</li>");
             }
             if (!errorFilter.isEmpty()) {
@@ -195,7 +195,7 @@ public class HapiFhirValidator
             }
             for (FilterTotals ft : fatalFilter) {
                 vsb.append("<li>"
-                        + "<input type=\"checkbox\" class=\"subOption\" name=\"FATALmessage" + Integer.toString(ReportNumber) + "\" value=\"" + ft.getCondition() + "\"/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
+                        + "<input type=\"checkbox\" class=\"subOption\" name=\"FATALmessage" + Integer.toString(ReportNumber) + "\" value=\"" + ft.getCondition() + "\" checked/><label for=\"filter_5\">\"" + ft.getCondition() + "\" (__total" + ft.getLabel() + "__ instances)</label>"
                         + "</li>");
             }
             if (!fatalFilter.isEmpty()) {
@@ -294,7 +294,7 @@ public class HapiFhirValidator
                     + "          show = true;\n"
                     + "          $(\"input[name='\" + sevVal + \"message" + Integer.toString(ReportNumber) + "']:checked\").each(function() {\n"
                     + "            var messVal = $(this).val();\n"
-                    + "            if (row.find('.Message').html().indexOf(messVal) >= 0) {\n"
+                    + "            if (row.find('.Message').html().match(messVal) != null) {\n"
                     + "              innerShow = false;\n"
                     + "                           return false;\n"
                     + "            } else {\n"
@@ -345,6 +345,8 @@ public class HapiFhirValidator
             if (!fatalFilter.isEmpty()) {
                 vsb.append("$(\"input[name='FATALmessage" + Integer.toString(ReportNumber) + "']\").on('click', function() {refresh" + Integer.toString(ReportNumber) + "()});\n");
             }
+
+            vsb.append("window.onload = function() { refresh1(); };");
             vsb.append("</script>");
 
             vsb.append("<br>").append("Artefact Versions:");

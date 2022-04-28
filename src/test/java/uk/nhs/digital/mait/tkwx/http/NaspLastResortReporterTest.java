@@ -63,8 +63,8 @@ public class NaspLastResortReporterTest {
         NaspLastResortReporter reporter = new NaspLastResortReporter();
         reporter.report("hello", ostream);
         String s = ostream.toString();
-        assertTrue("report must start with a http 500 response",
-                s.startsWith("HTTP/1.1 500 OK"));
+        assertTrue("report must start with an XML version statement",
+                s.startsWith("<?xml version=\"1.0\" encoding=\"utf-8\"?>"));
         assertTrue("report must contain the error message",
                 s.contains("hello"));
     }

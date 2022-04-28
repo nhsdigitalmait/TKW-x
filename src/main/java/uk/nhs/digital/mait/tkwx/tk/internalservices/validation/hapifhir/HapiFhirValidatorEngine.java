@@ -311,29 +311,30 @@ public class HapiFhirValidatorEngine {
                         System.out.println("npmPackageSupport Validation Support created and added to the support chain - " + fhirVersion);
 
                     }
-                }else if (spAssetDir != null && spAssetDir.trim().length() > 0) {
-                    hapiAssetCacheInterface.addAll(spAssetDir);
                 } else {
-                    int i = 0;
-                    while (true) {
-                        spAssetDir = config.getConfiguration(HapiFhirInstancePath + ASSETDIR + "." + i);
-                        if ((spAssetDir == null) || (spAssetDir.trim().length() == 0)) {
-                            break;
-                        } else {
-                            hapiAssetCacheInterface.addAll(spAssetDir);
+                   if (spAssetDir != null && spAssetDir.trim().length() > 0) {
+                    hapiAssetCacheInterface.addAll(spAssetDir);
+                   } else {
+                        int i = 0;
+                        while (true) {
+                            spAssetDir = config.getConfiguration(HapiFhirInstancePath + ASSETDIR + "." + i);
+                            if ((spAssetDir == null) || (spAssetDir.trim().length() == 0)) {
+                                break;
+                            } else {
+                                hapiAssetCacheInterface.addAll(spAssetDir);
+                            }
+                            i++;
                         }
-                        i++;
+                        if (i == 0) {
+                            Logger log = Logger.getInstance();
+                            log.log("No HAPI FHIR assets read in");
+                            System.out.println("No HAPI FHIR assets read in");
+                        }
                     }
-                    if (i == 0) {
-                        Logger log = Logger.getInstance();
-                        log.log("No HAPI FHIR assets read in");
-                        System.out.println("No HAPI FHIR assets read in");
-                    }
-                }
                 PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(context, hapiAssetCacheInterface.getStructureDefinitionIBaseResourceCache(), hapiAssetCacheInterface.getValueSetIBaseResourceCache(), hapiAssetCacheInterface.getCodeSystemIBaseResourceCache());
                 supportChain.addValidationSupport(prePopulatedSupport);
                 System.out.println("PrePopulated Validation Support created and added to the support chain - " + fhirVersion);
-
+                }
 
                     
 

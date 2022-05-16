@@ -64,11 +64,12 @@ public class XmlFragmentSubstitutionTest {
         String result = instance.getValue(o);
         assertEquals(expResult, result);
         
+        // if this test fails its probably because there is no getuuid handler listening on port 8001
         xpath = "//fhir:Bundle/*[1] src/test/resources/insert_uuid_id.xsl port 8001";
         instance.setData(xpath);
         o = "<Bundle xmlns=\"http://hl7.org/fhir\"><a><b>xxx<c>yyyy</c></b><b>xxx</b></a></Bundle>";
         result = instance.getValue(o);
-        assertEquals(true, result.contains("<fhir:id value"));
+        assertEquals(true, result.contains("<id value"));
     }
 
     /**

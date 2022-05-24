@@ -46,9 +46,13 @@ import org.hl7.fhir.common.hapi.validation.support.RemoteTerminologyServiceValid
 import org.hl7.fhir.common.hapi.validation.support.SnapshotGeneratingValidationSupport;
 import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.context.support.ConceptValidationOptions;
+import ca.uhn.fhir.context.support.IValidationSupport;
+import ca.uhn.fhir.context.support.ValidationSupportContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.util.VersionUtil;
+import javax.annotation.Nonnull;
 import org.hl7.fhir.common.hapi.validation.support.NpmPackageValidationSupport;
 import static uk.nhs.digital.mait.tkwx.util.Utils.readFile2String;
 
@@ -347,7 +351,25 @@ public class HapiFhirValidatorEngine {
             }
 
             if (inMemoryTerminologyServerValidationSupport) {
-                InMemoryTerminologyServerValidationSupport inMemoryTerminologyServer = new InMemoryTerminologyServerValidationSupport(context);
+                InMemoryTerminologyServerValidationSupport inMemoryTerminologyServer = new InMemoryTerminologyServerValidationSupport(context){
+                    // These overrides stop the inMemoryTerminologyServer support module from trying to validate any dmd or units of time validations - returning null means that the remoter terminology server will attempt to validate them
+                    @Override
+                    public IValidationSupport.CodeValidationResult validateCodeInValueSet(ValidationSupportContext theValidationSupportContext, ConceptValidationOptions theOptions, String theCodeSystem, String theCode, String theDisplay, @Nonnull IBaseResource theValueSet) {
+                        String valueSetUrl = CommonCodeSystemsTerminologyService.getValueSetUrl(theValueSet);
+                        if (valueSetUrl.equals("http://hl7.org/fhir/ValueSet/units-of-time")) {
+                            return null;
+                        }
+                        return super.validateCodeInValueSet(theValidationSupportContext, theOptions, theCodeSystem, theCode, theDisplay, theValueSet);
+                    }
+                    @Override
+                    public IValidationSupport.CodeValidationResult validateCode(ValidationSupportContext theValidationSupportContext, ConceptValidationOptions theOptions, String theCodeSystem, String theCode, String theDisplay, String theValueSetUrl) {
+
+                        if (theCodeSystem != null && theCodeSystem.equals("https://dmd.nhs.uk")) {
+                            return null;
+                        }
+                        return super.validateCode(theValidationSupportContext, theOptions, theCodeSystem, theCode, theDisplay, theValueSetUrl);
+                    }
+                };
                 supportChain.addValidationSupport(inMemoryTerminologyServer);
                 System.out.println("In Memory Terminology Validation Support created and added to the support chain - " + fhirVersion);
             }
@@ -359,7 +381,26 @@ public class HapiFhirValidatorEngine {
 
 // Create a module that uses a remote terminology service
             if (remoteTerminologyServiceUrl != null) {
-                remoteTermSvc = new RemoteTerminologyServiceValidationSupport(context);
+                remoteTermSvc = new RemoteTerminologyServiceValidationSupport(context){
+// These are overrides to prove that the "return null" in InMemoryTerminologyServer are subsequently being sent to the RemoteTerminology server (and they are!)
+//                    but are not necessary for prod code
+//                    @Override
+//                    public IValidationSupport.CodeValidationResult validateCodeInValueSet(ValidationSupportContext theValidationSupportContext, ConceptValidationOptions theOptions, String theCodeSystem, String theCode, String theDisplay, @Nonnull IBaseResource theValueSet) {
+//                        String valueSetUrl = CommonCodeSystemsTerminologyService.getValueSetUrl(theValueSet);
+//                        if (valueSetUrl.equals("http://hl7.org/fhir/ValueSet/units-of-time")) {
+//                            System.out.println("valueSetUrl= "+ valueSetUrl);
+//                        }
+//                        return super.validateCodeInValueSet(theValidationSupportContext, theOptions, theCodeSystem, theCode, theDisplay, theValueSet);
+//                    }
+//                    @Override
+//                    public IValidationSupport.CodeValidationResult validateCode(ValidationSupportContext theValidationSupportContext, ConceptValidationOptions theOptions, String theCodeSystem, String theCode, String theDisplay, String theValueSetUrl) {
+//
+//                        if (theCodeSystem !=null && theCodeSystem.equals("https://dmd.nhs.uk")) {
+//                            System.out.println("code= "+ theCode);
+//                        }
+//                        return super.validateCode(theValidationSupportContext, theOptions, theCodeSystem, theCode, theDisplay, theValueSetUrl);
+//                    }
+                };
                 authInterceptor = new BearerTokenAuthInterceptor(terminologyAccessToken);
                 remoteTermSvc.addClientInterceptor(authInterceptor);
                 remoteTermSvc.setBaseUrl(remoteTerminologyServiceUrl);

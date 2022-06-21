@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.logging.Level;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -120,7 +121,7 @@ public class BARSResponseImporter {
         String evidencePath = System.getenv("TKWROOT") + "/config/" + targetDomain + "/all_evidence";
         String logFolder = System.getenv("TKWROOT") + "/config/" + targetDomain + "/logs";
         Utils.createFolderIfMissing(logFolder);
-        Logger.getInstance().setAppName("TKSResponseImporter", logFolder);
+        Logger.getInstance().setAppName("BaRSResponseImporter", logFolder);
 
         Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Initialised");
         if (DEBUG) {
@@ -364,7 +365,7 @@ public class BARSResponseImporter {
                 NodeList testSupportSystem = root.getElementsByTagName(METADATA_TEST_SUPPORT_SYSTEM);
                 String testSupportSystemName = testSupportSystem != null && testSupportSystem.getLength() > 0 ? testSupportSystem.item(0).getAttributes().getNamedItem(METADATA_NAME).getTextContent() : "";
                 if (!targetDomain.equals(testSupportSystemName)) {
-                    Logger.getInstance().log(WARNING, BARSResponseImporter.class.getName(), String.format("Test Support System name %s does not match target domnain %s", testSupportSystemName, targetDomain));
+                    Logger.getInstance().log(WARNING, BARSResponseImporter.class.getName(), String.format("Test Support System name %s does not match target domain %s", testSupportSystemName, targetDomain));
                     return null;
                 }
 
@@ -523,7 +524,7 @@ public class BARSResponseImporter {
 //                                Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer Finished waiting on autotest");
 
                                 
-                                // now run autotest  -s <SenderEndpoint> ExtractedValidationResponse_(xml!json)_accept
+                                // now run autotest  -s <SenderEndpoint> ExtractedValidationResponse_(xml|json)_accept
                                 List<String> params = Arrays.asList(System.getenv("TKWROOT") + "/config/" + targetDomain
                                         + "/autotest_config/run_autotest.sh",
                                         "-s", sourceEndpointId, "ExtractedValidationResponse_"+responseFormat+"_accept");
@@ -560,6 +561,11 @@ public class BARSResponseImporter {
                                         try {
                                             response = is.readAllBytes();
                                         } catch (IOException ex) {
+                                        } finally {
+                                            try {
+                                                is.close();
+                                            } catch (IOException ex) {
+                                            }
                                         }
                                         Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), "Consumer ResponseImporter succeeded " + new String(response));
                                     } else {
@@ -569,8 +575,13 @@ public class BARSResponseImporter {
                                         InputStream es = p.getErrorStream();
                                         byte[] response = null;
                                         try {
-                                            response = is.readAllBytes();
+                                            response = es.readAllBytes();
                                         } catch (IOException ex) {
+                                        } finally {
+                                            try {
+                                                es.close();
+                                            } catch (IOException ex) {
+                                            }
                                         }
                                         Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer ResponseImporter error from process " + new String(response));
                                     }

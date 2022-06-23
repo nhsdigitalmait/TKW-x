@@ -90,72 +90,117 @@ public class ScriptParser {
      * @param name
      * @return the DataSource
      */
-    public DataSource getDataSource(String name) {
-        return visitor.getDatasources().get(name);
+    public DataSource getDataSource(String name) throws Exception {
+        DataSource ds = visitor.getDatasources().get(name);
+        if (ds != null) {
+            return visitor.getDatasources().get(name);
+        } else {
+            throw new Exception("ScriptParser.getDataSource datasource does not exist " + name);
+        }
     }
 
     /**
      * @param name
      * @return the test
      */
-    public Test getTest(String name) {
-        return visitor.getTests().get(name);
+    public Test getTest(String name) throws Exception {
+        Test test = visitor.getTests().get(name);
+        if (test != null) {
+            return test;
+        } else {
+            throw new Exception("ScriptParser.getTest test does not exist " + name);
+        }
     }
 
     /**
      * @param name
      * @return the passfailcheck
      */
-    public PassFailCheck getPassFailCheck(String name) {
-        return visitor.getPassfailchecks().get(name);
+    public PassFailCheck getPassFailCheck(String name) throws Exception {
+        PassFailCheck pfc = visitor.getPassfailchecks().get(name);
+        if (pfc != null) {
+            return pfc;
+        } else {
+            throw new Exception("ScriptParser.getPassFailCheck passfailcheck does not exist " + name);
+        }
     }
 
     /**
      * @param name
      * @return the message
      */
-    public Message getMessage(String name) {
-        return visitor.getMessages().get(name);
+    public Message getMessage(String name) throws Exception {
+        Message message = visitor.getMessages().get(name);
+        if (message != null) {
+            return message;
+        } else {
+            throw new Exception("ScriptParser.getMessage message does not exist " + name);
+        }
     }
 
     /**
      * @param name
      * @return the extractor
      */
-    public ResponseExtractor getExtractor(String name) {
-        return visitor.getExtractors().get(name);
+    public ResponseExtractor getExtractor(String name) throws Exception {
+        ResponseExtractor extractor = visitor.getExtractors().get(name);
+        if (extractor != null) {
+            return extractor;
+        } else {
+            throw new Exception("ScriptParser.getExtractor extractor does not exist " + name);
+        }
     }
 
     /**
      * @param name
      * @return the template
      */
-    public Template getTemplate(String name) {
-        return visitor.getTemplates().get(name);
+    public Template getTemplate(String name) throws Exception {
+        Template template = visitor.getTemplates().get(name);
+        if (template != null) {
+            return template;
+        } else {
+            throw new Exception("ScriptParser.getTemplate template does not exist " + name);
+        }
     }
 
     /**
      * @param name property set name
      * @return the propertySets
      */
-    public NamedPropertySet getPropertySet(String name) {
-        return visitor.getPropertySets().get(name);
+    public NamedPropertySet getPropertySet(String name) throws Exception {
+        NamedPropertySet ps = visitor.getPropertySets().get(name);
+        if ( ps != null ) {
+            return ps;
+        } else {
+            throw new Exception("ScriptParser.getPropertySet property set does not exist " + name);
+        }
     }
 
     /**
      * @param name httpHeaderSet name
      * @return the httpHeaderSet
      */
-    public HashMap<String, Object> getHttpHeaderSet(String name) {
-        return visitor.getHttpHeaderSets().get(name);
+    public HashMap<String, Object> getHttpHeaderSet(String name) throws Exception {
+        HashMap<String, Object> httpHeaderSet = visitor.getHttpHeaderSets().get(name);
+        if (httpHeaderSet != null) {
+            return httpHeaderSet;
+        } else {
+            throw new Exception("ScriptParser.getHttpHeaderSet http header set does not exist " + name);
+        }
     }
 
     /**
-     * @param name substition tag name
+     * @param name substitution tag name
      * @return the Object containing the substitution tag value
      */
-    public HashMap<String, Object> getSubstitutionTags() {
-        return visitor.getSubstitutionTags();
+    public HashMap<String, Object> getSubstitutionTags() throws Exception {
+        HashMap<String, Object> substitutionTags = visitor.getSubstitutionTags();
+        if ( substitutionTags != null ) {
+            return substitutionTags;
+        } else {
+            throw new Exception("ScriptParser.getSubstitutionTags substitution tags does not exist ");
+        }
     }
 
     private void link()

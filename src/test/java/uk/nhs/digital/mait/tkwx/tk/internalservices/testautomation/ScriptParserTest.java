@@ -99,19 +99,18 @@ public class ScriptParserTest {
      * Test of getDataSource method, of class ScriptParser.
      */
     @Test
-    public void testGetDataSource() {
+    public void testGetDataSource() throws Exception {
         System.out.println("getDataSource");
-        String name = "";
-        DataSource expResult = null;
+        String name = "patients";
         DataSource result = instance.getDataSource(name);
-        assertEquals(expResult, result);
+        assertTrue(result != null);
     }
 
     /**
      * Test of getTest method, of class ScriptParser.
      */
     @Test
-    public void testGetTest() {
+    public void testGetTest() throws Exception {
         System.out.println("getTest");
         String name = TEST_PREFIX + "test1";
         uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Test result = instance.getTest(name);
@@ -122,7 +121,7 @@ public class ScriptParserTest {
      * Test of getPassFailCheck method, of class ScriptParser.
      */
     @Test
-    public void testGetPassFailCheck() {
+    public void testGetPassFailCheck() throws Exception {
         System.out.println("getPassFailCheck");
         String name = "actionok";
         PassFailCheck result = instance.getPassFailCheck(name);
@@ -133,7 +132,7 @@ public class ScriptParserTest {
      * Test of getMessage method, of class ScriptParser.
      */
     @Test
-    public void testGetMessage() {
+    public void testGetMessage() throws Exception {
         System.out.println("getMessage");
         String name = "DE_EMPPID";
         Message result = instance.getMessage(name);
@@ -144,7 +143,7 @@ public class ScriptParserTest {
      * Test of getExtractor method, of class ScriptParser.
      */
     @Test
-    public void testGetExtractor() {
+    public void testGetExtractor() throws Exception {
         System.out.println("getExtractor");
         String name = "extractor_name";
         String expResult = "uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.SingleRecordXpathResponseExtractor";
@@ -156,7 +155,7 @@ public class ScriptParserTest {
      * Test of getTemplate method, of class ScriptParser.
      */
     @Test
-    public void testGetTemplate() {
+    public void testGetTemplate() throws Exception {
         System.out.println("getTemplate");
         String name = "DE_EMPPID_"+SEND_CDA_V2_SERVICE+"_template";
         Template result = instance.getTemplate(name);
@@ -167,7 +166,7 @@ public class ScriptParserTest {
      * Test of getPropertySet method, of class ScriptParser.
      */
     @Test
-    public void testGetPropertySet() {
+    public void testGetPropertySet() throws Exception {
         System.out.println("getPropertySet");
         String name = "webservices";
         NamedPropertySet result = instance.getPropertySet(name);
@@ -196,7 +195,7 @@ public class ScriptParserTest {
      * Test of getHttpHeaderSet method, of class ScriptParser.
      */
     @Test
-    public void testGetHttpHeaderSet() {
+    public void testGetHttpHeaderSet() throws Exception {
         System.out.println("getHttpHeaderSet");
         String name = "headerset1";
         HashMap<String, Object> result = instance.getHttpHeaderSet(name);
@@ -207,7 +206,7 @@ public class ScriptParserTest {
      * Test of getSubstitutionTags method, of class ScriptParser.
      */
     @Test
-    public void testGetSubstitutionTags() {
+    public void testGetSubstitutionTags() throws Exception {
         System.out.println("getSubstitutionTags");
         HashMap<String, Object> result = instance.getSubstitutionTags();
         assertNotNull(result);

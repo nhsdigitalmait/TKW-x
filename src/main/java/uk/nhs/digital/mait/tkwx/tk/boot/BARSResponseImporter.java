@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.logging.Level;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -58,6 +57,7 @@ import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.folderExists;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 import uk.nhs.digital.mait.tkwx.util.bodyextractors.SynchronousResponseBodyExtractor;
 
 /**
@@ -480,6 +480,7 @@ public class BARSResponseImporter {
 
                     HttpHeaderManager responseHeaderManager = extractor.getHttpResponseHeaders();
                     String responseContentType = responseHeaderManager.getHttpHeaderValue("X-was-Content-type");
+                    String correlationID = responseHeaderManager.getHttpHeaderValue("X-Correlation-ID");
 
                     if (responseContentType != null && responseContentType.toLowerCase().contains("json")) {
                         responseFormat = "json";
@@ -494,14 +495,24 @@ public class BARSResponseImporter {
 
                     if (folderExists(requestsFolder)) {
                         if (requestHeaderManager.getFirstLine().startsWith("POST")) {
+                            // NB These are the synchronous response bodies
                             String responseBodyEventCode = null;
+                            String responseBodyReasonCode = null;
+                            String responseBodyCategoryCode = null;
                             try {
                                 responseBodyEventCode
                                         = xpathExtractor("/fhir:Bundle/fhir:entry/fhir:resource/fhir:MessageHeader/fhir:eventCoding[fhir:system/@value='https://fhir.nhs.uk/CodeSystem/message-events-bars']/fhir:code/@value", responseBody);
+                                responseBodyReasonCode  // new,update,cancel
+                                        = xpathExtractor("/fhir:Bundle/fhir:entry/fhir:resource/fhir:MessageHeader/fhir:reason/fhir:coding[fhir:system/@value='https://fhir.nhs.uk/CodeSystem/message-reason-bars']/fhir:code/@value", responseBody);
+                                responseBodyCategoryCode
+                                        = xpathExtractor("/fhir:Bundle/fhir:entry/fhir:resource/fhir:ServiceRequest/fhir:category/fhir:coding[fhir:system/@value='https://fhir.nhs.uk/CodeSystem/message-category-servicerequest']/fhir:code/@value", responseBody);
                             } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
                                 Logger.getInstance().log(SEVERE, BARSResponseImporter.class.getName(), "Consumer Error extracting response body event code " + ex.getMessage());
                             }
-                            if (responseBodyEventCode.equals("servicerequest-request")) {
+                            //  TODO we should also handle 111 to ED referral cancellation *sometimes* resulting in a DNA safeguarding response 
+                            if (responseBodyEventCode.equals("servicerequest-request") && 
+                                    responseBodyReasonCode.matches("^(new|update)$") && 
+                                    responseBodyCategoryCode.equals("validation")) {
                                 Logger.getInstance().log(INFO, BARSResponseImporter.class.getName(), String.format("Consumer Creating response file %s/extracted_response.xml", requestsFolder));
                                 //Logger.getInstance().log(INFO,BARSResponseImporter.class.getName(),body);
                                 // put the extracted response into the autotest requests folder
@@ -532,6 +543,11 @@ public class BARSResponseImporter {
                                 Map<String, String> env = pb.environment();
                                 env.put("TKWROOT", System.getenv("TKWROOT"));
                                 env.put("TKW_BROWSER", "");
+                                
+                                // need this supplying to autotest via the environment so it can generate the correct response header
+                                if (!isNullOrEmpty(correlationID)) {
+                                    env.put("CorrelationID", correlationID);
+                                }
                                 Process p = null;
                                 try {
                                     p = pb.start();

@@ -177,4 +177,14 @@ public class PropertySetFunctions {
         boolean urlEncode = Boolean.parseBoolean(urlEncodeStr);
         return urlEncode ? URLEncoder.encode(df.format(cal.getTime()), StandardCharsets.UTF_8.toString()) : df.format(cal.getTime());
     }
+    
+    /**
+     * 
+     * @param propertyName
+     * @return the required system property value
+     */
+    public static String getSystemProperty(String propertyName) {
+        String value = System.getProperty(propertyName);
+        return value == null ? "" : value;
+    }
 }

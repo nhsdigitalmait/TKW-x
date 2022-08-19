@@ -337,6 +337,7 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
         HttpHeaderCheckContext httpHeaderCheckCtx = passfailCheckCtx.httpHeaderCheck();
         HttpStatusCheckContext httpStatusCheckCtx = passfailCheckCtx.httpStatusCheck();
         HttpHeaderCorrelationCheckContext httpHeaderCorrelationCheckCtx = passfailCheckCtx.httpHeaderCorrelationCheck();
+        XpathCorrelationCheckContext xpathCorrelationCheckContext = passfailCheckCtx.xpathCorrelationCheck();
 
         String checkType = null;
         if (xPathCheckCtx != null) {
@@ -347,6 +348,8 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
             checkType = httpStatusCheckCtx.HTTPSTATUSCHECK().getText();
         } else if (httpHeaderCorrelationCheckCtx != null) {
             checkType = httpHeaderCorrelationCheckCtx.HTTPHEADERCORRELATIONCHECK().getText();
+        } else if (xpathCorrelationCheckContext != null) {
+            checkType = xpathCorrelationCheckContext.XPATHCORRELATIONCHECK().getText();
         } else {
             NullCheckContext nullCheckContext = passfailCheckCtx.nullCheck();
             if (nullCheckContext != null) {

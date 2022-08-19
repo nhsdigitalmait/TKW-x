@@ -26,6 +26,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Script;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.TestResult;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import org.xml.sax.InputSource;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
 
 /**
  * Abstract base class for asynchronous pass fail checks looking across the
@@ -54,9 +55,18 @@ public abstract class AbstractRequestResponseComparatorPassFailCheck extends Abs
             throws Exception {
         TestResult p = TestResult.FAIL;
         String requestBody = getRequestBody(inAsync);
+        // TODO we are assuming that if it starts with { its a json and b fhir
+        if ( requestBody.trim().startsWith("{") ) {
+                requestBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(requestBody);
+        }
+
         if (!Utils.isNullOrEmpty(requestBody)) {
             String responseBody = getResponseBody(inSync);
-            if (!Utils.isNullOrEmpty(responseBody)) {
+            // TODO we are assuming that if it starts with { its a json and b fhir
+            if ( responseBody.trim().startsWith("{") ) {
+                    responseBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(responseBody);
+            }
+           if (!Utils.isNullOrEmpty(responseBody)) {
                 p = TestResult.valueOf(doChecks(s, new InputSource(new StringReader(requestBody)), new InputSource(new StringReader(responseBody))));
             } else {
                 setDescription(colourString("Zero Length Response Content", RED));

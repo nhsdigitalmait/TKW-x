@@ -547,6 +547,12 @@ public interface AutotestParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitHttpHeaderCorrelationCheck(AutotestParser.HttpHeaderCorrelationCheckContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link AutotestParser#xpathCorrelationCheck}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXpathCorrelationCheck(AutotestParser.XpathCorrelationCheckContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link AutotestParser#nullCheck}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

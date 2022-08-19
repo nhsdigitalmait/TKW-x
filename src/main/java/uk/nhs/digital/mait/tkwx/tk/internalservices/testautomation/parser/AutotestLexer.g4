@@ -24,6 +24,11 @@ options {
 package uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser;
 }
 
+@lexer::members {
+     private final static boolean DEBUG = true;
+}
+
+
 // these declarations appear in the generated parser file AutotestParser.java
 @parser::members {
         // introduced from AutotestGrammar.g4
@@ -238,6 +243,8 @@ SECONDRESPONSESYNCTRACKINGIDACKBY3MATCH : 'secondresponsesynctrackingidackby3mat
 HTTPHEADERCHECK : 'httpheadercheck' ;
 HTTPSTATUSCHECK : 'httpstatuscheck' ;
 HTTPHEADERCORRELATIONCHECK : 'httpheadercorrelationcheck' ;
+
+XPATHCORRELATIONCHECK : 'xpathcorrelationcheck' -> mode(CST_MODE) ;
 
 // new logical conjunction tests at 3.13
 OR : 'or' ;

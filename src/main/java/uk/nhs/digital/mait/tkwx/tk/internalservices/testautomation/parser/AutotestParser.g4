@@ -308,6 +308,7 @@ passFailCheck :  ( // all these are zero argument passfails
 | httpHeaderCorrelationCheck
 | httpStatusCheck
 | nullCheck
+| xpathCorrelationCheck
                    
 /* logical conjunctions */
 // NB Current TKW parser implementation will not cope with fully recursive nested expressions: only one level permitted
@@ -344,6 +345,9 @@ xpathTypeArg : MATCHES
 httpHeaderCheck : HTTPHEADERCHECK httpHeaderName xpathArg ;
 
 httpHeaderCorrelationCheck : HTTPHEADERCORRELATIONCHECK httpHeaderName httpHeaderName ;
+
+// Compares synchronous req resp evaluated xpaths if no second parameter then its the same xpath
+xpathCorrelationCheck : XPATHCORRELATIONCHECK xpathExpression xpathExpression ? ;
 
 nullCheck : nullCheckType matchString ;
 

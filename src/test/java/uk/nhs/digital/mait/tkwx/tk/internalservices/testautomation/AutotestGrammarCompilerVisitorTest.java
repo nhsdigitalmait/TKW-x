@@ -315,7 +315,7 @@ public class AutotestGrammarCompilerVisitorTest {
     @Test
     public void testGetTests() {
         System.out.println("getTests");
-        int expResult = 9;
+        int expResult = 10;
         HashMap<String, uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Test> result = instance.getTests();
         assertEquals(expResult, result.size());
     }

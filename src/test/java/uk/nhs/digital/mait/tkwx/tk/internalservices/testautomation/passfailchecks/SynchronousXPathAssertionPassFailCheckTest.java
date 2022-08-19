@@ -37,6 +37,7 @@ import org.xml.sax.InputSource;
  */
 public class SynchronousXPathAssertionPassFailCheckTest {
     private static AutotestParser.PassfailContext passfailCtx;
+    private SynchronousXPathAssertionPassFailCheck instance;
 
     public SynchronousXPathAssertionPassFailCheckTest() {
     }
@@ -59,6 +60,7 @@ public class SynchronousXPathAssertionPassFailCheckTest {
 
     @Before
     public void setUp() {
+        instance = new SynchronousXPathAssertionPassFailCheck();
     }
 
     @After
@@ -73,7 +75,6 @@ public class SynchronousXPathAssertionPassFailCheckTest {
     @Test
     public void testInit() throws Exception {
         System.out.println("init");
-        SynchronousXPathAssertionPassFailCheck instance = new SynchronousXPathAssertionPassFailCheck();
         instance.init(passfailCtx);
     }
 
@@ -87,7 +88,6 @@ public class SynchronousXPathAssertionPassFailCheckTest {
         System.out.println("doChecks");
         Script s = null;
         InputSource is = new InputSource(new ByteArrayInputStream("<el>xxx</el>".getBytes()));
-        SynchronousXPathAssertionPassFailCheck instance = new SynchronousXPathAssertionPassFailCheck();
         instance.init(passfailCtx);
         TestResult expResult = TestResult.PASS;
         TestResult result = instance.doChecks(s, is);
@@ -105,7 +105,6 @@ public class SynchronousXPathAssertionPassFailCheckTest {
         Script s = null;
         InputStream in = new ByteArrayInputStream((END_REQUEST_MARKER + "\r\n\r\nHTTP/1.1 200\r\n\r\n<el>xxx</el>").getBytes());
         InputStream inSync = null;
-        SynchronousXPathAssertionPassFailCheck instance = new SynchronousXPathAssertionPassFailCheck();
         instance.init(passfailCtx);
         TestResult expResult = TestResult.PASS;
         TestResult result = instance.passed(s, in, inSync);

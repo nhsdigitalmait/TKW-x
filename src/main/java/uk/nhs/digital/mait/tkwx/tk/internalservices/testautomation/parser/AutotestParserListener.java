@@ -900,6 +900,16 @@ public interface AutotestParserListener extends ParseTreeListener {
 	 */
 	void exitHttpHeaderCorrelationCheck(AutotestParser.HttpHeaderCorrelationCheckContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link AutotestParser#xpathCorrelationCheck}.
+	 * @param ctx the parse tree
+	 */
+	void enterXpathCorrelationCheck(AutotestParser.XpathCorrelationCheckContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AutotestParser#xpathCorrelationCheck}.
+	 * @param ctx the parse tree
+	 */
+	void exitXpathCorrelationCheck(AutotestParser.XpathCorrelationCheckContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AutotestParser#nullCheck}.
 	 * @param ctx the parse tree
 	 */

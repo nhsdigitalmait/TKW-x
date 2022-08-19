@@ -24,6 +24,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.TestResult;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.streamToByteArray;
 import org.xml.sax.InputSource;
+import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
 
 /**
  * abstract base class for synchronous pass fail checks looking across the
@@ -42,8 +43,15 @@ public abstract class AbstractSynchronousRequestResponseComparatorPassFailCheck 
 
         // submit with effectively cloned input streams
         String requestBody = getRequestBody(new ByteArrayInputStream(log.getBytes()));
+        // TODO we are assuming that if it starts with { its a json and b fhir
+        if ( requestBody.trim().startsWith("{") ) {
+                requestBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(requestBody);
+        }
         if (!Utils.isNullOrEmpty(requestBody)) {
             String responseBody = getResponseBody(new ByteArrayInputStream(log.getBytes()));
+            if ( responseBody.trim().startsWith("{") ) {
+                responseBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(responseBody);
+            }
             if (!Utils.isNullOrEmpty(responseBody)) {
                 p = TestResult.valueOf(doChecks(s, new InputSource(new StringReader(requestBody)), new InputSource(new StringReader(responseBody))));
             } else {

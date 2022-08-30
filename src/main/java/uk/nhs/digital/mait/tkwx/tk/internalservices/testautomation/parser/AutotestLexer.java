@@ -171,7 +171,7 @@ public class AutotestLexer extends Lexer {
 	}
 
 
-	     private final static boolean DEBUG = true;
+	     private final static boolean DEBUG = false;
 
 
 	public AutotestLexer(CharStream input) {

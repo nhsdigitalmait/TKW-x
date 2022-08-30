@@ -33,10 +33,10 @@ public class HttpAccepted
         extends AbstractPassFailCheck {
 
     @Override
-    public TestResult passed(Script s, InputStream in, InputStream inRequest)
+    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest)
             throws Exception {
         // Note that this DOES NOT CALL any extractor
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(inResponse));
         String httpResponse = null;
         String line = null;
         boolean rq = false;

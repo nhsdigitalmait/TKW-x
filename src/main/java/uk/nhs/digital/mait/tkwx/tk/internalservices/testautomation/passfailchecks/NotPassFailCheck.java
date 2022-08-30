@@ -29,19 +29,19 @@ public class NotPassFailCheck extends AbstractLogicalOperatorPassFailCheck {
      * runs the logical negation operator on the the result of the test
      *
      * @param s
-     * @param copiedInSync
-     * @param copiedInAsync
+     * @param copiedInResponse
+     * @param copiedInRequest
      * @return
      * @throws Exception
      */
     @Override
-    protected TestResult processSubTests(Script s, byte[] copiedInSync, byte[] copiedInAsync) throws Exception {
+    protected TestResult processSubTests(Script s, byte[] copiedInResponse, byte[] copiedInRequest) throws Exception {
 
         if (subTests.length != 1) {
             throw new Exception("Logical Operator Not must take one argument");
         }
 
-        testResult = copyStreamsRunTest(subTests[0], s, copiedInSync, copiedInAsync);
+        testResult = copyStreamsRunTest(subTests[0], s, copiedInResponse, copiedInRequest);
         description = "Not of :" + subTests[0].getDescription();
         return (testResult == TestResult.PASS) ? TestResult.FAIL : TestResult.PASS;
     }

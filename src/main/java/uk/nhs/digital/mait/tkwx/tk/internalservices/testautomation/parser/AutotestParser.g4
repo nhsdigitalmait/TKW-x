@@ -349,6 +349,7 @@ httpHeaderCorrelationCheck : HTTPHEADERCORRELATIONCHECK httpHeaderName httpHeade
 // Compares synchronous req resp evaluated xpaths if no second parameter then its the same xpath
 xpathCorrelationCheck : XPATHCORRELATIONCHECK xpathExpression xpathExpression ? ;
 
+// Takes a *quoted* regular expression parameter which defines that a null request/response has been detected
 nullCheck : nullCheckType matchString ;
 
 nullCheckType : NULLREQUEST 

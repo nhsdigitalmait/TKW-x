@@ -25,7 +25,7 @@ package uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser;
 }
 
 @lexer::members {
-     private final static boolean DEBUG = true;
+     private final static boolean DEBUG = false;
 }
 
 

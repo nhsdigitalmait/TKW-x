@@ -40,6 +40,14 @@ public class MessageIDsDifferPassFailCheck
         }
     }
 
+    /**
+     * The request and response payloads have already been extracted from the logs.
+     * @param s Script object
+     * @param request InputSource Payload
+     * @param response InputSource Payload
+     * @return boolean result of test
+     * @throws Exception
+     */
     @Override
     protected boolean doChecks(Script s, InputSource request, InputSource response)
             throws Exception {

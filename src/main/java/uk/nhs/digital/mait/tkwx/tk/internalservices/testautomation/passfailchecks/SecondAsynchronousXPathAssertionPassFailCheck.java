@@ -40,10 +40,10 @@ public class SecondAsynchronousXPathAssertionPassFailCheck
     }
 
     @Override
-    public TestResult passed(Script s, InputStream in, InputStream inRequest)
+    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest)
             throws Exception {
         TestResult p = TestResult.FAIL;
-        String responseBody = getResponseBody(in);
+        String responseBody = getResponseBody(inResponse);
         if (!Utils.isNullOrEmpty(responseBody)) {
             InputSource is = new InputSource(new StringReader(responseBody));
             p = doChecks(s, is);

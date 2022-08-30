@@ -327,11 +327,11 @@ public class SynchronousXPathAssertionPassFailCheck
     }
 
     @Override
-    public TestResult passed(Script s, InputStream in, InputStream inSync)
+    public TestResult passed(Script s, InputStream inResponse, InputStream inSync)
             throws Exception {
         TestResult p = TestResult.FAIL;
         try {
-            String responseBody = getResponseBody(in);
+            String responseBody = getResponseBody(inResponse);
             //if (!Utils.isNullOrEmpty(responseBody)) {
             InputSource is = new InputSource(new StringReader(responseBody));
             p = doChecks(s, is);

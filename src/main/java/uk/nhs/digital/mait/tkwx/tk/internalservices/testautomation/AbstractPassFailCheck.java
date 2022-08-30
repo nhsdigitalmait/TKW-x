@@ -67,23 +67,36 @@ abstract public class AbstractPassFailCheck
     @Override
     public void init(PassFailCheckContext passfailCheckCtx)
             throws Exception {
+        type = determinePassFailCheckType(passfailCheckCtx);
         XPathCheckContext xPathCheckCtx = passfailCheckCtx.xPathCheck();
-        if (xPathCheckCtx != null) {
-            type = xPathCheckCtx.xpathType().getText();
-            if (xPathCheckCtx.usingExtractor() != null) {
-                responseExtractorName = xPathCheckCtx.usingExtractor().extractorName().getText();
-            }
-        } else if (passfailCheckCtx.httpHeaderCheck() != null) {
-            type = passfailCheckCtx.httpHeaderCheck().HTTPHEADERCHECK().getText();
-        } else if (passfailCheckCtx.httpStatusCheck() != null) {
-            type = passfailCheckCtx.httpStatusCheck().HTTPSTATUSCHECK().getText();
-        } else if (passfailCheckCtx.httpHeaderCorrelationCheck() != null) {
-            type = passfailCheckCtx.httpHeaderCorrelationCheck().HTTPHEADERCORRELATIONCHECK().getText();
-        } else if (passfailCheckCtx.xpathCorrelationCheck() != null) {
-            type = passfailCheckCtx.xpathCorrelationCheck().XPATHCORRELATIONCHECK().getText();
-        } else {
-            type = passfailCheckCtx.getChild(0).getText();
+        if (xPathCheckCtx != null && xPathCheckCtx.usingExtractor() != null) {
+            responseExtractorName = xPathCheckCtx.usingExtractor().extractorName().getText();
         }
+    }
+
+    /**
+     * This method needs extending when new pass fail check types are added
+     * @param passfailCheckCtx
+     * @return String containing the type of the PFC
+     */
+    public static String determinePassFailCheckType(PassFailCheckContext passfailCheckCtx) {
+        String lType = null;
+        if (passfailCheckCtx.xPathCheck() != null) {
+            lType = passfailCheckCtx.xPathCheck().xpathType().getText();
+        } else if (passfailCheckCtx.httpHeaderCheck() != null) {
+            lType = passfailCheckCtx.httpHeaderCheck().HTTPHEADERCHECK().getText();
+        } else if (passfailCheckCtx.httpStatusCheck() != null) {
+            lType = passfailCheckCtx.httpStatusCheck().HTTPSTATUSCHECK().getText();
+        } else if (passfailCheckCtx.httpHeaderCorrelationCheck() != null) {
+            lType = passfailCheckCtx.httpHeaderCorrelationCheck().HTTPHEADERCORRELATIONCHECK().getText();
+        } else if (passfailCheckCtx.xpathCorrelationCheck() != null) {
+            lType = passfailCheckCtx.xpathCorrelationCheck().XPATHCORRELATIONCHECK().getText();
+        } else if ( passfailCheckCtx.nullCheck() != null ) {
+            lType = passfailCheckCtx.nullCheck().nullCheckType().getText();
+        } else {
+            lType = passfailCheckCtx.getChild(0).getText();
+        }
+        return lType;
     }
 
     /**
@@ -124,14 +137,13 @@ abstract public class AbstractPassFailCheck
      * outcome.
      *
      * @param s Reference to the current script
-     * @param in InputStream carrying the log file for the test result
-     * @param inRequest optional parameter supplying the request log if
-     * asynchronous
+     * @param inResponse InputStream carrying the log file for the test result
+     * @param inRequest optional parameter supplying the request log if present
      * @return TestResult reporting whether the test passed
      * @throws Exception
      */
     @Override
-    abstract public TestResult passed(Script s, InputStream in, InputStream inRequest) throws Exception;
+    abstract public TestResult passed(Script s, InputStream inResponse, InputStream inRequest) throws Exception;
 
 
     /**

@@ -24,6 +24,8 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.TestResult;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import static uk.nhs.digital.mait.tkwx.util.Utils.streamToByteArray;
 import org.xml.sax.InputSource;
+import static uk.nhs.digital.mait.tkwx.httpinterceptor.HttpInterceptWorker.isJsonFhir;
+import static uk.nhs.digital.mait.tkwx.tk.GeneralConstants.CONTENT_TYPE_HEADER;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
 
 /**
@@ -33,25 +35,32 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
  *
  * @author Simon Farrow simon.farrow1@hscic.gov.uk
  */
-public abstract class AbstractSynchronousRequestResponseComparatorPassFailCheck extends AbstractRequestResponseComparatorPassFailCheck {
+public abstract class AbstractSynchronousRequestResponseComparatorPassFailCheck 
+        extends AbstractRequestResponseComparatorPassFailCheck {
 
+    /**
+     *
+     * @param s Script object
+     * @param inResponse response log input stream
+     * @param inRequest request log input stream
+     * @return TestResult
+     * @throws Exception
+     */
     @Override
-    public TestResult passed(Script s, InputStream in, InputStream inRequest)
+    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest)
             throws Exception {
         TestResult p = TestResult.FAIL;
-        String log = inputStream2String(in);
+        String log = inputStream2String(inResponse);
 
         // submit with effectively cloned input streams
         String requestBody = getRequestBody(new ByteArrayInputStream(log.getBytes()));
-        // TODO we are assuming that if it starts with { its a json and b fhir
-        if ( requestBody.trim().startsWith("{") ) {
+        String rqContentType = getRequestHeaders().getHttpHeaderValue(CONTENT_TYPE_HEADER);
+        if ( requestBody != null && requestBody.trim().startsWith("{") && isJsonFhir(rqContentType)) {
                 requestBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(requestBody);
         }
         if (!Utils.isNullOrEmpty(requestBody)) {
             String responseBody = getResponseBody(new ByteArrayInputStream(log.getBytes()));
-            if ( responseBody.trim().startsWith("{") ) {
-                responseBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(responseBody);
-            }
+            // conversion to xml has already happened automatically for responses
             if (!Utils.isNullOrEmpty(responseBody)) {
                 p = TestResult.valueOf(doChecks(s, new InputSource(new StringReader(requestBody)), new InputSource(new StringReader(responseBody))));
             } else {
@@ -67,8 +76,8 @@ public abstract class AbstractSynchronousRequestResponseComparatorPassFailCheck 
      * overridden by subclasses to perform the specific checks
      *
      * @param s script
-     * @param request InputSource
-     * @param response InputSource
+     * @param request InputSource Payload
+     * @param response InputSource Payload
      * @return result of checks across the request and response messages
      * @throws Exception
      */

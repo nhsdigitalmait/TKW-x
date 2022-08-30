@@ -53,9 +53,9 @@ public class HttpHeaderCorrelationCheck
     }
 
     @Override
-    public TestResult passed(Script s, InputStream inSync, InputStream inAsync)
+    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest)
             throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(inSync));
+        BufferedReader br = new BufferedReader(new InputStreamReader(inResponse));
         String headerLine = null;
         String line = null;
         while ((line = br.readLine()) != null) {

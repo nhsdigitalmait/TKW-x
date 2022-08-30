@@ -29,7 +29,7 @@ public class Check
         extends AbstractPassFailCheck {
 
     @Override
-    public TestResult passed(Script s, InputStream in, InputStream inRequest)
+    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest)
             throws Exception {
                 setDescription(colourString("Check Description field", BLACK));
             return TestResult.CHECK;

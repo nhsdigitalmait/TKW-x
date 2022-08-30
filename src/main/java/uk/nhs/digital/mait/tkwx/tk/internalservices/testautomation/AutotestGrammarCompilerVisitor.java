@@ -32,6 +32,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.Autote
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.*;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailchecks.PassFailCheck;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.AbstractPassFailCheck.determinePassFailCheckType;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser;
 import static uk.nhs.digital.mait.tkwx.util.Utils.FUNCTION_PREFIX;
 import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
@@ -321,9 +322,7 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
     /**
      * Instantiates the correct check object from the syntax tree All are named
      * for the check apart from XPathCheck and NullCheck where the syntax
-     * defines different tests with similar syntax TODO warning there is an
-     * almost identical method in ScriptParser that needs amending in similar
-     * style
+     * defines different tests with similar syntax 
      *
      * @param passfailCtx
      * @return initialised pass fail check object
@@ -332,40 +331,27 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
     private PassFailCheck makePassFail(PassfailContext passfailCtx) throws Exception {
 
         PassFailCheckContext passfailCheckCtx = passfailCtx.passFailCheck();
+        PassFailCheck pf = instantiatePassFailCheck(passfailCheckCtx, bootProperties);
+        pf.init(passfailCtx);
+        return pf;
+    }
 
-        XPathCheckContext xPathCheckCtx = passfailCheckCtx.xPathCheck();
-        HttpHeaderCheckContext httpHeaderCheckCtx = passfailCheckCtx.httpHeaderCheck();
-        HttpStatusCheckContext httpStatusCheckCtx = passfailCheckCtx.httpStatusCheck();
-        HttpHeaderCorrelationCheckContext httpHeaderCorrelationCheckCtx = passfailCheckCtx.httpHeaderCorrelationCheck();
-        XpathCorrelationCheckContext xpathCorrelationCheckContext = passfailCheckCtx.xpathCorrelationCheck();
+    /**
+     * @param passfailCheckCtx
+     * @param pBootProperties
+     * @return instantiated PFC
+     * @throws Exception 
+     */
+    public static PassFailCheck instantiatePassFailCheck(PassFailCheckContext passfailCheckCtx, Properties pBootProperties) throws Exception {
 
-        String checkType = null;
-        if (xPathCheckCtx != null) {
-            checkType = xPathCheckCtx.xpathType().getText();
-        } else if (httpHeaderCheckCtx != null) {
-            checkType = httpHeaderCheckCtx.HTTPHEADERCHECK().getText();
-        } else if (httpStatusCheckCtx != null) {
-            checkType = httpStatusCheckCtx.HTTPSTATUSCHECK().getText();
-        } else if (httpHeaderCorrelationCheckCtx != null) {
-            checkType = httpHeaderCorrelationCheckCtx.HTTPHEADERCORRELATIONCHECK().getText();
-        } else if (xpathCorrelationCheckContext != null) {
-            checkType = xpathCorrelationCheckContext.XPATHCORRELATIONCHECK().getText();
-        } else {
-            NullCheckContext nullCheckContext = passfailCheckCtx.nullCheck();
-            if (nullCheckContext != null) {
-                checkType = nullCheckContext.nullCheckType().getText();
-            } else {
-                checkType = passfailCheckCtx.getChild(0).getText();
-            }
-        }
-
+        String checkType = determinePassFailCheckType(passfailCheckCtx);
+        
         String pfclass = "tks.autotest.passfail." + checkType;
-        pfclass = bootProperties.getProperty(pfclass);
+        pfclass = pBootProperties.getProperty(pfclass);
         if (pfclass == null) {
-            throw new Exception("PassFail check " + checkType + " has no class defined");
+            throw new Exception("PassFail check " + checkType + " has no class defined. Has the instantiatePassFailCheck switch been updated?");
         }
         PassFailCheck pf = (PassFailCheck) Class.forName(pfclass).newInstance();
-        pf.init(passfailCtx);
         return pf;
     }
 

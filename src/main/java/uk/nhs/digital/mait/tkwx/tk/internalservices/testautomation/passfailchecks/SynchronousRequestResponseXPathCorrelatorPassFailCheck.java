@@ -71,6 +71,14 @@ public class SynchronousRequestResponseXPathCorrelatorPassFailCheck
         }
     }
 
+    /**
+     *
+     * @param s Script Object 
+     * @param request
+     * @param response
+     * @return boolean result of check
+     * @throws Exception
+     */
     @Override
     protected boolean doChecks(Script s, InputSource request, InputSource response)
             throws Exception {
@@ -83,7 +91,7 @@ public class SynchronousRequestResponseXPathCorrelatorPassFailCheck
             if ((requestValue.compareToIgnoreCase(responseValue)==0)) {
                 result = true;
                 sb.append(colourString("Result: ", BLACK));
-                sb.append(colourString("XPath values are equals as expected.", GREEN));
+                sb.append(colourString("XPath values are equal as expected.", GREEN));
                 sb.append(colourString("<BR/>Request XPATH: ", BLACK));
                 sb.append(colourString(givenXpath, GREEN));
                 sb.append(colourString("<BR/>Request: ", BLACK));

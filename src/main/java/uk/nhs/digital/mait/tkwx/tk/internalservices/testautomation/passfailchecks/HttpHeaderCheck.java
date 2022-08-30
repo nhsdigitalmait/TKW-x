@@ -68,9 +68,9 @@ public class HttpHeaderCheck
     }
 
     @Override
-    public TestResult passed(Script s, InputStream in, InputStream inRequest)
+    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest)
             throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(inResponse));
         String headerLine = null;
         String line = null;
         boolean rq = false;

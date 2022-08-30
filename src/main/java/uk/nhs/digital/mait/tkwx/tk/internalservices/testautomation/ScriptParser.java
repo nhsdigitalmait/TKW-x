@@ -31,6 +31,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailcheck
 import uk.nhs.digital.mait.commonutils.util.Logger;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.HttpHeaderCorrelationCheckContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.XpathCorrelationCheckContext;
+import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.AutotestGrammarCompilerVisitor.instantiatePassFailCheck;
 
 /**
  *
@@ -323,46 +324,14 @@ public class ScriptParser {
     }
 
     /**
-     * This method in only called by AbstractLogicalOperatorPassFailCheck Its a
-     * near duplicate of the one in AutotestManagerCompilerVisitor
-     *
+     * This method is only called by AbstractLogicalOperatorPassFailCheck 
+     * for instantiating subtests used with logical operators
      * @param passfailCheckCtx
      * @return initialised PassFailCheck object
      * @throws Exception
      */
     public PassFailCheck makePassFail(PassFailCheckContext passfailCheckCtx) throws Exception {
-        XPathCheckContext xPathCheckCtx = passfailCheckCtx.xPathCheck();
-        HttpHeaderCheckContext httpHeaderCheckCtx = passfailCheckCtx.httpHeaderCheck();
-        HttpStatusCheckContext httpStatusCheckCtx = passfailCheckCtx.httpStatusCheck();
-        HttpHeaderCorrelationCheckContext httpHeaderCorrelationCheckCtx = passfailCheckCtx.httpHeaderCorrelationCheck();
-        XpathCorrelationCheckContext xpathCorrelationCheckContext = passfailCheckCtx.xpathCorrelationCheck();
-
-
-        String checkType;
-        if (xPathCheckCtx != null) {
-            checkType = xPathCheckCtx.xpathType().getText();
-        } else if (httpHeaderCheckCtx != null) {
-            checkType = httpHeaderCheckCtx.HTTPHEADERCHECK().getText();
-        } else if (httpStatusCheckCtx != null) {
-            checkType = httpStatusCheckCtx.HTTPSTATUSCHECK().getText();
-        } else if (httpHeaderCorrelationCheckCtx != null) {
-            checkType = httpHeaderCorrelationCheckCtx.HTTPHEADERCORRELATIONCHECK().getText();
-        } else if (httpHeaderCorrelationCheckCtx != null) {
-            checkType = xpathCorrelationCheckContext.XPATHCORRELATIONCHECK().getText();
-        } else {
-            NullCheckContext nullCheckContext = passfailCheckCtx.nullCheck();
-            if (nullCheckContext != null) {
-                checkType = nullCheckContext.nullCheckType().getText();
-            } else {
-                checkType = passfailCheckCtx.getChild(0).getText();
-            }
-        }
-        String pfclass = "tks.autotest.passfail." + checkType;
-        pfclass = bootProperties.getProperty(pfclass);
-        if (pfclass == null) {
-            throw new Exception("PassFail check " + checkType + " has no class defined");
-        }
-        PassFailCheck pf = (PassFailCheck) Class.forName(pfclass).newInstance();
+        PassFailCheck pf = instantiatePassFailCheck(passfailCheckCtx, bootProperties);
         pf.init(passfailCheckCtx);
         return pf;
     }

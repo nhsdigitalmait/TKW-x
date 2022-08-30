@@ -26,6 +26,7 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.Script;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.TestResult;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import org.xml.sax.InputSource;
+import uk.nhs.digital.mait.tkwx.http.HttpHeaderManager;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.FHIRJsonXmlAdapter;
 
 /**
@@ -45,23 +46,23 @@ public abstract class AbstractRequestResponseComparatorPassFailCheck extends Abs
     /**
      *
      * @param s script
-     * @param inSync response input steam
-     * @param inAsync request input stream
+     * @param inResponse response input steam
+     * @param inRequest request input stream
      * @return TestResult
      * @throws Exception
      */
     @Override
-    public TestResult passed(Script s, InputStream inSync, InputStream inAsync)
+    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest)
             throws Exception {
         TestResult p = TestResult.FAIL;
-        String requestBody = getRequestBody(inAsync);
+        String requestBody = getRequestBody(inRequest);
         // TODO we are assuming that if it starts with { its a json and b fhir
         if ( requestBody.trim().startsWith("{") ) {
                 requestBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(requestBody);
         }
 
         if (!Utils.isNullOrEmpty(requestBody)) {
-            String responseBody = getResponseBody(inSync);
+            String responseBody = getResponseBody(inResponse);
             // TODO we are assuming that if it starts with { its a json and b fhir
             if ( responseBody.trim().startsWith("{") ) {
                     responseBody = FHIRJsonXmlAdapter.fhirConvertJson2Xml(responseBody);
@@ -87,6 +88,16 @@ public abstract class AbstractRequestResponseComparatorPassFailCheck extends Abs
      * @throws Exception
      */
     protected abstract boolean doChecks(Script s, InputSource request, InputSource response) throws Exception;
+
+    /**
+     * extracts a string containing the xml request message
+     *
+     * @return request headers
+     * @throws java.lang.Exception
+     */
+    protected HttpHeaderManager getRequestHeaders() throws Exception {
+        return requestbe.getHttpRequestHeaders();
+    }
 
     /**
      * extracts a string containing the xml request message

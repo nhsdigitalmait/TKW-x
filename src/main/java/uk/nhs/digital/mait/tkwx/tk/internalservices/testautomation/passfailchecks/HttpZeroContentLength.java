@@ -35,10 +35,10 @@ public class HttpZeroContentLength
         extends AbstractPassFailCheck {
 
     @Override
-    public TestResult passed(Script s, InputStream in, InputStream inRequest)
+    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest)
             throws Exception {
         SynchronousResponseBodyExtractor be = new SynchronousResponseBodyExtractor();
-        String body= be.getBody(in);
+        String body= be.getBody(inResponse);
         int length = body.length();
        
         setDescription(colourString("Expected: ", BLACK));

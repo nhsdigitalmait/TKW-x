@@ -49,12 +49,12 @@ public interface PassFailCheck
     /**
      * Implement to provide the check on a response message.
      * @param s Script content
-     * @param in Input stream (e.g. from network or file) from which to read the message
+     * @param inResponse Input stream (e.g. from network or file) from which to read the message
      * @param inRequest request input stream
      * @return TestResult with a status of passed if passed
      * @throws Exception if something goes wrong
      */
-    public TestResult passed(Script s, InputStream in, InputStream inRequest) throws Exception;     
+    public TestResult passed(Script s, InputStream inResponse, InputStream inRequest) throws Exception;     
 
     /**
      * allows access to the relevant row of a tdv table

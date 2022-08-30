@@ -30,16 +30,16 @@ public class OrPassFailCheck extends AbstractLogicalOperatorPassFailCheck {
      * runs one or more tests which are logically or'ed under partial evaluation
      * (ie stop evaluating when you get a success)
      * @param s
-     * @param copiedInSync
-     * @param copiedInAsync
+     * @param copiedInResponse
+     * @param copiedInRequest
      * @return TestResult
      * @throws Exception
      */
     @Override
-    protected TestResult processSubTests(Script s, byte[] copiedInSync, byte[] copiedInAsync) throws Exception {
+    protected TestResult processSubTests(Script s, byte[] copiedInResponse, byte[] copiedInRequest) throws Exception {
 
         for (PassFailCheck pf : subTests) {
-            testResult = copyStreamsRunTest(pf, s, copiedInSync, copiedInAsync);
+            testResult = copyStreamsRunTest(pf, s, copiedInResponse, copiedInRequest);
             // concatenate fail reasons
             description += pf.getDescription() + "<BR/>";
             if (testResult == TestResult.PASS) {

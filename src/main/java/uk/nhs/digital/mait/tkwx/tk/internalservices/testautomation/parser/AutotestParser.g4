@@ -328,6 +328,11 @@ xpathType : SYNCHRONOUSXPATH
 | SECONDRESPONSEXPATH
 ;
 
+xpathCorrelationType : SYNCHRONOUSXPATHCORRELATION
+| ASYNCHRONOUSXPATHCORRELATION
+| SECONDASYNCHRONOUSXPATHCORRELATION
+;
+
 xpathExpression : CST ;
 
 xpathArg : xpathTypeNoArg | ( xpathTypeArg matchString ) ;
@@ -346,8 +351,8 @@ httpHeaderCheck : HTTPHEADERCHECK httpHeaderName xpathArg ;
 
 httpHeaderCorrelationCheck : HTTPHEADERCORRELATIONCHECK httpHeaderName httpHeaderName ;
 
-// Compares synchronous req resp evaluated xpaths if no second parameter then its the same xpath
-xpathCorrelationCheck : XPATHCORRELATIONCHECK xpathExpression xpathExpression ? ;
+// Compares req resp evaluated xpaths if no third parameter then its the same xpath
+xpathCorrelationCheck : xpathCorrelationType xpathExpression xpathExpression ? ;
 
 // Takes a *quoted* regular expression parameter which defines that a null request/response has been detected
 nullCheck : nullCheckType matchString ;

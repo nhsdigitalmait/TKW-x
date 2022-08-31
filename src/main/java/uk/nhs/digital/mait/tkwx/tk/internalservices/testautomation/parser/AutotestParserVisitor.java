@@ -511,6 +511,12 @@ public interface AutotestParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitXpathType(AutotestParser.XpathTypeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link AutotestParser#xpathCorrelationType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXpathCorrelationType(AutotestParser.XpathCorrelationTypeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link AutotestParser#xpathExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

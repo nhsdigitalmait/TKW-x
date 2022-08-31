@@ -30,23 +30,29 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.Autote
  *
  * @author Simon Farrow simon.farrow1@hscic.gov.uk
  */
-public class SynchronousRequestResponseXPathCorrelatorPassFailCheck
-        extends AbstractSynchronousRequestResponseComparatorPassFailCheck {
+public class XPathCorrelatorPassFailCheck
+        extends AbstractRequestResponseComparatorPassFailCheck {
     
     private String secondXpath  = null;
     private XPathExpression secondExpression = null;
+    private final AbstractRequestResponseComparatorPassFailCheck invoker;
     
-        /**
+    public XPathCorrelatorPassFailCheck(AbstractRequestResponseComparatorPassFailCheck invoker)
+            throws Exception {
+        this.invoker = invoker;
+    }
+    
+    /**
      *
-     * @param passfailCtx
+     * @param passfailCheckCtx
      * @throws java.lang.Exception
      */
     @Override
-    public void init(AutotestParser.PassfailContext passfailCtx)
+    public void init(AutotestParser.PassFailCheckContext passfailCheckCtx)
             throws Exception {
-        super.init(passfailCtx);
+        super.init(passfailCheckCtx);
         
-        AutotestParser.XpathCorrelationCheckContext xpathCorrelationCheckContext = passfailCtx.passFailCheck().xpathCorrelationCheck();
+        AutotestParser.XpathCorrelationCheckContext xpathCorrelationCheckContext = passfailCheckCtx.xpathCorrelationCheck();
 
         // The second parameter currently does not bacause CST is a one shot
         
@@ -133,7 +139,7 @@ public class SynchronousRequestResponseXPathCorrelatorPassFailCheck
             }
         }
         
-        setDescription(sb.toString());
+        invoker.setDescription(sb.toString());
 
         return result;
     }

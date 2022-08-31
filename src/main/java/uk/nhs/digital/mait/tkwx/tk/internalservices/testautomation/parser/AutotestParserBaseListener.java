@@ -1014,6 +1014,18 @@ public class AutotestParserBaseListener implements AutotestParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterXpathCorrelationType(AutotestParser.XpathCorrelationTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitXpathCorrelationType(AutotestParser.XpathCorrelationTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterXpathExpression(AutotestParser.XpathExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}

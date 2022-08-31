@@ -225,6 +225,10 @@ HTTP500 : 'http500'  ;
 NULLRESPONSE : 'nullresponse'  ; 
 NULLREQUEST : 'nullrequest'  ; 
 
+SYNCHRONOUSXPATHCORRELATION : 'synchronousxpathcorrelationcheck' -> mode(CST_MODE) ;
+ASYNCHRONOUSXPATHCORRELATION : 'asynchronousxpathcorrelationcheck' -> mode(CST_MODE) ;
+SECONDASYNCHRONOUSXPATHCORRELATION : 'secondasynchronousxpathcorrelationcheck' -> mode(CST_MODE) ;
+
 SYNCHRONOUSXPATH : 'synchronousxpath' -> mode(CST_MODE) ; 
 ASYNCHRONOUSXPATH : 'asynchronousxpath' -> mode(CST_MODE) ; 
 SECONDRESPONSEXPATH : 'secondresponsexpath' -> mode(CST_MODE) ; 
@@ -244,7 +248,6 @@ HTTPHEADERCHECK : 'httpheadercheck' ;
 HTTPSTATUSCHECK : 'httpstatuscheck' ;
 HTTPHEADERCORRELATIONCHECK : 'httpheadercorrelationcheck' ;
 
-XPATHCORRELATIONCHECK : 'xpathcorrelationcheck' -> mode(CST_MODE) ;
 
 // new logical conjunction tests at 3.13
 OR : 'or' ;

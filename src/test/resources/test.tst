@@ -28,7 +28,9 @@ DE_EMPPID_test7 CHAIN SYNC faultcodeok TEXT "DE_EMPPID_7: The faultcode in the S
 DE_EMPPID_test8 CHAIN SYNC errortextcheck TEXT "DE_EMPPID_8: The ErrorText should indicate that &quot;Profile ID is missing&quot;"
 DE_EMPPID_test9 CHAIN SYNC httpheaderchecknonzerocontent TEXT "DE_EMPPID_9: "
 demodelay FUNCTION delay 5000 1000
-DE_EMPPID_test10 CHAIN SYNC xpathcorrelation TEXT "xpath correlation check: "
+DE_EMPPID_test10 CHAIN SYNC synchronousxpathcorrelation TEXT "synchronous xpath correlation check: "
+DE_EMPPID_test11 CHAIN SYNC asynchronousxpathcorrelation TEXT "asynchronous xpath correlation check: "
+DE_EMPPID_test12 CHAIN SYNC secondasynchronousxpathcorrelation TEXT "second asynchronous xpath correlation check: "
 END TESTS
 
 BEGIN MESSAGES
@@ -98,7 +100,9 @@ httpstatuscheck206 httpstatuscheck 206
 nullrq nullrequest "^Failed.*$"
 nullresp nullresponse "^Failed.*$"
 httpheadercorrelation httpheadercorrelationcheck Header1 Header2
-xpathcorrelation xpathcorrelationcheck /el/text()
+synchronousxpathcorrelation synchronousxpathcorrelationcheck /el/text()
+asynchronousxpathcorrelation asynchronousxpathcorrelationcheck /el/text()
+secondasynchronousxpathcorrelation secondasynchronousxpathcorrelationcheck /el/text()
 END PASSFAIL
 
 BEGIN SUBSTITUTION_TAGS

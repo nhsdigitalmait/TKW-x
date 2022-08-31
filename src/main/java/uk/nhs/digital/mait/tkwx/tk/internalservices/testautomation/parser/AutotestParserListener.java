@@ -840,6 +840,16 @@ public interface AutotestParserListener extends ParseTreeListener {
 	 */
 	void exitXpathType(AutotestParser.XpathTypeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link AutotestParser#xpathCorrelationType}.
+	 * @param ctx the parse tree
+	 */
+	void enterXpathCorrelationType(AutotestParser.XpathCorrelationTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AutotestParser#xpathCorrelationType}.
+	 * @param ctx the parse tree
+	 */
+	void exitXpathCorrelationType(AutotestParser.XpathCorrelationTypeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AutotestParser#xpathExpression}.
 	 * @param ctx the parse tree
 	 */

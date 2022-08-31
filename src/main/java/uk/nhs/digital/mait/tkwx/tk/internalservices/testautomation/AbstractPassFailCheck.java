@@ -90,7 +90,7 @@ abstract public class AbstractPassFailCheck
         } else if (passfailCheckCtx.httpHeaderCorrelationCheck() != null) {
             lType = passfailCheckCtx.httpHeaderCorrelationCheck().HTTPHEADERCORRELATIONCHECK().getText();
         } else if (passfailCheckCtx.xpathCorrelationCheck() != null) {
-            lType = passfailCheckCtx.xpathCorrelationCheck().XPATHCORRELATIONCHECK().getText();
+            lType = passfailCheckCtx.xpathCorrelationCheck().xpathCorrelationType().getText();
         } else if ( passfailCheckCtx.nullCheck() != null ) {
             lType = passfailCheckCtx.nullCheck().nullCheckType().getText();
         } else {

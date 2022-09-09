@@ -21,16 +21,11 @@ import java.util.Properties;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.HttpHeaderCheckContext;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.HttpStatusCheckContext;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.NullCheckContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.PassFailCheckContext;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.XPathCheckContext;
 import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailchecks.PassFailCheck;
 import uk.nhs.digital.mait.commonutils.util.Logger;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.HttpHeaderCorrelationCheckContext;
-import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.parser.AutotestParser.XpathCorrelationCheckContext;
 import static uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.AutotestGrammarCompilerVisitor.instantiatePassFailCheck;
 
 /**
@@ -80,8 +75,18 @@ public class ScriptParser {
             visitor = new AutotestGrammarCompilerVisitor(script, bootProperties);
             Object x = visitor.visit(pt);
 
-            link();
+            ParseTreeWalker walker = new ParseTreeWalker();
+            parser = AbstractAutotestParser.getAutotestParser(fileName);
+            AutotestParser.InputContext inputContext = parser.input();
 
+            AutotestListener autotestListener = new AutotestListener(fileName, parser);
+            walker.walk(autotestListener, inputContext);
+            if ( !autotestListener.postParseAnalyse() ) {
+                autotestListener.dumpErrors();
+                throw new IllegalArgumentException("Script "+fileName+" failed referential integrity checks.");
+            }
+
+            link();
         } catch (IOException ex) {
             Logger.getInstance().log(SEVERE, ScriptParser.class.getName(), "IO Error " + ex.getMessage() + " reading test script file " + fileName);
         }
@@ -172,7 +177,7 @@ public class ScriptParser {
      */
     public NamedPropertySet getPropertySet(String name) throws Exception {
         NamedPropertySet ps = visitor.getPropertySets().get(name);
-        if ( ps != null ) {
+        if (ps != null) {
             return ps;
         } else {
             throw new Exception("ScriptParser.getPropertySet property set does not exist " + name);
@@ -198,7 +203,7 @@ public class ScriptParser {
      */
     public HashMap<String, Object> getSubstitutionTags() throws Exception {
         HashMap<String, Object> substitutionTags = visitor.getSubstitutionTags();
-        if ( substitutionTags != null ) {
+        if (substitutionTags != null) {
             return substitutionTags;
         } else {
             throw new Exception("ScriptParser.getSubstitutionTags substitution tags does not exist ");
@@ -324,8 +329,9 @@ public class ScriptParser {
     }
 
     /**
-     * This method is only called by AbstractLogicalOperatorPassFailCheck 
-     * for instantiating subtests used with logical operators
+     * This method is only called by AbstractLogicalOperatorPassFailCheck for
+     * instantiating subtests used with logical operators
+     *
      * @param passfailCheckCtx
      * @return initialised PassFailCheck object
      * @throws Exception

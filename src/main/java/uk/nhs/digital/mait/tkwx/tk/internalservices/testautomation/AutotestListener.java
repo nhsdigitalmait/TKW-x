@@ -394,28 +394,60 @@ public class AutotestListener extends AutotestParserBaseListener {
     }
 
     /**
-     * To be called after the walk through
-     * reports unresolved references and unused declarations
+     * To be called after the walk through reports unresolved references and
+     * unused declarations return whether the scipt has referential integrity
+     * 
+     * @return whether the script has referebtial integrity
      */
-    public void postParseAnalyse() {
+    public boolean postParseAnalyse() {
+        boolean result = true;
         for (Namespace namespace : Namespace.values()) {
-            System.out.println("Checking namespace " + namespace.toString());
             if (namespace != Namespace.TOP_LEVEL && namespace != Namespace.SCHEDULE) {
-                
+
+                // check for unresolved references
+                for (String reference : references.get(namespace)) {
+                    if (!declarations.get(namespace).contains(reference)) {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * output fatal errors
+     */
+    public void dumpErrors() {
+        for (Namespace namespace : Namespace.values()) {
+            //System.err.println("Checking namespace " + namespace.toString());
+            if (namespace != Namespace.TOP_LEVEL && namespace != Namespace.SCHEDULE) {
+                // check for unresolved references
+                for (String reference : references.get(namespace)) {
+                    if (!declarations.get(namespace).contains(reference)) {
+                        System.err.println("Error: Unresolved " + namespace + " reference:" + reference);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * output non fatal warnings
+     */
+    public void dumpWarnings() {
+        for (Namespace namespace : Namespace.values()) {
+            //System.err.println("Checking namespace " + namespace.toString());
+            if (namespace != Namespace.TOP_LEVEL && namespace != Namespace.SCHEDULE) {
+
                 // check for unused declarations
                 for (String declaration : declarations.get(namespace)) {
                     if (!references.get(namespace).contains(declaration)) {
                         System.err.println("Warning: Unused " + namespace + " declaration:" + declaration);
                     }
                 }
-
-                // check for unresolved references
-                for (String reference : references.get(namespace)) {
-                    if (!declarations.get(namespace).contains(reference)) {
-                        System.err.println("Error: Unresolved" + namespace + " reference:" + reference);
-                    }
-                }
             }
         }
-    } // postParseAnalysis
+    }
 }

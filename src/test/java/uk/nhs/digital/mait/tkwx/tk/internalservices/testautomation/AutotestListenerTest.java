@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -71,7 +72,9 @@ public class AutotestListenerTest {
         walker.walk(instance, inputContext);
 
         // do the test
-        instance.postParseAnalyse();
+        boolean result = instance.postParseAnalyse();
+        boolean expResult = true;
+        assertEquals(expResult,result);
     }
     
     
@@ -276,5 +279,33 @@ public class AutotestListenerTest {
     }
     
     // end of callbacks
+
+    /**
+     * Test of dumpErrors method, of class AutotestListener.
+     */
+    @Test
+    public void testDumpErrors() {
+        System.out.println("dumpErrors");
+        // Walk it and attach our listener
+        ParseTreeWalker walker = new ParseTreeWalker();
+        AutotestParser.InputContext inputContext = ap.input();
+        walker.walk(instance, inputContext);
+        boolean result = instance.postParseAnalyse();
+        instance.dumpErrors();
+    }
+
+    /**
+     * Test of dumpWarnings method, of class AutotestListener.
+     */
+    @Test
+    public void testDumpWarnings() {
+        System.out.println("dumpWarnings");
+        // Walk it and attach our listener
+        ParseTreeWalker walker = new ParseTreeWalker();
+        AutotestParser.InputContext inputContext = ap.input();
+        walker.walk(instance, inputContext);
+        boolean result = instance.postParseAnalyse();
+        instance.dumpWarnings();
+    }
 
 }

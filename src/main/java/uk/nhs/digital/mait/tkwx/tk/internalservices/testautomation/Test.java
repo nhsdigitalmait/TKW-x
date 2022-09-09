@@ -68,8 +68,10 @@ import uk.nhs.digital.mait.tkwx.tk.internalservices.testautomation.passfailcheck
 import uk.nhs.digital.mait.tkwx.tk.internalservices.validation.Copyable;
 import uk.nhs.digital.mait.commonutils.util.FileLocker;
 import uk.nhs.digital.mait.commonutils.util.Logger;
+import uk.nhs.digital.mait.commonutils.util.configurator.Configurator;
 import uk.nhs.digital.mait.tkwx.util.Utils;
 import uk.nhs.digital.mait.commonutils.util.xsltransform.TransformManager;
+import static uk.nhs.digital.mait.tkwx.util.Utils.isNullOrEmpty;
 import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
 
 /**
@@ -85,6 +87,7 @@ import static uk.nhs.digital.mait.tkwx.util.Utils.replaceTkwroot;
  */
 public class Test
         implements Linkable, Copyable, Cloneable {
+
 
     enum SendHow {
         UNDEFINED,
@@ -155,6 +158,8 @@ public class Test
     // for accessing expected results columns from a datasource
     private DataSource datasource = null;
     private String recordid = null;
+
+    private int transmitDelay = 0;
 
     private final static HashMap<String, String> TRANSMIT_MODE_SUFFIXES = new HashMap<>();
     private static final String SEND_BUSINESS_ACK = "SendBusinessAck-v1-0";
@@ -228,6 +233,15 @@ public class Test
         }
 
         correlationCountError = false;
+        
+        try {
+            Configurator c = Configurator.getConfigurator();
+            String s = c.getConfiguration("tks.autotest.transmitdelay");
+            if (!isNullOrEmpty(s)){
+                transmitDelay = Integer.parseInt(s);
+            } 
+        } catch (Exception ex) {
+        }
     }
 
     /**
@@ -868,6 +882,12 @@ public class Test
             // This needs to be a blocking call for autotest purposes
             // The transmitter checks the autotest system property and joins the thread if its true
             ServiceResponse r = transmitter.execute(null);
+            
+            // slug here if necessary for APIM...
+            if ( transmitDelay > 0 ) {
+                System.out.println("Sleeping "+transmitDelay + "ms");
+                Thread.sleep(transmitDelay);
+            }
 
             transmitterLog = getTransmitterLogFile(schedule, filename);
         }

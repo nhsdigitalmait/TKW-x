@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SessionStateManager {
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     /**
      *

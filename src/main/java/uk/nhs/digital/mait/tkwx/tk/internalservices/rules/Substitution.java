@@ -157,18 +157,18 @@ public class Substitution {
     private void handleJsonpath(SimulatorRulesParser.SubstitutionContext ctx) {
         type = SubstitutionType.JSONPATH;
         try {
-            // jsonpath returns 1..3 args
+            // jsonpath returns 1..4 args
             switch (ctx.substitution_jsonpath().xpath_arg().size()) {
-                case 1:
+                case 1:// default json payload
                     initialiseJsonpath(ctx.substitution_jsonpath().xpath_arg().get(0).getText());
                     break;
-                case 2:
-                    // optional match source + jsonpath
+                case 2:// jwt header | jwt payload
+                    // <match source> <jsonpath>
                     matchSource = MatchSource.valueOf(ctx.substitution_jsonpath().xpath_arg().get(0).getText().toUpperCase());
                     initialiseJsonpath(ctx.substitution_jsonpath().xpath_arg().get(1).getText());
                     break;
-                case 4:
-                    // match source + header name + encoding + jsonpath
+                case 4: //  http headers containing base64 encoded json
+                    // <match source> + <encoding> + <http header name> + <jsonpath>
                     matchSource = MatchSource.valueOf(ctx.substitution_jsonpath().xpath_arg().get(0).getText().toUpperCase());
                     if ( matchSource == HTTP_HEADER ) {
                         encoding = Encoding.valueOf(ctx.substitution_jsonpath().xpath_arg().get(1).getText().toUpperCase());

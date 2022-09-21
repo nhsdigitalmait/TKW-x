@@ -69,7 +69,12 @@ property_name : DOT_SEPARATED_IDENTIFIER | IDENTIFIER ;
 substitution_no_arg : UUID_UPPER | UUID_LOWER | HL7_DATETIME | ISO8601_DATETIME | RFC822_DATETIME;
 // NB this switches to CST Mode 1st param is optional xml match source last is xpath
 substitution_xpath : SUBSTITUTION_XPATH  xpath_arg xpath_arg ? ;  
-substitution_jsonpath : SUBSTITUTION_JSONPATH  xpath_arg ( xpath_arg xpath_arg xpath_arg ) ? ; // accomodated encoding and headername  
+
+// acceptable forms
+//1 arg <jsonpath>  # default payload
+//2 args (jwt_header|jwt_payload) <jsonpath>  # jwt
+//4 args <matchsource> <encoding> <httpheadername> <jsonpath> # base64 encoded httpheader
+substitution_jsonpath : SUBSTITUTION_JSONPATH  xpath_arg ( xpath_arg ( xpath_arg xpath_arg ) ? ) ? ; // accomodated encoding and headername  
 substitution_regexp_cardinality : FIRST | ALL ;
 regexp : QUOTED_STRING QUOTED_STRING substitution_regexp_cardinality ? ;
 substitution_regexp : SUBSTITUTION_REGEXP  text_match_source?  regexp + ;

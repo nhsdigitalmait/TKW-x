@@ -60,6 +60,7 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
 
     private final ArrayList<Schedule> schedules = new ArrayList<>();
     private final HashMap<String, String> testRootTest = new HashMap<>();
+    private final HashMap<String, ArrayList<String>> scheduleTests = new HashMap<>();
 
     /**
      * public constructor
@@ -99,24 +100,17 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
     }
 
     @Override
-    public Object visitSchedule(ScheduleContext ctx) {
-        getSchedules().add(new Schedule(ctx));
-        String rootTestName = null;
-        for (TestNameContext testNameCtx : ctx.testName()) {
-            if (rootTestName == null) {
-                rootTestName = testNameCtx.getText();
-            }
-            // builds a hashmap relating a test to the root test in the schedule
-            // This is required so that we can derive the appropriate Extractor defined in the PFC for a given schedule
-            if (testRootTest.get(testNameCtx.getText()) == null) {
-                testRootTest.put(testNameCtx.getText(), rootTestName);
-            } else {
-                // This is only a concern if the PassFailCheck associated with the Test has an Extractor defined.
-                //Logger.getInstance().log(WARNING, AutotestGrammarCompilerVisitor.class.getName(),
-                //        "Warning attempt to override root for a repeated test " + testNameCtx.getText());
-            }
+    public Object visitSchedule(ScheduleContext scheduleCtx) {
+        getSchedules().add(new Schedule(scheduleCtx));
+
+        // create a hashmap of array lists of test names
+        // this is then used when post processing to derive the correct datasource to use with a passfail check extractor
+        ArrayList<String> testNameList = new ArrayList<>();
+        scheduleTests.put(scheduleCtx.scheduleName().getText(), testNameList);
+        for (TestNameContext testNameCtx : scheduleCtx.testName()) {
+            testNameList.add(testNameCtx.getText());
         }
-        return super.visitSchedule(ctx);
+        return super.visitSchedule(scheduleCtx);
     }
 
     @Override
@@ -425,15 +419,48 @@ public class AutotestGrammarCompilerVisitor extends AutotestParserBaseVisitor {
         return substitutionTags;
     }
 
-
     /**
-     * uses a map to enable us to back track to the first test in the schedule
-     * so that we can derive the message and hence the datasource for the test
+     * uses a map to enable us to back track to the last Test in the schedule
+     * before the given Test which sends a Message. So that we can derive 
+     * the Message and hence the DataSource for the Test
      *
      * @param testName
      * @return The name of the first or root test for the given test
      */
     public String getRootTest(String testName) {
         return testRootTest.get(testName);
+    }
+
+    /**
+     * post process to set the correct root test which is the last test to send
+     * a message before the current test in the Schedule. This means we can derive the 
+     * DataSource for the messaging Test which means we can have more than 
+     * DataSource/Extractor used in a single Schedule
+     */
+    public void postProcess() {
+        for (String schedule : scheduleTests.keySet()) {
+            String rootTestName = null;
+            for (String testName : scheduleTests.get(schedule)) {
+                Test test = tests.get(testName);
+                String msgName = test.getMsgname();
+                if (msgName != null) {
+                    if (rootTestName == null) {
+                        rootTestName = testName;
+                    } else if (!rootTestName.equals(testName)) {
+                        rootTestName = testName;
+                    }
+                }
+                
+                // builds a hashmap relating a test to the root test (latest test to send a message) in the schedule
+                // This is required so that we can derive the appropriate Extractor defined in the PFC for a given schedule
+                if (testRootTest.get(testName) == null) {
+                    testRootTest.put(testName, rootTestName);
+                } else {
+                    // This is only a concern if the PassFailCheck associated with the Test has an Extractor defined.
+                    //Logger.getInstance().log(WARNING, AutotestGrammarCompilerVisitor.class.getName(),
+                    //        "Warning attempt to override root for a repeated test " + testNameCtx.getText());
+                }
+            } // for test
+        } // for schedule
     }
 }

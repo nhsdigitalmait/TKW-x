@@ -441,6 +441,21 @@ public class ExpressionTest {
     }
 
     @Test
+    public void testJsonpathEquals() throws Exception {
+        System.out.println("jsonpathequals");
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathequals"));
+
+        popReq(TEST_JSON);
+        boolean expResult = true;
+        boolean result = instance.evaluate(req);
+        assertEquals(expResult, result);
+
+        instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathnotequals"));
+        result = instance.evaluate(req);
+        assertEquals(expResult, result);
+    }
+
+    @Test
     public void testJsonpathCompare() throws Exception {
         System.out.println("jsonpathcompare");
         instance = new Expression(visitor.getExpressionCtx().get("exp_jsonpathcompare"));

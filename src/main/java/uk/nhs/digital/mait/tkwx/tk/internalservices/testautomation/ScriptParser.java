@@ -85,7 +85,10 @@ public class ScriptParser {
                 autotestListener.dumpErrors();
                 throw new IllegalArgumentException("Script "+fileName+" failed referential integrity checks.");
             }
-
+            
+            // now everything is parsed we go back and calculate for an Extractor what is the inferred DataSource
+            visitor.postProcess();
+            
             link();
         } catch (IOException ex) {
             Logger.getInstance().log(SEVERE, ScriptParser.class.getName(), "IO Error " + ex.getMessage() + " reading test script file " + fileName);

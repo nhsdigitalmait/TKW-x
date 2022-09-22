@@ -90,6 +90,9 @@ exp_jsonpathnotmatches jsonpathnotmatches resourceType ^bundle$
 exp_jsonpathcompare jsonpathcompare resourceType resourceType
 exp_jsonpathnotcompare jsonpathnotcompare resourceType resourceType.Element
 
+exp_jsonpathequals jsonpathmatches resourceType Bundle
+exp_jsonpathnotequals jsonpathnotmatches resourceType bundle
+
 exp_jsonpath_jwt_header_exists  jwt_header_json jsonpathexists a
 exp_jsonpath_jwt_payload_exists jwt_payload_json  jsonpathexists c
 

@@ -45,7 +45,7 @@ CO_AMB_PR_XML___actioncorrect synchronousxpath /soap:Envelope/soap:Header/wsa:Ac
 ok httpok
 respexists synchronousxpath /soap:Envelope/soap:Body/itk:SimpleMessageResponse exists
 respok synchronousxpath /soap:Envelope/soap:Body/itk:SimpleMessageResponse/text() matches "^(OK|TEST_HARNESS_ID.*)$"
-#syncmessageidsok syncmessageidsdiffer
+syncmessageidsok syncmessageidsdiffer
 synctimestampok synctimestampislater
 END PASSFAIL
 

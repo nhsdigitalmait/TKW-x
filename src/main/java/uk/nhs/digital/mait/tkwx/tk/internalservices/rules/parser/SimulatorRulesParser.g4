@@ -158,7 +158,7 @@ match_rule :  IDENTIFIER | REGEXP | PATH | INTEGER;
 rule_lines : rule_line + ;
 rule_line : if_statement | include_statement ;
             
-if_statement : IF?  if_expression  THEN?  true_response+  ( ELSE?  false_response+ ) ?  ;
+if_statement : IF?  if_expression  THEN?  true_response+  ( ELSE  false_response+ ) ?  ;
 if_expression :     LPAREN if_expression RPAREN |
                     NOT if_expression |
                     if_expression AND if_expression |

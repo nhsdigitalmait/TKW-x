@@ -6,6 +6,18 @@
 # converts from TKW_ROOT to $TKWROOT
 # -u converts from $TKWROOT to TKW_ROOT
 #
+if [[ "$TKWROOT" == "" ]]
+then
+	echo "TKWROOT environment variable is not set"
+	exit 1
+fi
+
+if [[ ! -e "$TKWROOT" ]]
+then
+	echo "TKWROOT environment variable ($TKWROOT) does not point to a valid folder"
+	exit 1
+fi
+
 if [[ "$1" == "-u" ]]
 then
 	opt=$1

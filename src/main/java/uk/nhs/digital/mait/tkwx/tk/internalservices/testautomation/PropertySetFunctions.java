@@ -173,9 +173,13 @@ public class PropertySetFunctions {
         int secondsOffset = Integer.parseInt(secondsoffsetStr);
         cal.add(Calendar.DAY_OF_YEAR, daysOfffset);
         cal.add(Calendar.SECOND, secondsOffset);
-
+        
+       //in winter when british and gmt time are same java include Z instead of +00:00
+        String formatedDate = df.format(cal.getTime()).replace("Z", "+00:00");
+         
         boolean urlEncode = Boolean.parseBoolean(urlEncodeStr);
-        return urlEncode ? URLEncoder.encode(df.format(cal.getTime()), StandardCharsets.UTF_8.toString()) : df.format(cal.getTime());
+         return urlEncode ? URLEncoder.encode(formatedDate, StandardCharsets.UTF_8.toString()) : formatedDate;
+       // return urlEncode ? URLEncoder.encode(df.format(cal.getTime()), StandardCharsets.UTF_8.toString()) : df.format(cal.getTime());
     }
     
     /**

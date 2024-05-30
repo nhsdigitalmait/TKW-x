@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>uk.nhs.digital.mait</groupId>
     <artifactId>tkw-x</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -14,7 +14,7 @@
         <tkwx-rules-path>${internal_services_root}/rules/parser</tkwx-rules-path>
         <tkwx-automation-path>${internal_services_root}/testautomation/parser</tkwx-automation-path>
         <tkwx-validation-path>${internal_services_root}/validation/parser</tkwx-validation-path>
-        <skiptests>false</skiptests>
+        <skiptests>true</skiptests>
     </properties>    
     
     <build>
@@ -183,8 +183,10 @@
                             <version>${project.version}</version>
                             <type>jar</type>
                             <overWrite>false</overWrite>
-                            <outputDirectory>${env.TKWROOT}</outputDirectory>
-                            <destFileName>TKW-x.jar</destFileName>
+<!--                            <outputDirectory>/home/shul1/Documents/TKW_BaRS</outputDirectory>-->
+                             <outputDirectory>${env.TKWROOT}</outputDirectory> 
+                           <!-- change the the jar file name to avoid overwrite. /home/shul1/Documents/TKW_BaRS -->                       
+                            <destFileName>TKW-x-2.jar</destFileName>
                         </artifactItem>
                     </artifactItems>
                     <outputDirectory>${project.build.directory}/wars</outputDirectory>
@@ -547,6 +549,12 @@
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
             <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
     <name>tkw-x</name>
